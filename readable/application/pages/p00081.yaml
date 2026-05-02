@@ -1,0 +1,1331 @@
+---
+# ====== Page: Roles - Privilegios ===========================
+id: 81
+identification: 
+  name: Roles - Privilegios
+  alias: ROLES-PRIVILEGIOS
+  title: Roles - Privilegios
+
+appearance: 
+  page-mode: Normal
+  page-template: Left Side Column
+  template-options: 
+  - '#DEFAULT#'
+
+navigation-menu: 
+  override-user-interface-level: false
+
+navigation: 
+  cursor-focus: Do not focus cursor
+  warn-on-unsaved-changes: false
+
+css: 
+  inline: |
+    /* Scroll Results Only in Side Column */
+    .t-Body-side {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+    .search-results {
+        flex: 1;
+        overflow: auto;
+    }
+    /* Format Search Region */
+    .search-region {
+        border-bottom: 1px solid rgba(0,0,0,.1);
+        flex-shrink: 0;
+    }
+
+security: 
+  authentication: Page Requires Authentication
+  deep-linking: Application Default
+  page-access-protection: Arguments Must Have Checksum
+  form-auto-complete: On
+  browser-cache: Application Default
+
+session-management: 
+  rejoin-sessions: Application Default
+
+advanced: 
+  enable-duplicate-page-submissions: No - Prevent page from being re-posted
+  reload-on-submit: Always
+
+server-cache: 
+  caching: Disabled
+
+regions: 
+- # ====== Region: Breadcrumb ==================================
+  id: 14246135692094633
+  identification: 
+    name: Breadcrumb
+    type: Breadcrumb
+
+  source: 
+    breadcrumb: Breadcrumb # 7705913887831249
+
+  layout: 
+    sequence: 10
+    parent-region: No Parent
+    slot: REGION_POSITION_01
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Title Bar
+    template-options: 
+    - '#DEFAULT#'
+    - t-BreadcrumbRegion--useBreadcrumbTitle
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    appearance: 
+      breadcrumb-template: Breadcrumb
+      template-options: 
+      - '#DEFAULT#'
+
+- # ====== Region: Search ======================================
+  id: 14247651726094634
+  identification: 
+    name: Search
+    type: Static Content
+
+  layout: 
+    sequence: 10
+    parent-region: No Parent
+    slot: REGION_POSITION_02
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Blank with Attributes
+    template-options: 
+    - '#DEFAULT#'
+    - t-Form--stretchInputs
+    css-classes: 
+    - search-region
+    - padding-md
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    settings: 
+      output-as: HTML
+      expand-shortcuts: false
+
+- # ====== Region: Master Records ==============================
+  id: 14248470386094635
+  identification: 
+    name: Master Records
+    type: Classic Report
+
+  source: 
+    location: Local Database
+    type: SQL Query
+    sql-query: |
+      select "ID_ROL",
+          null LINK_CLASS,
+          apex_page.get_url(p_items => 'P81_ID_ROL', p_values => "ID_ROL") LINK,
+          null ICON_CLASS,
+          null LINK_ATTR,
+          null ICON_COLOR_CLASS,
+          case when coalesce(:P81_ID_ROL,'0') = "ID_ROL"
+            then 'is-active' 
+            else ' '
+          end LIST_CLASS,
+          (substr("NOMBRE_ROL", 1, 50)||( case when length("NOMBRE_ROL") > 50 then '...' else '' end )) LIST_TITLE,
+          (substr("DESCRIPCION", 1, 50)||( case when length("DESCRIPCION") > 50 then '...' else '' end )) LIST_TEXT,
+          null LIST_BADGE
+      from "ROLES" x
+      where (:P81_SEARCH is null
+              or upper(x."NOMBRE_ROL") like '%'||upper(:P81_SEARCH)||'%'
+              or upper(x."DESCRIPCION") like '%'||upper(:P81_SEARCH)||'%'
+          )
+      order by "NOMBRE_ROL"
+    page-items-to-submit: 
+    - P81_SEARCH
+
+  order-by: 
+    type: None
+
+  layout: 
+    sequence: 20
+    parent-region: No Parent
+    slot: REGION_POSITION_02
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Blank with Attributes (No Grid)
+    template-options: 
+    - '#DEFAULT#'
+    css-classes: 
+    - search-results
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  server-cache: 
+    caching: Disabled
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    layout: 
+      number-of-rows-type: Static Value
+      number-of-rows: 1000
+
+    appearance: 
+      template-type: Theme
+      template: Media List
+      template-options: 
+      - t-MediaList--showDesc
+      - t-MediaList--stack
+
+    pagination: 
+      type: No Pagination (Show All Rows)
+      partial-page-refresh: true
+
+    performance: 
+      lazy-loading: false
+      maximum-rows-to-process: 500
+
+    messages: 
+      when-no-data-found: <div class="u-tC">No data found.</div>
+
+    break-formatting: 
+      break-columns: No Break
+
+    advanced: 
+      strip-html: false
+      sort-nulls: Last
+
+    heading: 
+      type: Custom Headings
+
+    download: 
+      csv-export-enabled: false
+
+    printing: 
+      enabled: false
+
+  columns: 
+  - # ====== Column: ID_ROL ======================================
+    id: 14249194353094636
+    identification: 
+      column-name: ID_ROL
+      type: Plain Text
+
+    heading: 
+      heading: ID_ROL
+      alignment: center
+
+    layout: 
+      sequence: 1
+      column-alignment: start
+
+    accessibility: 
+      value-identifies-row: false
+
+    sorting: 
+      sortable: false
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    advanced: 
+      compute-sum: false
+
+    ui-defaults-reference: 
+      table-owner: Parsing Schema
+
+    security: 
+      escape-special-characters: true
+
+  - # ====== Column: LINK_CLASS ==================================
+    id: 14249593569094637
+    identification: 
+      column-name: LINK_CLASS
+      type: Plain Text
+
+    heading: 
+      heading: LINK_CLASS
+      alignment: center
+
+    layout: 
+      sequence: 2
+      column-alignment: start
+
+    accessibility: 
+      value-identifies-row: false
+
+    sorting: 
+      sortable: false
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    advanced: 
+      compute-sum: false
+
+    ui-defaults-reference: 
+      table-owner: Parsing Schema
+
+    security: 
+      escape-special-characters: true
+
+  - # ====== Column: LINK ========================================
+    id: 14249929679094637
+    identification: 
+      column-name: LINK
+      type: Plain Text
+
+    heading: 
+      heading: LINK
+      alignment: center
+
+    layout: 
+      sequence: 3
+      column-alignment: start
+
+    accessibility: 
+      value-identifies-row: false
+
+    sorting: 
+      sortable: false
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    advanced: 
+      compute-sum: false
+
+    ui-defaults-reference: 
+      table-owner: Parsing Schema
+
+    security: 
+      escape-special-characters: true
+
+  - # ====== Column: ICON_CLASS ==================================
+    id: 14250382035094637
+    identification: 
+      column-name: ICON_CLASS
+      type: Plain Text
+
+    heading: 
+      heading: ICON_CLASS
+      alignment: center
+
+    layout: 
+      sequence: 4
+      column-alignment: start
+
+    accessibility: 
+      value-identifies-row: false
+
+    sorting: 
+      sortable: false
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    advanced: 
+      compute-sum: false
+
+    ui-defaults-reference: 
+      table-owner: Parsing Schema
+
+    security: 
+      escape-special-characters: true
+
+  - # ====== Column: LINK_ATTR ===================================
+    id: 14250746404094637
+    identification: 
+      column-name: LINK_ATTR
+      type: Plain Text
+
+    heading: 
+      heading: LINK_ATTR
+      alignment: center
+
+    layout: 
+      sequence: 5
+      column-alignment: start
+
+    accessibility: 
+      value-identifies-row: false
+
+    sorting: 
+      sortable: false
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    advanced: 
+      compute-sum: false
+
+    ui-defaults-reference: 
+      table-owner: Parsing Schema
+
+    security: 
+      escape-special-characters: true
+
+  - # ====== Column: ICON_COLOR_CLASS ============================
+    id: 14251179517094637
+    identification: 
+      column-name: ICON_COLOR_CLASS
+      type: Plain Text
+
+    heading: 
+      heading: ICON_COLOR_CLASS
+      alignment: center
+
+    layout: 
+      sequence: 6
+      column-alignment: start
+
+    accessibility: 
+      value-identifies-row: false
+
+    sorting: 
+      sortable: false
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    advanced: 
+      compute-sum: false
+
+    ui-defaults-reference: 
+      table-owner: Parsing Schema
+
+    security: 
+      escape-special-characters: true
+
+  - # ====== Column: LIST_CLASS ==================================
+    id: 14251563419094638
+    identification: 
+      column-name: LIST_CLASS
+      type: Plain Text
+
+    heading: 
+      heading: LIST_CLASS
+      alignment: center
+
+    layout: 
+      sequence: 7
+      column-alignment: start
+
+    accessibility: 
+      value-identifies-row: false
+
+    sorting: 
+      sortable: false
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    advanced: 
+      compute-sum: false
+
+    ui-defaults-reference: 
+      table-owner: Parsing Schema
+
+    security: 
+      escape-special-characters: true
+
+  - # ====== Column: LIST_TITLE ==================================
+    id: 14251968517094638
+    identification: 
+      column-name: LIST_TITLE
+      type: Plain Text
+
+    heading: 
+      heading: LIST_TITLE
+      alignment: center
+
+    layout: 
+      sequence: 8
+      column-alignment: start
+
+    accessibility: 
+      value-identifies-row: false
+
+    sorting: 
+      sortable: false
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    advanced: 
+      compute-sum: false
+
+    ui-defaults-reference: 
+      table-owner: Parsing Schema
+
+    security: 
+      escape-special-characters: true
+
+  - # ====== Column: LIST_TEXT ===================================
+    id: 14252329161094638
+    identification: 
+      column-name: LIST_TEXT
+      type: Plain Text
+
+    heading: 
+      heading: LIST_TEXT
+      alignment: center
+
+    layout: 
+      sequence: 9
+      column-alignment: start
+
+    accessibility: 
+      value-identifies-row: false
+
+    sorting: 
+      sortable: false
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    advanced: 
+      compute-sum: false
+
+    ui-defaults-reference: 
+      table-owner: Parsing Schema
+
+    security: 
+      escape-special-characters: true
+
+  - # ====== Column: LIST_BADGE ==================================
+    id: 14252748846094638
+    identification: 
+      column-name: LIST_BADGE
+      type: Plain Text
+
+    heading: 
+      heading: LIST_BADGE
+      alignment: center
+
+    layout: 
+      sequence: 10
+      column-alignment: start
+
+    accessibility: 
+      value-identifies-row: false
+
+    sorting: 
+      sortable: false
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    advanced: 
+      compute-sum: false
+
+    ui-defaults-reference: 
+      table-owner: Parsing Schema
+
+    security: 
+      escape-special-characters: true
+
+- # ====== Region: Roles =======================================
+  id: 14253125526094846
+  identification: 
+    name: Roles
+    type: Classic Report
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: ROLES
+    include-rowid-column: false
+    where-clause: '"ID_ROL" = :P81_ID_ROL'
+
+  order-by: 
+    type: None
+
+  layout: 
+    sequence: 10
+    parent-region: No Parent
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Standard
+    template-options: 
+    - '#DEFAULT#'
+    - t-Region--noPadding
+    - t-Region--scrollBody
+    css-classes: 
+    - js-master-region
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  server-side-condition: 
+    type: Item is NOT NULL
+    item: P81_ID_ROL
+
+  server-cache: 
+    caching: Disabled
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    layout: 
+      number-of-rows-type: Static Value
+      number-of-rows: 15
+
+    appearance: 
+      template-type: Theme
+      template: Value Attribute Pairs - Column
+      template-options: 
+      - '#DEFAULT#'
+      - t-AVPList--leftAligned
+
+    pagination: 
+      type: No Pagination (Show All Rows)
+      partial-page-refresh: true
+
+    performance: 
+      lazy-loading: false
+      maximum-rows-to-process: 500
+
+    messages: 
+      when-no-data-found: No Record Selected
+
+    break-formatting: 
+      break-columns: No Break
+
+    advanced: 
+      strip-html: true
+      sort-nulls: Last
+
+    heading: 
+      type: Custom Headings
+
+    download: 
+      csv-export-enabled: false
+
+    printing: 
+      enabled: false
+
+  columns: 
+  - # ====== Column: ID_ROL ======================================
+    id: 14253701436094847
+    identification: 
+      column-name: ID_ROL
+      type: Hidden
+
+    layout: 
+      sequence: 1
+
+    ui-defaults-reference: 
+      table-owner: Parsing Schema
+
+    server-side-condition: 
+      type: Rows returned
+      sql-query: |
+        select 1 from "ROLES"
+        where "ID_ROL" is not null
+        and "ID_ROL" = :P81_ID_ROL
+
+    security: 
+      escape-special-characters: true
+
+  - # ====== Column: DESCRIPCION =================================
+    id: 14254133733094847
+    identification: 
+      column-name: DESCRIPCION
+      type: Plain Text
+
+    heading: 
+      heading: Descripcion
+      alignment: start
+
+    layout: 
+      sequence: 2
+      column-alignment: start
+
+    accessibility: 
+      value-identifies-row: false
+
+    sorting: 
+      sortable: false
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    advanced: 
+      compute-sum: false
+
+    ui-defaults-reference: 
+      table-owner: Parsing Schema
+
+    server-side-condition: 
+      type: Rows returned
+      sql-query: |
+        select 1 from "ROLES"
+        where "DESCRIPCION" is not null
+        and "ID_ROL" = :P81_ID_ROL
+
+    security: 
+      escape-special-characters: true
+
+  - # ====== Column: NOMBRE_ROL ==================================
+    id: 14254580706094847
+    identification: 
+      column-name: NOMBRE_ROL
+      type: Plain Text
+
+    heading: 
+      heading: Nombre Rol
+      alignment: start
+
+    layout: 
+      sequence: 3
+      column-alignment: start
+
+    accessibility: 
+      value-identifies-row: false
+
+    sorting: 
+      sortable: false
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    advanced: 
+      compute-sum: false
+
+    ui-defaults-reference: 
+      table-owner: Parsing Schema
+
+    server-side-condition: 
+      type: Rows returned
+      sql-query: |
+        select 1 from "ROLES"
+        where "NOMBRE_ROL" is not null
+        and "ID_ROL" = :P81_ID_ROL
+
+    security: 
+      escape-special-characters: true
+
+- # ====== Region: Region Display Selector =====================
+  id: 14257429903094849
+  identification: 
+    name: Region Display Selector
+    type: Region Display Selector
+
+  layout: 
+    sequence: 20
+    parent-region: No Parent
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Blank with Attributes
+    template-options: 
+    - '#DEFAULT#'
+    - margin-bottom-md
+    css-classes: 
+    - js-detail-rds
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: true
+    exclude-title-from-translation: false
+
+  server-side-condition: 
+    type: Item is NOT NULL
+    item: P81_ID_ROL
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    settings: 
+      mode: View Single Region
+      display-region-icons: false
+      include-'show-all': true
+      remember-selection: N
+
+- # ====== Region: Roles Privilegios ===========================
+  id: 14257869509094849
+  identification: 
+    name: Roles Privilegios
+    type: Classic Report
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: ROLES_PRIVILEGIOS
+    include-rowid-column: true
+    where-clause: 'ID_ROL = :P81_ID_ROL'
+
+  order-by: 
+    type: None
+
+  layout: 
+    sequence: 30
+    parent-region: No Parent
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Standard
+    template-options: 
+    - '#DEFAULT#'
+    - t-Region--noPadding
+    - t-Region--scrollBody
+    css-classes: 
+    - js-detail-region
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: true
+    exclude-title-from-translation: false
+
+  server-side-condition: 
+    type: Item is NOT NULL
+    item: P81_ID_ROL
+
+  server-cache: 
+    caching: Disabled
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    layout: 
+      number-of-rows-type: Static Value
+      number-of-rows: 100
+
+    appearance: 
+      template-type: Theme
+      template: Standard
+      template-options: 
+      - t-Report--stretch
+      - '#DEFAULT#'
+      - t-Report--altRowsDefault
+      - t-Report--rowHighlight
+      - t-Report--inline
+
+    pagination: 
+      type: Row Ranges X to Y (with next and previous links)
+      display-position: Bottom - Right
+      partial-page-refresh: true
+
+    performance: 
+      lazy-loading: false
+      maximum-rows-to-process: 5000
+
+    messages: 
+      when-no-data-found: No data found.
+
+    break-formatting: 
+      break-columns: No Break
+
+    advanced: 
+      strip-html: true
+      sort-nulls: Last
+
+    heading: 
+      type: Custom Headings
+
+    download: 
+      csv-export-enabled: false
+
+    printing: 
+      enabled: false
+
+  columns: 
+  - # ====== Column: ROWID =======================================
+    id: 9718006281137628
+    identification: 
+      column-name: ROWID
+      type: Hidden
+
+    layout: 
+      sequence: 13
+
+    ui-defaults-reference: 
+      table-owner: Parsing Schema
+
+    security: 
+      escape-special-characters: true
+
+  - # ====== Column: ID_ROL ======================================
+    id: 14258913843094954
+    identification: 
+      column-name: ID_ROL
+      type: Hidden
+
+    layout: 
+      sequence: 2
+
+    ui-defaults-reference: 
+      table-owner: Parsing Schema
+
+    security: 
+      escape-special-characters: true
+
+  - # ====== Column: ID_PRIV =====================================
+    id: 14259395680094954
+    identification: 
+      column-name: ID_PRIV
+      type: Plain Text (based on List of Values)
+
+    heading: 
+      heading: Privilegios Asignados
+      alignment: start
+
+    layout: 
+      sequence: 3
+      column-alignment: start
+
+    accessibility: 
+      value-identifies-row: false
+
+    list-of-values: 
+      type: Shared Component
+      list-of-values: PRIVILEGIOS # 14274155546125607
+
+    sorting: 
+      sortable: false
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    advanced: 
+      compute-sum: false
+
+    ui-defaults-reference: 
+      table-owner: Parsing Schema
+
+    security: 
+      escape-special-characters: true
+
+- # ====== Region: No Record Selected ==========================
+  id: 14270438302094973
+  identification: 
+    name: No Record Selected
+    type: Static Content
+
+  source: 
+    html-code: No Record Selected
+
+  layout: 
+    sequence: 70
+    parent-region: No Parent
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Blank with Attributes
+    template-options: 
+    - '#DEFAULT#'
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  server-side-condition: 
+    type: Item is NULL
+    item: P81_ID_ROL
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    settings: 
+      output-as: HTML
+      expand-shortcuts: false
+
+page-items: 
+- # ====== Page Item: P81_SEARCH ===============================
+  id: 14248198127094635
+  identification: 
+    name: P81_SEARCH
+    type: Text Field
+
+  label: 
+    label: Search
+    alignment: Right
+
+  settings: 
+    subtype: Text
+    trim-spaces: Leading and Trailing
+    text-case: NO CHANGE
+    submit-when-enter-pressed: false
+    disabled: false
+
+  layout: 
+    sequence: 10
+    region: Search # 14247651726094634
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Hidden
+    template-options: 
+    - '#DEFAULT#'
+    - t-Form-fieldContainer--large
+    - t-Form-fieldContainer--postTextBlock
+    icon: fa-search
+    width: 30
+    value-placeholder: Search...
+
+  validation: 
+    value-required: false
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  session-state: 
+    storage: Per Session (Persistent)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P81_ID_ROL ===============================
+  id: 14257134969094849
+  identification: 
+    name: P81_ID_ROL
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 40
+    region: Roles # 14253125526094846
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Session (Persistent)
+
+  security: 
+    session-state-protection: Checksum Required - Session Level
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+buttons: 
+- # ====== Button: RESET =======================================
+  id: 14246937338094634
+  identification: 
+    button-name: RESET
+    label: Reset
+
+  layout: 
+    sequence: 10
+    region: Breadcrumb # 14246135692094633
+    slot: NEXT
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text with Icon
+    hot: false
+    template-options: 
+    - '#DEFAULT#'
+    - t-Button--noUI
+    - t-Button--iconLeft
+    - t-Button--gapRight
+    icon: fa-undo-alt
+
+  behavior: 
+    action: Redirect to Page in this Application
+    target: 
+      url: 'f?p=&APP_ID.:81:&APP_SESSION.:RESET:&DEBUG.:RP,81::'
+      page: 81 # Roles - Privilegios
+      request: RESET
+      clear-cache: RP,81
+
+    warn-on-unsaved-changes: Do Not Check
+
+- # ====== Button: POP_ROLES_PRIVILEGIOS =======================
+  id: 14261336991094955
+  identification: 
+    button-name: POP_ROLES_PRIVILEGIOS
+    label: Add Roles Privilegios
+
+  layout: 
+    sequence: 10
+    region: Roles Privilegios # 14257869509094849
+    slot: EDIT
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Icon
+    hot: false
+    template-options: 
+    - '#DEFAULT#'
+    - t-Button--noUI
+    icon: fa-plus
+
+  behavior: 
+    action: Redirect to Page in this Application
+    target: 
+      url: 'f?p=&APP_ID.:83:&APP_SESSION.::&DEBUG.:RP,83:P83_ID_ROL:&P81_ID_ROL.'
+      page: 83 # Roles Privilegios
+      clear-cache: RP,83
+      values: 
+        p83_id_rol: '&P81_ID_ROL.'
+
+    warn-on-unsaved-changes: Do Not Check
+
+dynamic-actions: 
+- # ====== Dynamic Action: Dialog Closed =======================
+  id: 14257985770094849
+  identification: 
+    name: Dialog Closed
+
+  execution: 
+    sequence: 40
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Dialog Closed
+    selection-type: Region
+    region: Roles Privilegios # 14257869509094849
+
+  actions: 
+  - # ====== Action: Refresh =====================================
+    id: 14262047184094955
+    identification: 
+      action: Refresh
+
+    settings: 
+      maintain-pagination: false
+
+    affected-elements: 
+      selection-type: Region
+      region: Roles Privilegios # 14257869509094849
+
+    execution: 
+      sequence: 10
+      event: Dialog Closed # 14257985770094849
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+  - # ====== Action: Execute JavaScript Code =====================
+    id: 14262583962094955
+    identification: 
+      action: Execute JavaScript Code
+
+    settings: 
+      code: apex.message.showPageSuccess('Roles Privilegios row(s) updated.');
+
+    execution: 
+      sequence: 20
+      event: Dialog Closed # 14257985770094849
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+- # ====== Dynamic Action: Dialog Closed =======================
+  id: 14271263474094974
+  identification: 
+    name: Dialog Closed
+
+  execution: 
+    sequence: 10
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Dialog Closed
+    selection-type: Region
+    region: Roles # 14253125526094846
+
+  actions: 
+  - # ====== Action: Refresh =====================================
+    id: 14271850698094974
+    identification: 
+      action: Refresh
+
+    settings: 
+      maintain-pagination: false
+
+    affected-elements: 
+      selection-type: Region
+      region: Roles # 14253125526094846
+
+    execution: 
+      sequence: 20
+      event: Dialog Closed # 14271263474094974
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+  - # ====== Action: Execute JavaScript Code =====================
+    id: 14272380578094974
+    identification: 
+      action: Execute JavaScript Code
+
+    settings: 
+      code: apex.message.showPageSuccess('Roles row(s) updated.');
+
+    execution: 
+      sequence: 30
+      event: Dialog Closed # 14271263474094974
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+- # ====== Dynamic Action: Perform Search ======================
+  id: 14271395362094974
+  identification: 
+    name: Perform Search
+
+  execution: 
+    sequence: 150
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Key Press
+    selection-type: Item(s)
+    item(s): 
+    - P81_SEARCH
+
+  client-side-condition: 
+    type: JavaScript expression
+    javascript-expression: this.browserEvent.which === apex.jQuery.ui.keyCode.ENTER
+
+  actions: 
+  - # ====== Action: Refresh =====================================
+    id: 14273122818094974
+    identification: 
+      action: Refresh
+
+    settings: 
+      maintain-pagination: false
+
+    affected-elements: 
+      selection-type: Region
+      region: Master Records # 14248470386094635
+
+    execution: 
+      sequence: 10
+      event: Perform Search # 14271395362094974
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+  - # ====== Action: Cancel Event ================================
+    id: 14273682230094974
+    identification: 
+      action: Cancel Event
+
+    execution: 
+      sequence: 30
+      event: Perform Search # 14271395362094974
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+

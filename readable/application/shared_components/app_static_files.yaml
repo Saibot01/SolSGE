@@ -1,0 +1,82 @@
+---
+- # ====== Static Application File: icons/app-icon-32.png ======
+  id: 7996258175830910
+  identification: 
+    file-name: icons/app-icon-32.png
+
+  attributes: 
+    mime-type: image/png
+    file-character-set: Unicode UTF-8
+
+- # ====== Static Application File: icons/app-icon-144-rounded.p
+  id: 7996510893830908
+  identification: 
+    file-name: icons/app-icon-144-rounded.png
+
+  attributes: 
+    mime-type: image/png
+    file-character-set: Unicode UTF-8
+
+- # ====== Static Application File: icons/app-icon-192.png =====
+  id: 7996889121830908
+  identification: 
+    file-name: icons/app-icon-192.png
+
+  attributes: 
+    mime-type: image/png
+    file-character-set: Unicode UTF-8
+
+- # ====== Static Application File: icons/app-icon-256-rounded.p
+  id: 7997190377830907
+  identification: 
+    file-name: icons/app-icon-256-rounded.png
+
+  attributes: 
+    mime-type: image/png
+    file-character-set: Unicode UTF-8
+
+- # ====== Static Application File: icons/app-icon-512.png =====
+  id: 7997411344830902
+  identification: 
+    file-name: icons/app-icon-512.png
+
+  attributes: 
+    mime-type: image/png
+    file-character-set: Unicode UTF-8
+
+- # ====== Static Application File: ventas.png =================
+  id: 13187443643411102
+  identification: 
+    file-name: ventas.png
+
+  attributes: 
+    mime-type: image/png
+    file-character-set: Unicode UTF-8
+
+- # ====== Static Application File: beneficio-financiero (1).png
+  id: 13188312296417174
+  identification: 
+    file-name: beneficio-financiero (1).png
+
+  attributes: 
+    mime-type: image/png
+    file-character-set: Unicode UTF-8
+
+- # ====== Static Application File: cliente.png ================
+  id: 13189551576431584
+  identification: 
+    file-name: cliente.png
+
+  attributes: 
+    mime-type: image/png
+    file-character-set: Unicode UTF-8
+
+- # ====== Static Application File: tienda-online.png ==========
+  id: 13190203450448648
+  identification: 
+    file-name: tienda-online.png
+
+  attributes: 
+    mime-type: image/png
+    file-character-set: Unicode UTF-8
+

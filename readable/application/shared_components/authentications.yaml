@@ -1,0 +1,43 @@
+---
+- # ====== Authentication: Oracle APEX Accounts ================
+  id: 7705602882831250
+  identification: 
+    name: Oracle APEX Accounts
+
+  subscription: 
+    version-number: 1
+
+  settings: 
+    type: Oracle APEX Accounts
+
+  session-not-valid: 
+    redirect-to: Login Page
+
+  login-processing: 
+    switch-in-session: false
+
+  real-application-security: 
+    ras-mode: Disabled
+
+- # ====== Authentication: Custom_login ========================
+  id: 10305647656027707
+  identification: 
+    name: Custom_login
+
+  subscription: 
+    version-number: 39015609427875
+
+  settings: 
+    type: Custom
+    authentication-function-name: AUT_PKG.AUTENTICACION_LOGIN
+    enable-legacy-authentication-attributes: false
+
+  session-not-valid: 
+    redirect-to: Login Page
+
+  login-processing: 
+    switch-in-session: false
+
+  real-application-security: 
+    ras-mode: Disabled
+

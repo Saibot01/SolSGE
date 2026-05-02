@@ -1,0 +1,2146 @@
+---
+# ====== Page: Orden de Venta ================================
+id: 54
+identification: 
+  name: Orden de Venta
+  alias: ORDEN-DE-VENTA1
+  title: Orden de Venta
+
+appearance: 
+  page-mode: Normal
+  page-template: Theme Default
+  template-options: 
+  - '#DEFAULT#'
+
+navigation-menu: 
+  override-user-interface-level: false
+
+navigation: 
+  cursor-focus: Do not focus cursor
+  warn-on-unsaved-changes: true
+
+javascript: 
+  function-and-global-variable-declaration: |
+    function recalculaImporte() {
+        var model = apex.region("Detalle_Ventas").widget().interactiveGrid("getCurrentView").model;
+        var col_gl_amount = model.getFieldKey("TOTAL");
+        var n_total = 0;
+    
+        model.forEach(function(igrow) {
+            var raw_value = igrow[col_gl_amount];
+    
+            if (raw_value !== null && raw_value !== undefined) {
+                // Elimina símbolo de moneda y formato
+                var clean_value = raw_value
+                    .toString()
+                    .replace(/[^0-9,.-]/g, '')
+                    .replace(/\./g, '')
+                    .replace(',', '.');
+    
+                var n_dist_amount = parseFloat(clean_value);
+    
+                if (!isNaN(n_dist_amount)) {
+                    n_total += n_dist_amount;
+                    console.log("N_DIST_AMOUNT: " + n_dist_amount);
+                }
+            }
+        });
+    
+        console.log("n_total: " + n_total);
+        apex.item('P54_TOTAL').setValue(Math.round(n_total));
+    
+        //apex.item('P54_TOTAL').setValue(n_total.toFixed(2));
+    }
+    
+    
+    
+    /*function recalculaImporte(){
+     
+    var model = apex.region("Detalle_Ventas").widget().interactiveGrid("getCurrentView").model;
+    var n_dist_amount, n_total;
+    //var iva = 0;
+    var col_gl_amount = model.getFieldKey("PRECIO_UNITARIO");
+    console.log("PRECIO_UNITARIO: "+col_gl_amount)
+    model.forEach(function(igrow){   
+            n_dist_amount = parseInt(igrow[col_gl_amount]);
+                if (!isNaN(n_dist_amount)) {
+                             n_total += n_dist_amount;
+                             console.log("N_DIST_AMMOUNT: "+n_dist_amount);
+    
+                }
+      });
+         
+    console.log("n_total: "+n_total);
+    apex.item('P54_TOTAL').setValue(n_total);
+    
+    }*/
+
+security: 
+  authentication: Page Requires Authentication
+  deep-linking: Application Default
+  page-access-protection: Arguments Must Have Checksum
+  form-auto-complete: Off
+  browser-cache: Application Default
+
+session-management: 
+  rejoin-sessions: Application Default
+
+advanced: 
+  enable-duplicate-page-submissions: Yes - Enable page to be re-posted
+  reload-on-submit: Only for Success
+
+server-cache: 
+  caching: Disabled
+
+regions: 
+- # ====== Region: Cabecera ====================================
+  id: 11735397033125021
+  identification: 
+    name: Cabecera
+    type: Static Content
+
+  layout: 
+    sequence: 40
+    parent-region: Orden de Venta # 11880079139947272
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Standard
+    template-options: 
+    - '#DEFAULT#'
+    - t-Region--removeHeader js-removeLandmark
+    - t-Region--scrollBody
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    settings: 
+      output-as: HTML
+      expand-shortcuts: false
+
+- # ====== Region: Pie =========================================
+  id: 11735508211125023
+  identification: 
+    name: Pie
+    type: Static Content
+
+  layout: 
+    sequence: 70
+    parent-region: Orden de Venta # 11880079139947272
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Standard
+    template-options: 
+    - '#DEFAULT#'
+    - t-Region--removeHeader js-removeLandmark
+    - t-Region--scrollBody
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    settings: 
+      output-as: HTML
+      expand-shortcuts: false
+
+- # ====== Region: Productos ===================================
+  id: 11738175220125049
+  identification: 
+    name: Productos
+    type: Static Content
+
+  layout: 
+    sequence: 60
+    parent-region: Orden de Venta # 11880079139947272
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Standard
+    template-options: 
+    - '#DEFAULT#'
+    - t-Region--scrollBody
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  configuration: 
+    build-option: Commented Out # 7705349298831252
+
+  attributes: 
+    settings: 
+      output-as: HTML
+      expand-shortcuts: false
+
+- # ====== Region: Orden de Venta ==============================
+  id: 11880079139947272
+  identification: 
+    name: Orden de Venta
+    type: Form
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: ORDENES_VENTA
+    include-rowid-column: false
+
+  layout: 
+    sequence: 10
+    parent-region: No Parent
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Blank with Attributes
+    template-options: 
+    - '#DEFAULT#'
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    edit: 
+      enabled: true
+      allowed-operations: 
+      - Add Row
+      - Update Row
+      - Delete Row
+      lost-update-type: Row Values
+
+- # ====== Region: Buttons =====================================
+  id: 11884556427947278
+  identification: 
+    name: Buttons
+    type: Static Content
+
+  layout: 
+    sequence: 20
+    parent-region: No Parent
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Buttons Container
+    template-options: 
+    - '#DEFAULT#'
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    settings: 
+      output-as: Text (escape special characters)
+      show-line-breaks: true
+
+- # ====== Region: Detalle Ventas ==============================
+  id: 11937687366860014
+  identification: 
+    name: Detalle Ventas
+    type: Interactive Grid
+
+  source: 
+    location: Local Database
+    type: SQL Query
+    sql-query: |
+      select DE.ID_DETALLE,
+             DE.ID_ORDEN,
+             DE.ID_PRODUCTO,
+             DE.CANTIDAD,
+             DE.PRECIO_UNITARIO,
+             DE.TOTAL
+        from DETALLE_ORDEN DE, PRECIO_POR_CATEGORIA CA
+       where DE.ID_PRODUCTO = CA.ID_PRODUCTO
+       AND ID_ORDEN = :P54_ID_ORDEN
+    page-items-to-submit: 
+    - P54_ID_ORDEN
+
+  layout: 
+    sequence: 50
+    parent-region: Orden de Venta # 11880079139947272
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Interactive Report
+    template-options: 
+    - '#DEFAULT#'
+    - t-IRR-region--hideHeader js-addHiddenHeadingRoleDesc
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    static-id: Detalle_Ventas
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    id: 11937810916860016
+    edit: 
+      enabled: true
+      allowed-operations: 
+      - Add Row
+      - Update Row
+      - Delete Row
+      lost-update-type: Row Values
+      add-row-if-empty: true
+
+    performance: 
+      lazy-loading: false
+
+    appearance: 
+      select-first-row: true
+      fixed-row-height: true
+
+    pagination: 
+      type: Scroll
+      show-total-count: true
+
+    toolbar: 
+      show: true
+      controls: 
+      - Search Column Selection
+      - Search Field
+      - Actions Menu
+      - Reset Button
+      - Save Button
+
+    enable-users-to: 
+      save-public-report: false
+      flashback: true
+      define-chart-view: true
+      download: true
+
+    download: 
+      formats: 
+      - CSV
+      - HTML
+      - Excel
+      - PDF
+      send-as-email: true
+
+    heading: 
+      fixed-to: Page
+
+    icon-view: 
+      show: false
+
+    detail-view: 
+      show: false
+
+    advanced: 
+      initialization-javascript-function: |
+        function(config){
+            config.defaultGridViewOptions = {
+                footer: false
+            }
+            return config;
+        }
+
+    saved-reports: 
+    - # ====== Saved Report: Primary Report ========================
+      id: 11960145040194558
+      identification: 
+        name: Primary Report
+        alias: 119602
+
+  columns: 
+  - # ====== Column: ID_DETALLE ==================================
+    id: 11937991701860017
+    identification: 
+      column-name: ID_DETALLE
+      type: Hidden
+
+    settings: 
+      value-protected: true
+
+    layout: 
+      sequence: 30
+
+    accessibility: 
+      value-identifies-row: false
+
+    source: 
+      type: Database Column
+      database-column: ID_DETALLE
+      data-type: NUMBER
+      query-only: true
+      primary-key: true
+
+    session-state: 
+      data-type: VARCHAR2
+
+    export-/-printing: 
+      include-in-export-/-print: false
+
+    enable-users-to: 
+      sort: false
+
+  - # ====== Column: ID_ORDEN ====================================
+    id: 11938055398860018
+    identification: 
+      column-name: ID_ORDEN
+      type: Hidden
+
+    settings: 
+      value-protected: true
+
+    layout: 
+      sequence: 40
+
+    accessibility: 
+      value-identifies-row: false
+
+    source: 
+      type: Database Column
+      database-column: ID_ORDEN
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      type: Item
+      item: P54_ID_ORDEN
+      duplicate-copies-existing-value: true
+
+    session-state: 
+      data-type: VARCHAR2
+
+    export-/-printing: 
+      include-in-export-/-print: false
+
+    enable-users-to: 
+      sort: false
+
+    server-side-condition: 
+      type: Item is NOT NULL
+      item: P54_ID_ORDEN
+
+  - # ====== Column: ID_PRODUCTO =================================
+    id: 11938135673860019
+    identification: 
+      column-name: ID_PRODUCTO
+      type: Popup LOV
+
+    heading: 
+      heading: Producto
+      alignment: center
+
+    settings: 
+      display-as: Inline Popup
+      initial-fetch: Automatic
+      manual-entry: false
+      fetch-on-search: false
+
+    search: 
+      match-type: Contains
+      case-sensitive: false
+      minimum-characters: 0
+
+    multiple-values: 
+      type: No
+
+    layout: 
+      sequence: 50
+      column-alignment: center
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: true
+
+    list-of-values: 
+      type: SQL Query
+      sql-query: |
+        select pro.nombre, pro.id_producto 
+        from productos pro, precio_por_categoria  cat
+            where pro.id_producto = cat.id_producto
+            and cat.CATEGORIA_CLIENTE = :P54_TIP_CLIENTE;
+      display-extra-values: true
+      display-null-value: true
+
+    source: 
+      type: Database Column
+      database-column: ID_PRODUCTO
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      performance-impacting-operators: 
+      - Contains
+      - Starts With
+      - Case Insensitive
+      - Regular Expression
+      text-case: Mixed
+      lov-type: Distinct Column
+      exact-match: true
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: CANTIDAD ====================================
+    id: 11938212017860020
+    identification: 
+      column-name: CANTIDAD
+      type: Number Field
+
+    heading: 
+      heading: Cantidad
+      alignment: end
+
+    settings: 
+      number-alignment: Start
+      virtual-keyboard: Decimal
+
+    layout: 
+      sequence: 60
+      column-alignment: end
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: true
+
+    source: 
+      type: Database Column
+      database-column: CANTIDAD
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: PRECIO_UNITARIO =============================
+    id: 11938307526860021
+    identification: 
+      column-name: PRECIO_UNITARIO
+      type: Number Field
+
+    heading: 
+      heading: Precio Unitario
+      alignment: end
+
+    settings: 
+      number-alignment: Start
+      virtual-keyboard: Decimal
+
+    layout: 
+      sequence: 70
+      column-alignment: end
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: false
+
+    source: 
+      type: Database Column
+      database-column: PRECIO_UNITARIO
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: APEX$ROW_ACTION =============================
+    id: 11938461766860022
+    identification: 
+      column-name: APEX$ROW_ACTION
+      type: Actions Menu
+
+    layout: 
+      sequence: 20
+
+  - # ====== Column: APEX$ROW_SELECTOR ===========================
+    id: 11938597088860023
+    identification: 
+      column-name: APEX$ROW_SELECTOR
+      type: Row Selector
+
+    settings: 
+      enable-multi-select: true
+      show-select-all: true
+      hide-control: false
+
+    layout: 
+      sequence: 10
+
+  - # ====== Column: TOTAL =======================================
+    id: 12005416807524723
+    identification: 
+      column-name: TOTAL
+      type: Number Field
+
+    heading: 
+      heading: Total
+      alignment: end
+
+    settings: 
+      number-alignment: Start
+      virtual-keyboard: Decimal
+
+    layout: 
+      sequence: 80
+      column-alignment: end
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: false
+
+    source: 
+      type: Database Column
+      database-column: TOTAL
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  printing: 
+    page: 
+      size: A4
+      orientation: Landscape
+      units: Millimeters
+      width: 297
+      height: 210
+      border-width: 0.5
+      border-color: '#666666'
+
+    page-header: 
+      font: Helvetica
+      font-weight: Normal
+      font-size: 12
+      font-color: '#000000'
+      alignment: center
+
+    column-headings: 
+      font: Helvetica
+      font-weight: Bold
+      font-size: 10
+      font-color: '#000000'
+      background-color: '#EEEEEE'
+
+    columns: 
+      font: Helvetica
+      font-weight: Normal
+      font-size: 10
+      font-color: '#000000'
+      background-color: '#FFFFFF'
+
+    page-footer: 
+      font: Helvetica
+      font-weight: Normal
+      font-size: 12
+      font-color: '#000000'
+      alignment: center
+
+page-items: 
+- # ====== Page Item: P54_PRODUCTO =============================
+  id: 11738215192125050
+  identification: 
+    name: P54_PRODUCTO
+    type: Popup LOV
+
+  label: 
+    label: Producto
+    alignment: Left
+
+  settings: 
+    display-as: Inline Popup
+    initial-fetch: Automatic
+    manual-entry: false
+    fetch-on-search: false
+
+  search: 
+    match-type: Contains
+    case-sensitive: false
+    minimum-characters: 0
+
+  multiple-values: 
+    type: No
+
+  layout: 
+    sequence: 10
+    region: Productos # 11738175220125049
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: 6
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 30
+
+  validation: 
+    value-required: false
+
+  list-of-values: 
+    type: SQL Query
+    sql-query: |
+      select pro.nombre, pro.id_producto from productos pro, precio_por_categoria cat
+          where pro.id_producto = cat.id_producto
+          and CATEGORIA_CLIENTE = :P54_TIP_CLIENTE;
+    display-extra-values: true
+    display-null-value: true
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  session-state: 
+    storage: Per Session (Persistent)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P54_ID_ORDEN =============================
+  id: 11880467286947273
+  identification: 
+    name: P54_ID_ORDEN
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 10
+    region: Orden de Venta # 11880079139947272
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Orden de Venta # 11880079139947272
+    column: ID_ORDEN
+    data-type: NUMBER
+    query-only: true
+    primary-key: true
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Request (Memory Only)
+
+  security: 
+    session-state-protection: Checksum Required - Session Level
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P54_ID_PERSONA ===========================
+  id: 11880806631947274
+  identification: 
+    name: P54_ID_PERSONA
+    type: Popup LOV
+
+  label: 
+    label: Cliente
+    alignment: Left
+
+  settings: 
+    display-as: Inline Popup
+    initial-fetch: Automatic
+    manual-entry: false
+    fetch-on-search: false
+
+  search: 
+    match-type: Contains
+    case-sensitive: false
+    minimum-characters: 0
+
+  multiple-values: 
+    type: No
+
+  layout: 
+    sequence: 20
+    region: Cabecera # 11735397033125021
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: 4
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Required - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 30
+
+  validation: 
+    value-required: true
+
+  list-of-values: 
+    type: SQL Query
+    sql-query: |2
+          SELECT PE.PRIMER_NOMBRE ||' '||PE.SEGUNDO_NOMBRE||' '||PE.PRIMER_APELLIDO||' '||PE.SEGUNDO_APELLIDO|| ' - '||PE.NRO_DOCUMENTO AS CLIENTE,CL.ID_PERSONA FROM PERSONAS PE, CLIENTES CL
+          WHERE PE.ID_PERSONA = CL.ID_PERSONA
+    display-extra-values: true
+    display-null-value: true
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Orden de Venta # 11880079139947272
+    column: ID_PERSONA
+    data-type: NUMBER
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P54_FECHA_ORDEN ==========================
+  id: 11881270955947275
+  identification: 
+    name: P54_FECHA_ORDEN
+    type: Date Picker
+
+  label: 
+    label: Fecha
+    alignment: Left
+
+  settings: 
+    show-time: false
+    display-as: Popup
+    minimum-date: None
+    maximum-date: None
+    multiple-months: No
+    use-defaults: true
+
+  layout: 
+    sequence: 40
+    region: Cabecera # 11735397033125021
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: 4
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 30
+
+  validation: 
+    value-required: false
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Orden de Venta # 11880079139947272
+    column: FECHA_ORDEN
+    data-type: DATE
+    query-only: false
+    primary-key: false
+
+  default: 
+    type: SQL Query (return single value)
+    sql-query-(return-single-value): |
+      SELECT CURRENT_TIMESTAMP AT TIME ZONE 'America/Argentina/Buenos_Aires' AS FECHA_HORA_ARG
+      FROM dual;
+      
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P54_ESTADO ===============================
+  id: 11881613602947275
+  identification: 
+    name: P54_ESTADO
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 60
+    region: Cabecera # 11735397033125021
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Orden de Venta # 11880079139947272
+    column: ESTADO
+    data-type: VARCHAR2
+    query-only: false
+    primary-key: false
+
+  default: 
+    type: Static
+    static-value: Pendiente
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Request (Memory Only)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P54_TOTAL ================================
+  id: 11882046773947275
+  identification: 
+    name: P54_TOTAL
+    type: Number Field
+
+  label: 
+    label: Total
+    alignment: Left
+
+  settings: 
+    number-alignment: Start
+    virtual-keyboard: Decimal
+
+  layout: 
+    sequence: 50
+    region: Pie # 11735508211125023
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: 9
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    format-mask: 999G999G999G999G999G999G990
+    width: 30
+
+  validation: 
+    value-required: false
+
+  advanced: 
+    css-classes: 
+    - 'style="font-size:35px;text-align:right;font-weight:bold;"'
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Orden de Venta # 11880079139947272
+    column: TOTAL
+    data-type: NUMBER
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P54_OBSERVACION ==========================
+  id: 11882467038947275
+  identification: 
+    name: P54_OBSERVACION
+    type: Text Field
+
+  label: 
+    label: Observacion
+    alignment: Left
+
+  settings: 
+    subtype: Text
+    trim-spaces: Leading and Trailing
+    text-case: NO CHANGE
+    submit-when-enter-pressed: false
+    disabled: false
+
+  layout: 
+    sequence: 60
+    region: Pie # 11735508211125023
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 32
+
+  validation: 
+    value-required: false
+    maximum-length: 255
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Orden de Venta # 11880079139947272
+    column: OBSERVACION
+    data-type: VARCHAR2
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P54_CANTIDAD =============================
+  id: 11936378381860001
+  identification: 
+    name: P54_CANTIDAD
+    type: Text Field
+
+  label: 
+    label: Cantidad
+    alignment: Left
+
+  settings: 
+    subtype: Text
+    trim-spaces: Leading and Trailing
+    text-case: NO CHANGE
+    submit-when-enter-pressed: false
+    disabled: false
+
+  layout: 
+    sequence: 20
+    region: Productos # 11738175220125049
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: 2
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 30
+
+  validation: 
+    value-required: false
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  session-state: 
+    storage: Per Session (Persistent)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P54_PRE_UNITARIO =========================
+  id: 11936413825860002
+  identification: 
+    name: P54_PRE_UNITARIO
+    type: Text Field
+
+  label: 
+    label: Pre Unitario
+    alignment: Left
+
+  settings: 
+    subtype: Text
+    trim-spaces: Leading and Trailing
+    text-case: NO CHANGE
+    submit-when-enter-pressed: false
+    disabled: false
+
+  layout: 
+    sequence: 30
+    region: Productos # 11738175220125049
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: 4
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 30
+
+  validation: 
+    value-required: false
+
+  advanced: 
+    custom-attributes: 
+    - disabled="disabled"
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  session-state: 
+    storage: Per Session (Persistent)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P54_TIP_CLIENTE ==========================
+  id: 11940497434860042
+  identification: 
+    name: P54_TIP_CLIENTE
+    type: Text Field
+
+  label: 
+    label: Tipo Cliente
+    alignment: Left
+
+  settings: 
+    subtype: Text
+    trim-spaces: Leading and Trailing
+    text-case: NO CHANGE
+    submit-when-enter-pressed: false
+    disabled: false
+
+  layout: 
+    sequence: 20
+    region: Orden de Venta # 11880079139947272
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 30
+
+  validation: 
+    value-required: false
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  session-state: 
+    storage: Per Session (Persistent)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P54_ID_OFICINA ===========================
+  id: 12005610111524725
+  identification: 
+    name: P54_ID_OFICINA
+    type: Select List
+
+  label: 
+    label: Oficina
+    alignment: Left
+
+  settings: 
+    page-action-on-selection: None
+
+  multiple-values: 
+    type: No
+
+  layout: 
+    sequence: 50
+    region: Cabecera # 11735397033125021
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    height: 1
+
+  validation: 
+    value-required: true
+
+  list-of-values: 
+    type: SQL Query
+    sql-query: select descripcion, codigo_oficina from OFICINAS
+    display-extra-values: false
+    display-null-value: false
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Orden de Venta # 11880079139947272
+    column: ID_OFICINA
+    data-type: NUMBER
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+buttons: 
+- # ====== Button: CANCEL ======================================
+  id: 11884940051947278
+  identification: 
+    button-name: CANCEL
+    label: Cancel
+
+  layout: 
+    sequence: 10
+    region: Buttons # 11884556427947278
+    slot: CLOSE
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text
+    hot: false
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Defined by Dynamic Action
+    execute-validations: true
+
+- # ====== Button: DELETE ======================================
+  id: 11886330571947279
+  identification: 
+    button-name: DELETE
+    label: Delete
+
+  layout: 
+    sequence: 20
+    region: Buttons # 11884556427947278
+    slot: DELETE
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text
+    hot: false
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Submit Page
+    execute-validations: false
+    show-processing: false
+    warn-on-unsaved-changes: Do Not Check
+    database-action: SQL DELETE action
+
+  confirmation: 
+    message: '&APP_TEXT$DELETE_MSG!RAW.'
+    style: Danger
+
+  server-side-condition: 
+    type: Item is NOT NULL
+    item: P54_ID_ORDEN
+
+- # ====== Button: SAVE ========================================
+  id: 11886756685947280
+  identification: 
+    button-name: SAVE
+    label: Actualizar
+
+  layout: 
+    sequence: 30
+    region: Buttons # 11884556427947278
+    slot: NEXT
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text
+    hot: true
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Submit Page
+    execute-validations: true
+    show-processing: false
+    warn-on-unsaved-changes: Do Not Check
+    database-action: SQL UPDATE action
+
+  server-side-condition: 
+    type: Item is NOT NULL
+    item: P54_ID_ORDEN
+
+- # ====== Button: CREATE ======================================
+  id: 11887183878947280
+  identification: 
+    button-name: CREATE
+    label: Crear
+
+  layout: 
+    sequence: 40
+    region: Buttons # 11884556427947278
+    slot: NEXT
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text
+    hot: true
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Submit Page
+    execute-validations: true
+    show-processing: false
+    warn-on-unsaved-changes: Do Not Check
+    database-action: SQL INSERT action
+
+  server-side-condition: 
+    type: Item is NULL
+    item: P54_ID_ORDEN
+
+- # ====== Button: Agregar =====================================
+  id: 11936775803860005
+  identification: 
+    button-name: Agregar
+    label: Agregar
+
+  layout: 
+    sequence: 40
+    region: Productos # 11738175220125049
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: 2
+    alignment: Left center
+
+  appearance: 
+    button-template: Text
+    hot: true
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Defined by Dynamic Action
+    execute-validations: true
+
+- # ====== Button: CLIENTE =====================================
+  id: 15984092643097116
+  identification: 
+    button-name: CLIENTE
+    label: + Cliente
+
+  layout: 
+    sequence: 30
+    region: Cabecera # 11735397033125021
+    slot: BODY
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    alignment: Left center
+
+  appearance: 
+    button-template: Text
+    hot: true
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Redirect to Page in this Application
+    target: 
+      url: 'f?p=&APP_ID.:91:&SESSION.::&DEBUG.:RP,54::'
+      page: 91 # Alta de Clientes
+      clear-cache: RP,54
+
+    warn-on-unsaved-changes: Do Not Check
+
+dynamic-actions: 
+- # ====== Dynamic Action: Tipo Cliente ========================
+  id: 11737530059125043
+  identification: 
+    name: Tipo Cliente
+
+  execution: 
+    sequence: 30
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Change
+    selection-type: Item(s)
+    item(s): 
+    - P54_ID_PERSONA
+
+  actions: 
+  - # ====== Action: Execute Server-side Code ====================
+    id: 11737699605125044
+    identification: 
+      action: Execute Server-side Code
+
+    settings: 
+      language: PE.PROPERTY.SOURCE_SNIPPET_LANG.LOV.PLSQL.D
+      pl/sql-code: |
+        SELECT CATEGORIA_CLIENTE 
+            INTO :P54_TIP_CLIENTE
+        FROM  CLIENTES CL
+            WHERE CL.ID_PERSONA = :P54_ID_PERSONA;
+      items-to-submit: 
+      - P54_ID_PERSONA
+      items-to-return: 
+      - P54_TIP_CLIENTE
+      suppress-change-event: false
+
+    execution: 
+      sequence: 10
+      event: Tipo Cliente # 11737530059125043
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+      stop-execution-on-error: true
+      wait-for-result: true
+
+  - # ====== Action: Refresh =====================================
+    id: 11938826428860026
+    identification: 
+      action: Refresh
+
+    settings: 
+      maintain-pagination: false
+
+    affected-elements: 
+      selection-type: Item(s)
+      item(s): 
+      - P54_TIP_CLIENTE
+
+    execution: 
+      sequence: 20
+      event: Tipo Cliente # 11737530059125043
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+- # ====== Dynamic Action: Cancel Dialog =======================
+  id: 11885015507947278
+  identification: 
+    name: Cancel Dialog
+
+  execution: 
+    sequence: 10
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Click
+    selection-type: Button
+    button: CANCEL # 11884940051947278
+
+  actions: 
+  - # ====== Action: Cancel Dialog ===============================
+    id: 11885847564947279
+    identification: 
+      action: Cancel Dialog
+
+    execution: 
+      sequence: 10
+      event: Cancel Dialog # 11885015507947278
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+- # ====== Dynamic Action: Carga de Productos ==================
+  id: 11936509317860003
+  identification: 
+    name: Carga de Productos
+
+  execution: 
+    sequence: 50
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Change
+    selection-type: Item(s)
+    item(s): 
+    - P54_PRODUCTO
+
+  actions: 
+  - # ====== Action: Execute Server-side Code ====================
+    id: 11936669903860004
+    identification: 
+      action: Execute Server-side Code
+
+    settings: 
+      language: PE.PROPERTY.SOURCE_SNIPPET_LANG.LOV.PLSQL.D
+      pl/sql-code: |
+        select 1, cat.precio 
+        into :P54_CANTIDAD,:P54_PRE_UNITARIO
+        from productos pro, precio_por_categoria cat
+            where pro.id_producto = cat.id_producto
+            --and CATEGORIA_CLIENTE = :P54_TIP_CLIENTE
+            and pro.id_producto = :P54_PRODUCTO;
+      items-to-submit: 
+      - P54_PRODUCTO
+      items-to-return: 
+      - P54_CANTIDAD
+      - P54_PRE_UNITARIO
+      suppress-change-event: false
+
+    execution: 
+      sequence: 10
+      event: Carga de Productos # 11936509317860003
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+      stop-execution-on-error: true
+      wait-for-result: true
+
+- # ====== Dynamic Action: Insertar Detalle ====================
+  id: 11936802538860006
+  identification: 
+    name: Insertar Detalle
+
+  execution: 
+    sequence: 60
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Click
+    selection-type: Button
+    button: Agregar # 11936775803860005
+
+  actions: 
+  - # ====== Action: Execute Server-side Code ====================
+    id: 11936948840860007
+    identification: 
+      action: Execute Server-side Code
+
+    settings: 
+      language: PE.PROPERTY.SOURCE_SNIPPET_LANG.LOV.PLSQL.D
+      pl/sql-code: |
+        insert into DETALLE_ORDEN(id_orden, id_producto, cantidad, precio_unitario)
+        values (:P54_ID_ORDEN,:P54_PRODUCTO,:P54_CANTIDAD,:P54_PRE_UNITARIO);
+      items-to-submit: 
+      - P54_ID_ORDEN
+      - P54_PRODUCTO
+      - P54_CANTIDAD
+      - P54_PRE_UNITARIO
+
+    execution: 
+      sequence: 10
+      event: Insertar Detalle # 11936802538860006
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+      stop-execution-on-error: true
+      wait-for-result: true
+
+  - # ====== Action: Execute Server-side Code ====================
+    id: 11937034738860008
+    identification: 
+      action: Execute Server-side Code
+
+    settings: 
+      language: PE.PROPERTY.SOURCE_SNIPPET_LANG.LOV.PLSQL.D
+      pl/sql-code: |
+        DECLARE
+            v_total number;
+            BEGIN
+            SELECT SUM(PRECIO_UNITARIO) 
+                INTO v_total
+                FROM DETALLE_ORDEN
+                WHERE ID_ORDEN = :P54_ID_ORDEN;
+        
+                :P54_TOTAL := v_total;
+            END;
+      items-to-submit: 
+      - P54_ID_ORDEN
+      items-to-return: 
+      - P54_TOTAL
+      suppress-change-event: false
+
+    execution: 
+      sequence: 20
+      event: Insertar Detalle # 11936802538860006
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+      stop-execution-on-error: true
+      wait-for-result: true
+
+  - # ====== Action: Refresh =====================================
+    id: 11937180583860009
+    identification: 
+      action: Refresh
+
+    settings: 
+      maintain-pagination: false
+
+    affected-elements: 
+      selection-type: Item(s)
+      item(s): 
+      - P54_TOTAL
+
+    execution: 
+      sequence: 30
+      event: Insertar Detalle # 11936802538860006
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+- # ====== Dynamic Action: Carga de Productoss =================
+  id: 11940500984860043
+  identification: 
+    name: Carga de Productoss
+
+  execution: 
+    sequence: 70
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Change
+    selection-type: Column(s)
+    interactive-grid: Detalle Ventas # 11937687366860014
+    column(s): 
+    - ID_PRODUCTO
+
+  actions: 
+  - # ====== Action: Execute Server-side Code ====================
+    id: 11940694518860044
+    identification: 
+      action: Execute Server-side Code
+
+    settings: 
+      language: PE.PROPERTY.SOURCE_SNIPPET_LANG.LOV.PLSQL.D
+      pl/sql-code: |
+        select 1, cat.precio,cat.precio  
+        into :CANTIDAD,:PRECIO_UNITARIO, :TOTAL
+        from productos pro, precio_por_categoria cat
+            where pro.id_producto = cat.id_producto
+            AND CAT.CATEGORIA_CLIENTE = :P54_TIP_CLIENTE
+            and pro.id_producto = :ID_PRODUCTO;
+      items-to-submit: 
+      - ID_PRODUCTO
+      items-to-return: 
+      - CANTIDAD
+      - PRECIO_UNITARIO
+      suppress-change-event: false
+
+    execution: 
+      sequence: 10
+      event: Carga de Productoss # 11940500984860043
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+      stop-execution-on-error: true
+      wait-for-result: true
+
+  - # ====== Action: Execute JavaScript Code =====================
+    id: 12939315090107105
+    identification: 
+      action: Execute JavaScript Code
+
+    settings: 
+      code: recalculaImporte();
+
+    execution: 
+      sequence: 20
+      event: Carga de Productoss # 11940500984860043
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+- # ====== Dynamic Action: New =================================
+  id: 11940930376860047
+  identification: 
+    name: New
+
+  execution: 
+    sequence: 80
+    event-scope: Static
+
+  when: 
+    event: Before Page Submit
+
+  actions: 
+  - # ====== Action: Execute JavaScript Code =====================
+    id: 11941046197860048
+    identification: 
+      action: Execute JavaScript Code
+
+    settings: 
+      code: $('#P54_TOTAL').removeAttr("disabled");
+
+    execution: 
+      sequence: 10
+      event: New # 11940930376860047
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+- # ====== Dynamic Action: Totalizador =========================
+  id: 11941183824860049
+  identification: 
+    name: Totalizador
+
+  execution: 
+    sequence: 90
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Change
+    selection-type: Column(s)
+    interactive-grid: Detalle Ventas # 11937687366860014
+    column(s): 
+    - CANTIDAD
+    - PRECIO_UNITARIO
+
+  actions: 
+  - # ====== Action: Execute JavaScript Code =====================
+    id: 11941267057860050
+    identification: 
+      action: Execute JavaScript Code
+
+    settings: 
+      code: recalculaImporte();
+
+    execution: 
+      sequence: 30
+      event: Totalizador # 11941183824860049
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+  - # ====== Action: Execute Server-side Code ====================
+    id: 12005584861524724
+    identification: 
+      action: Execute Server-side Code
+
+    settings: 
+      language: PE.PROPERTY.SOURCE_SNIPPET_LANG.LOV.PLSQL.D
+      pl/sql-code: ':TOTAL := :CANTIDAD * :PRECIO_UNITARIO;'
+      items-to-submit: 
+      - CANTIDAD
+      - PRECIO_UNITARIO
+      items-to-return: 
+      - TOTAL
+      suppress-change-event: false
+
+    execution: 
+      sequence: 40
+      event: Totalizador # 11941183824860049
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+      stop-execution-on-error: true
+      wait-for-result: true
+
+- # ====== Dynamic Action: Recalcular Total IG =================
+  id: 12003374641524702
+  identification: 
+    name: Recalcular Total IG
+
+  execution: 
+    sequence: 100
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Change
+    selection-type: Region
+    region: Detalle Ventas # 11937687366860014
+
+  actions: 
+  - # ====== Action: Execute JavaScript Code =====================
+    id: 12003449913524703
+    identification: 
+      action: Execute JavaScript Code
+
+    settings: 
+      code: recalculaImporte();
+
+    execution: 
+      sequence: 10
+      event: Recalcular Total IG # 12003374641524702
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+processes: 
+- # ====== Process: Indicaciones Inicial =======================
+  id: 11737888500125046
+  identification: 
+    name: Indicaciones Inicial
+    type: Execute Code
+    execution-chain: None
+
+  source: 
+    location: Local Database
+    language: PL/SQL
+    pl/sql-code: |
+      apex_application.g_print_success_message := 
+          '<div style="text-align: center;">
+              <span style="color: black;">
+                  <strong>Para ingresar productos, debe seleccionar un cliente.</strong>
+              </span>
+          </div>';
+      
+
+  execution: 
+    sequence: 20
+    point: Before Header
+    run-process: Once Per Page Visit (default)
+
+- # ====== Process: Initialize form Orden de Venta =============
+  id: 11887519818947280
+  identification: 
+    name: Initialize form Orden de Venta
+    type: Form - Initialization
+    execution-chain: None
+    form-region: Orden de Venta # 11880079139947272
+
+  execution: 
+    sequence: 10
+    point: Before Header
+    run-process: Once Per Page Visit (default)
+
+- # ====== Process: Process form Orden de Venta ================
+  id: 11887912180947281
+  identification: 
+    name: Process form Orden de Venta
+    type: Form - Automatic Row Processing (DML)
+    execution-chain: None
+    form-region: Orden de Venta # 11880079139947272
+
+  settings: 
+    target-type: Region Source
+    prevent-lost-updates: true
+    lock-row: Yes
+    return-primary-key(s)-after-insert: true
+
+  execution: 
+    sequence: 20
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+
+- # ====== Process: Close Dialog ===============================
+  id: 11888358961947281
+  identification: 
+    name: Close Dialog
+    type: Close Dialog
+    execution-chain: None
+
+  settings: 
+    show-success-messages: true
+
+  execution: 
+    sequence: 50
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+
+  server-side-condition: 
+    type: Request is contained in Value
+    value: CREATE,SAVE,DELETE
+
+- # ====== Process: Detalle Factura - Save Interactive Grid Data
+  id: 11938657497860024
+  identification: 
+    name: Detalle Factura - Save Interactive Grid Data
+    type: Interactive Grid - Automatic Row Processing (DML)
+    execution-chain: None
+    editable-region: Detalle Ventas # 11937687366860014
+
+  settings: 
+    target-type: PL/SQL Code
+    pl/sql-code-to-insert/update/delete: |
+      begin
+          case:APEX$ROW_STATUS
+              WHEN 'C' THEN
+                  INSERT INTO DETALLE_ORDEN(ID_ORDEN,ID_PRODUCTO,CANTIDAD,PRECIO_UNITARIO,TOTAL)
+                  VALUES (:P54_ID_ORDEN,:ID_PRODUCTO,:CANTIDAD,:PRECIO_UNITARIO,:TOTAL);
+              WHEN 'U' THEN
+                  UPDATE DETALLE_ORDEN
+                  SET ID_PRODUCTO = :ID_PRODUCTO,
+                      CANTIDAD = :CANTIDAD,
+                      PRECIO_UNITARIO = :PRECIO_UNITARIO,
+                      TOTAL = :TOTAL
+                  WHERE ID_ORDEN = :P54_ID_ORDEN;
+              WHEN 'D' THEN
+                  DELETE DETALLE_ORDEN WHERE ID_ORDEN = :ID_ORDEN;
+          END CASE;
+      END;
+    prevent-lost-updates: true
+    lock-row: Yes
+
+  execution: 
+    sequence: 30
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+
+  server-side-condition: 
+    execution-scope: For Created and Modified Rows
+
+- # ====== Process: Eliminar Lineas ============================
+  id: 11938736721860025
+  identification: 
+    name: Eliminar Lineas
+    type: Execute Code
+    execution-chain: None
+
+  source: 
+    location: Local Database
+    language: PL/SQL
+    pl/sql-code: 'delete from DETALLE_ORDEN where id_orden = :P54_ID_ORDEN;'
+
+  execution: 
+    sequence: 10
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+
+  server-side-condition: 
+    when-button-pressed: DELETE # 11886330571947279
+

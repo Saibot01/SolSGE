@@ -1,0 +1,1988 @@
+---
+- # ====== List: Navigation Menu ===============================
+  id: 7706470273831245
+  identification: 
+    name: Navigation Menu
+
+  subscription: 
+    version-number: 39028005008103
+
+  source: 
+    type: Static Values
+
+  entries: 
+  - # ====== Entry: Home =========================================
+    id: 8007399120830870
+    label: 
+      label: Home
+
+    icon: 
+      image/icon-css-classes: fa-home
+
+    layout: 
+      sequence: 10
+
+    is-current: 
+      type: Target Page
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:1:&APP_SESSION.::&DEBUG.:::'
+        page: 1 # Home
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+  - # ====== Entry: Administration ===============================
+    id: 8044595892830593
+    label: 
+      label: Administration
+
+    icon: 
+      image/icon-css-classes: fa-user-wrench
+
+    layout: 
+      sequence: 10000
+
+    is-current: 
+      type: Target Page
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:10000:&SESSION.::&DEBUG.::::'
+        page: 10000 # Administration
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+  - # ====== Entry: Personas =====================================
+    id: 8171737903383999
+    label: 
+      label: Personas
+
+    icon: 
+      image/icon-css-classes: fa-address-book-o
+
+    layout: 
+      sequence: 20
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 9
+      - 10
+      - 16
+      - 20
+
+    user-defined-attributes: 
+      translatable: false
+
+  - # ====== Entry: Clientes =====================================
+    id: 8255106441955864
+    label: 
+      label: Clientes
+
+    icon: 
+      image/icon-css-classes: fa-file-user
+
+    layout: 
+      sequence: 40
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 19
+      - 20
+
+    user-defined-attributes: 
+      translatable: false
+
+  - # ====== Entry: Oficinas =====================================
+    id: 8278125456904540
+    label: 
+      label: Oficinas
+
+    icon: 
+      image/icon-css-classes: fa-coffee
+
+    layout: 
+      sequence: 50
+      parent-entry: Clientes # 8255106441955864
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 21
+      - 22
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:21:&SESSION.::&DEBUG.::::'
+        page: 21 # Oficinas
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: |
+        security_pkg.can_access(:APP_ID, :APP_USER, 21, NULL)
+        
+
+  - # ====== Entry: Departamentos ================================
+    id: 8295001743887393
+    label: 
+      label: Departamentos
+
+    icon: 
+      image/icon-css-classes: fa-line-map
+
+    layout: 
+      sequence: 60
+      parent-entry: Clientes # 8255106441955864
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 23
+      - 24
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:23:&SESSION.::&DEBUG.::::'
+        page: 23 # Departamentos
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: |
+        security_pkg.can_access(:APP_ID, :APP_USER, 23, NULL)
+        
+
+  - # ====== Entry: Ciudades =====================================
+    id: 8310818540859518
+    label: 
+      label: Ciudades
+
+    icon: 
+      image/icon-css-classes: fa-location
+
+    layout: 
+      sequence: 70
+      parent-entry: Clientes # 8255106441955864
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 26
+      - 27
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:26:&SESSION.::&DEBUG.::::'
+        page: 26 # Ciudades
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: |
+        security_pkg.can_access(:APP_ID, :APP_USER, 26, NULL)
+        
+
+  - # ====== Entry: Ventas =======================================
+    id: 8339507211145106
+    label: 
+      label: Ventas
+
+    icon: 
+      image/icon-css-classes: fa-badge-dollar
+
+    layout: 
+      sequence: 80
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 30
+      - 31
+
+    user-defined-attributes: 
+      translatable: false
+
+  - # ====== Entry: Empleados Roles ==============================
+    id: 8617323186071067
+    label: 
+      label: Empleados Roles
+
+    icon: 
+      image/icon-css-classes: fa-layout-header-sidebar-left
+
+    layout: 
+      sequence: 140
+      parent-entry: Personas # 8171737903383999
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 11
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:11:&SESSION.::&DEBUG.::::'
+        page: 11 # Empleados Roles
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: |
+        security_pkg.can_access(:APP_ID, :APP_USER, 11, NULL)
+        
+
+  - # ====== Entry: Roles ========================================
+    id: 8649557169896206
+    label: 
+      label: Roles
+
+    icon: 
+      image/icon-css-classes: fa-table
+
+    layout: 
+      sequence: 150
+      parent-entry: Administration # 8044595892830593
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 13
+      - 14
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:13:&SESSION.::&DEBUG.::::'
+        page: 13 # Roles
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: |
+        security_pkg.can_access(:APP_ID, :APP_USER, 13, NULL)
+        
+
+  - # ====== Entry: Empleados ====================================
+    id: 9476411794028238
+    label: 
+      label: Empleados
+
+    icon: 
+      image/icon-css-classes: fa-table-pointer
+
+    layout: 
+      sequence: 90
+      parent-entry: Personas # 8171737903383999
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 2
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:2:&SESSION.::&DEBUG.::::'
+        page: 2 # Empleados
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Never
+
+  - # ====== Entry: PRUEBA C IG ==================================
+    id: 9641252169881528
+    label: 
+      label: PRUEBA C IG
+
+    icon: 
+      image/icon-css-classes: fa-table-pointer
+
+    layout: 
+      sequence: 190
+      parent-entry: Clientes # 8255106441955864
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 28
+      - 29
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:28:&SESSION.::&DEBUG.::::'
+        page: 28 # PRUEBA C IG
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: |
+        security_pkg.can_access(:APP_ID, :APP_USER, 28, NULL)
+        
+
+  - # ====== Entry: Prueba Direccion IG ==========================
+    id: 9751669625480181
+    label: 
+      label: Prueba Direccion IG
+
+    icon: 
+      image/icon-css-classes: fa-table-pointer
+
+    layout: 
+      sequence: 200
+      parent-entry: PRUEBA C IG # 9641252169881528
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 34
+      - 35
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:34:&APP_SESSION.::&DEBUG.:::'
+        page: 34 # Prueba Direccion IG
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+  - # ====== Entry: Proveedores ==================================
+    id: 9808235671312828
+    label: 
+      label: Proveedores
+
+    icon: 
+      image/icon-css-classes: fa-table
+
+    layout: 
+      sequence: 210
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 41
+      - 42
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:41:&SESSION.::&DEBUG.::::'
+        page: 41 # Proveedores IG
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: 'security_pkg.can_access(:APP_ID, :APP_USER, 41, NULL)'
+
+  - # ====== Entry: Contactos ====================================
+    id: 9828298994464714
+    label: 
+      label: Contactos
+
+    icon: 
+      image/icon-css-classes: fa-table-pointer
+
+    layout: 
+      sequence: 220
+      parent-entry: Proveedores # 9808235671312828
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 43
+      - 44
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:43:&SESSION.::&DEBUG.::::'
+        page: 43 # Contactos IG
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: |
+        security_pkg.can_access(:APP_ID, :APP_USER, 43, NULL)
+        
+
+  - # ====== Entry: Empleados IG =================================
+    id: 11527866378699159
+    label: 
+      label: Empleados IG
+
+    icon: 
+      image/icon-css-classes: fa-table
+
+    layout: 
+      sequence: 10010
+      parent-entry: Personas # 8171737903383999
+
+    is-current: 
+      type: Target Page
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:16:&SESSION.::&DEBUG.::::'
+        page: 16 # Empleados IG
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+  - # ====== Entry: Productos ====================================
+    id: 11719915312104968
+    label: 
+      label: Productos
+
+    icon: 
+      image/icon-css-classes: fa-cash-register
+
+    layout: 
+      sequence: 230
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 3
+
+    user-defined-attributes: 
+      translatable: false
+
+  - # ====== Entry: Productos ====================================
+    id: 11721586981122390
+    label: 
+      label: Productos
+
+    icon: 
+      image/icon-css-classes: fa-ai-sparkle-generate-audio
+
+    layout: 
+      sequence: 240
+      parent-entry: Productos # 11719915312104968
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 5
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:5:&SESSION.::&DEBUG.::::'
+        page: 5 # Productos
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: |
+        security_pkg.can_access(:APP_ID, :APP_USER, 5, NULL)
+        
+
+  - # ====== Entry: Precio por Categoria =========================
+    id: 11756066830189434
+    label: 
+      label: Precio por Categoria
+
+    icon: 
+      image/icon-css-classes: fa-badge-dollar
+
+    layout: 
+      sequence: 250
+      parent-entry: Productos # 11719915312104968
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 8
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:8:&SESSION.::&DEBUG.::::'
+        page: 8 # Precio por Categoria
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: |
+        security_pkg.can_access(:APP_ID, :APP_USER, 8, NULL)
+        
+
+  - # ====== Entry: Producto Proveedor ===========================
+    id: 11777800015215866
+    label: 
+      label: Producto Proveedor
+
+    icon: 
+      image/icon-css-classes: fa-file-archive-o
+
+    layout: 
+      sequence: 260
+      parent-entry: Productos # 11719915312104968
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 25
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:25:&SESSION.::&DEBUG.::::'
+        page: 25 # Producto Proveedor
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: |
+        security_pkg.can_access(:APP_ID, :APP_USER, 25, NULL)
+        
+
+  - # ====== Entry: Marcas =======================================
+    id: 11790548476241621
+    label: 
+      label: Marcas
+
+    icon: 
+      image/icon-css-classes: fa-gift
+
+    layout: 
+      sequence: 270
+      parent-entry: Productos # 11719915312104968
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 37
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:37:&SESSION.::&DEBUG.::::'
+        page: 37 # Marcas
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: |
+        security_pkg.can_access(:APP_ID, :APP_USER, 37, NULL)
+        
+
+  - # ====== Entry: Categoria ====================================
+    id: 11802612667263059
+    label: 
+      label: Categoria
+
+    icon: 
+      image/icon-css-classes: fa-ai-innovation-lightbulb
+
+    layout: 
+      sequence: 280
+      parent-entry: Productos # 11719915312104968
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 40
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:40:&SESSION.::&DEBUG.::::'
+        page: 40 # Categoria
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: |
+        security_pkg.can_access(:APP_ID, :APP_USER, 40, NULL)
+        
+
+  - # ====== Entry: Clientes =====================================
+    id: 11819013165293128
+    label: 
+      label: Clientes
+
+    icon: 
+      image/icon-css-classes: fa-head-ai-sparkle
+
+    layout: 
+      sequence: 290
+      parent-entry: Clientes # 8255106441955864
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 4
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:4:&APP_SESSION.::&DEBUG.:::'
+        page: 4 # Clientes
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+  - # ====== Entry: Orden de Venta ===============================
+    id: 11874938547937402
+    label: 
+      label: Orden de Venta
+
+    icon: 
+      image/icon-css-classes: fa-ai-sparkle-zoom-in
+
+    layout: 
+      sequence: 370
+      parent-entry: Ventas # 8339507211145106
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 52
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:52:&SESSION.::&DEBUG.::::'
+        page: 52 # Orden de Venta
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: 'security_pkg.can_access(:APP_ID, :APP_USER, 52, NULL)'
+
+  - # ====== Entry: Inventarios ==================================
+    id: 12108709573618278
+    label: 
+      label: Inventarios
+
+    icon: 
+      image/icon-css-classes: fa-stock-chart
+
+    layout: 
+      sequence: 320
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 12
+
+    user-defined-attributes: 
+      translatable: false
+
+  - # ====== Entry: Ajuste Manual de Stock =======================
+    id: 12111748507630559
+    label: 
+      label: Ajuste Manual de Stock
+
+    icon: 
+      image/icon-css-classes: fa-box-arrow-in-east
+
+    layout: 
+      sequence: 330
+      parent-entry: Inventarios # 12108709573618278
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 32
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:32:&APP_SESSION.::&DEBUG.:::'
+        page: 32 # Ajuste Manual de Stock
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+  - # ====== Entry: Stock de Productos ===========================
+    id: 12127454199676472
+    label: 
+      label: Stock de Productos
+
+    icon: 
+      image/icon-css-classes: fa-money-withdrawal
+
+    layout: 
+      sequence: 340
+      parent-entry: Inventarios # 12108709573618278
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 47
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:47:&APP_SESSION.::&DEBUG.:::'
+        page: 47 # Stock de Productos
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+  - # ====== Entry: Reporte Inventario ===========================
+    id: 12138835757706400
+    label: 
+      label: Reporte Inventario
+
+    icon: 
+      image/icon-css-classes: fa-print
+
+    layout: 
+      sequence: 350
+      parent-entry: Inventarios # 12108709573618278
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 55
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:55:&APP_SESSION.::&DEBUG.:::'
+        page: 55 # Reporte Inventario
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+  - # ====== Entry: Movimiento de Stock ==========================
+    id: 12141689573711543
+    label: 
+      label: Movimiento de Stock
+
+    icon: 
+      image/icon-css-classes: fa-cart-times
+
+    layout: 
+      sequence: 360
+      parent-entry: Reporte Inventario # 12138835757706400
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 56
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:56:&SESSION.::&DEBUG.::::'
+        page: 56 # Movimiento de Stock
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+  - # ====== Entry: Reporte Orden ================================
+    id: 12148205276723968
+    label: 
+      label: Reporte Orden
+
+    icon: 
+      image/icon-css-classes: fa-print
+
+    layout: 
+      sequence: 460
+      parent-entry: Ventas # 8339507211145106
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 58
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:58:&SESSION.::&DEBUG.::::'
+        page: 58 # Reporte Orden
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+  - # ====== Entry: Reservas de Productos ========================
+    id: 12149799653730083
+    label: 
+      label: Reservas de Productos
+
+    icon: 
+      image/icon-css-classes: fa-cart-magnifying-glass
+
+    layout: 
+      sequence: 380
+      parent-entry: Reporte Orden # 12148205276723968
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 59
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:59:&APP_SESSION.::&DEBUG.:::'
+        page: 59 # Reservas de Productos
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+  - # ====== Entry: Monedas ======================================
+    id: 12637951790948672
+    label: 
+      label: Monedas
+
+    icon: 
+      image/icon-css-classes: fa-money
+
+    layout: 
+      sequence: 390
+      parent-entry: Administration # 8044595892830593
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 17
+      - 18
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:17:&SESSION.::&DEBUG.::::'
+        page: 17 # Monedas
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: 'security_pkg.can_access(:APP_ID, :APP_USER, 17, NULL)'
+
+  - # ====== Entry: Planes Cuota =================================
+    id: 12668223827939210
+    label: 
+      label: Planes Cuota
+
+    icon: 
+      image/icon-css-classes: fa-abacus
+
+    layout: 
+      sequence: 400
+      parent-entry: Administration # 8044595892830593
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 38
+      - 49
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:38:&SESSION.::&DEBUG.::::'
+        page: 38 # Planes Cuota
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: 'security_pkg.can_access(:APP_ID, :APP_USER, 38, NULL)'
+
+  - # ====== Entry: Talonarios ===================================
+    id: 12690735946943745
+    label: 
+      label: Talonarios
+
+    icon: 
+      image/icon-css-classes: fa-ai-sparkle-generate-document
+
+    layout: 
+      sequence: 410
+      parent-entry: Administration # 8044595892830593
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 51
+      - 53
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:51:&SESSION.::&DEBUG.::::'
+        page: 51 # Talonarios
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: 'security_pkg.can_access(:APP_ID, :APP_USER, 51, NULL)'
+
+  - # ====== Entry: Metodos de Pago ==============================
+    id: 12715912646950195
+    label: 
+      label: Metodos de Pago
+
+    icon: 
+      image/icon-css-classes: fa-money-check-pen
+
+    layout: 
+      sequence: 420
+      parent-entry: Administration # 8044595892830593
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 57
+      - 60
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:57:&SESSION.::&DEBUG.::::'
+        page: 57 # Metodos de Pago
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: 'security_pkg.can_access(:APP_ID, :APP_USER, 57, NULL)'
+
+  - # ====== Entry: Caja =========================================
+    id: 12725308437975347
+    label: 
+      label: Caja
+
+    icon: 
+      image/icon-css-classes: fa-file-o
+
+    layout: 
+      sequence: 430
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 62
+
+    user-defined-attributes: 
+      translatable: false
+
+  - # ====== Entry: Configuracion de Cajas =======================
+    id: 12733619303987508
+    label: 
+      label: Configuracion de Cajas
+
+    icon: 
+      image/icon-css-classes: fa-abacus
+
+    layout: 
+      sequence: 440
+      parent-entry: Caja # 12725308437975347
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 63
+      - 64
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:63:&SESSION.::&DEBUG.::::'
+        page: 63 # Configuracion de Cajas
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: 'security_pkg.can_access(:APP_ID, :APP_USER, 63, NULL)'
+
+  - # ====== Entry: Apertura de Caja =============================
+    id: 12745977496199273
+    label: 
+      label: Apertura de Caja
+
+    icon: 
+      image/icon-css-classes: fa-ai-sparkle-enlarge
+
+    layout: 
+      sequence: 450
+      parent-entry: Caja # 12725308437975347
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 65
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:65:&SESSION.::&DEBUG.::::'
+        page: 65 # Apertura de Caja
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: 'security_pkg.can_access(:APP_ID, :APP_USER, 65, NULL)'
+
+  - # ====== Entry: Proceso Ventas ===============================
+    id: 12793291056370641
+    label: 
+      label: Proceso Ventas
+
+    icon: 
+      image/icon-css-classes: fa-cash-register
+
+    layout: 
+      sequence: 310
+      parent-entry: Ventas # 8339507211145106
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 66
+      - 67
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:66:&SESSION.::&DEBUG.::::'
+        page: 66 # Proceso Ventas
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: 'security_pkg.can_access(:APP_ID, :APP_USER, 66, NULL)'
+
+  - # ====== Entry: Compras ======================================
+    id: 12815939864378893
+    label: 
+      label: Compras
+
+    icon: 
+      image/icon-css-classes: fa-file-o
+
+    layout: 
+      sequence: 470
+
+    is-current: 
+      type: Pages
+
+    user-defined-attributes: 
+      translatable: false
+
+  - # ====== Entry: Proceso de Compras ===========================
+    id: 12833043839386520
+    label: 
+      label: Proceso de Compras
+
+    icon: 
+      image/icon-css-classes: fa-cash-register
+
+    layout: 
+      sequence: 480
+      parent-entry: Compras # 12815939864378893
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 69
+      - 70
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:69:&SESSION.::&DEBUG.::::'
+        page: 69 # Proceso de Compras
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: 'security_pkg.can_access(:APP_ID, :APP_USER, 69, NULL)'
+
+  - # ====== Entry: Orden de Compra ==============================
+    id: 12903212820928786
+    label: 
+      label: Orden de Compra
+
+    icon: 
+      image/icon-css-classes: fa-vault
+
+    layout: 
+      sequence: 490
+      parent-entry: Compras # 12815939864378893
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 71
+      - 72
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:71:&SESSION.::&DEBUG.::::'
+        page: 71 # Orden de Compra
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: 'security_pkg.can_access(:APP_ID, :APP_USER, 71, NULL)'
+
+  - # ====== Entry: Cierre de Caja ===============================
+    id: 13320903194673444
+    label: 
+      label: Cierre de Caja
+
+    icon: 
+      image/icon-css-classes: fa-money-bag
+
+    layout: 
+      sequence: 500
+      parent-entry: Caja # 12725308437975347
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 61
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:61:&SESSION.::&DEBUG.::::'
+        page: 61 # Cierre de Caja
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: 'security_pkg.can_access(:APP_ID, :APP_USER, 61, NULL)'
+
+  - # ====== Entry: Seguridad ====================================
+    id: 14175335484895525
+    label: 
+      label: Seguridad
+
+    layout: 
+      sequence: 10020
+
+    is-current: 
+      type: Target Page
+
+    user-defined-attributes: 
+      translatable: false
+
+  - # ====== Entry: Privilegios ==================================
+    id: 14184202958932464
+    label: 
+      label: Privilegios
+
+    icon: 
+      image/icon-css-classes: fa-ai-sparkle-generate-list
+
+    layout: 
+      sequence: 510
+      parent-entry: Seguridad # 14175335484895525
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 75
+      - 76
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:75:&SESSION.::&DEBUG.::::'
+        page: 75 # Privilegios
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: |
+        security_pkg.can_access(:APP_ID, :APP_USER, 75, NULL)
+        
+
+  - # ====== Entry: Roles - Privilegios ==========================
+    id: 14245746968094633
+    label: 
+      label: Roles - Privilegios
+
+    icon: 
+      image/icon-css-classes: fa-accordion
+
+    layout: 
+      sequence: 520
+      parent-entry: Seguridad # 14175335484895525
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 81
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:81:&SESSION.::&DEBUG.::::'
+        page: 81 # Roles - Privilegios
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: 'security_pkg.can_access(:APP_ID, :APP_USER, 81, NULL)'
+
+  - # ====== Entry: Recursos =====================================
+    id: 14296153979158716
+    label: 
+      label: Recursos
+
+    icon: 
+      image/icon-css-classes: fa-clipboard
+
+    layout: 
+      sequence: 530
+      parent-entry: Seguridad # 14175335484895525
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 77
+      - 78
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:77:&SESSION.::&DEBUG.::::'
+        page: 77 # Recursos
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: 'security_pkg.can_access(:APP_ID, :APP_USER, 77, NULL)'
+
+  - # ====== Entry: Proceso de Inventario ========================
+    id: 14746849516426949
+    label: 
+      label: Proceso de Inventario
+
+    icon: 
+      image/icon-css-classes: fa-book
+
+    layout: 
+      sequence: 540
+      parent-entry: Inventarios # 12108709573618278
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 79
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:79:&SESSION.::&DEBUG.::::'
+        page: 79 # Proceso de Inventario
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: 'security_pkg.can_access(:APP_ID, :APP_USER, 79, NULL)'
+
+  - # ====== Entry: Conteo Fisico ================================
+    id: 15248561116464006
+    label: 
+      label: Conteo Fisico
+
+    icon: 
+      image/icon-css-classes: fa-abacus
+
+    layout: 
+      sequence: 550
+      parent-entry: Inventarios # 12108709573618278
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 73
+      - 74
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:73:&SESSION.::&DEBUG.::::'
+        page: 73 # Conteo Fisico
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: 'security_pkg.can_access(:APP_ID, :APP_USER, 73, NULL)'
+
+  - # ====== Entry: Revision =====================================
+    id: 15360295200775388
+    label: 
+      label: Revision
+
+    icon: 
+      image/icon-css-classes: fa-ai
+
+    layout: 
+      sequence: 560
+      parent-entry: Inventarios # 12108709573618278
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 80
+      - 85
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:80:&SESSION.::&DEBUG.::::'
+        page: 80 # Revision
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: 'security_pkg.can_access(:APP_ID, :APP_USER, 80, NULL)'
+
+  - # ====== Entry: Existencias ==================================
+    id: 15472943404391227
+    label: 
+      label: Existencias
+
+    icon: 
+      image/icon-css-classes: fa-abacus
+
+    layout: 
+      sequence: 570
+      parent-entry: Reporte Inventario # 12138835757706400
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 88
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:88:&SESSION.::&DEBUG.::::'
+        page: 88 # Existencias
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: 'security_pkg.can_access(:APP_ID, :APP_USER, 88, NULL)'
+
+  - # ====== Entry: Formas de Pago ===============================
+    id: 15928566803184577
+    label: 
+      label: Formas de Pago
+
+    icon: 
+      image/icon-css-classes: fa-dollar
+
+    layout: 
+      sequence: 580
+      parent-entry: Administration # 8044595892830593
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 89
+      - 90
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:89:&SESSION.::&DEBUG.::::'
+        page: 89 # Formas de Pago
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: 'security_pkg.can_access(:APP_ID, :APP_USER, 89, NULL)'
+
+  - # ====== Entry: Nota de Credito Proveedor ====================
+    id: 16001999386644355
+    label: 
+      label: Nota de Credito Proveedor
+
+    icon: 
+      image/icon-css-classes: fa-ai-sparkle-eraser
+
+    layout: 
+      sequence: 590
+      parent-entry: Proveedores # 9808235671312828
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 94
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:94:&SESSION.::&DEBUG.::::'
+        page: 94 # Nota de Credito Proveedor
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: 'security_pkg.can_access(:APP_ID, :APP_USER, 94, NULL)'
+
+  - # ====== Entry: Cobros =======================================
+    id: 16135373289245386
+    label: 
+      label: Cobros
+
+    icon: 
+      image/icon-css-classes: fa-money-bag
+
+    layout: 
+      sequence: 600
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 93
+
+    user-defined-attributes: 
+      translatable: false
+
+  - # ====== Entry: Cobros =======================================
+    id: 16148657170363760
+    label: 
+      label: Cobros
+
+    icon: 
+      image/icon-css-classes: fa-money-bag
+
+    layout: 
+      sequence: 610
+      parent-entry: Cobros # 16135373289245386
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 95
+      - 98
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:95:&SESSION.::&DEBUG.::::'
+        page: 95 # Cobros
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: 'security_pkg.can_access(:APP_ID, :APP_USER, 95, NULL)'
+
+  - # ====== Entry: Cotizacion ===================================
+    id: 16531242107171066
+    label: 
+      label: Cotizacion
+
+    icon: 
+      image/icon-css-classes: fa-exchange
+
+    layout: 
+      sequence: 620
+      parent-entry: Administration # 8044595892830593
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 101
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:101:&SESSION.::&DEBUG.::::'
+        page: 101 # Cotizacion
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: 'security_pkg.can_access(:APP_ID, :APP_USER, 101, NULL)'
+
+  - # ====== Entry: Recepción de Orden de Compra =================
+    id: 16589424898057873
+    label: 
+      label: Recepción de Orden de Compra
+
+    icon: 
+      image/icon-css-classes: fa-box-arrow-in-south
+
+    layout: 
+      sequence: 630
+      parent-entry: Compras # 12815939864378893
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 106
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:107:&SESSION.::&DEBUG.::::'
+        page: 107 # Recepción de productos
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: 'security_pkg.can_access(:APP_ID, :APP_USER, 107, NULL)'
+
+  - # ====== Entry: reset-password ===============================
+    id: 19213877930556526
+    label: 
+      label: reset-password
+
+    icon: 
+      image/icon-css-classes: fa-file-o
+
+    layout: 
+      sequence: 640
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 102
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:102:&SESSION.::&DEBUG.::::'
+        page: 102 # Restablecer Contraseña
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Never
+
+  - # ====== Entry: Personas =====================================
+    id: 20268823123275842
+    label: 
+      label: Personas
+
+    icon: 
+      image/icon-css-classes: fa-address-book
+
+    layout: 
+      sequence: 10030
+      parent-entry: Personas # 8171737903383999
+
+    is-current: 
+      type: Target Page
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:9:&SESSION.::&DEBUG.::::'
+        page: 9 # Personas
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: Expression
+      language: PL/SQL
+      pl/sql-expression: 'security_pkg.can_access(:APP_ID, :APP_USER, 9, NULL)'
+
+- # ====== List: Navigation Bar ================================
+  id: 7995151038830923
+  identification: 
+    name: Navigation Bar
+
+  subscription: 
+    version-number: 39017542522586
+
+  source: 
+    type: Static Values
+
+  entries: 
+  - # ====== Entry: &APP_USER. ===================================
+    id: 8043025782830594
+    label: 
+      label: '&APP_USER.'
+
+    icon: 
+      image/icon-css-classes: fa-user
+
+    layout: 
+      sequence: 10
+
+    is-current: 
+      type: Target Page
+
+    link: 
+      target: '#'
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+      2.: has-username
+
+  - # ====== Entry: --- ==========================================
+    id: 8043590427830594
+    label: 
+      label: '---'
+
+    layout: 
+      sequence: 20
+      parent-entry: '&APP_USER.' # 8043025782830594
+
+    is-current: 
+      type: Target Page
+
+    link: 
+      target: separator
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: User is Authenticated (not public)
+
+  - # ====== Entry: Sign Out =====================================
+    id: 8043910523830593
+    label: 
+      label: Sign Out
+
+    icon: 
+      image/icon-css-classes: fa-sign-out
+
+    layout: 
+      sequence: 30
+      parent-entry: '&APP_USER.' # 8043025782830594
+
+    is-current: 
+      type: Target Page
+
+    link: 
+      target: '&LOGOUT_URL.'
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+    server-side-condition: 
+      type: User is Authenticated (not public)
+
+  - # ====== Entry: Install App ==================================
+    id: 13175279392297521
+    label: 
+      label: Install App
+
+    icon: 
+      image/icon-css-classes: fa-cloud-download
+
+    layout: 
+      sequence: 1
+
+    is-current: 
+      type: Never
+
+    link: 
+      target: '#action$a-pwa-install'
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+      2.: a-pwaInstall
+
+- # ====== List: Access Control ================================
+  id: 8045668914830590
+  identification: 
+    name: Access Control
+
+  subscription: 
+    version-number: 1
+
+  source: 
+    type: Static Values
+
+  configuration: 
+    build-option: 'Feature: Access Control' # 7997625436830901
+
+  entries: 
+  - # ====== Entry: Users ========================================
+    id: 8046080844830589
+    label: 
+      label: Users
+
+    icon: 
+      image/icon-css-classes: fa-users
+
+    layout: 
+      sequence: 10
+
+    is-current: 
+      type: Target Page
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:10011:&APP_SESSION.::&DEBUG.:RP::'
+        page: 10011 # Manage User Access
+        clear-cache: RP
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+      1.: Set level of access for authenticated users of this application
+
+  - # ====== Entry: Access Control ===============================
+    id: 8046458084830589
+    label: 
+      label: Access Control
+
+    icon: 
+      image/icon-css-classes: fa-key
+
+    layout: 
+      sequence: 20
+
+    is-current: 
+      type: Target Page
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:10010:&APP_SESSION.::&DEBUG.:::'
+        page: 10010 # Configure Access Control
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+      1.: Change access control settings and disable access control
+

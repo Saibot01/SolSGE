@@ -1,0 +1,96 @@
+---
+- # ====== Authorization: Administration Rights ================
+  id: 7999318185830898
+  identification: 
+    name: Administration Rights
+
+  subscription: 
+    version-number: 1
+
+  authorization-scheme: 
+    type: Is In Role or Group
+
+  settings: 
+    type: Application Role
+    name(s): Administrator
+
+  server-cache: 
+    evaluation-point: Once per Page View
+
+  error: 
+    error-message: Insufficient privileges, user is not an Administrator
+
+- # ====== Authorization: Reader Rights ========================
+  id: 7999407166830898
+  identification: 
+    name: Reader Rights
+
+  subscription: 
+    version-number: 1
+
+  authorization-scheme: 
+    type: PL/SQL Function Returning Boolean
+
+  settings: 
+    pl/sql-function-body: |
+      if nvl(apex_app_setting.get_value(
+         p_name => 'ACCESS_CONTROL_SCOPE'),'x') = 'ALL_USERS' then
+          -- allow user not in the ACL to access the application
+          return true;
+      else
+          -- require user to have at least one role
+          return apex_acl.has_user_any_roles (
+              p_application_id => :APP_ID, 
+              p_user_name      => :APP_USER);
+      end if;
+
+  server-cache: 
+    evaluation-point: Once per Session
+
+  error: 
+    error-message: You are not authorized to view this application, either because you have not been granted access, or your account has been locked. Please contact the application administrator.
+
+- # ====== Authorization: Contribution Rights ==================
+  id: 7999510381830898
+  identification: 
+    name: Contribution Rights
+
+  subscription: 
+    version-number: 1
+
+  authorization-scheme: 
+    type: Is In Role or Group
+
+  settings: 
+    type: Application Role
+    name(s): Administrator,Contributor
+
+  server-cache: 
+    evaluation-point: Once per Page View
+
+  error: 
+    error-message: Insufficient privileges, user is not a Contributor
+
+- # ====== Authorization: AUTH_PAGE_BY_PRIV ====================
+  id: 14144931354359505
+  identification: 
+    name: AUTH_PAGE_BY_PRIV
+
+  subscription: 
+    version-number: 39027535884097
+
+  authorization-scheme: 
+    type: PL/SQL Function Returning Boolean
+
+  settings: 
+    pl/sql-function-body: 'RETURN security_pkg.can_access(:APP_ID, :APP_USER, :APP_PAGE_ID, NULL);'
+
+  server-cache: 
+    evaluation-point: Once per Page View
+
+  error: 
+    error-message: No cuenta con los permisos necesarios para acceder a este modulo. Contacte con el administrador del sistema
+
+  comments: 
+    comments: Autorizacion Custom
+

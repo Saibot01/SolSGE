@@ -1,0 +1,1209 @@
+---
+# ====== Page: Conteo Fisico =================================
+id: 74
+identification: 
+  name: Conteo Fisico
+  alias: CONTEO-FISICO
+  title: Conteo Fisico
+
+appearance: 
+  page-mode: Modal Dialog
+  dialog-template: Theme Default
+  template-options: 
+  - '#DEFAULT#'
+  - ui-dialog--stretch
+
+dialog: 
+  chained: false
+  resizable: true
+
+navigation-menu: 
+  override-user-interface-level: false
+
+navigation: 
+  cursor-focus: Do not focus cursor
+  warn-on-unsaved-changes: true
+
+javascript: 
+  function-and-global-variable-declaration: |
+    var ig$ = apex.region("inventario_ig").widget();
+    var view = ig$.interactiveGrid("getViews", "grid");
+    var model = view.model;
+    
+    model.subscribe({
+      onChange: function(changeType, change) {
+        if (changeType === "edit") {
+          var column = change.column;
+          if (column !== "CANTIDAD_FISICA") {
+            apex.message.showPageSuccess("Solo puede editar la cantidad física");
+            model.setValue(change.recordId, column, change.oldValue); // revierte cambio
+          }
+        }
+      }
+    });
+    
+
+security: 
+  authentication: Page Requires Authentication
+  deep-linking: Application Default
+  page-access-protection: Arguments Must Have Checksum
+  form-auto-complete: Off
+  browser-cache: Application Default
+
+session-management: 
+  rejoin-sessions: Application Default
+
+advanced: 
+  enable-duplicate-page-submissions: Yes - Enable page to be re-posted
+  reload-on-submit: Only for Success
+
+server-cache: 
+  caching: Disabled
+
+regions: 
+- # ====== Region: Detalle =====================================
+  id: 13352277251104040
+  identification: 
+    name: Detalle
+    type: Interactive Grid
+
+  source: 
+    location: Local Database
+    type: SQL Query
+    sql-query: |
+      select ID_INVENTARIO_DETALLE,
+             ID_INVENTARIO,
+             ID_PRODUCTO,
+             CANTIDAD_FISICA,
+             ORDEN_SECTOR,
+             ORDEN_UBICACION
+        from INVENTARIO_DETALLE
+       where ID_INVENTARIO = :P74_ID_INVENTARIO;
+    page-items-to-submit: 
+    - P74_ID_INVENTARIO
+
+  layout: 
+    sequence: 120
+    parent-region: Conteo Fisico # 15232770614463990
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Interactive Report
+    template-options: 
+    - '#DEFAULT#'
+    - t-IRR-region--hideHeader js-addHiddenHeadingRoleDesc
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    static-id: inventario_ig
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    id: 13352318071104041
+    edit: 
+      enabled: true
+      allowed-operations: 
+      - Update Row
+      lost-update-type: Row Values
+
+    performance: 
+      lazy-loading: false
+
+    appearance: 
+      select-first-row: true
+      fixed-row-height: true
+
+    pagination: 
+      type: Scroll
+      show-total-count: true
+
+    toolbar: 
+      show: true
+      controls: 
+      - Search Column Selection
+      - Search Field
+
+    enable-users-to: 
+      save-public-report: false
+      flashback: true
+      define-chart-view: false
+      download: false
+
+    heading: 
+      fixed-to: Page
+
+    icon-view: 
+      show: false
+
+    detail-view: 
+      show: false
+
+    saved-reports: 
+    - # ====== Saved Report: Primary Report ========================
+      id: 15281918386498937
+      identification: 
+        name: Primary Report
+        alias: 152820
+
+  columns: 
+  - # ====== Column: ID_INVENTARIO_DETALLE =======================
+    id: 13352420847104042
+    identification: 
+      column-name: ID_INVENTARIO_DETALLE
+      type: Hidden
+
+    settings: 
+      value-protected: true
+
+    layout: 
+      sequence: 30
+
+    accessibility: 
+      value-identifies-row: false
+
+    source: 
+      type: Database Column
+      database-column: ID_INVENTARIO_DETALLE
+      data-type: NUMBER
+      query-only: true
+      primary-key: true
+
+    session-state: 
+      data-type: VARCHAR2
+
+    export-/-printing: 
+      include-in-export-/-print: false
+
+    enable-users-to: 
+      sort: false
+
+  - # ====== Column: ID_INVENTARIO ===============================
+    id: 13352571186104043
+    identification: 
+      column-name: ID_INVENTARIO
+      type: Hidden
+
+    settings: 
+      value-protected: true
+
+    layout: 
+      sequence: 40
+
+    accessibility: 
+      value-identifies-row: false
+
+    source: 
+      type: Database Column
+      database-column: ID_INVENTARIO
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    session-state: 
+      data-type: VARCHAR2
+
+    export-/-printing: 
+      include-in-export-/-print: false
+
+    enable-users-to: 
+      sort: false
+
+  - # ====== Column: ID_PRODUCTO =================================
+    id: 13352694177104044
+    identification: 
+      column-name: ID_PRODUCTO
+      type: Popup LOV
+
+    heading: 
+      heading: Producto
+      alignment: center
+
+    settings: 
+      display-as: Inline Popup
+      initial-fetch: Automatic
+      manual-entry: false
+      fetch-on-search: false
+
+    search: 
+      match-type: Contains
+      case-sensitive: false
+      minimum-characters: 0
+
+    multiple-values: 
+      type: No
+
+    layout: 
+      sequence: 50
+      column-alignment: start
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: true
+
+    list-of-values: 
+      type: Shared Component
+      list-of-values: PRODUCTOS.NOMBRE # 11765368439189441
+      display-extra-values: true
+      display-null-value: true
+
+    source: 
+      type: Database Column
+      database-column: ID_PRODUCTO
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      performance-impacting-operators: 
+      - Contains
+      - Starts With
+      - Case Insensitive
+      - Regular Expression
+      text-case: Mixed
+      lov-type: Use List of Values
+      exact-match: true
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: CANTIDAD_FISICA =============================
+    id: 13352852178104046
+    identification: 
+      column-name: CANTIDAD_FISICA
+      type: Number Field
+
+    heading: 
+      heading: Cantidad Fisica
+      alignment: center
+
+    settings: 
+      number-alignment: Start
+      virtual-keyboard: Decimal
+
+    layout: 
+      sequence: 70
+      column-alignment: end
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: true
+
+    source: 
+      type: Database Column
+      database-column: CANTIDAD_FISICA
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: ORDEN_SECTOR ================================
+    id: 15276369894490601
+    identification: 
+      column-name: ORDEN_SECTOR
+      type: Number Field
+
+    heading: 
+      heading: Orden Sector
+      alignment: center
+
+    settings: 
+      number-alignment: Start
+      virtual-keyboard: Decimal
+
+    layout: 
+      sequence: 120
+      column-alignment: end
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: false
+
+    source: 
+      type: Database Column
+      database-column: ORDEN_SECTOR
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: ORDEN_UBICACION =============================
+    id: 15276480186490602
+    identification: 
+      column-name: ORDEN_UBICACION
+      type: Number Field
+
+    heading: 
+      heading: Orden Ubicacion
+      alignment: center
+
+    settings: 
+      number-alignment: Start
+      virtual-keyboard: Decimal
+
+    layout: 
+      sequence: 130
+      column-alignment: end
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: false
+
+    source: 
+      type: Database Column
+      database-column: ORDEN_UBICACION
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: APEX$ROW_ACTION =============================
+    id: 15277164480490609
+    identification: 
+      column-name: APEX$ROW_ACTION
+      type: Actions Menu
+
+    layout: 
+      sequence: 20
+
+  - # ====== Column: APEX$ROW_SELECTOR ===========================
+    id: 15277239336490610
+    identification: 
+      column-name: APEX$ROW_SELECTOR
+      type: Row Selector
+
+    settings: 
+      enable-multi-select: true
+      show-select-all: true
+      hide-control: false
+
+    layout: 
+      sequence: 10
+
+- # ====== Region: Conteo Fisico ===============================
+  id: 15232770614463990
+  identification: 
+    name: Conteo Fisico
+    type: Form
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: INVENTARIO
+    include-rowid-column: false
+
+  layout: 
+    sequence: 10
+    parent-region: No Parent
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Blank with Attributes
+    template-options: 
+    - '#DEFAULT#'
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    edit: 
+      enabled: true
+      allowed-operations: 
+      - Add Row
+      - Update Row
+      - Delete Row
+      lost-update-type: Row Values
+
+- # ====== Region: Buttons =====================================
+  id: 15244175348464002
+  identification: 
+    name: Buttons
+    type: Static Content
+
+  layout: 
+    sequence: 20
+    parent-region: No Parent
+    slot: REGION_POSITION_03
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Buttons Container
+    template-options: 
+    - '#DEFAULT#'
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    settings: 
+      output-as: Text (escape special characters)
+      show-line-breaks: true
+
+page-items: 
+- # ====== Page Item: P74_ID_INVENTARIO ========================
+  id: 15233077722463991
+  identification: 
+    name: P74_ID_INVENTARIO
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 10
+    region: Conteo Fisico # 15232770614463990
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Conteo Fisico # 15232770614463990
+    column: ID_INVENTARIO
+    data-type: NUMBER
+    query-only: true
+    primary-key: true
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Request (Memory Only)
+
+  security: 
+    session-state-protection: Checksum Required - Session Level
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P74_NRO_DOCUMENTO ========================
+  id: 15233437923463995
+  identification: 
+    name: P74_NRO_DOCUMENTO
+    type: Text Field
+
+  label: 
+    label: Nro Documento
+    alignment: Right
+
+  settings: 
+    subtype: Text
+    trim-spaces: Leading and Trailing
+    text-case: NO CHANGE
+    submit-when-enter-pressed: false
+    disabled: false
+
+  layout: 
+    sequence: 20
+    region: Conteo Fisico # 15232770614463990
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Required - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 32
+
+  validation: 
+    value-required: true
+    maximum-length: 30
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Conteo Fisico # 15232770614463990
+    column: NRO_DOCUMENTO
+    data-type: VARCHAR2
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P74_USUARIO_ENVIO ========================
+  id: 15236123845463998
+  identification: 
+    name: P74_USUARIO_ENVIO
+    type: Text Field
+
+  label: 
+    label: Usuario Envio
+    alignment: Left
+
+  settings: 
+    subtype: Text
+    trim-spaces: Leading and Trailing
+    text-case: NO CHANGE
+    submit-when-enter-pressed: false
+    disabled: false
+
+  layout: 
+    sequence: 90
+    region: Conteo Fisico # 15232770614463990
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 32
+
+  validation: 
+    value-required: false
+    maximum-length: 100
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Conteo Fisico # 15232770614463990
+    column: USUARIO_ENVIO
+    data-type: VARCHAR2
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P74_FECHA_ENVIO ==========================
+  id: 15236599076463998
+  identification: 
+    name: P74_FECHA_ENVIO
+    type: Date Picker
+
+  label: 
+    label: Fecha Envio
+    alignment: Left
+
+  settings: 
+    show-time: false
+    display-as: Popup
+    minimum-date: None
+    maximum-date: None
+    multiple-months: No
+    use-defaults: true
+
+  layout: 
+    sequence: 100
+    region: Conteo Fisico # 15232770614463990
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 32
+
+  validation: 
+    value-required: false
+    maximum-length: 255
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Conteo Fisico # 15232770614463990
+    column: FECHA_ENVIO
+    data-type: DATE
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P74_ESTADO ===============================
+  id: 15277710473490615
+  identification: 
+    name: P74_ESTADO
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 110
+    region: Conteo Fisico # 15232770614463990
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  default: 
+    type: Static
+    static-value: ENVIADO
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Session (Persistent)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+buttons: 
+- # ====== Button: CANCEL ======================================
+  id: 15244521688464003
+  identification: 
+    button-name: CANCEL
+    label: Cancel
+
+  layout: 
+    sequence: 10
+    region: Buttons # 15244175348464002
+    slot: CLOSE
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text
+    hot: false
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Defined by Dynamic Action
+    execute-validations: true
+
+- # ====== Button: DELETE ======================================
+  id: 15245966814464004
+  identification: 
+    button-name: DELETE
+    label: Delete
+
+  layout: 
+    sequence: 20
+    region: Buttons # 15244175348464002
+    slot: DELETE
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text
+    hot: false
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Submit Page
+    execute-validations: false
+    show-processing: false
+    warn-on-unsaved-changes: Do Not Check
+    database-action: SQL DELETE action
+
+  confirmation: 
+    message: '&APP_TEXT$DELETE_MSG!RAW.'
+    style: Danger
+
+  server-side-condition: 
+    type: Item is NOT NULL
+    item: P74_ID_INVENTARIO
+
+- # ====== Button: SAVE ========================================
+  id: 15246302528464004
+  identification: 
+    button-name: SAVE
+    label: Apply Changes
+
+  layout: 
+    sequence: 20
+    region: Buttons # 15244175348464002
+    slot: NEXT
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text
+    hot: true
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Submit Page
+    execute-validations: true
+    show-processing: false
+    warn-on-unsaved-changes: Do Not Check
+    database-action: SQL UPDATE action
+
+  server-side-condition: 
+    type: Item is NOT NULL
+    item: P74_ID_INVENTARIO
+
+- # ====== Button: CREATE ======================================
+  id: 15246742254464004
+  identification: 
+    button-name: CREATE
+    label: Create
+
+  layout: 
+    sequence: 30
+    region: Buttons # 15244175348464002
+    slot: NEXT
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text
+    hot: true
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Submit Page
+    execute-validations: true
+    show-processing: false
+    warn-on-unsaved-changes: Do Not Check
+    database-action: SQL INSERT action
+
+  server-side-condition: 
+    type: Item is NULL
+    item: P74_ID_INVENTARIO
+
+- # ====== Button: Vista =======================================
+  id: 15461089940249303
+  identification: 
+    button-name: Vista
+    label: Vista Previa
+
+  layout: 
+    sequence: 10
+    region: Buttons # 15244175348464002
+    slot: NEXT
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text
+    hot: true
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Redirect to Page in this Application
+    target: 
+      url: 'f?p=&APP_ID.:86:&SESSION.::&DEBUG.:74:P86_ID_INVENTARIO:&P74_ID_INVENTARIO.'
+      page: 86 # Reporte de Conteo
+      clear-cache: 74
+      values: 
+        p86_id_inventario: '&P74_ID_INVENTARIO.'
+
+    warn-on-unsaved-changes: Do Not Check
+
+  server-side-condition: 
+    type: Item is NOT NULL
+    item: P74_ID_INVENTARIO
+
+dynamic-actions: 
+- # ====== Dynamic Action: Cancel Dialog =======================
+  id: 15244656202464003
+  identification: 
+    name: Cancel Dialog
+
+  execution: 
+    sequence: 10
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Click
+    selection-type: Button
+    button: CANCEL # 15244521688464003
+
+  actions: 
+  - # ====== Action: Cancel Dialog ===============================
+    id: 15245496824464004
+    identification: 
+      action: Cancel Dialog
+
+    execution: 
+      sequence: 10
+      event: Cancel Dialog # 15244656202464003
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+- # ====== Dynamic Action: New =================================
+  id: 15277483644490612
+  identification: 
+    name: New
+
+  execution: 
+    sequence: 20
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: After Refresh
+    selection-type: Region
+    region: Detalle # 13352277251104040
+
+  actions: 
+  - # ====== Action: Execute JavaScript Code =====================
+    id: 15277555646490613
+    identification: 
+      action: Execute JavaScript Code
+
+    settings: 
+      code: |
+        var ig$ = apex.region("inventario_ig").widget();
+        var view = ig$.interactiveGrid("getViews", "grid");
+        var model = view.model;
+        
+        model.subscribe({
+          onChange: function(changeType, change) {
+            if (changeType === "edit") {
+              var column = change.column;
+              if (column !== "CANTIDAD_FISICA") {
+                apex.message.showPageSuccess("Solo puede editar la cantidad física");
+                model.setValue(change.recordId, column, change.oldValue); // revierte cambio
+              }
+            }
+          }
+        });
+        
+
+    affected-elements: 
+      selection-type: Region
+      region: Detalle # 13352277251104040
+
+    execution: 
+      sequence: 10
+      event: New # 15277483644490612
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+- # ====== Dynamic Action: Precarga datos ======================
+  id: 15280345400490641
+  identification: 
+    name: Precarga datos
+
+  execution: 
+    sequence: 30
+    event-scope: Static
+
+  when: 
+    event: Page Load
+
+  actions: 
+  - # ====== Action: Setea Usuario ===============================
+    id: 15280423188490642
+    identification: 
+      name: Setea Usuario
+      action: Set Value
+
+    settings: 
+      set-type: Static Assignment
+      value: '&APP_USER.'
+      suppress-change-event: false
+
+    affected-elements: 
+      selection-type: Item(s)
+      item(s): 
+      - P74_USUARIO_ENVIO
+
+    execution: 
+      sequence: 10
+      event: Precarga datos # 15280345400490641
+      fire-when-event-result-is: True
+      fire-on-initialization: true
+      stop-execution-on-error: true
+      wait-for-result: true
+
+  - # ====== Action: Setea Fecha =================================
+    id: 15280565273490643
+    identification: 
+      name: Setea Fecha
+      action: Set Value
+
+    settings: 
+      set-type: SQL Statement
+      sql-statement: |
+        SELECT CURRENT_TIMESTAMP AT TIME ZONE 'America/Asuncion' AS fecha_paraguay
+        FROM dual;
+      escape-special-characters: true
+      suppress-change-event: false
+
+    affected-elements: 
+      selection-type: Item(s)
+      item(s): 
+      - P74_FECHA_ENVIO
+
+    execution: 
+      sequence: 20
+      event: Precarga datos # 15280345400490641
+      fire-when-event-result-is: True
+      fire-on-initialization: true
+      stop-execution-on-error: true
+      wait-for-result: true
+
+processes: 
+- # ====== Process: Initialize form Conteo Fisico ==============
+  id: 15247146352464005
+  identification: 
+    name: Initialize form Conteo Fisico
+    type: Form - Initialization
+    execution-chain: None
+    form-region: Conteo Fisico # 15232770614463990
+
+  execution: 
+    sequence: 10
+    point: Before Header
+    run-process: Once Per Page Visit (default)
+
+- # ====== Process: Close Dialog ===============================
+  id: 15247978178464005
+  identification: 
+    name: Close Dialog
+    type: Close Dialog
+    execution-chain: None
+
+  settings: 
+    show-success-messages: true
+
+  execution: 
+    sequence: 40
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+
+  server-side-condition: 
+    type: Request is contained in Value
+    value: CREATE,SAVE,DELETE
+
+- # ====== Process: Detalle - Save Interactive Grid Data =======
+  id: 15277395690490611
+  identification: 
+    name: Detalle - Save Interactive Grid Data
+    type: Interactive Grid - Automatic Row Processing (DML)
+    execution-chain: None
+    editable-region: Detalle # 13352277251104040
+
+  settings: 
+    target-type: PL/SQL Code
+    pl/sql-code-to-insert/update/delete: |
+      BEGIN
+          CASE :APEX$ROW_STATUS
+              WHEN 'C' THEN
+                  NULL; -- No insertás desde este IG
+              WHEN 'U' THEN
+                  UPDATE INVENTARIO_DETALLE
+                     SET CANTIDAD_FISICA = :CANTIDAD_FISICA
+                   WHERE ID_INVENTARIO_DETALLE = :ID_INVENTARIO_DETALLE;
+              WHEN 'D' THEN
+                  NULL; -- No borrás desde este IG
+          END CASE;
+      END;
+      
+    prevent-lost-updates: true
+    lock-row: Yes
+
+  execution: 
+    sequence: 30
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  success-message: 
+    success-message: Inventario enviado a revisión.
+
+  error: 
+    display-location: Inline in Notification
+
+  server-side-condition: 
+    execution-scope: For Created and Modified Rows
+
+- # ====== Process: Actualiza cabecera =========================
+  id: 15277692570490614
+  identification: 
+    name: Actualiza cabecera
+    type: Execute Code
+    execution-chain: None
+
+  source: 
+    location: Local Database
+    language: PL/SQL
+    pl/sql-code: |
+      UPDATE INVENTARIO
+      SET USUARIO_ENVIO = :P74_USUARIO_ENVIO,
+      FECHA_ENVIO = :P74_FECHA_ENVIO,
+      ESTADO = :P74_ESTADO
+      WHERE NRO_DOCUMENTO = :P74_NRO_DOCUMENTO
+      AND ID_INVENTARIO = :P74_ID_INVENTARIO;
+      
+
+  execution: 
+    sequence: 20
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+

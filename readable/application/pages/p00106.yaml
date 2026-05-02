@@ -1,0 +1,2072 @@
+---
+# ====== Page: Recepción de Orden de Compra ==================
+id: 106
+identification: 
+  name: Recepción de Orden de Compra
+  alias: RECEPCIÓN-DE-ORDEN-DE-COMPRA
+  title: Recepción de Orden de Compra
+
+appearance: 
+  page-mode: Modal Dialog
+  dialog-template: Theme Default
+  template-options: 
+  - '#DEFAULT#'
+
+dialog: 
+  chained: true
+  resizable: true
+
+navigation-menu: 
+  override-user-interface-level: false
+
+navigation: 
+  cursor-focus: Do not focus cursor
+  warn-on-unsaved-changes: true
+
+css: 
+  inline: |
+    .col-oculta {
+      display: none !important;
+    }
+    
+
+security: 
+  authentication: Page Requires Authentication
+  deep-linking: Application Default
+  page-access-protection: Arguments Must Have Checksum
+  form-auto-complete: Off
+  browser-cache: Application Default
+
+session-management: 
+  rejoin-sessions: Application Default
+
+advanced: 
+  enable-duplicate-page-submissions: Yes - Enable page to be re-posted
+  reload-on-submit: Only for Success
+
+server-cache: 
+  caching: Disabled
+
+regions: 
+- # ====== Region: Region 1 ====================================
+  id: 14820944924450434
+  identification: 
+    name: Region 1
+    title: Datos de la Orden de Compra
+    type: Static Content
+
+  layout: 
+    sequence: 10
+    parent-region: No Parent
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Standard
+    template-options: 
+    - '#DEFAULT#'
+    - t-Region--scrollBody
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    settings: 
+      output-as: HTML
+      expand-shortcuts: false
+
+- # ====== Region: Recepción ===================================
+  id: 14821899402450443
+  identification: 
+    name: Recepción
+    title: Recepción
+    type: Static Content
+
+  layout: 
+    sequence: 50
+    parent-region: No Parent
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Standard
+    template-options: 
+    - '#DEFAULT#'
+    - t-Region--scrollBody
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    settings: 
+      output-as: HTML
+      expand-shortcuts: false
+
+- # ====== Region: Detalle de orden ============================
+  id: 14822380992450448
+  identification: 
+    name: Detalle de orden
+    title: Detalle de orden - Recepción
+    type: Interactive Grid
+
+  source: 
+    location: Local Database
+    type: SQL Query
+    sql-query: |
+      SELECT
+        doc.ID_DETALLE_OC,
+        doc.ID_PRODUCTO,
+        p.NOMBRE                          AS NOMBRE_PRODUCTO,
+        doc.CANTIDAD                           AS CANTIDAD_PEDIDA,
+      
+        NVL((
+          SELECT SUM(dr.CANTIDAD_RECIBIDA)
+            FROM DETALLE_RECEPCION_COMPRA dr
+            JOIN RECEPCIONES_COMPRA r
+              ON r.ID_RECEPCION = dr.ID_RECEPCION
+           WHERE r.ID_ORDEN_COMPRA = doc.ID_ORDEN_COMPRA
+             AND dr.ID_DETALLE_OC   = doc.ID_DETALLE_OC
+        ), 0)                                   AS CANTIDAD_RECIBIDA_ACUM,
+      
+        doc.CANTIDAD
+          - NVL((
+            SELECT SUM(dr.CANTIDAD_RECIBIDA)
+              FROM DETALLE_RECEPCION_COMPRA dr
+              JOIN RECEPCIONES_COMPRA r
+                ON r.ID_RECEPCION = dr.ID_RECEPCION
+             WHERE r.ID_ORDEN_COMPRA = doc.ID_ORDEN_COMPRA
+               AND dr.ID_DETALLE_OC   = doc.ID_DETALLE_OC
+          ), 0)                                 AS CANTIDAD_PENDIENTE,
+      
+        0                                       AS CANTIDAD_A_RECIBIR
+      
+      FROM DETALLE_ORDEN_COMPRA doc
+      JOIN PRODUCTOS p
+        ON p.ID_PRODUCTO = doc.ID_PRODUCTO
+      WHERE doc.ID_ORDEN_COMPRA = :P120_ID_ORDEN_COMPRA;
+      
+
+  layout: 
+    sequence: 60
+    parent-region: No Parent
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Interactive Report
+    template-options: 
+    - '#DEFAULT#'
+    - t-IRR-region--hideHeader js-addHiddenHeadingRoleDesc
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    static-id: IG_DETALLE_OC
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  configuration: 
+    build-option: Commented Out # 7705349298831252
+
+  attributes: 
+    id: 14822452313450449
+    edit: 
+      enabled: true
+      allowed-operations: 
+      - Update Row
+      lost-update-type: Row Values
+
+    performance: 
+      lazy-loading: false
+
+    appearance: 
+      select-first-row: true
+      fixed-row-height: true
+
+    pagination: 
+      type: Scroll
+      show-total-count: true
+
+    toolbar: 
+      show: true
+      controls: 
+      - Search Column Selection
+      - Search Field
+      - Actions Menu
+      - Reset Button
+      - Save Button
+
+    enable-users-to: 
+      save-public-report: false
+      flashback: true
+      define-chart-view: true
+      download: true
+
+    download: 
+      formats: 
+      - CSV
+      - HTML
+      - Excel
+      - PDF
+      send-as-email: true
+
+    heading: 
+      fixed-to: Page
+
+    icon-view: 
+      show: false
+
+    detail-view: 
+      show: false
+
+    saved-reports: 
+    - # ====== Saved Report: Primary Report ========================
+      id: 16601376787300243
+      identification: 
+        name: Primary Report
+        alias: 166014
+
+  columns: 
+  - # ====== Column: ID_DETALLE_OC ===============================
+    id: 14822574755450450
+    identification: 
+      column-name: ID_DETALLE_OC
+      type: Hidden
+
+    settings: 
+      value-protected: true
+
+    layout: 
+      sequence: 30
+
+    accessibility: 
+      value-identifies-row: false
+
+    source: 
+      type: Database Column
+      database-column: ID_DETALLE_OC
+      data-type: NUMBER
+      query-only: false
+      primary-key: true
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    session-state: 
+      data-type: VARCHAR2
+
+    export-/-printing: 
+      include-in-export-/-print: false
+
+    enable-users-to: 
+      sort: false
+
+  - # ====== Column: ID_PRODUCTO =================================
+    id: 16593346940211701
+    identification: 
+      column-name: ID_PRODUCTO
+      type: Hidden
+
+    settings: 
+      value-protected: true
+
+    layout: 
+      sequence: 40
+
+    accessibility: 
+      value-identifies-row: false
+
+    source: 
+      type: Database Column
+      database-column: ID_PRODUCTO
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    session-state: 
+      data-type: VARCHAR2
+
+    export-/-printing: 
+      include-in-export-/-print: false
+
+    enable-users-to: 
+      sort: false
+
+  - # ====== Column: NOMBRE_PRODUCTO =============================
+    id: 16593443066211702
+    identification: 
+      column-name: NOMBRE_PRODUCTO
+      type: Textarea
+
+    heading: 
+      heading: Nombre Producto
+      alignment: start
+
+    settings: 
+      resizable: true
+      auto-height: false
+      character-counter: false
+      trim-spaces: Leading and Trailing
+
+    layout: 
+      sequence: 50
+      column-alignment: start
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: true
+      maximum-length: 500
+
+    source: 
+      type: Database Column
+      database-column: NOMBRE_PRODUCTO
+      data-type: VARCHAR2
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    session-state: 
+      data-type: VARCHAR2
+
+    column-filter: 
+      enabled: true
+      performance-impacting-operators: 
+      - Contains
+      - Starts With
+      - Case Insensitive
+      - Regular Expression
+      text-case: Mixed
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: false
+      hide: true
+
+  - # ====== Column: CANTIDAD_PEDIDA =============================
+    id: 16593555148211703
+    identification: 
+      column-name: CANTIDAD_PEDIDA
+      type: Display Only
+
+    heading: 
+      heading: Cantidad Pedida
+      alignment: start
+
+    settings: 
+      format: Plain Text
+      based-on: Item Value
+
+    layout: 
+      sequence: 60
+      column-alignment: start
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    source: 
+      type: Database Column
+      database-column: CANTIDAD_PEDIDA
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    session-state: 
+      data-type: VARCHAR2
+
+    column-filter: 
+      enabled: true
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: CANTIDAD_RECIBIDA_ACUM ======================
+    id: 16593622165211704
+    identification: 
+      column-name: CANTIDAD_RECIBIDA_ACUM
+      type: Display Only
+
+    heading: 
+      heading: Cantidad Recibida Acum
+      alignment: start
+
+    settings: 
+      format: Plain Text
+      based-on: Item Value
+
+    layout: 
+      sequence: 70
+      column-alignment: start
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    source: 
+      type: Database Column
+      database-column: CANTIDAD_RECIBIDA_ACUM
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    session-state: 
+      data-type: VARCHAR2
+
+    column-filter: 
+      enabled: true
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: CANTIDAD_PENDIENTE ==========================
+    id: 16593745689211705
+    identification: 
+      column-name: CANTIDAD_PENDIENTE
+      type: Display Only
+
+    heading: 
+      heading: Cantidad Pendiente
+      alignment: start
+
+    settings: 
+      format: Plain Text
+      based-on: Item Value
+
+    layout: 
+      sequence: 80
+      column-alignment: start
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    source: 
+      type: Database Column
+      database-column: CANTIDAD_PENDIENTE
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    session-state: 
+      data-type: VARCHAR2
+
+    column-filter: 
+      enabled: true
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: CANTIDAD_A_RECIBIR ==========================
+    id: 16593805398211706
+    identification: 
+      column-name: CANTIDAD_A_RECIBIR
+      type: Number Field
+
+    heading: 
+      heading: Cantidad A Recibir
+      alignment: end
+
+    settings: 
+      number-alignment: Start
+      virtual-keyboard: Decimal
+
+    layout: 
+      sequence: 90
+      column-alignment: end
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: false
+
+    source: 
+      type: Database Column
+      database-column: CANTIDAD_A_RECIBIR
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: APEX$ROW_ACTION =============================
+    id: 16593992517211707
+    identification: 
+      column-name: APEX$ROW_ACTION
+      type: Actions Menu
+
+    layout: 
+      sequence: 20
+
+  - # ====== Column: APEX$ROW_SELECTOR ===========================
+    id: 16594046441211708
+    identification: 
+      column-name: APEX$ROW_SELECTOR
+      type: Row Selector
+
+    settings: 
+      enable-multi-select: true
+      show-select-all: true
+      hide-control: false
+
+    layout: 
+      sequence: 10
+
+  printing: 
+    page: 
+      size: A4
+      orientation: Landscape
+      units: Millimeters
+      width: 297
+      height: 210
+      border-width: 0.5
+      border-color: '#666666'
+
+    page-header: 
+      font: Helvetica
+      font-weight: Normal
+      font-size: 12
+      font-color: '#000000'
+      alignment: center
+      page-header-text: Detalle de orden - Recepción
+
+    column-headings: 
+      font: Helvetica
+      font-weight: Bold
+      font-size: 10
+      font-color: '#000000'
+      background-color: '#EEEEEE'
+
+    columns: 
+      font: Helvetica
+      font-weight: Normal
+      font-size: 10
+      font-color: '#000000'
+      background-color: '#FFFFFF'
+
+    page-footer: 
+      font: Helvetica
+      font-weight: Normal
+      font-size: 12
+      font-color: '#000000'
+      alignment: center
+
+- # ====== Region: Breadcrumb ==================================
+  id: 16589820606057879
+  identification: 
+    name: Breadcrumb
+    type: Breadcrumb
+
+  source: 
+    breadcrumb: Breadcrumb # 7705913887831249
+
+  layout: 
+    sequence: 10
+    parent-region: No Parent
+    slot: REGION_POSITION_01
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Title Bar
+    template-options: 
+    - '#DEFAULT#'
+    - t-BreadcrumbRegion--useBreadcrumbTitle
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    appearance: 
+      breadcrumb-template: Breadcrumb
+      template-options: 
+      - '#DEFAULT#'
+
+- # ====== Region: Detalle =====================================
+  id: 16594704229211715
+  identification: 
+    name: Detalle
+    title: Detalle de Orden
+    type: Classic Report
+
+  source: 
+    location: Local Database
+    type: SQL Query
+    sql-query: |
+      SELECT
+        -- F02: ID_DETALLE_OC sigue siendo necesario 
+        -- para el FK en DETALLE_RECEPCION_COMPRA
+        APEX_ITEM.HIDDEN(2, doc.ID_DETALLE_OC)            AS F02,
+      
+        -- F03: ID_PRODUCTO
+        APEX_ITEM.HIDDEN(3, dcp.ID_PRODUCTO)              AS F03,
+      
+        pr.NOMBRE                                         AS NOMBRE_PRODUCTO,
+      
+        -- ✅ Cantidad según FACTURA (no según OC)
+        dcp.CANTIDAD                                      AS CANTIDAD_PEDIDA,
+      
+        -- ✅ Acumulado recibido filtrando por COMPROBANTE
+        NVL((
+          SELECT SUM(dr.CANTIDAD_RECIBIDA)
+            FROM DETALLE_RECEPCION_COMPRA dr
+            JOIN RECEPCIONES_COMPRA r
+              ON r.ID_RECEPCION = dr.ID_RECEPCION
+           WHERE r.ID_COMPROBANTE = dcp.ID_COMPROBANTE    -- ← cambio clave
+             AND dr.ID_DETALLE_OC = doc.ID_DETALLE_OC
+        ), 0)                                             AS CANTIDAD_RECIBIDA_ACUM,
+      
+        -- ✅ Pendiente contra factura
+        dcp.CANTIDAD - NVL((
+          SELECT SUM(dr.CANTIDAD_RECIBIDA)
+            FROM DETALLE_RECEPCION_COMPRA dr
+            JOIN RECEPCIONES_COMPRA r
+              ON r.ID_RECEPCION = dr.ID_RECEPCION
+           WHERE r.ID_COMPROBANTE = dcp.ID_COMPROBANTE
+             AND dr.ID_DETALLE_OC = doc.ID_DETALLE_OC
+        ), 0)                                             AS CANTIDAD_PENDIENTE,
+      
+        -- F04: hidden para validación (pendiente)
+        APEX_ITEM.HIDDEN(
+          4,
+          dcp.CANTIDAD - NVL((
+            SELECT SUM(dr.CANTIDAD_RECIBIDA)
+              FROM DETALLE_RECEPCION_COMPRA dr
+              JOIN RECEPCIONES_COMPRA r
+                ON r.ID_RECEPCION = dr.ID_RECEPCION
+             WHERE r.ID_COMPROBANTE = dcp.ID_COMPROBANTE
+               AND dr.ID_DETALLE_OC = doc.ID_DETALLE_OC
+          ), 0)
+        )                                                 AS F04,
+      
+        -- F01: campo editable
+        APEX_ITEM.TEXT(
+          p_idx       => 1,
+          p_value     => 0,
+          p_size      => 10,
+          p_maxlength => 12
+        )                                                 AS CANTIDAD_A_RECIBIR
+      
+      -- ✅ Base ahora es la FACTURA
+      FROM DETALLE_COMPROBANTE_PROV dcp
+      JOIN DETALLE_ORDEN_COMPRA doc
+        ON doc.ID_ORDEN_COMPRA = :P106_ID_ORDEN_COMPRA
+       AND doc.ID_PRODUCTO     = dcp.ID_PRODUCTO          -- link por producto
+      JOIN PRODUCTOS pr
+        ON pr.ID_PRODUCTO = dcp.ID_PRODUCTO
+      WHERE dcp.ID_COMPROBANTE = :P106_ID_COMPROBANTE     -- ← filtro principal
+        AND dcp.CANTIDAD - NVL((                          -- ← solo pendientes
+          SELECT SUM(dr.CANTIDAD_RECIBIDA)
+            FROM DETALLE_RECEPCION_COMPRA dr
+            JOIN RECEPCIONES_COMPRA r
+              ON r.ID_RECEPCION = dr.ID_RECEPCION
+           WHERE r.ID_COMPROBANTE = dcp.ID_COMPROBANTE
+             AND dr.ID_DETALLE_OC = doc.ID_DETALLE_OC
+        ), 0) > 0;
+
+  order-by: 
+    type: None
+
+  layout: 
+    sequence: 70
+    parent-region: No Parent
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Standard
+    template-options: 
+    - '#DEFAULT#'
+    - t-Region--scrollBody
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  server-cache: 
+    caching: Disabled
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    layout: 
+      number-of-rows-type: Static Value
+      number-of-rows: 15
+
+    appearance: 
+      template-type: Theme
+      template: Standard
+      template-options: 
+      - '#DEFAULT#'
+      - t-Report--altRowsDefault
+      - t-Report--rowHighlight
+
+    pagination: 
+      type: Row Ranges X to Y (with next and previous links)
+      display-position: Bottom - Right
+      partial-page-refresh: true
+
+    performance: 
+      lazy-loading: false
+
+    break-formatting: 
+      break-columns: No Break
+
+    advanced: 
+      strip-html: false
+      sort-nulls: Last
+
+    heading: 
+      type: Custom Headings
+
+    download: 
+      csv-export-enabled: false
+
+    printing: 
+      enabled: false
+
+  columns: 
+  - # ====== Column: F02 =========================================
+    id: 16594827927211716
+    identification: 
+      column-name: F02
+      type: Plain Text
+
+    heading: 
+      alignment: start
+
+    layout: 
+      sequence: 10
+      column-alignment: start
+
+    accessibility: 
+      value-identifies-row: false
+
+    column-formatting: 
+      css-classes: 
+      - col-oculta
+
+    sorting: 
+      sortable: true
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    advanced: 
+      compute-sum: false
+
+    ui-defaults-reference: 
+      table-owner: Parsing Schema
+
+    security: 
+      escape-special-characters: false
+
+  - # ====== Column: F03 =========================================
+    id: 16594920008211717
+    identification: 
+      column-name: F03
+      type: Plain Text
+
+    heading: 
+      alignment: start
+
+    layout: 
+      sequence: 20
+      column-alignment: start
+
+    accessibility: 
+      value-identifies-row: false
+
+    column-formatting: 
+      css-classes: 
+      - col-oculta
+
+    sorting: 
+      sortable: true
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    advanced: 
+      compute-sum: false
+
+    ui-defaults-reference: 
+      table-owner: Parsing Schema
+
+    security: 
+      escape-special-characters: false
+
+  - # ====== Column: NOMBRE_PRODUCTO =============================
+    id: 16595014278211718
+    identification: 
+      column-name: NOMBRE_PRODUCTO
+      type: Plain Text
+
+    heading: 
+      heading: Producto
+      alignment: start
+
+    layout: 
+      sequence: 30
+      column-alignment: start
+
+    accessibility: 
+      value-identifies-row: false
+
+    sorting: 
+      sortable: true
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    advanced: 
+      compute-sum: false
+
+    ui-defaults-reference: 
+      table-owner: Parsing Schema
+
+    security: 
+      escape-special-characters: true
+
+  - # ====== Column: CANTIDAD_PEDIDA =============================
+    id: 16595106936211719
+    identification: 
+      column-name: CANTIDAD_PEDIDA
+      type: Plain Text
+
+    heading: 
+      heading: Cantidad Pedida
+      alignment: end
+
+    layout: 
+      sequence: 40
+      column-alignment: end
+
+    accessibility: 
+      value-identifies-row: false
+
+    sorting: 
+      sortable: true
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    advanced: 
+      compute-sum: false
+
+    ui-defaults-reference: 
+      table-owner: Parsing Schema
+
+    security: 
+      escape-special-characters: true
+
+  - # ====== Column: CANTIDAD_RECIBIDA_ACUM ======================
+    id: 16595240873211720
+    identification: 
+      column-name: CANTIDAD_RECIBIDA_ACUM
+      type: Plain Text
+
+    heading: 
+      heading: Cantidad Recibida
+      alignment: end
+
+    layout: 
+      sequence: 50
+      column-alignment: end
+
+    accessibility: 
+      value-identifies-row: false
+
+    sorting: 
+      sortable: true
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    advanced: 
+      compute-sum: false
+
+    ui-defaults-reference: 
+      table-owner: Parsing Schema
+
+    security: 
+      escape-special-characters: true
+
+  - # ====== Column: CANTIDAD_PENDIENTE ==========================
+    id: 16595355559211721
+    identification: 
+      column-name: CANTIDAD_PENDIENTE
+      type: Plain Text
+
+    heading: 
+      heading: Cantidad Pendiente
+      alignment: end
+
+    layout: 
+      sequence: 60
+      column-alignment: end
+
+    accessibility: 
+      value-identifies-row: false
+
+    sorting: 
+      sortable: true
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    advanced: 
+      compute-sum: false
+
+    ui-defaults-reference: 
+      table-owner: Parsing Schema
+
+    security: 
+      escape-special-characters: true
+
+  - # ====== Column: CANTIDAD_A_RECIBIR ==========================
+    id: 16595417189211722
+    identification: 
+      column-name: CANTIDAD_A_RECIBIR
+      type: Plain Text
+
+    heading: 
+      heading: Cantidad a Recibir
+      alignment: start
+
+    layout: 
+      sequence: 70
+      column-alignment: start
+
+    accessibility: 
+      value-identifies-row: false
+
+    sorting: 
+      sortable: true
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    advanced: 
+      compute-sum: false
+
+    ui-defaults-reference: 
+      table-owner: Parsing Schema
+
+    security: 
+      escape-special-characters: false
+
+  - # ====== Column: F04 =========================================
+    id: 16595784055211725
+    identification: 
+      column-name: F04
+      type: Plain Text
+
+    heading: 
+      alignment: start
+
+    layout: 
+      sequence: 80
+      column-alignment: start
+
+    accessibility: 
+      value-identifies-row: false
+
+    column-formatting: 
+      css-classes: 
+      - col-oculta
+
+    sorting: 
+      sortable: true
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    advanced: 
+      compute-sum: false
+
+    ui-defaults-reference: 
+      table-owner: Parsing Schema
+
+    security: 
+      escape-special-characters: false
+
+page-items: 
+- # ====== Page Item: P106_ID_ORDEN_COMPRA =====================
+  id: 14821009329450435
+  identification: 
+    name: P106_ID_ORDEN_COMPRA
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 30
+    region: No Parent
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Session (Persistent)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P106_OC_NUMERO ===========================
+  id: 14821265045450437
+  identification: 
+    name: P106_OC_NUMERO
+    type: Display Only
+
+  label: 
+    label: Nro de Orden
+    alignment: Left
+
+  settings: 
+    format: Plain Text
+    based-on: Item Value
+    show-line-breaks: true
+    send-on-page-submit: true
+
+  layout: 
+    sequence: 10
+    region: Region 1 # 14820944924450434
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Session (Persistent)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P106_OC_PROVEEDOR ========================
+  id: 14821311690450438
+  identification: 
+    name: P106_OC_PROVEEDOR
+    type: Display Only
+
+  label: 
+    label: Proveedor
+    alignment: Left
+
+  settings: 
+    format: Plain Text
+    based-on: Item Value
+    show-line-breaks: true
+    send-on-page-submit: true
+
+  layout: 
+    sequence: 30
+    region: Region 1 # 14820944924450434
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Session (Persistent)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P106_OC_FECHA ============================
+  id: 14821491048450439
+  identification: 
+    name: P106_OC_FECHA
+    type: Display Only
+
+  label: 
+    label: Fecha
+    alignment: Left
+
+  settings: 
+    format: Plain Text
+    based-on: Item Value
+    show-line-breaks: true
+    send-on-page-submit: true
+
+  layout: 
+    sequence: 20
+    region: Region 1 # 14820944924450434
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: false
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Session (Persistent)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P106_ESTADO ==============================
+  id: 14821511996450440
+  identification: 
+    name: P106_ESTADO
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 50
+    region: Region 1 # 14820944924450434
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Session (Persistent)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P106_OC_TOTAL ============================
+  id: 14821696302450441
+  identification: 
+    name: P106_OC_TOTAL
+    type: Display Only
+
+  label: 
+    label: Total
+    alignment: Left
+
+  settings: 
+    format: Plain Text
+    based-on: Item Value
+    show-line-breaks: true
+    send-on-page-submit: true
+
+  layout: 
+    sequence: 40
+    region: Region 1 # 14820944924450434
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: false
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Session (Persistent)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P106_ID_RECEPCION ========================
+  id: 14821960668450444
+  identification: 
+    name: P106_ID_RECEPCION
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 10
+    region: Recepción # 14821899402450443
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Session (Persistent)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P106_REC_FECHA ===========================
+  id: 14822058632450445
+  identification: 
+    name: P106_REC_FECHA
+    type: Date Picker
+
+  label: 
+    label: Fecha de Recepcion
+    alignment: Left
+
+  settings: 
+    show-time: false
+    display-as: Popup
+    minimum-date: None
+    maximum-date: None
+    multiple-months: No
+    use-defaults: true
+
+  layout: 
+    sequence: 20
+    region: Recepción # 14821899402450443
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 30
+
+  validation: 
+    value-required: false
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  default: 
+    type: Expression
+    language: PL/SQL
+    pl/sql-expression: SYSDATE
+
+  session-state: 
+    storage: Per Session (Persistent)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P106_REC_OBS =============================
+  id: 14822178448450446
+  identification: 
+    name: P106_REC_OBS
+    type: Textarea
+
+  label: 
+    label: 'Observación '
+    alignment: Left
+
+  settings: 
+    resizable: true
+    auto-height: false
+    character-counter: false
+    trim-spaces: Leading and Trailing
+
+  layout: 
+    sequence: 30
+    region: Recepción # 14821899402450443
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 30
+    height: 5
+
+  validation: 
+    value-required: false
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Session (Persistent)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P106_REC_ID_EMPLEADO =====================
+  id: 14822268551450447
+  identification: 
+    name: P106_REC_ID_EMPLEADO
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 40
+    region: Recepción # 14821899402450443
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  default: 
+    type: SQL Query (return single value)
+    sql-query-(return-single-value): |
+      SELECT ID_EMPLEADO 
+      FROM EMPLEADOS
+      WHERE CODIGO_USUARIO = :APP_USER
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Session (Persistent)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P106_COD_USUARIO =========================
+  id: 16597130929211739
+  identification: 
+    name: P106_COD_USUARIO
+    type: Display Only
+
+  label: 
+    label: Usuario
+    alignment: Left
+
+  settings: 
+    format: Plain Text
+    based-on: Item Value
+    show-line-breaks: true
+    send-on-page-submit: true
+
+  layout: 
+    sequence: 50
+    region: Recepción # 14821899402450443
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  default: 
+    type: Expression
+    language: PL/SQL
+    pl/sql-expression: ':APP_USER'
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Session (Persistent)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P106_ESTADO_TEXTO ========================
+  id: 16597258234211740
+  identification: 
+    name: P106_ESTADO_TEXTO
+    type: Display Only
+
+  label: 
+    label: Estado
+    alignment: Left
+
+  settings: 
+    format: Plain Text
+    based-on: Item Value
+    show-line-breaks: true
+    send-on-page-submit: true
+
+  layout: 
+    sequence: 60
+    region: Region 1 # 14820944924450434
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Session (Persistent)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P106_ID_COMPROBANTE ======================
+  id: 20233719292558308
+  identification: 
+    name: P106_ID_COMPROBANTE
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 40
+    region: No Parent
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Session (Persistent)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+buttons: 
+- # ====== Button: BT_GUARDAR ==================================
+  id: 16594209691211710
+  identification: 
+    button-name: BT_GUARDAR
+    label: Guardar recepción
+
+  layout: 
+    sequence: 10
+    region: Detalle # 16594704229211715
+    slot: CHANGE
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text
+    hot: true
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Submit Page
+    execute-validations: true
+    show-processing: false
+    warn-on-unsaved-changes: Do Not Check
+
+validations: 
+- # ====== Validation: VAL_AL_MENOS_UNA_CANTIDAD ===============
+  id: 16595835231211726
+  identification: 
+    name: VAL_AL_MENOS_UNA_CANTIDAD
+
+  execution: 
+    sequence: 5
+
+  validation: 
+    type: Function Body (returning Boolean)
+    language: PL/SQL
+    pl/sql-function-body: |
+      DECLARE
+        l_count  PLS_INTEGER;
+        l_val    VARCHAR2(4000);
+      BEGIN
+        -- Si no hay G_F01, consideramos que no hay datos
+        l_count := NVL(APEX_APPLICATION.G_F01.COUNT, 0);
+      
+        IF l_count = 0 THEN
+          RETURN FALSE;
+        END IF;
+      
+        FOR i IN 1 .. l_count LOOP
+          l_val := TRIM(APEX_APPLICATION.G_F01(i));
+      
+          -- Si el usuario escribió algo que no sea vacío ni "0"
+          IF l_val IS NOT NULL AND l_val <> '0' THEN
+            RETURN TRUE;
+          END IF;
+        END LOOP;
+      
+        -- Si llegamos hasta acá, todas las filas son NULL o "0"
+        RETURN FALSE;
+      
+      EXCEPTION
+        WHEN OTHERS THEN
+          -- Si algo raro pasa, por seguridad consideramos que la validación falla
+          RETURN FALSE;
+      END;
+    always-execute: false
+
+  error: 
+    error-message: Debes ingresar al menos una cantidad a recibir mayor a cero.
+    display-location: Inline with Field and in Notification
+
+  server-side-condition: 
+    when-button-pressed: BT_GUARDAR # 16594209691211710
+
+- # ====== Validation: VAL_CANTIDAD_NO_SUPERA_PENDIENTE ========
+  id: 16595927755211727
+  identification: 
+    name: VAL_CANTIDAD_NO_SUPERA_PENDIENTE
+
+  execution: 
+    sequence: 8
+
+  validation: 
+    type: Function Body (returning Boolean)
+    language: PL/SQL
+    pl/sql-function-body: |
+      DECLARE
+        l_count   PLS_INTEGER;
+        l_raw     VARCHAR2(4000);
+        l_cant    NUMBER;
+        l_pend    NUMBER;
+      BEGIN
+        -- Si no hay filas en F01, no validamos nada (la otra validación se encarga del "todo cero")
+        l_count := NVL(APEX_APPLICATION.G_F01.COUNT, 0);
+      
+        IF l_count = 0 THEN
+          RETURN TRUE;
+        END IF;
+      
+        FOR i IN 1 .. l_count LOOP
+          -- Si no hay pendiente para este índice, salimos del loop por seguridad
+          IF APEX_APPLICATION.G_F04.COUNT < i THEN
+            EXIT;
+          END IF;
+      
+          l_raw := TRIM(APEX_APPLICATION.G_F01(i));
+      
+          -- Si está vacío, lo tratamos como 0
+          IF l_raw IS NULL THEN
+            l_cant := 0;
+          ELSE
+            -- Intentamos convertir a número
+            BEGIN
+              l_cant := TO_NUMBER(l_raw);
+            EXCEPTION
+              WHEN OTHERS THEN
+                -- Si no es número válido, la validación falla
+                RETURN FALSE;
+            END;
+          END IF;
+      
+          -- Pendiente (F04 viene del hidden que armamos)
+          l_pend := NVL(TO_NUMBER(APEX_APPLICATION.G_F04(i)), 0);
+      
+          -- No permitir negativos ni superar pendiente
+          IF l_cant < 0 THEN
+            RETURN FALSE;
+          ELSIF l_cant > l_pend THEN
+            RETURN FALSE;
+          END IF;
+        END LOOP;
+      
+        RETURN TRUE;
+      END;
+    always-execute: false
+
+  error: 
+    error-message: La cantidad a recibir debe ser numérica, no negativa y no puede superar la cantidad pendiente.
+    display-location: Inline with Field and in Notification
+
+  server-side-condition: 
+    when-button-pressed: BT_GUARDAR # 16594209691211710
+
+processes: 
+- # ====== Process: CARGAR_DATOS_OC ============================
+  id: 14821769507450442
+  identification: 
+    name: CARGAR_DATOS_OC
+    type: Execute Code
+    execution-chain: None
+
+  source: 
+    location: Local Database
+    language: PL/SQL
+    pl/sql-code: |
+      DECLARE
+        v_nombre_proveedor PERSONAS.PRIMER_NOMBRE%TYPE;
+      BEGIN
+        -- Datos de la OC
+        SELECT oc.ID_ORDEN_COMPRA,
+               oc.FECHA_ORDEN,
+               oc.ESTADO,
+               oc.TOTAL_ORDEN,
+               p.PRIMER_NOMBRE || ' ' || p.PRIMER_APELLIDO,
+               CASE oc.ESTADO
+                    WHEN 'P' THEN 'Pendiente'
+                    WHEN 'R' THEN 'Recepción parcial'
+                    WHEN 'C' THEN 'Completa'
+                    WHEN 'A' THEN 'Anulada'
+                    ELSE 'Desconocido'
+               END
+          INTO :P106_OC_NUMERO,
+               :P106_OC_FECHA,
+               :P106_ESTADO,
+               :P106_OC_TOTAL,
+               v_nombre_proveedor,
+               :P106_ESTADO_TEXTO
+          FROM ORDENES_COMPRA oc
+          JOIN PERSONAS p
+            ON p.ID_PERSONA = oc.ID_PROVEEDOR
+         WHERE oc.ID_ORDEN_COMPRA = :P106_ID_ORDEN_COMPRA;
+      
+        :P106_OC_PROVEEDOR := v_nombre_proveedor;
+      
+        -- ✅ NUEVO: verificar que el comprobante pasado
+        -- pertenezca a esta OC (validación de seguridad)
+        BEGIN
+          SELECT ID_COMPROBANTE
+            INTO :P106_ID_COMPROBANTE
+            FROM COMPROBANTES_PROVEEDOR
+           WHERE ID_COMPROBANTE  = :P106_ID_COMPROBANTE
+             AND ID_ORDEN_COMPRA = :P106_ID_ORDEN_COMPRA;
+        EXCEPTION
+          WHEN NO_DATA_FOUND THEN
+            RAISE_APPLICATION_ERROR(-20001,
+              'El comprobante no corresponde a esta Orden de Compra.');
+        END;
+      END;
+
+  execution: 
+    sequence: 10
+    point: Before Header
+    run-process: Once Per Page Visit (default)
+
+- # ====== Process: Detalle de orden - Save Interactive Grid Dat
+  id: 16594181858211709
+  identification: 
+    name: Detalle de orden - Save Interactive Grid Data
+    type: Interactive Grid - Automatic Row Processing (DML)
+    execution-chain: None
+    editable-region: Detalle de orden # 14822380992450448
+
+  settings: 
+    target-type: Region Source
+    prevent-lost-updates: true
+    lock-row: Yes
+    return-primary-key(s)-after-insert: true
+
+  execution: 
+    sequence: 10
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+
+  server-side-condition: 
+    execution-scope: For Created and Modified Rows
+
+- # ====== Process: CREAR_CABECERA_RECEPCION ===================
+  id: 16594389608211711
+  identification: 
+    name: CREAR_CABECERA_RECEPCION
+    type: Execute Code
+    execution-chain: None
+
+  source: 
+    location: Local Database
+    language: PL/SQL
+    pl/sql-code: |
+      DECLARE
+        v_id_recepcion RECEPCIONES_COMPRA.ID_RECEPCION%TYPE;
+      BEGIN
+        INSERT INTO RECEPCIONES_COMPRA (
+          ID_ORDEN_COMPRA,
+          ID_COMPROBANTE,        -- ✅ NUEVO
+          FECHA_RECEPCION,
+          ID_EMPLEADO,
+          OBSERVACION
+        ) VALUES (
+          :P106_ID_ORDEN_COMPRA,
+          :P106_ID_COMPROBANTE,  -- ✅ NUEVO
+          :P106_REC_FECHA,
+          :P106_REC_ID_EMPLEADO,
+          :P106_REC_OBS
+        )
+        RETURNING ID_RECEPCION INTO v_id_recepcion;
+        :P106_ID_RECEPCION := v_id_recepcion;
+      END;
+
+  execution: 
+    sequence: 10
+    point: After Submit
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+
+  server-side-condition: 
+    when-button-pressed: BT_GUARDAR # 16594209691211710
+
+- # ====== Process: PROCESAR_DETALLE_RECEPCION =================
+  id: 16595566588211723
+  identification: 
+    name: PROCESAR_DETALLE_RECEPCION
+    type: Execute Code
+    execution-chain: None
+
+  source: 
+    location: Local Database
+    language: PL/SQL
+    pl/sql-code: |
+      DECLARE
+        v_cant_a_recibir  NUMBER;
+        v_id_det_oc       NUMBER;
+        v_id_producto     NUMBER;
+      BEGIN
+        -- Si no hay filas en F01, no hacemos nada
+        IF APEX_APPLICATION.G_F01.COUNT = 0 THEN
+          RETURN;
+        END IF;
+      
+        FOR i IN 1 .. APEX_APPLICATION.G_F01.COUNT LOOP
+          -- Cantidad a recibir (puede venir vacía)
+          v_cant_a_recibir := NVL(TO_NUMBER(APEX_APPLICATION.G_F01(i)), 0);
+      
+          -- Si no existe índice en F02 o F03, saltamos la fila
+          IF APEX_APPLICATION.G_F02.COUNT < i
+             OR APEX_APPLICATION.G_F03.COUNT < i
+          THEN
+            CONTINUE;
+          END IF;
+      
+          v_id_det_oc   := TO_NUMBER(APEX_APPLICATION.G_F02(i));
+          v_id_producto := TO_NUMBER(APEX_APPLICATION.G_F03(i));
+      
+          IF v_cant_a_recibir > 0 THEN
+            INSERT INTO DETALLE_RECEPCION_COMPRA (
+              ID_RECEPCION,
+              ID_DETALLE_OC,
+              ID_PRODUCTO,
+              CANTIDAD_RECIBIDA
+            ) VALUES (
+              :P106_ID_RECEPCION,
+              v_id_det_oc,
+              v_id_producto,
+              v_cant_a_recibir
+            );
+          END IF;
+        END LOOP;
+      END;
+      
+
+  execution: 
+    sequence: 20
+    point: After Submit
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+
+  server-side-condition: 
+    when-button-pressed: BT_GUARDAR # 16594209691211710
+
+- # ====== Process: RECALCULAR_ESTADO_OC =======================
+  id: 16595605082211724
+  identification: 
+    name: RECALCULAR_ESTADO_OC
+    type: Execute Code
+    execution-chain: None
+
+  source: 
+    location: Local Database
+    language: PL/SQL
+    pl/sql-code: |
+      BEGIN
+        RECALCULAR_ESTADO_OC(
+          P_ID_OC          => :P106_ID_ORDEN_COMPRA,
+          P_ID_COMPROBANTE => :P106_ID_COMPROBANTE   -- ✅ NUEVO
+        );
+      END;
+
+  execution: 
+    sequence: 30
+    point: After Submit
+    run-process: Once Per Page Visit (default)
+
+  success-message: 
+    success-message: Recepción registrada correctamente.
+
+  error: 
+    error-message: Error al registrar la recepción.
+    display-location: Inline in Notification
+
+  server-side-condition: 
+    when-button-pressed: BT_GUARDAR # 16594209691211710
+
+branches: 
+- # ====== Branch: BR_VOLVER_MISMA_PAGINA ======================
+  id: 16596069967211728
+  identification: 
+    name: BR_VOLVER_MISMA_PAGINA
+
+  execution: 
+    sequence: 10
+    point: After Processing
+
+  behavior: 
+    type: Page or URL (Redirect)
+    target: 
+      url: 'f?p=&APP_ID.:106:&SESSION.::&DEBUG.::P106_ID_ORDEN_COMPRA:&P106_ID_ORDEN_COMPRA.&success_msg=#SUCCESS_MSG#'
+      page: 106 # Recepción de Orden de Compra
+      values: 
+        p106_id_orden_compra: '&P106_ID_ORDEN_COMPRA.'
+
+  server-side-condition: 
+    when-button-pressed: BT_GUARDAR # 16594209691211710
+

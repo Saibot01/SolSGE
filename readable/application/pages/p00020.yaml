@@ -1,0 +1,962 @@
+---
+# ====== Page: Empleados IG Forms ============================
+id: 20
+identification: 
+  name: Empleados IG Forms
+  alias: EMPLEADOS-IG-FORMS
+  title: Empleados IG Forms
+
+appearance: 
+  page-mode: Modal Dialog
+  dialog-template: Drawer
+  template-options: 
+  - '#DEFAULT#'
+  - js-dialog-class-t-Drawer--pullOutEnd
+
+dialog: 
+  chained: false
+  resizable: true
+
+navigation-menu: 
+  override-user-interface-level: false
+
+navigation: 
+  cursor-focus: Do not focus cursor
+  warn-on-unsaved-changes: true
+
+security: 
+  authentication: Page Requires Authentication
+  deep-linking: Application Default
+  page-access-protection: Arguments Must Have Checksum
+  form-auto-complete: Off
+  browser-cache: Application Default
+
+session-management: 
+  rejoin-sessions: Application Default
+
+advanced: 
+  enable-duplicate-page-submissions: Yes - Enable page to be re-posted
+  reload-on-submit: Only for Success
+
+server-cache: 
+  caching: Disabled
+
+regions: 
+- # ====== Region: Empleados IG Forms ==========================
+  id: 11505182297464549
+  identification: 
+    name: Empleados IG Forms
+    type: Form
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: EMPLEADOS
+    include-rowid-column: false
+
+  layout: 
+    sequence: 10
+    parent-region: No Parent
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Blank with Attributes
+    template-options: 
+    - '#DEFAULT#'
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    edit: 
+      enabled: true
+      allowed-operations: 
+      - Add Row
+      - Update Row
+      - Delete Row
+      lost-update-type: Row Values
+
+- # ====== Region: Buttons =====================================
+  id: 11511726818464568
+  identification: 
+    name: Buttons
+    type: Static Content
+
+  layout: 
+    sequence: 20
+    parent-region: No Parent
+    slot: REGION_POSITION_03
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Buttons Container
+    template-options: 
+    - '#DEFAULT#'
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    settings: 
+      output-as: Text (escape special characters)
+      show-line-breaks: true
+
+page-items: 
+- # ====== Page Item: P20_ID_EMPLEADO ==========================
+  id: 11505424286464554
+  identification: 
+    name: P20_ID_EMPLEADO
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 10
+    region: Empleados IG Forms # 11505182297464549
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Empleados IG Forms # 11505182297464549
+    column: ID_EMPLEADO
+    data-type: NUMBER
+    query-only: false
+    primary-key: true
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Request (Memory Only)
+
+  security: 
+    session-state-protection: Checksum Required - Session Level
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P20_ID_PERSONA ===========================
+  id: 11505829993464560
+  identification: 
+    name: P20_ID_PERSONA
+    type: Popup LOV
+
+  label: 
+    label: Nro Documento
+    alignment: Left
+
+  settings: 
+    display-as: Inline Popup
+    initial-fetch: Automatic
+    manual-entry: false
+    fetch-on-search: false
+
+  search: 
+    match-type: Contains
+    case-sensitive: false
+    minimum-characters: 0
+
+  multiple-values: 
+    type: No
+
+  layout: 
+    sequence: 20
+    region: Empleados IG Forms # 11505182297464549
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 30
+
+  validation: 
+    value-required: true
+
+  list-of-values: 
+    type: Shared Component
+    list-of-values: PERSONAS.NRO_DOCUMENTO_1 # 9739886888480172
+    display-extra-values: true
+    display-null-value: true
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Empleados IG Forms # 11505182297464549
+    column: ID_PERSONA
+    data-type: NUMBER
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P20_NOMBRE ===============================
+  id: 11506293914464563
+  identification: 
+    name: P20_NOMBRE
+    type: Text Field
+
+  label: 
+    label: Nombre
+    alignment: Right
+
+  settings: 
+    subtype: Text
+    trim-spaces: Leading and Trailing
+    text-case: NO CHANGE
+    submit-when-enter-pressed: false
+    disabled: false
+
+  layout: 
+    sequence: 30
+    region: Empleados IG Forms # 11505182297464549
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 32
+
+  validation: 
+    value-required: false
+    maximum-length: 255
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Empleados IG Forms # 11505182297464549
+    column: NOMBRE
+    data-type: VARCHAR2
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P20_FECHA_ALTA ===========================
+  id: 11506693488464563
+  identification: 
+    name: P20_FECHA_ALTA
+    type: Display Only
+
+  label: 
+    label: Fecha Alta
+    alignment: Left
+
+  settings: 
+    format: Plain Text
+    based-on: Item Value
+    show-line-breaks: true
+    send-on-page-submit: true
+
+  layout: 
+    sequence: 40
+    region: Empleados IG Forms # 11505182297464549
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Empleados IG Forms # 11505182297464549
+    column: FECHA_ALTA
+    data-type: DATE
+    query-only: true
+    primary-key: false
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Request (Memory Only)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P20_CARGO ================================
+  id: 11507022620464563
+  identification: 
+    name: P20_CARGO
+    type: Text Field
+
+  label: 
+    label: Cargo
+    alignment: Right
+
+  settings: 
+    subtype: Text
+    trim-spaces: Leading and Trailing
+    text-case: NO CHANGE
+    submit-when-enter-pressed: false
+    disabled: false
+
+  layout: 
+    sequence: 50
+    region: Empleados IG Forms # 11505182297464549
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 32
+
+  validation: 
+    value-required: false
+    maximum-length: 255
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Empleados IG Forms # 11505182297464549
+    column: CARGO
+    data-type: VARCHAR2
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P20_CONTRASEÑA ===========================
+  id: 11507433427464564
+  identification: 
+    name: P20_CONTRASEÑA
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 60
+    region: Empleados IG Forms # 11505182297464549
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Empleados IG Forms # 11505182297464549
+    column: CONTRASEÑA
+    data-type: VARCHAR2
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Request (Memory Only)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P20_CODIGO_USUARIO =======================
+  id: 11507890309464564
+  identification: 
+    name: P20_CODIGO_USUARIO
+    type: Textarea
+
+  label: 
+    label: Codigo  de Usuario
+    alignment: Left
+
+  settings: 
+    resizable: true
+    auto-height: false
+    character-counter: false
+    trim-spaces: Leading and Trailing
+
+  layout: 
+    sequence: 70
+    region: Empleados IG Forms # 11505182297464549
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 60
+    height: 4
+
+  validation: 
+    value-required: false
+    maximum-length: 1000
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Empleados IG Forms # 11505182297464549
+    column: CODIGO_USUARIO
+    data-type: VARCHAR2
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P20_CODIGO_VERIFICACION ==================
+  id: 11508236702464564
+  identification: 
+    name: P20_CODIGO_VERIFICACION
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 80
+    region: Empleados IG Forms # 11505182297464549
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Empleados IG Forms # 11505182297464549
+    column: CODIGO_VERIFICACION
+    data-type: VARCHAR2
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Request (Memory Only)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P20_CORREO ===============================
+  id: 11508611210464564
+  identification: 
+    name: P20_CORREO
+    type: Textarea
+
+  label: 
+    label: Correo Laboral
+    alignment: Left
+
+  settings: 
+    resizable: true
+    auto-height: false
+    character-counter: false
+    trim-spaces: Leading and Trailing
+
+  layout: 
+    sequence: 90
+    region: Empleados IG Forms # 11505182297464549
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 60
+    height: 4
+
+  validation: 
+    value-required: false
+    maximum-length: 1000
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Empleados IG Forms # 11505182297464549
+    column: CORREO
+    data-type: VARCHAR2
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+buttons: 
+- # ====== Button: CANCEL ======================================
+  id: 11512166136464568
+  identification: 
+    button-name: CANCEL
+    label: Cancelar
+
+  layout: 
+    sequence: 10
+    region: Buttons # 11511726818464568
+    slot: CLOSE
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text
+    hot: false
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Defined by Dynamic Action
+    execute-validations: true
+
+- # ====== Button: DELETE ======================================
+  id: 11513594051464572
+  identification: 
+    button-name: DELETE
+    label: Eliminar
+
+  layout: 
+    sequence: 20
+    region: Buttons # 11511726818464568
+    slot: DELETE
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text
+    hot: false
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Submit Page
+    execute-validations: false
+    show-processing: false
+    warn-on-unsaved-changes: Do Not Check
+    database-action: SQL DELETE action
+
+  confirmation: 
+    message: '&APP_TEXT$DELETE_MSG!RAW.'
+    style: Danger
+
+  server-side-condition: 
+    type: Item is NOT NULL
+    item: P20_ID_EMPLEADO
+
+- # ====== Button: SAVE ========================================
+  id: 11513994133464573
+  identification: 
+    button-name: SAVE
+    label: Guardar
+
+  layout: 
+    sequence: 30
+    region: Buttons # 11511726818464568
+    slot: NEXT
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text
+    hot: true
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Submit Page
+    execute-validations: true
+    show-processing: false
+    warn-on-unsaved-changes: Do Not Check
+    database-action: SQL UPDATE action
+
+  server-side-condition: 
+    type: Item is NOT NULL
+    item: P20_ID_EMPLEADO
+
+- # ====== Button: CREATE ======================================
+  id: 11514366380464573
+  identification: 
+    button-name: CREATE
+    label: Crear
+
+  layout: 
+    sequence: 40
+    region: Buttons # 11511726818464568
+    slot: NEXT
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text
+    hot: true
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Submit Page
+    execute-validations: true
+    show-processing: false
+    warn-on-unsaved-changes: Do Not Check
+    database-action: SQL INSERT action
+
+  server-side-condition: 
+    type: Item is NULL
+    item: P20_ID_EMPLEADO
+
+dynamic-actions: 
+- # ====== Dynamic Action: ASIGNAR_NOMBRE ======================
+  id: 9716648712137614
+  identification: 
+    name: ASIGNAR_NOMBRE
+
+  execution: 
+    sequence: 20
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Change
+    selection-type: Item(s)
+    item(s): 
+    - P20_ID_PERSONA
+
+  actions: 
+  - # ====== Action: Set Value ===================================
+    id: 9716760404137615
+    identification: 
+      action: Set Value
+
+    settings: 
+      set-type: SQL Statement
+      sql-statement: |
+        select primer_nombre||' '||primer_apellido 
+        		--into :NOMBRE
+        		from personas 
+        		where ID_PERSONA = :P20_ID_PERSONA;
+                
+      items-to-submit: 
+      - P20_ID_PERSONA
+      escape-special-characters: true
+      suppress-change-event: false
+
+    affected-elements: 
+      selection-type: Item(s)
+      item(s): 
+      - P20_NOMBRE
+
+    execution: 
+      sequence: 10
+      event: ASIGNAR_NOMBRE # 9716648712137614
+      fire-when-event-result-is: True
+      fire-on-initialization: true
+      stop-execution-on-error: true
+      wait-for-result: true
+
+- # ====== Dynamic Action: ASIGNAR COD_USUARIO =================
+  id: 9716819969137616
+  identification: 
+    name: ASIGNAR COD_USUARIO
+
+  execution: 
+    sequence: 30
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Change
+    selection-type: Item(s)
+    item(s): 
+    - P20_ID_PERSONA
+
+  actions: 
+  - # ====== Action: Set Value ===================================
+    id: 9716986940137617
+    identification: 
+      action: Set Value
+
+    settings: 
+      set-type: SQL Statement
+      sql-statement: |
+        SELECT UPPER(SUBSTR(primer_nombre, 1, 1) || primer_apellido)
+               --INTO v_codigo_usuario
+                FROM personas
+                where ID_PERSONA = :P20_ID_PERSONA;
+      items-to-submit: 
+      - P20_ID_PERSONA
+      escape-special-characters: true
+      suppress-change-event: false
+
+    affected-elements: 
+      selection-type: Item(s)
+      item(s): 
+      - P20_CODIGO_USUARIO
+
+    execution: 
+      sequence: 10
+      event: ASIGNAR COD_USUARIO # 9716819969137616
+      fire-when-event-result-is: True
+      fire-on-initialization: true
+      stop-execution-on-error: true
+      wait-for-result: true
+
+- # ====== Dynamic Action: Cancel Dialog =======================
+  id: 11512282509464568
+  identification: 
+    name: Cancel Dialog
+
+  execution: 
+    sequence: 10
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Click
+    selection-type: Button
+    button: CANCEL # 11512166136464568
+
+  actions: 
+  - # ====== Action: Cancel Dialog ===============================
+    id: 11513013124464571
+    identification: 
+      action: Cancel Dialog
+
+    execution: 
+      sequence: 10
+      event: Cancel Dialog # 11512282509464568
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+processes: 
+- # ====== Process: Initialize form Empleados IG Forms =========
+  id: 11514718947464575
+  identification: 
+    name: Initialize form Empleados IG Forms
+    type: Form - Initialization
+    execution-chain: None
+    form-region: Empleados IG Forms # 11505182297464549
+
+  execution: 
+    sequence: 10
+    point: Before Header
+    run-process: Once Per Page Visit (default)
+
+- # ====== Process: Process form Empleados IG Forms ============
+  id: 11515179556464575
+  identification: 
+    name: Process form Empleados IG Forms
+    type: Form - Automatic Row Processing (DML)
+    execution-chain: None
+    form-region: Empleados IG Forms # 11505182297464549
+
+  settings: 
+    target-type: Region Source
+    prevent-lost-updates: true
+    lock-row: Yes
+    return-primary-key(s)-after-insert: true
+
+  execution: 
+    sequence: 10
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+
+  server-side-condition: 
+    when-button-pressed: SAVE # 11513994133464573
+    type: Item is NOT NULL
+    item: P20_ID_EMPLEADO
+
+- # ====== Process: Close Dialog ===============================
+  id: 11515538130464575
+  identification: 
+    name: Close Dialog
+    type: Close Dialog
+    execution-chain: None
+
+  settings: 
+    show-success-messages: true
+
+  execution: 
+    sequence: 15
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+
+  server-side-condition: 
+    type: Request is contained in Value
+    value: CREATE,SAVE,DELETE
+
+- # ====== Process: Registrar Empleado =========================
+  id: 16597366208211741
+  identification: 
+    name: Registrar Empleado
+    type: Execute Code
+    execution-chain: None
+
+  source: 
+    location: Local Database
+    language: PL/SQL
+    pl/sql-code: |
+      DECLARE
+        v_id EMPLEADOS.ID_EMPLEADO%TYPE;
+      BEGIN
+        APEX_DEBUG.MESSAGE('Iniciando registro - ID_PERSONA: ' || :P20_ID_PERSONA);
+        
+        PKG_EMPLEADOS.registrar_empleado(
+          p_id_persona  => :P20_ID_PERSONA,
+          p_nombre      => :P20_NOMBRE,
+          p_cargo       => :P20_CARGO,
+          p_correo      => :P20_CORREO,
+          p_url_reset   => 'https://gd48788b1691042-orapdbtes.adb.sa-vinhedo-1.oraclecloudapps.com/ords/r/workplace/solsge/reset-password',
+          p_id_empleado => v_id
+        );
+      
+        :P20_ID_EMPLEADO := v_id;
+      
+        APEX_APPLICATION.G_PRINT_SUCCESS_MESSAGE :=
+          'Empleado registrado. Credenciales enviadas a ' || :P20_CORREO;
+      
+      EXCEPTION
+        WHEN OTHERS THEN
+          RAISE_APPLICATION_ERROR(-20099, 'Error: ' || SQLERRM);
+      END;
+
+  execution: 
+    sequence: 5
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    error-message: Error registrando el empleado
+    display-location: Inline in Notification
+
+  server-side-condition: 
+    when-button-pressed: CREATE # 11514366380464573
+    type: Item is NULL
+    item: P20_ID_EMPLEADO
+

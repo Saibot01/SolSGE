@@ -1,0 +1,4475 @@
+---
+# ====== Page: Proceso Ventas ================================
+id: 67
+identification: 
+  name: Proceso Ventas
+  alias: PROCESO-VENTAS
+  title: Proceso Ventas
+
+appearance: 
+  page-mode: Normal
+  page-template: Theme Default
+  template-options: 
+  - '#DEFAULT#'
+
+navigation-menu: 
+  override-user-interface-level: false
+
+navigation: 
+  cursor-focus: Do not focus cursor
+  warn-on-unsaved-changes: true
+
+javascript: 
+  function-and-global-variable-declaration: |
+    function recalculaImporte() {
+        var model = apex.region("Detalle_V").widget().interactiveGrid("getCurrentView").model;
+        var col_gl_amount = model.getFieldKey("TOTAL");
+        var col_iva = model.getFieldKey("IVA_CALCULADO");
+        var col_porcentaje = model.getFieldKey("PORCENTAJE");
+    
+        var total_iva_5 = 0;
+        var total_iva_10 = 0;
+        var total_general = 0;
+    
+        model.forEach(function(row) {
+            var raw_total = row[col_gl_amount];
+            var raw_iva = row[col_iva];
+            var raw_porcentaje = row[col_porcentaje];
+    
+            if (raw_total !== null && raw_total !== undefined) {
+                var clean_total = raw_total
+                    .toString()
+                    .replace(/[^0-9,.-]/g, '')
+                    .replace(/\./g, '')
+                    .replace(',', '.');
+    
+                var total = parseFloat(clean_total);
+                var iva = parseFloat(raw_iva);
+                var porcentaje = parseFloat(raw_porcentaje);
+    
+                if (!isNaN(total)) {
+                    total_general += total;
+                }
+    
+                if (!isNaN(iva) && !isNaN(porcentaje)) {
+                    if (porcentaje === 5) {
+                        total_iva_5 += iva;
+                    } else if (porcentaje === 10) {
+                        total_iva_10 += iva;
+                    }
+                }
+    
+                console.log("Total: " + total);
+                console.log("IVA: " + iva + " | %: " + porcentaje);
+            }
+        });
+    
+        // Seteo en los items APEX
+        apex.item('P67_TOTAL_IVA_5').setValue(Math.round(total_iva_5));
+        apex.item('P67_TOTAL_IVA_10').setValue(Math.round(total_iva_10));
+        apex.item('P67_TOTAL_IVA').setValue(Math.round(total_iva_5 + total_iva_10));
+        apex.item('P67_TOTAL_MONEDA_LOCAL').setValue(Math.round(total_general));
+    }
+    
+
+css: 
+  inline: |
+    .campo-grande-negrita input {
+      font-size: 24px;
+      font-weight: bold;
+    }
+    
+
+security: 
+  authentication: Page Requires Authentication
+  deep-linking: Application Default
+  page-access-protection: Arguments Must Have Checksum
+  form-auto-complete: Off
+  browser-cache: Application Default
+
+session-management: 
+  rejoin-sessions: Application Default
+
+advanced: 
+  enable-duplicate-page-submissions: Yes - Enable page to be re-posted
+  reload-on-submit: Only for Success
+
+server-cache: 
+  caching: Disabled
+
+regions: 
+- # ====== Region: Cabecera ====================================
+  id: 12007879735524747
+  identification: 
+    name: Cabecera
+    type: Static Content
+
+  layout: 
+    sequence: 30
+    parent-region: Proceso Ventas # 12776927328370633
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Standard
+    template-options: 
+    - '#DEFAULT#'
+    - t-Region--scrollBody
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    settings: 
+      output-as: HTML
+      expand-shortcuts: false
+
+- # ====== Region: Detalle =====================================
+  id: 12007971917524748
+  identification: 
+    name: Detalle
+    type: Static Content
+
+  layout: 
+    sequence: 40
+    parent-region: Proceso Ventas # 12776927328370633
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Standard
+    template-options: 
+    - '#DEFAULT#'
+    - t-Region--scrollBody
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    settings: 
+      output-as: HTML
+      expand-shortcuts: false
+
+- # ====== Region: Totalizador =================================
+  id: 12008074369524749
+  identification: 
+    name: Totalizador
+    type: Static Content
+
+  layout: 
+    sequence: 50
+    parent-region: Proceso Ventas # 12776927328370633
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Standard
+    template-options: 
+    - '#DEFAULT#'
+    - t-Region--scrollBody
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    settings: 
+      output-as: HTML
+      expand-shortcuts: false
+
+- # ====== Region: Detalle_Venta ===============================
+  id: 12008123551524750
+  identification: 
+    name: Detalle_Venta
+    type: Interactive Grid
+
+  source: 
+    location: Local Database
+    type: SQL Query
+    sql-query: |
+      SELECT 
+        ven.id_orden,
+        pr.nombre,
+        det.cantidad,
+        det.precio_unitario,
+        det.total
+      FROM detalle_orden det, ordenes_venta ven, productos pr
+         WHERE ven.id_orden = det.id_orden
+        AND det.id_producto = pr.id_producto
+        AND VEN.ID_ORDEN = :P67_ID_ORDEN_VENTA;
+      
+    page-items-to-submit: 
+    - P67_ID_ORDEN_VENTA
+
+  layout: 
+    sequence: 10
+    parent-region: Detalle # 12007971917524748
+    slot: SUB_REGIONS
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Interactive Report
+    template-options: 
+    - '#DEFAULT#'
+    - t-IRR-region--hideHeader js-addHiddenHeadingRoleDesc
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    static-id: Detalle_Venta
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  configuration: 
+    build-option: Commented Out # 7705349298831252
+
+  attributes: 
+    id: 12854132617396801
+    edit: 
+      enabled: true
+      allowed-operations: 
+      - Add Row
+      - Update Row
+      - Delete Row
+      lost-update-type: Row Values
+      add-row-if-empty: true
+
+    performance: 
+      lazy-loading: false
+
+    appearance: 
+      select-first-row: true
+      fixed-row-height: true
+
+    pagination: 
+      type: Scroll
+      show-total-count: true
+
+    toolbar: 
+      show: true
+      controls: 
+      - Search Column Selection
+      - Search Field
+      - Actions Menu
+      - Reset Button
+      - Save Button
+
+    enable-users-to: 
+      save-public-report: false
+      flashback: true
+      define-chart-view: true
+      download: true
+
+    download: 
+      formats: 
+      - CSV
+      - HTML
+      - Excel
+      - PDF
+      send-as-email: true
+
+    heading: 
+      fixed-to: Page
+
+    icon-view: 
+      show: false
+
+    detail-view: 
+      show: false
+
+    saved-reports: 
+    - # ====== Saved Report: Primary Report ========================
+      id: 12866050417401613
+      identification: 
+        name: Primary Report
+        alias: 128661
+
+  columns: 
+  - # ====== Column: CANTIDAD ====================================
+    id: 12855989535396819
+    identification: 
+      column-name: CANTIDAD
+      type: Number Field
+
+    heading: 
+      heading: Cantidad
+      alignment: center
+
+    settings: 
+      number-alignment: Start
+      virtual-keyboard: Decimal
+
+    layout: 
+      sequence: 40
+      column-alignment: center
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: true
+
+    source: 
+      type: Database Column
+      database-column: CANTIDAD
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: PRECIO_UNITARIO =============================
+    id: 12856080733396820
+    identification: 
+      column-name: PRECIO_UNITARIO
+      type: Number Field
+
+    heading: 
+      heading: Precio Unitario
+      alignment: center
+
+    settings: 
+      number-alignment: Start
+      virtual-keyboard: Decimal
+
+    layout: 
+      sequence: 50
+      column-alignment: center
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: false
+
+    source: 
+      type: Database Column
+      database-column: PRECIO_UNITARIO
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: TOTAL =======================================
+    id: 12856161679396821
+    identification: 
+      column-name: TOTAL
+      type: Number Field
+
+    heading: 
+      heading: Total
+      alignment: center
+
+    settings: 
+      number-alignment: Start
+      virtual-keyboard: Decimal
+
+    layout: 
+      sequence: 60
+      column-alignment: center
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: false
+
+    source: 
+      type: Database Column
+      database-column: TOTAL
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: APEX$ROW_ACTION =============================
+    id: 12940926604107121
+    identification: 
+      column-name: APEX$ROW_ACTION
+      type: Actions Menu
+
+    layout: 
+      sequence: 20
+
+  - # ====== Column: APEX$ROW_SELECTOR ===========================
+    id: 12941023211107122
+    identification: 
+      column-name: APEX$ROW_SELECTOR
+      type: Row Selector
+
+    settings: 
+      enable-multi-select: true
+      show-select-all: true
+      hide-control: false
+
+    layout: 
+      sequence: 10
+
+  - # ====== Column: PRODUCTO ====================================
+    id: 12941203284107124
+    identification: 
+      column-name: PRODUCTO
+      type: Popup LOV
+
+    heading: 
+      heading: Producto
+      alignment: center
+
+    settings: 
+      display-as: Inline Popup
+      initial-fetch: Automatic
+      manual-entry: false
+      fetch-on-search: false
+
+    search: 
+      match-type: Contains
+      case-sensitive: false
+      minimum-characters: 0
+
+    multiple-values: 
+      type: No
+
+    layout: 
+      sequence: 30
+      column-alignment: start
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: true
+      maximum-length: 255
+
+    list-of-values: 
+      type: SQL Query
+      sql-query: |
+        select pro.nombre, pro.id_producto 
+        from productos pro, precio_por_categoria  cat
+            where pro.id_producto = cat.id_producto
+            and cat.CATEGORIA_CLIENTE = :P67_TIP_CLIENTE;
+      display-extra-values: true
+      display-null-value: true
+
+    source: 
+      type: Database Column
+      database-column: NOMBRE
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      performance-impacting-operators: 
+      - Contains
+      - Starts With
+      - Case Insensitive
+      - Regular Expression
+      text-case: Mixed
+      lov-type: Use List of Values
+      exact-match: true
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: ID_ORDEN ====================================
+    id: 12941348441107125
+    identification: 
+      column-name: ID_ORDEN
+      type: Number Field
+
+    heading: 
+      alignment: end
+
+    settings: 
+      number-alignment: Start
+      virtual-keyboard: Decimal
+
+    layout: 
+      sequence: 80
+      column-alignment: end
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: true
+
+    source: 
+      type: Database Column
+      database-column: ID_ORDEN
+      data-type: NUMBER
+      query-only: false
+      primary-key: true
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: false
+
+    enable-users-to: 
+      sort: false
+      hide: true
+
+  printing: 
+    page: 
+      size: A4
+      orientation: Landscape
+      units: Millimeters
+      width: 297
+      height: 210
+      border-width: 0.5
+      border-color: '#666666'
+
+    page-header: 
+      font: Helvetica
+      font-weight: Normal
+      font-size: 12
+      font-color: '#000000'
+      alignment: center
+
+    column-headings: 
+      font: Helvetica
+      font-weight: Bold
+      font-size: 10
+      font-color: '#000000'
+      background-color: '#EEEEEE'
+
+    columns: 
+      font: Helvetica
+      font-weight: Normal
+      font-size: 10
+      font-color: '#000000'
+      background-color: '#FFFFFF'
+
+    page-footer: 
+      font: Helvetica
+      font-weight: Normal
+      font-size: 12
+      font-color: '#000000'
+      alignment: center
+
+- # ====== Region: Proceso Ventas ==============================
+  id: 12776927328370633
+  identification: 
+    name: Proceso Ventas
+    type: Form
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: COMPROBANTES
+    include-rowid-column: false
+
+  layout: 
+    sequence: 10
+    parent-region: No Parent
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Blank with Attributes
+    template-options: 
+    - '#DEFAULT#'
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    edit: 
+      enabled: true
+      allowed-operations: 
+      - Add Row
+      - Update Row
+      - Delete Row
+      lost-update-type: Row Values
+
+- # ====== Region: Buttons =====================================
+  id: 12788816961370639
+  identification: 
+    name: Buttons
+    type: Static Content
+
+  layout: 
+    sequence: 20
+    parent-region: No Parent
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Buttons Container
+    template-options: 
+    - '#DEFAULT#'
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    settings: 
+      output-as: Text (escape special characters)
+      show-line-breaks: true
+
+- # ====== Region: Detalle_V ===================================
+  id: 13115576183342824
+  identification: 
+    name: Detalle_V
+    type: Interactive Grid
+
+  source: 
+    location: Local Database
+    type: SQL Query
+    sql-query: |
+      SELECT 
+        ven.id_orden,
+        pr.ID_PRODUCTO,
+        pr.nombre,
+        det.cantidad,
+        det.precio_unitario,
+        det.total,
+        ti.descripcion AS iva,
+        ti.porcentaje,
+        ROUND((det.total * ti.porcentaje) / (100 + ti.porcentaje), 0) AS iva_calculado
+      FROM detalle_orden det
+      JOIN ordenes_venta ven ON ven.id_orden = det.id_orden
+      JOIN productos pr ON pr.id_producto = det.id_producto
+      LEFT JOIN tipo_iva ti ON ti.id_tipo_iva = pr.id_tipo_iva
+      WHERE det.id_orden = :P67_ID_ORDEN_VENTA;
+    page-items-to-submit: 
+    - P67_ID_ORDEN_VENTA
+
+  layout: 
+    sequence: 20
+    parent-region: Detalle # 12007971917524748
+    slot: SUB_REGIONS
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Interactive Report
+    template-options: 
+    - '#DEFAULT#'
+    - t-IRR-region--hideHeader js-addHiddenHeadingRoleDesc
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    static-id: Detalle_V
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    id: 13115666318342825
+    edit: 
+      enabled: true
+      allowed-operations: 
+      - Add Row
+      - Update Row
+      - Delete Row
+      lost-update-type: Row Values
+      add-row-if-empty: true
+
+    performance: 
+      lazy-loading: false
+
+    appearance: 
+      select-first-row: true
+      fixed-row-height: true
+
+    pagination: 
+      type: Scroll
+      show-total-count: true
+
+    toolbar: 
+      show: true
+      controls: 
+      - Search Column Selection
+      - Search Field
+      - Actions Menu
+      - Reset Button
+      - Save Button
+
+    enable-users-to: 
+      save-public-report: false
+      flashback: true
+      define-chart-view: true
+      download: true
+
+    download: 
+      formats: 
+      - CSV
+      - HTML
+      - Excel
+      - PDF
+      send-as-email: true
+
+    heading: 
+      fixed-to: Page
+
+    icon-view: 
+      show: false
+
+    detail-view: 
+      show: false
+
+    saved-reports: 
+    - # ====== Saved Report: Primary Report ========================
+      id: 13148657267840543
+      identification: 
+        name: Primary Report
+        alias: 131487
+
+  columns: 
+  - # ====== Column: ID_ORDEN ====================================
+    id: 13115704241342826
+    identification: 
+      column-name: ID_ORDEN
+      type: Number Field
+
+    heading: 
+      heading: Id Orden
+      alignment: end
+
+    settings: 
+      number-alignment: Start
+      virtual-keyboard: Decimal
+
+    layout: 
+      sequence: 30
+      column-alignment: end
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: true
+
+    source: 
+      type: Database Column
+      database-column: ID_ORDEN
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: NOMBRE ======================================
+    id: 13115848780342827
+    identification: 
+      column-name: NOMBRE
+      type: Text Field
+
+    heading: 
+      heading: Nombre
+      alignment: start
+
+    settings: 
+      trim-spaces: Leading and Trailing
+      text-case: NO CHANGE
+
+    layout: 
+      sequence: 50
+      column-alignment: start
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: true
+      maximum-length: 255
+
+    source: 
+      type: Database Column
+      database-column: NOMBRE
+      data-type: VARCHAR2
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      performance-impacting-operators: 
+      - Contains
+      - Starts With
+      - Case Insensitive
+      - Regular Expression
+      text-case: Mixed
+      lov-type: Use List of Values
+      exact-match: true
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: CANTIDAD ====================================
+    id: 13115953233342828
+    identification: 
+      column-name: CANTIDAD
+      type: Number Field
+
+    heading: 
+      heading: Cantidad
+      alignment: end
+
+    settings: 
+      number-alignment: Start
+      virtual-keyboard: Decimal
+
+    layout: 
+      sequence: 70
+      column-alignment: end
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: true
+
+    source: 
+      type: Database Column
+      database-column: CANTIDAD
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: PRECIO_UNITARIO =============================
+    id: 13116001580342829
+    identification: 
+      column-name: PRECIO_UNITARIO
+      type: Number Field
+
+    heading: 
+      heading: Precio Unitario
+      alignment: end
+
+    settings: 
+      number-alignment: Start
+      virtual-keyboard: Decimal
+
+    layout: 
+      sequence: 80
+      column-alignment: end
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: false
+
+    source: 
+      type: Database Column
+      database-column: PRECIO_UNITARIO
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: TOTAL =======================================
+    id: 13116116227342830
+    identification: 
+      column-name: TOTAL
+      type: Number Field
+
+    heading: 
+      heading: Total
+      alignment: end
+
+    settings: 
+      number-alignment: Start
+      virtual-keyboard: Decimal
+
+    layout: 
+      sequence: 120
+      column-alignment: end
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: false
+
+    source: 
+      type: Database Column
+      database-column: TOTAL
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: ID_PRODUCTO =================================
+    id: 13116209340342831
+    identification: 
+      column-name: ID_PRODUCTO
+      type: Popup LOV
+
+    heading: 
+      heading: Producto
+      alignment: center
+
+    settings: 
+      display-as: Inline Popup
+      initial-fetch: Automatic
+      manual-entry: false
+      fetch-on-search: false
+
+    search: 
+      match-type: Contains
+      case-sensitive: false
+      minimum-characters: 0
+
+    multiple-values: 
+      type: No
+
+    layout: 
+      sequence: 40
+      column-alignment: center
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: true
+
+    list-of-values: 
+      type: SQL Query
+      sql-query: |
+        select pro.nombre, pro.id_producto 
+        from productos pro, precio_por_categoria  cat
+            where pro.id_producto = cat.id_producto
+            and cat.CATEGORIA_CLIENTE = :P67_TIP_CLIENTE;
+      display-extra-values: true
+      display-null-value: true
+
+    source: 
+      type: Database Column
+      database-column: ID_PRODUCTO
+      data-type: NUMBER
+      query-only: false
+      primary-key: true
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      performance-impacting-operators: 
+      - Contains
+      - Starts With
+      - Case Insensitive
+      - Regular Expression
+      text-case: Mixed
+      lov-type: Use List of Values
+      exact-match: true
+
+    export-/-printing: 
+      include-in-export-/-print: false
+
+    enable-users-to: 
+      sort: false
+      hide: true
+
+  - # ====== Column: APEX$ROW_ACTION =============================
+    id: 13116693028342835
+    identification: 
+      column-name: APEX$ROW_ACTION
+      type: Actions Menu
+
+    layout: 
+      sequence: 20
+
+  - # ====== Column: APEX$ROW_SELECTOR ===========================
+    id: 13116722980342836
+    identification: 
+      column-name: APEX$ROW_SELECTOR
+      type: Row Selector
+
+    settings: 
+      enable-multi-select: true
+      show-select-all: true
+      hide-control: false
+
+    layout: 
+      sequence: 10
+
+  - # ====== Column: IVA =========================================
+    id: 13182516321363547
+    identification: 
+      column-name: IVA
+      type: Text Field
+
+    heading: 
+      heading: Iva
+      alignment: start
+
+    settings: 
+      trim-spaces: Leading and Trailing
+      text-case: NO CHANGE
+
+    layout: 
+      sequence: 100
+      column-alignment: start
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: false
+      maximum-length: 50
+
+    source: 
+      type: Database Column
+      database-column: IVA
+      data-type: VARCHAR2
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      performance-impacting-operators: 
+      - Contains
+      - Starts With
+      - Case Insensitive
+      - Regular Expression
+      text-case: Mixed
+      lov-type: Distinct Column
+      exact-match: true
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: PORCENTAJE ==================================
+    id: 13182659561363548
+    identification: 
+      column-name: PORCENTAJE
+      type: Number Field
+
+    heading: 
+      heading: Porcentaje
+      alignment: end
+
+    settings: 
+      number-alignment: Start
+      virtual-keyboard: Decimal
+
+    layout: 
+      sequence: 90
+      column-alignment: end
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: false
+
+    source: 
+      type: Database Column
+      database-column: PORCENTAJE
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: IVA_CALCULADO ===============================
+    id: 13182763481363549
+    identification: 
+      column-name: IVA_CALCULADO
+      type: Number Field
+
+    heading: 
+      heading: Iva Calculado
+      alignment: end
+
+    settings: 
+      number-alignment: Start
+      virtual-keyboard: Decimal
+
+    layout: 
+      sequence: 110
+      column-alignment: end
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: false
+
+    source: 
+      type: Database Column
+      database-column: IVA_CALCULADO
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  printing: 
+    page: 
+      size: A4
+      orientation: Landscape
+      units: Millimeters
+      width: 297
+      height: 210
+      border-width: 0.5
+      border-color: '#666666'
+
+    page-header: 
+      font: Helvetica
+      font-weight: Normal
+      font-size: 12
+      font-color: '#000000'
+      alignment: center
+
+    column-headings: 
+      font: Helvetica
+      font-weight: Bold
+      font-size: 10
+      font-color: '#000000'
+      background-color: '#EEEEEE'
+
+    columns: 
+      font: Helvetica
+      font-weight: Normal
+      font-size: 10
+      font-color: '#000000'
+      background-color: '#FFFFFF'
+
+    page-footer: 
+      font: Helvetica
+      font-weight: Normal
+      font-size: 12
+      font-color: '#000000'
+      alignment: center
+
+page-items: 
+- # ====== Page Item: P67_ID_COMPROBANTE =======================
+  id: 12777329510370634
+  identification: 
+    name: P67_ID_COMPROBANTE
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 10
+    region: Proceso Ventas # 12776927328370633
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso Ventas # 12776927328370633
+    column: ID_COMPROBANTE
+    data-type: NUMBER
+    query-only: true
+    primary-key: true
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Request (Memory Only)
+
+  security: 
+    session-state-protection: Checksum Required - Session Level
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P67_ID_CLIENTE ===========================
+  id: 12777738763370634
+  identification: 
+    name: P67_ID_CLIENTE
+    type: Popup LOV
+
+  label: 
+    label: Cliente
+    alignment: Left
+
+  settings: 
+    display-as: Inline Popup
+    initial-fetch: Automatic
+    manual-entry: false
+    fetch-on-search: false
+
+  search: 
+    match-type: Contains
+    case-sensitive: false
+    minimum-characters: 0
+
+  multiple-values: 
+    type: No
+
+  layout: 
+    sequence: 60
+    region: Cabecera # 12007879735524747
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Required - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 30
+
+  validation: 
+    value-required: true
+
+  list-of-values: 
+    type: Function Body returning SQL Query
+    language: PL/SQL
+    pl/sql-function-body-returning-sql-query: |
+      
+          SELECT PE.PRIMER_NOMBRE ||' '||PE.SEGUNDO_NOMBRE||' '||PE.PRIMER_APELLIDO ||' '||PE.SEGUNDO_APELLIDO,  CL.ID_PERSONA FROM CLIENTES CL, PERSONAS PE
+          WHERE PE.ID_PERSONA = CL.ID_PERSONA
+    display-extra-values: true
+    display-null-value: true
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso Ventas # 12776927328370633
+    column: ID_CLIENTE
+    data-type: NUMBER
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P67_ID_OFICINA ===========================
+  id: 12778106097370635
+  identification: 
+    name: P67_ID_OFICINA
+    type: Select List
+
+  label: 
+    label: Oficina
+    alignment: Left
+
+  settings: 
+    page-action-on-selection: None
+
+  multiple-values: 
+    type: No
+
+  layout: 
+    sequence: 80
+    region: Cabecera # 12007879735524747
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Required - Floating
+    template-options: 
+    - '#DEFAULT#'
+    height: 1
+
+  validation: 
+    value-required: true
+
+  list-of-values: 
+    type: SQL Query
+    sql-query: select descripcion, codigo_oficina from OFICINAS
+    display-extra-values: false
+    display-null-value: false
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso Ventas # 12776927328370633
+    column: ID_OFICINA
+    data-type: NUMBER
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P67_ID_ORDEN_VENTA =======================
+  id: 12778583306370635
+  identification: 
+    name: P67_ID_ORDEN_VENTA
+    type: Popup LOV
+
+  label: 
+    label: N° Orden Venta
+    alignment: Left
+
+  settings: 
+    display-as: Inline Popup
+    initial-fetch: Automatic
+    manual-entry: false
+    fetch-on-search: false
+
+  search: 
+    match-type: Contains
+    case-sensitive: false
+    minimum-characters: 0
+
+  multiple-values: 
+    type: No
+
+  layout: 
+    sequence: 90
+    region: Cabecera # 12007879735524747
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 30
+
+  validation: 
+    value-required: false
+
+  list-of-values: 
+    type: SQL Query
+    sql-query: |
+      SELECT id_orden, id_orden as orden
+      FROM ORDENES_VENTA
+      WHERE ESTADO = 'Pendiente'
+      
+    display-extra-values: true
+    display-null-value: true
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso Ventas # 12776927328370633
+    column: ID_ORDEN_VENTA
+    data-type: NUMBER
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P67_TIPO_COMPROBANTE =====================
+  id: 12778956980370635
+  identification: 
+    name: P67_TIPO_COMPROBANTE
+    type: Text Field
+
+  label: 
+    label: Tipo Comprobante
+    alignment: Left
+
+  settings: 
+    subtype: Text
+    trim-spaces: Leading and Trailing
+    text-case: NO CHANGE
+    submit-when-enter-pressed: false
+    disabled: false
+
+  layout: 
+    sequence: 50
+    region: Cabecera # 12007879735524747
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Required - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 32
+
+  validation: 
+    value-required: true
+    maximum-length: 1
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso Ventas # 12776927328370633
+    column: TIPO_COMPROBANTE
+    data-type: VARCHAR2
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P67_ID_FAC_ORIGEN ========================
+  id: 12779329267370635
+  identification: 
+    name: P67_ID_FAC_ORIGEN
+    type: Text Field
+
+  label: 
+    label: Factura Origen
+    alignment: Left
+
+  settings: 
+    subtype: Text
+    trim-spaces: Leading and Trailing
+    text-case: NO CHANGE
+    submit-when-enter-pressed: false
+    disabled: false
+
+  layout: 
+    sequence: 30
+    region: Cabecera # 12007879735524747
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: false
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 30
+
+  validation: 
+    value-required: false
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso Ventas # 12776927328370633
+    column: ID_FAC_ORIGEN
+    data-type: VARCHAR2
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P67_FECHA ================================
+  id: 12779771922370636
+  identification: 
+    name: P67_FECHA
+    type: Date Picker
+
+  label: 
+    label: Fecha
+    alignment: Left
+
+  settings: 
+    show-time: false
+    display-as: Popup
+    minimum-date: None
+    maximum-date: None
+    multiple-months: No
+    use-defaults: true
+
+  layout: 
+    sequence: 130
+    region: Cabecera # 12007879735524747
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 32
+
+  validation: 
+    value-required: false
+    maximum-length: 255
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso Ventas # 12776927328370633
+    column: FECHA
+    data-type: DATE
+    query-only: false
+    primary-key: false
+
+  default: 
+    type: SQL Query (return single value)
+    sql-query-(return-single-value): |
+      SELECT CURRENT_TIMESTAMP AT TIME ZONE 'America/Argentina/Buenos_Aires' AS FECHA_HORA_ARG
+      FROM dual;
+      
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P67_TOTAL_MONEDA_LOCAL ===================
+  id: 12780133555370636
+  identification: 
+    name: P67_TOTAL_MONEDA_LOCAL
+    type: Number Field
+
+  label: 
+    label: Total Moneda Local
+    alignment: Left
+
+  settings: 
+    number-alignment: Start
+    virtual-keyboard: Decimal
+
+  layout: 
+    sequence: 80
+    region: Totalizador # 12008074369524749
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Required - Floating
+    template-options: 
+    - '#DEFAULT#'
+    css-classes: 
+    - campo-grande-negrita
+    format-mask: 999G999G999G999G999G999G990
+    width: 32
+
+  validation: 
+    value-required: true
+    maximum-length: 255
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso Ventas # 12776927328370633
+    column: TOTAL_MONEDA_LOCAL
+    data-type: NUMBER
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P67_MONEDA ===============================
+  id: 12780586739370636
+  identification: 
+    name: P67_MONEDA
+    type: Select List
+
+  label: 
+    label: Moneda
+    alignment: Left
+
+  settings: 
+    page-action-on-selection: None
+
+  multiple-values: 
+    type: No
+
+  layout: 
+    sequence: 90
+    region: Totalizador # 12008074369524749
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    height: 1
+
+  validation: 
+    value-required: false
+
+  list-of-values: 
+    type: SQL Query
+    sql-query: |
+      select descripcion, codigo_moneda from MONEDAS
+      order by codigo_moneda asc;
+    display-extra-values: false
+    display-null-value: false
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso Ventas # 12776927328370633
+    column: MONEDA
+    data-type: VARCHAR2
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P67_TIPO_CAMBIO ==========================
+  id: 12780937466370636
+  identification: 
+    name: P67_TIPO_CAMBIO
+    type: Display Only
+
+  label: 
+    label: Cambio
+    alignment: Left
+
+  settings: 
+    format: Plain Text
+    based-on: Item Value
+    show-line-breaks: true
+    send-on-page-submit: true
+
+  layout: 
+    sequence: 130
+    region: Totalizador # 12008074369524749
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Always, replacing any existing value in session state
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Session (Persistent)
+
+  server-side-condition: 
+    type: Item != Value
+    item: P67_MONEDA
+    value: 1
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P67_TOTAL_MONEDA_ORIGEN ==================
+  id: 12781392519370636
+  identification: 
+    name: P67_TOTAL_MONEDA_ORIGEN
+    type: Number Field
+
+  label: 
+    label: Total Moneda Origen
+    alignment: Left
+
+  settings: 
+    number-alignment: Start
+    virtual-keyboard: Decimal
+
+  layout: 
+    sequence: 140
+    region: Totalizador # 12008074369524749
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: 3
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    css-classes: 
+    - campo-grande-negrita
+    format-mask: $999G999G990D00
+    width: 32
+
+  validation: 
+    value-required: false
+    maximum-length: 255
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso Ventas # 12776927328370633
+    column: TOTAL_MONEDA_ORIGEN
+    data-type: NUMBER
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P67_FORMA_PAGO ===========================
+  id: 12781756695370636
+  identification: 
+    name: P67_FORMA_PAGO
+    type: Select List
+
+  label: 
+    label: Forma de Pago
+    alignment: Left
+
+  settings: 
+    page-action-on-selection: None
+
+  multiple-values: 
+    type: No
+
+  layout: 
+    sequence: 100
+    region: Cabecera # 12007879735524747
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    height: 1
+
+  validation: 
+    value-required: false
+
+  list-of-values: 
+    type: Function Body returning SQL Query
+    language: PL/SQL
+    pl/sql-function-body-returning-sql-query: |
+      
+      SELECT DESCRIPCION, ID_FORMA_PAGO FROM FORMAS_PAGO
+      WHERE ACTIVO = 'S'
+    display-extra-values: false
+    display-null-value: false
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso Ventas # 12776927328370633
+    column: FORMA_PAGO
+    data-type: VARCHAR2
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P67_ESTADO ===============================
+  id: 12782113067370637
+  identification: 
+    name: P67_ESTADO
+    type: Select List
+
+  label: 
+    label: Estado
+    alignment: Left
+
+  settings: 
+    page-action-on-selection: None
+
+  multiple-values: 
+    type: No
+
+  layout: 
+    sequence: 120
+    region: Cabecera # 12007879735524747
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    height: 1
+
+  validation: 
+    value-required: false
+
+  list-of-values: 
+    type: Static Values
+    static-values: 'STATIC:Anular;N,Activo;A'
+    display-extra-values: true
+    display-null-value: true
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso Ventas # 12776927328370633
+    column: ESTADO
+    data-type: VARCHAR2
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  server-side-condition: 
+    type: Item is NOT NULL
+    item: P67_ID_COMPROBANTE
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P67_OBSERVACION ==========================
+  id: 12782560447370637
+  identification: 
+    name: P67_OBSERVACION
+    type: Text Field
+
+  label: 
+    label: Observacion
+    alignment: Left
+
+  settings: 
+    subtype: Text
+    trim-spaces: Leading and Trailing
+    text-case: NO CHANGE
+    submit-when-enter-pressed: false
+    disabled: false
+
+  layout: 
+    sequence: 140
+    region: Cabecera # 12007879735524747
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 32
+
+  validation: 
+    value-required: false
+    maximum-length: 255
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso Ventas # 12776927328370633
+    column: OBSERVACION
+    data-type: VARCHAR2
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P67_ID_TALONARIO =========================
+  id: 12782972964370637
+  identification: 
+    name: P67_ID_TALONARIO
+    type: Select List
+
+  label: 
+    label: Talonario
+    alignment: Left
+
+  settings: 
+    page-action-on-selection: None
+
+  multiple-values: 
+    type: No
+
+  layout: 
+    sequence: 10
+    region: Cabecera # 12007879735524747
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: 2
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    height: 1
+
+  validation: 
+    value-required: false
+
+  list-of-values: 
+    type: Shared Component
+    list-of-values: TALONARIOS.TIPO_COMPROBANTE # 12783043529370637
+    display-extra-values: true
+    display-null-value: true
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso Ventas # 12776927328370633
+    column: ID_TALONARIO
+    data-type: NUMBER
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P67_NRO_COMPROBANTE ======================
+  id: 12783656515370637
+  identification: 
+    name: P67_NRO_COMPROBANTE
+    type: Text Field
+
+  label: 
+    label: Nro Comprobante
+    alignment: Left
+
+  settings: 
+    subtype: Text
+    trim-spaces: Leading and Trailing
+    text-case: NO CHANGE
+    submit-when-enter-pressed: false
+    disabled: false
+
+  layout: 
+    sequence: 20
+    region: Cabecera # 12007879735524747
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 32
+
+  validation: 
+    value-required: false
+    maximum-length: 20
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso Ventas # 12776927328370633
+    column: NRO_COMPROBANTE
+    data-type: VARCHAR2
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P67_ID_PLAN_CUOTA ========================
+  id: 12939615576107108
+  identification: 
+    name: P67_ID_PLAN_CUOTA
+    type: Popup LOV
+
+  label: 
+    label: Plan Cuota
+    alignment: Left
+
+  settings: 
+    display-as: Inline Popup
+    initial-fetch: Automatic
+    manual-entry: false
+    fetch-on-search: false
+
+  search: 
+    match-type: Contains
+    case-sensitive: false
+    minimum-characters: 0
+
+  multiple-values: 
+    type: No
+
+  layout: 
+    sequence: 110
+    region: Cabecera # 12007879735524747
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: 5
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 30
+
+  validation: 
+    value-required: false
+
+  list-of-values: 
+    type: Function Body returning SQL Query
+    language: PL/SQL
+    pl/sql-function-body-returning-sql-query: |
+      
+          SELECT descripcion, id_plan_cuota FROM PLANES_CUOTA
+          where activo = 'S'
+    display-extra-values: true
+    display-null-value: true
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso Ventas # 12776927328370633
+    column: ID_PLAN_CUOTA
+    data-type: NUMBER
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P67_TOTAL_EXENTA =========================
+  id: 12939796034107109
+  identification: 
+    name: P67_TOTAL_EXENTA
+    type: Number Field
+
+  label: 
+    label: Total Exenta
+    alignment: Left
+
+  settings: 
+    number-alignment: Start
+    virtual-keyboard: Decimal
+
+  layout: 
+    sequence: 150
+    region: Totalizador # 12008074369524749
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    css-classes: 
+    - campo-grande-negrita
+    format-mask: 999G999G999G999G999G999G990
+    width: 30
+
+  validation: 
+    value-required: false
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso Ventas # 12776927328370633
+    column: TOTAL_EXENTA
+    data-type: NUMBER
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P67_TOTAL_GRAVADA_5 ======================
+  id: 12939802909107110
+  identification: 
+    name: P67_TOTAL_GRAVADA_5
+    type: Number Field
+
+  label: 
+    label: Total Gravada 5
+    alignment: Left
+
+  settings: 
+    number-alignment: Start
+    virtual-keyboard: Decimal
+
+  layout: 
+    sequence: 160
+    region: Totalizador # 12008074369524749
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    css-classes: 
+    - campo-grande-negrita
+    format-mask: 999G999G999G999G999G999G990
+    width: 30
+
+  validation: 
+    value-required: false
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso Ventas # 12776927328370633
+    column: TOTAL_GRAVADA_5
+    data-type: NUMBER
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P67_TOTAL_GRAVADA_10 =====================
+  id: 12939986345107111
+  identification: 
+    name: P67_TOTAL_GRAVADA_10
+    type: Number Field
+
+  label: 
+    label: Total Gravada 10
+    alignment: Left
+
+  settings: 
+    number-alignment: Start
+    virtual-keyboard: Decimal
+
+  layout: 
+    sequence: 170
+    region: Totalizador # 12008074369524749
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    css-classes: 
+    - campo-grande-negrita
+    format-mask: 999G999G999G999G999G999G990
+    width: 30
+
+  validation: 
+    value-required: false
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso Ventas # 12776927328370633
+    column: TOTAL_GRAVADA_10
+    data-type: NUMBER
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P67_TOTAL_IVA_5 ==========================
+  id: 12940027763107112
+  identification: 
+    name: P67_TOTAL_IVA_5
+    type: Number Field
+
+  label: 
+    label: Total Iva 5
+    alignment: Left
+
+  settings: 
+    number-alignment: Start
+    virtual-keyboard: Decimal
+
+  layout: 
+    sequence: 180
+    region: Totalizador # 12008074369524749
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    css-classes: 
+    - campo-grande-negrita
+    format-mask: 999G999G999G999G999G999G990
+    width: 30
+
+  validation: 
+    value-required: false
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso Ventas # 12776927328370633
+    column: TOTAL_IVA_5
+    data-type: NUMBER
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P67_TOTAL_IVA_10 =========================
+  id: 12940100311107113
+  identification: 
+    name: P67_TOTAL_IVA_10
+    type: Number Field
+
+  label: 
+    label: Total Iva 10
+    alignment: Left
+
+  settings: 
+    number-alignment: Start
+    virtual-keyboard: Decimal
+
+  layout: 
+    sequence: 200
+    region: Totalizador # 12008074369524749
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    css-classes: 
+    - campo-grande-negrita
+    format-mask: 999G999G999G999G999G999G990
+    width: 30
+
+  validation: 
+    value-required: false
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso Ventas # 12776927328370633
+    column: TOTAL_IVA_10
+    data-type: NUMBER
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P67_TOTAL_IVA ============================
+  id: 12940258645107114
+  identification: 
+    name: P67_TOTAL_IVA
+    type: Number Field
+
+  label: 
+    label: Total Iva
+    alignment: Left
+
+  settings: 
+    number-alignment: Start
+    virtual-keyboard: Decimal
+
+  layout: 
+    sequence: 220
+    region: Totalizador # 12008074369524749
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    css-classes: 
+    - campo-grande-negrita
+    format-mask: 999G999G999G999G999G999G990
+    width: 30
+
+  validation: 
+    value-required: false
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso Ventas # 12776927328370633
+    column: TOTAL_IVA
+    data-type: NUMBER
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P67_TIP_CLIENTE ==========================
+  id: 12941663587107128
+  identification: 
+    name: P67_TIP_CLIENTE
+    type: Hidden
+
+  settings: 
+    value-protected: false
+
+  layout: 
+    sequence: 20
+    region: Proceso Ventas # 12776927328370633
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Session (Persistent)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P67_NEW ==================================
+  id: 12942864877107140
+  identification: 
+    name: P67_NEW
+    type: Text Field
+
+  label: 
+    label: New
+    alignment: Left
+
+  settings: 
+    subtype: Text
+    trim-spaces: Leading and Trailing
+    text-case: NO CHANGE
+    submit-when-enter-pressed: false
+    disabled: false
+
+  layout: 
+    sequence: 150
+    region: Cabecera # 12007879735524747
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 30
+
+  validation: 
+    value-required: false
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  default: 
+    type: Static
+    static-value: 'Valor recibido: &P67_ID_ORDEN_VENTA.'
+
+  session-state: 
+    storage: Per Session (Persistent)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  server-side-condition: 
+    type: Item is NOT NULL
+    item: P67_ID_ORDEN_VENTA
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+  configuration: 
+    build-option: Commented Out # 7705349298831252
+
+- # ====== Page Item: P67_METODO_PAGO ==========================
+  id: 15464300169249336
+  identification: 
+    name: P67_METODO_PAGO
+    type: Select List
+
+  label: 
+    label: Metodos de Pago
+    alignment: Left
+
+  settings: 
+    page-action-on-selection: None
+
+  multiple-values: 
+    type: No
+
+  layout: 
+    sequence: 190
+    region: Totalizador # 12008074369524749
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: false
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    height: 1
+
+  validation: 
+    value-required: false
+
+  list-of-values: 
+    type: SQL Query
+    sql-query: SELECT DESCRIPCION, ID_METODO_PAGO FROM METODOS_PAGO
+    display-extra-values: false
+    display-null-value: false
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  session-state: 
+    storage: Per Session (Persistent)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P67_MONTO_PAGO ===========================
+  id: 15464450617249337
+  identification: 
+    name: P67_MONTO_PAGO
+    type: Number Field
+
+  label: 
+    label: Monto Ingresado
+    alignment: Left
+
+  settings: 
+    number-alignment: Start
+    virtual-keyboard: Decimal
+
+  layout: 
+    sequence: 210
+    region: Totalizador # 12008074369524749
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: false
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    css-classes: 
+    - campo-grande-negrita
+    format-mask: 999G999G999G999G999G999G990
+    width: 30
+
+  validation: 
+    value-required: false
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P67_VUELTO ===============================
+  id: 15464591449249338
+  identification: 
+    name: P67_VUELTO
+    type: Number Field
+
+  label: 
+    label: Vuelto
+    alignment: Left
+
+  settings: 
+    number-alignment: Start
+    virtual-keyboard: Decimal
+
+  layout: 
+    sequence: 230
+    region: Totalizador # 12008074369524749
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: false
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    css-classes: 
+    - campo-grande-negrita
+    format-mask: 999G999G999G999G999G999G990
+    width: 30
+
+  validation: 
+    value-required: false
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P67_ID_METODO_PAGO =======================
+  id: 15982936729097105
+  identification: 
+    name: P67_ID_METODO_PAGO
+    type: Number Field
+
+  label: 
+    label: Id Metodo Pago
+    alignment: Left
+
+  settings: 
+    number-alignment: Start
+    virtual-keyboard: Decimal
+
+  layout: 
+    sequence: 60
+    region: Proceso Ventas # 12776927328370633
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 30
+
+  validation: 
+    value-required: false
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso Ventas # 12776927328370633
+    column: ID_METODO_PAGO
+    data-type: NUMBER
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+buttons: 
+- # ====== Button: CANCEL ======================================
+  id: 12789213733370640
+  identification: 
+    button-name: CANCEL
+    label: Cancelar
+
+  layout: 
+    sequence: 10
+    region: Buttons # 12788816961370639
+    slot: CLOSE
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text
+    hot: false
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Defined by Dynamic Action
+    execute-validations: true
+
+- # ====== Button: DELETE ======================================
+  id: 12790634805370640
+  identification: 
+    button-name: DELETE
+    label: Eliminar
+
+  layout: 
+    sequence: 20
+    region: Buttons # 12788816961370639
+    slot: DELETE
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text
+    hot: false
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Submit Page
+    execute-validations: false
+    show-processing: false
+    warn-on-unsaved-changes: Do Not Check
+    database-action: SQL DELETE action
+
+  confirmation: 
+    message: '&APP_TEXT$DELETE_MSG!RAW.'
+    style: Danger
+
+  server-side-condition: 
+    type: Item is NOT NULL
+    item: P67_ID_COMPROBANTE
+
+- # ====== Button: SAVE ========================================
+  id: 12791039185370640
+  identification: 
+    button-name: SAVE
+    label: Actualizar
+
+  layout: 
+    sequence: 30
+    region: Buttons # 12788816961370639
+    slot: NEXT
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text
+    hot: true
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Submit Page
+    execute-validations: true
+    show-processing: false
+    warn-on-unsaved-changes: Do Not Check
+    database-action: SQL UPDATE action
+
+  server-side-condition: 
+    type: Item is NOT NULL
+    item: P67_ID_COMPROBANTE
+
+- # ====== Button: CREATE ======================================
+  id: 12791467411370641
+  identification: 
+    button-name: CREATE
+    label: Crear
+
+  layout: 
+    sequence: 40
+    region: Buttons # 12788816961370639
+    slot: NEXT
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text
+    hot: true
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Submit Page
+    execute-validations: true
+    show-processing: false
+    warn-on-unsaved-changes: Do Not Check
+    database-action: SQL INSERT action
+
+  server-side-condition: 
+    type: Item is NULL
+    item: P67_ID_COMPROBANTE
+
+- # ====== Button: Cliente =====================================
+  id: 15463718056249330
+  identification: 
+    button-name: Cliente
+    label: + Cliente
+
+  layout: 
+    sequence: 70
+    region: Cabecera # 12007879735524747
+    slot: BODY
+    start-new-layout: false
+    start-new-row: false
+    column: 4
+    new-column: true
+    column-span: Automatic
+    alignment: Left center
+
+  appearance: 
+    button-template: Text with Icon
+    hot: true
+    template-options: 
+    - '#DEFAULT#'
+    - t-Button--iconLeft
+    icon: fa-user-md
+
+  behavior: 
+    action: Redirect to Page in this Application
+    target: 
+      url: 'f?p=&APP_ID.:91:&SESSION.::&DEBUG.:CR,67::'
+      page: 91 # Alta de Clientes
+      clear-cache: CR,67
+
+    warn-on-unsaved-changes: Do Not Check
+
+dynamic-actions: 
+- # ====== Dynamic Action: Cancel Dialog =======================
+  id: 12789366170370640
+  identification: 
+    name: Cancel Dialog
+
+  execution: 
+    sequence: 10
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Click
+    selection-type: Button
+    button: CANCEL # 12789213733370640
+
+  actions: 
+  - # ====== Action: Cancel Dialog ===============================
+    id: 12790190088370640
+    identification: 
+      action: Cancel Dialog
+
+    execution: 
+      sequence: 10
+      event: Cancel Dialog # 12789366170370640
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+- # ====== Dynamic Action: Rellena Campos ======================
+  id: 12940442582107116
+  identification: 
+    name: Rellena Campos
+
+  execution: 
+    sequence: 20
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Change
+    selection-type: Item(s)
+    item(s): 
+    - P67_ID_TALONARIO
+
+  actions: 
+  - # ====== Action: Execute Server-side Code ====================
+    id: 12940532121107117
+    identification: 
+      action: Execute Server-side Code
+
+    settings: 
+      language: PE.PROPERTY.SOURCE_SNIPPET_LANG.LOV.PLSQL.D
+      pl/sql-code: |
+        select id_oficina, tipo_comprobante
+        into :P67_ID_OFICINA, :P67_TIPO_COMPROBANTE
+        from TALONARIOS
+        WHERE ID_TALONARIO = :P67_ID_TALONARIO;
+      items-to-submit: 
+      - P67_ID_TALONARIO
+      items-to-return: 
+      - P67_ID_OFICINA
+      - P67_TIPO_COMPROBANTE
+      suppress-change-event: false
+
+    execution: 
+      sequence: 10
+      event: Rellena Campos # 12940442582107116
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+      stop-execution-on-error: true
+      wait-for-result: true
+
+  - # ====== Action: Refresh =====================================
+    id: 12940618348107118
+    identification: 
+      action: Refresh
+
+    settings: 
+      maintain-pagination: false
+
+    affected-elements: 
+      selection-type: Item(s)
+      item(s): 
+      - P67_ID_OFICINA
+      - P67_TIPO_COMPROBANTE
+      - P67_NRO_COMPROBANTE
+
+    execution: 
+      sequence: 30
+      event: Rellena Campos # 12940442582107116
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+  - # ====== Action: Execute Server-side Code ====================
+    id: 12940735358107119
+    identification: 
+      action: Execute Server-side Code
+
+    settings: 
+      language: PE.PROPERTY.SOURCE_SNIPPET_LANG.LOV.PLSQL.D
+      pl/sql-code: |
+        SELECT FN_OBTENER_COMPROBANTE(:P67_ID_OFICINA, :P67_TIPO_COMPROBANTE) 
+        INTO :P67_NRO_COMPROBANTE FROM DUAL;
+      items-to-submit: 
+      - P67_ID_OFICINA
+      - P67_TIPO_COMPROBANTE
+      items-to-return: 
+      - P67_NRO_COMPROBANTE
+      suppress-change-event: false
+
+    execution: 
+      sequence: 20
+      event: Rellena Campos # 12940442582107116
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+      stop-execution-on-error: true
+      wait-for-result: true
+
+- # ====== Dynamic Action: Carga de Detalle ====================
+  id: 12941442504107126
+  identification: 
+    name: Carga de Detalle
+
+  execution: 
+    sequence: 30
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Change
+    selection-type: Item(s)
+    item(s): 
+    - P67_ID_ORDEN_VENTA
+
+  actions: 
+  - # ====== Action: Refresh =====================================
+    id: 12941585925107127
+    identification: 
+      action: Refresh
+
+    settings: 
+      maintain-pagination: false
+
+    affected-elements: 
+      selection-type: Item(s)
+      item(s): 
+      - P67_NEW
+
+    execution: 
+      sequence: 20
+      event: Carga de Detalle # 12941442504107126
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+    client-side-condition: 
+      type: Item is not null
+      item: P67_ID_ORDEN_VENTA
+
+  - # ====== Action: Refresh =====================================
+    id: 12942919936107141
+    identification: 
+      action: Refresh
+
+    settings: 
+      maintain-pagination: false
+
+    affected-elements: 
+      selection-type: Region
+      region: Detalle_V # 13115576183342824
+
+    execution: 
+      sequence: 10
+      event: Carga de Detalle # 12941442504107126
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+- # ====== Dynamic Action: Tipo Cliente ========================
+  id: 12941752126107129
+  identification: 
+    name: Tipo Cliente
+
+  execution: 
+    sequence: 40
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Change
+    selection-type: Item(s)
+    item(s): 
+    - P67_ID_CLIENTE
+
+  actions: 
+  - # ====== Action: Execute Server-side Code ====================
+    id: 12941866047107130
+    identification: 
+      action: Execute Server-side Code
+
+    settings: 
+      language: PE.PROPERTY.SOURCE_SNIPPET_LANG.LOV.PLSQL.D
+      pl/sql-code: |
+        SELECT CATEGORIA_CLIENTE 
+            INTO :P67_TIP_CLIENTE
+        FROM  CLIENTES CL
+            WHERE CL.ID_PERSONA = :P67_ID_CLIENTE;
+      items-to-submit: 
+      - P67_ID_CLIENTE
+      items-to-return: 
+      - P67_TIP_CLIENTE
+      suppress-change-event: false
+
+    execution: 
+      sequence: 10
+      event: Tipo Cliente # 12941752126107129
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+      stop-execution-on-error: true
+      wait-for-result: true
+
+  - # ====== Action: Refresh =====================================
+    id: 12942195747107133
+    identification: 
+      action: Refresh
+
+    settings: 
+      maintain-pagination: false
+
+    affected-elements: 
+      selection-type: Item(s)
+      item(s): 
+      - P67_TIP_CLIENTE
+
+    execution: 
+      sequence: 20
+      event: Tipo Cliente # 12941752126107129
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+- # ====== Dynamic Action: Carga de Productos ==================
+  id: 12941944195107131
+  identification: 
+    name: Carga de Productos
+
+  execution: 
+    sequence: 50
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Change
+    selection-type: Column(s)
+    interactive-grid: Detalle_Venta # 12008123551524750
+    column(s): 
+    - PRODUCTO
+
+  actions: 
+  - # ====== Action: Execute Server-side Code ====================
+    id: 12942021495107132
+    identification: 
+      action: Execute Server-side Code
+
+    settings: 
+      language: PE.PROPERTY.SOURCE_SNIPPET_LANG.LOV.PLSQL.D
+      pl/sql-code: |
+        select 1, cat.precio,cat.precio
+        into :CANTIDAD,:PRECIO_UNITARIO, :TOTAL
+        from productos pro, precio_por_categoria cat
+            where pro.id_producto = cat.id_producto
+            AND CAT.CATEGORIA_CLIENTE = :P67_TIP_CLIENTE
+            and pro.id_producto = :PRODUCTO;
+      items-to-submit: 
+      - PRODUCTO
+      items-to-return: 
+      - CANTIDAD
+      - PRECIO_UNITARIO
+      - TOTAL
+      suppress-change-event: false
+
+    execution: 
+      sequence: 10
+      event: Carga de Productos # 12941944195107131
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+      stop-execution-on-error: true
+      wait-for-result: true
+
+  - # ====== Action: Execute JavaScript Code =====================
+    id: 12942482629107136
+    identification: 
+      action: Execute JavaScript Code
+
+    settings: 
+      code: recalculaImporte();
+
+    execution: 
+      sequence: 20
+      event: Carga de Productos # 12941944195107131
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+- # ====== Dynamic Action: Totalizador =========================
+  id: 12942243687107134
+  identification: 
+    name: Totalizador
+
+  execution: 
+    sequence: 60
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Change
+    selection-type: Column(s)
+    interactive-grid: Detalle_Venta # 12008123551524750
+    column(s): 
+    - CANTIDAD
+    - PRECIO_UNITARIO
+
+  actions: 
+  - # ====== Action: Execute Server-side Code ====================
+    id: 12942343183107135
+    identification: 
+      action: Execute Server-side Code
+
+    settings: 
+      language: PE.PROPERTY.SOURCE_SNIPPET_LANG.LOV.PLSQL.D
+      pl/sql-code: ':TOTAL := :CANTIDAD * :PRECIO_UNITARIO;'
+      items-to-submit: 
+      - CANTIDAD
+      - PRECIO_UNITARIO
+      items-to-return: 
+      - TOTAL
+      suppress-change-event: false
+
+    execution: 
+      sequence: 30
+      event: Totalizador # 12942243687107134
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+      stop-execution-on-error: true
+      wait-for-result: true
+
+  - # ====== Action: Execute JavaScript Code =====================
+    id: 12942567966107137
+    identification: 
+      action: Execute JavaScript Code
+
+    settings: 
+      code: recalculaImporte();
+
+    execution: 
+      sequence: 20
+      event: Totalizador # 12942243687107134
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+- # ====== Dynamic Action: Total IG ============================
+  id: 12942665835107138
+  identification: 
+    name: Total IG
+
+  execution: 
+    sequence: 70
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: NATIVE_IG|REGION TYPE|interactivegridselectionchange
+    selection-type: Region
+    region: Detalle_V # 13115576183342824
+
+  actions: 
+  - # ====== Action: Execute JavaScript Code =====================
+    id: 12942718970107139
+    identification: 
+      action: Execute JavaScript Code
+
+    settings: 
+      code: recalculaImporte();
+
+    execution: 
+      sequence: 10
+      event: Total IG # 12942665835107138
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+- # ====== Dynamic Action: New =================================
+  id: 13116948466342838
+  identification: 
+    name: New
+
+  execution: 
+    sequence: 80
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Change
+    selection-type: Column(s)
+    interactive-grid: Detalle_V # 13115576183342824
+    column(s): 
+    - ID_PRODUCTO
+
+  actions: 
+  - # ====== Action: Execute Server-side Code ====================
+    id: 13117060433342839
+    identification: 
+      action: Execute Server-side Code
+
+    settings: 
+      language: PE.PROPERTY.SOURCE_SNIPPET_LANG.LOV.PLSQL.D
+      pl/sql-code: |
+        select 1, cat.precio,cat.precio
+        into :CANTIDAD,:PRECIO_UNITARIO, :TOTAL
+        from productos pro, precio_por_categoria cat
+            where pro.id_producto = cat.id_producto
+            AND CAT.CATEGORIA_CLIENTE = :P67_TIP_CLIENTE
+            and pro.id_producto = :ID_PRODUCTO;
+      items-to-submit: 
+      - ID_PRODUCTO
+      items-to-return: 
+      - CANTIDAD
+      - PRECIO_UNITARIO
+      - TOTAL
+      suppress-change-event: false
+
+    execution: 
+      sequence: 10
+      event: New # 13116948466342838
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+      stop-execution-on-error: true
+      wait-for-result: true
+
+  - # ====== Action: Execute JavaScript Code =====================
+    id: 13179737375363519
+    identification: 
+      action: Execute JavaScript Code
+
+    settings: 
+      code: recalculaImporte();
+
+    execution: 
+      sequence: 20
+      event: New # 13116948466342838
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+- # ====== Dynamic Action: New_1 ===============================
+  id: 13117147310342840
+  identification: 
+    name: New_1
+
+  execution: 
+    sequence: 90
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Change
+    selection-type: Column(s)
+    interactive-grid: Detalle_V # 13115576183342824
+    column(s): 
+    - CANTIDAD
+    - PRECIO_UNITARIO
+
+  actions: 
+  - # ====== Action: Execute Server-side Code ====================
+    id: 13117285545342841
+    identification: 
+      action: Execute Server-side Code
+
+    settings: 
+      language: PE.PROPERTY.SOURCE_SNIPPET_LANG.LOV.PLSQL.D
+      pl/sql-code: ':TOTAL := :CANTIDAD * :PRECIO_UNITARIO;'
+      items-to-submit: 
+      - CANTIDAD
+      - PRECIO_UNITARIO
+      items-to-return: 
+      - TOTAL
+      suppress-change-event: false
+
+    execution: 
+      sequence: 30
+      event: New_1 # 13117147310342840
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+      stop-execution-on-error: true
+      wait-for-result: true
+
+  - # ====== Action: Execute JavaScript Code =====================
+    id: 13179806125363520
+    identification: 
+      action: Execute JavaScript Code
+
+    settings: 
+      code: recalculaImporte();
+
+    execution: 
+      sequence: 20
+      event: New_1 # 13117147310342840
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+- # ====== Dynamic Action: New_2 ===============================
+  id: 13182137220363543
+  identification: 
+    name: New_2
+
+  execution: 
+    sequence: 100
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Change
+    selection-type: Item(s)
+    item(s): 
+    - P67_MONEDA
+
+  client-side-condition: 
+    type: Item != Value
+    item: P67_MONEDA
+    value: 1
+
+  actions: 
+  - # ====== Action: Show ========================================
+    id: 13182278455363544
+    identification: 
+      action: Show
+
+    affected-elements: 
+      selection-type: Item(s)
+      item(s): 
+      - P67_TIPO_CAMBIO
+
+    execution: 
+      sequence: 10
+      event: New_2 # 13182137220363543
+      fire-when-event-result-is: True
+      fire-on-initialization: true
+
+  - # ====== Action: Hide ========================================
+    id: 13182479635363546
+    identification: 
+      action: Hide
+
+    affected-elements: 
+      selection-type: Item(s)
+      item(s): 
+      - P67_TIPO_CAMBIO
+
+    execution: 
+      sequence: 10
+      event: New_2 # 13182137220363543
+      fire-when-event-result-is: False
+      fire-on-initialization: true
+
+  - # ====== Action: Show ========================================
+    id: 13182854324363550
+    identification: 
+      action: Show
+
+    affected-elements: 
+      selection-type: Item(s)
+      item(s): 
+      - P67_TOTAL_MONEDA_ORIGEN
+
+    execution: 
+      sequence: 20
+      event: New_2 # 13182137220363543
+      fire-when-event-result-is: True
+      fire-on-initialization: true
+
+  - # ====== Action: Hide ========================================
+    id: 13348345183104001
+    identification: 
+      action: Hide
+
+    affected-elements: 
+      selection-type: Item(s)
+      item(s): 
+      - P67_TOTAL_MONEDA_ORIGEN
+
+    execution: 
+      sequence: 20
+      event: New_2 # 13182137220363543
+      fire-when-event-result-is: False
+      fire-on-initialization: true
+
+  - # ====== Action: set cambios =================================
+    id: 14820716052450432
+    identification: 
+      name: set cambios
+      action: Set Value
+
+    settings: 
+      set-type: SQL Statement
+      sql-statement: |
+        SELECT TRUNC(tipo_compra)
+        FROM TIPOS_CAMBIO
+        WHERE fuente = 'BCP'
+          AND COD_MONEDA_COTIZADA = 1
+        ORDER BY FECHA_UPDATED DESC
+        FETCH FIRST 1 ROWS ONLY;
+        
+      escape-special-characters: true
+      suppress-change-event: false
+
+    affected-elements: 
+      selection-type: Item(s)
+      item(s): 
+      - P67_TIPO_CAMBIO
+
+    execution: 
+      sequence: 30
+      event: New_2 # 13182137220363543
+      fire-when-event-result-is: True
+      fire-on-initialization: true
+      stop-execution-on-error: true
+      wait-for-result: true
+
+  - # ====== Action: Clear =======================================
+    id: 14820897187450433
+    identification: 
+      action: Clear
+
+    affected-elements: 
+      selection-type: Item(s)
+      item(s): 
+      - P67_TIPO_CAMBIO
+
+    execution: 
+      sequence: 30
+      event: New_2 # 13182137220363543
+      fire-when-event-result-is: False
+      fire-on-initialization: false
+
+- # ====== Dynamic Action: Cambio divisa =======================
+  id: 13348467461104002
+  identification: 
+    name: Cambio divisa
+
+  execution: 
+    sequence: 110
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Change
+    selection-type: Item(s)
+    item(s): 
+    - P67_TIPO_CAMBIO
+
+  actions: 
+  - # ====== Action: Execute Server-side Code ====================
+    id: 13348506980104003
+    identification: 
+      action: Execute Server-side Code
+
+    settings: 
+      language: PE.PROPERTY.SOURCE_SNIPPET_LANG.LOV.PLSQL.D
+      pl/sql-code: |
+        DECLARE
+          v_local NUMBER;
+          v_tc    NUMBER;
+        BEGIN
+          -- Convertir limpiando puntos y comas (miles o decimales)
+          v_local := TO_NUMBER(REPLACE(REPLACE(:P67_TOTAL_MONEDA_LOCAL, '.', ''), ',', ''));
+          v_tc    := TO_NUMBER(REPLACE(REPLACE(:P67_TIPO_CAMBIO, '.', ''), ',', ''));
+        
+          IF v_local IS NULL OR v_tc IS NULL OR v_tc = 0 THEN
+            :P67_TOTAL_MONEDA_ORIGEN := NULL;
+          ELSE
+            :P67_TOTAL_MONEDA_ORIGEN := ROUND(v_local / v_tc, 2);
+          END IF;
+        END;
+        
+      items-to-submit: 
+      - P67_TOTAL_MONEDA_LOCAL
+      - P67_TIPO_CAMBIO
+      items-to-return: 
+      - P67_TOTAL_MONEDA_ORIGEN
+      suppress-change-event: false
+
+    execution: 
+      sequence: 10
+      event: Cambio divisa # 13348467461104002
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+      stop-execution-on-error: true
+      wait-for-result: true
+
+- # ====== Dynamic Action: Plan Cuota ==========================
+  id: 15463820690249331
+  identification: 
+    name: Plan Cuota
+
+  execution: 
+    sequence: 120
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Change
+    selection-type: Item(s)
+    item(s): 
+    - P67_FORMA_PAGO
+
+  client-side-condition: 
+    type: Item = Value
+    item: P67_FORMA_PAGO
+    value: 1
+
+  actions: 
+  - # ====== Action: Show ========================================
+    id: 15464021629249333
+    identification: 
+      action: Show
+
+    affected-elements: 
+      selection-type: Item(s)
+      item(s): 
+      - P67_ID_PLAN_CUOTA
+
+    execution: 
+      sequence: 10
+      event: Plan Cuota # 15463820690249331
+      fire-when-event-result-is: True
+      fire-on-initialization: true
+
+  - # ====== Action: Hide ========================================
+    id: 15464108045249334
+    identification: 
+      action: Hide
+
+    affected-elements: 
+      selection-type: Item(s)
+      item(s): 
+      - P67_ID_PLAN_CUOTA
+
+    execution: 
+      sequence: 10
+      event: Plan Cuota # 15463820690249331
+      fire-when-event-result-is: False
+      fire-on-initialization: true
+
+- # ====== Dynamic Action: Calcula Monto =======================
+  id: 15464724165249340
+  identification: 
+    name: Calcula Monto
+
+  execution: 
+    sequence: 130
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Change
+    selection-type: Item(s)
+    item(s): 
+    - P67_MONTO_PAGO
+
+  actions: 
+  - # ====== Action: Execute Server-side Code ====================
+    id: 15464872980249341
+    identification: 
+      action: Execute Server-side Code
+
+    settings: 
+      language: PE.PROPERTY.SOURCE_SNIPPET_LANG.LOV.PLSQL.D
+      pl/sql-code: |
+        :P67_VUELTO := 
+            TO_NUMBER(REPLACE(:P67_MONTO_PAGO, '.', '')) 
+          - TO_NUMBER(REPLACE(:P67_TOTAL_MONEDA_LOCAL, '.', ''));
+        
+      items-to-submit: 
+      - P67_TOTAL_MONEDA_LOCAL
+      - P67_MONTO_PAGO
+      items-to-return: 
+      - P67_VUELTO
+      suppress-change-event: false
+
+    execution: 
+      sequence: 10
+      event: Calcula Monto # 15464724165249340
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+      stop-execution-on-error: true
+      wait-for-result: true
+
+- # ====== Dynamic Action: Factura Origen ======================
+  id: 15982572038097101
+  identification: 
+    name: Factura Origen
+
+  execution: 
+    sequence: 140
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Change
+    selection-type: Item(s)
+    item(s): 
+    - P67_ID_TALONARIO
+
+  client-side-condition: 
+    type: Item = Value
+    item: P67_ID_TALONARIO
+    value: 21
+
+  actions: 
+  - # ====== Action: Show ========================================
+    id: 15982628240097102
+    identification: 
+      action: Show
+
+    affected-elements: 
+      selection-type: Item(s)
+      item(s): 
+      - P67_IF_FAC_ORIGEN
+
+    execution: 
+      sequence: 20
+      event: Factura Origen # 15982572038097101
+      fire-when-event-result-is: True
+      fire-on-initialization: true
+
+  - # ====== Action: Hide ========================================
+    id: 15982798829097103
+    identification: 
+      action: Hide
+
+    affected-elements: 
+      selection-type: Item(s)
+      item(s): 
+      - P67_IF_FAC_ORIGEN
+
+    execution: 
+      sequence: 10
+      event: Factura Origen # 15982572038097101
+      fire-when-event-result-is: False
+      fire-on-initialization: true
+
+  - # ====== Action: Execute Server-side Code ====================
+    id: 15982866685097104
+    identification: 
+      action: Execute Server-side Code
+
+    settings: 
+      language: PE.PROPERTY.SOURCE_SNIPPET_LANG.LOV.PLSQL.D
+      pl/sql-code: |
+        select nro_comprobante 
+        into :P67_ID_FAC_ORIGEN
+        from COMPROBANTES
+        where id_comprobante = :P67_ID_COMPROBANTE;
+      items-to-submit: 
+      - P67_ID_COMPROBANTE
+      items-to-return: 
+      - P67_ID_FAC_ORIGEN
+      suppress-change-event: false
+
+    execution: 
+      sequence: 10
+      event: Factura Origen # 15982572038097101
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+      stop-execution-on-error: true
+      wait-for-result: true
+
+  - # ====== Action: Show ========================================
+    id: 15983043835097106
+    identification: 
+      action: Show
+
+    affected-elements: 
+      selection-type: Item(s)
+      item(s): 
+      - P67_ID_FAC_ORIGEN
+
+    execution: 
+      sequence: 20
+      event: Factura Origen # 15982572038097101
+      fire-when-event-result-is: True
+      fire-on-initialization: true
+
+  - # ====== Action: Hide ========================================
+    id: 15983166713097107
+    identification: 
+      action: Hide
+
+    affected-elements: 
+      selection-type: Item(s)
+      item(s): 
+      - P67_ID_FAC_ORIGEN
+
+    execution: 
+      sequence: 10
+      event: Factura Origen # 15982572038097101
+      fire-when-event-result-is: False
+      fire-on-initialization: true
+
+validations: 
+- # ====== Validation: New =====================================
+  id: 15464606428249339
+  identification: 
+    name: New
+
+  execution: 
+    sequence: 10
+
+  validation: 
+    type: Expression
+    language: PL/SQL
+    pl/sql-expression: ':P67_VUELTO < 0'
+    always-execute: false
+
+  error: 
+    error-message: Cambio no puede ser Negativo
+    display-location: Inline with Field and in Notification
+    associated-item: P67_VUELTO # 15464591449249338
+
+  configuration: 
+    build-option: Commented Out # 7705349298831252
+
+processes: 
+- # ====== Process: Initialize form Proceso Ventas =============
+  id: 12791846761370641
+  identification: 
+    name: Initialize form Proceso Ventas
+    type: Form - Initialization
+    execution-chain: None
+    form-region: Proceso Ventas # 12776927328370633
+
+  execution: 
+    sequence: 10
+    point: Before Header
+    run-process: Once Per Page Visit (default)
+
+- # ====== Process: Process form Proceso Ventas ================
+  id: 12792268806370641
+  identification: 
+    name: Process form Proceso Ventas
+    type: Form - Automatic Row Processing (DML)
+    execution-chain: None
+    form-region: Proceso Ventas # 12776927328370633
+
+  settings: 
+    target-type: Region Source
+    prevent-lost-updates: true
+    lock-row: Yes
+    return-primary-key(s)-after-insert: true
+
+  execution: 
+    sequence: 10
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+
+- # ====== Process: Close Dialog ===============================
+  id: 12792603198370641
+  identification: 
+    name: Close Dialog
+    type: Clear Session State
+    execution-chain: None
+
+  settings: 
+    type: Clear all Items on the Current Page
+
+  execution: 
+    sequence: 60
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+
+  server-side-condition: 
+    type: Request is contained in Value
+    value: CREATE,SAVE,DELETE
+
+- # ====== Process: Detalle_Venta - Save Interactive Grid Data =
+  id: 12941104366107123
+  identification: 
+    name: Detalle_Venta - Save Interactive Grid Data
+    type: Interactive Grid - Automatic Row Processing (DML)
+    execution-chain: None
+    editable-region: Detalle_Venta # 12008123551524750
+
+  settings: 
+    target-type: Region Source
+    prevent-lost-updates: true
+    lock-row: Yes
+    return-primary-key(s)-after-insert: true
+
+  execution: 
+    sequence: 40
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+
+  server-side-condition: 
+    execution-scope: For Created and Modified Rows
+
+  configuration: 
+    build-option: Commented Out # 7705349298831252
+
+- # ====== Process: Detalle_V - Save Interactive Grid Data =====
+  id: 13116846885342837
+  identification: 
+    name: Detalle_V - Save Interactive Grid Data
+    type: Interactive Grid - Automatic Row Processing (DML)
+    execution-chain: None
+    editable-region: Detalle_V # 13115576183342824
+
+  settings: 
+    target-type: Region Source
+    prevent-lost-updates: true
+    lock-row: Yes
+    return-primary-key(s)-after-insert: true
+
+  execution: 
+    sequence: 30
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+
+  server-side-condition: 
+    when-button-pressed: CREATE # 12791467411370641
+    execution-scope: For Created and Modified Rows
+
+- # ====== Process: Actualiza Factura ==========================
+  id: 13117395752342842
+  identification: 
+    name: Actualiza Factura
+    type: Execute Code
+    execution-chain: None
+
+  source: 
+    location: Local Database
+    language: PL/SQL
+    pl/sql-code: |
+      BEGIN
+       UPDATE TALONARIOS
+          SET NRO_ACTUAL = NRO_ACTUAL +1
+          WHERE TIPO_COMPROBANTE = :P67_TIPO_COMPROBANTE;
+          COMMIT;
+      END;
+
+  execution: 
+    sequence: 50
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+
+- # ====== Process: Detalle Factura Cursor =====================
+  id: 13117457362342843
+  identification: 
+    name: Detalle Factura Cursor
+    type: Execute Code
+    execution-chain: None
+
+  source: 
+    location: Local Database
+    language: PL/SQL
+    pl/sql-code: |
+      DECLARE
+          CURSOR CUR_DETALLE IS
+              SELECT 
+                ven.id_orden,
+                pr.ID_PRODUCTO,
+                pr.nombre,
+                det.cantidad,
+                det.precio_unitario,
+                det.total,
+                ti.descripcion AS iva,
+                ti.porcentaje,
+                ROUND((det.total * ti.porcentaje) / (100 + ti.porcentaje), 0) AS iva_calculado
+              FROM detalle_orden det
+              JOIN ordenes_venta ven ON ven.id_orden = det.id_orden
+              JOIN productos pr ON pr.id_producto = det.id_producto
+              LEFT JOIN tipo_iva ti ON ti.id_tipo_iva = pr.id_tipo_iva
+              WHERE det.id_orden = :P67_ID_ORDEN_VENTA;
+      
+          REG_DET CUR_DETALLE%ROWTYPE;
+      BEGIN
+          OPEN CUR_DETALLE;
+          LOOP
+              FETCH CUR_DETALLE INTO REG_DET;
+              EXIT WHEN CUR_DETALLE%NOTFOUND;
+      
+              INSERT INTO DETALLE_COMPROBANTE (
+                  ID_COMPROBANTE,
+                  ID_PRODUCTO,
+                  CANTIDAD,
+                  PRECIO_UNITARIO,
+                  TOTAL_LINEA,
+                  MONTO_IVA,
+                  PORCENTAJE_IVA
+              ) VALUES (
+                  :P67_ID_COMPROBANTE, -- este debe estar definido en la página
+                  REG_DET.ID_PRODUCTO,
+                  REG_DET.CANTIDAD,
+                  REG_DET.PRECIO_UNITARIO,
+                  REG_DET.TOTAL,
+                  REG_DET.IVA_CALCULADO,
+                  REG_DET.PORCENTAJE
+              );
+      
+          END LOOP;
+          CLOSE CUR_DETALLE;
+      
+          apex_application.g_print_success_message :=
+              'Se generó el comprobante correctamente a partir de la orden de venta N° ' || :P67_ID_ORDEN_VENTA;
+      END;
+      
+
+  execution: 
+    sequence: 20
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+
+  server-side-condition: 
+    when-button-pressed: CREATE # 12791467411370641
+
+- # ====== Process: Validacion de Caja =========================
+  id: 15465358937249346
+  identification: 
+    name: Validacion de Caja
+    type: Execute Code
+    execution-chain: None
+
+  source: 
+    location: Local Database
+    language: PL/SQL
+    pl/sql-code: |
+      DECLARE
+          v_estado varchar2(1);
+      
+          BEGIN
+              SELECT CA.ESTADO 
+              INTO v_estado
+              FROM CAJAS CA, EMPLEADOS EP
+              WHERE EP.ID_EMPLEADO = CA.ID_EMPLEADO
+              --AND EP.CODIGO_USUARIO = &APP_USER
+              AND CA.ESTADO = 'A';
+               EXCEPTION
+                  WHEN NO_DATA_FOUND THEN
+                  apex_application.g_print_success_message := '<span style="color: BLACK;"La caja no se encuentra Habilitada<br> </span>';
+                  RAISE_APPLICATION_ERROR(-20000, 'Caja No Habilitada');
+          END;
+
+  execution: 
+    sequence: 20
+    point: Before Header
+    run-process: Once Per Page Visit (default)
+

@@ -1,0 +1,872 @@
+---
+- # ====== Breadcrumb: Breadcrumb ==============================
+  id: 7705913887831249
+  identification: 
+    name: Breadcrumb
+
+  entries: 
+  - # ====== Entry: Administration ===============================
+    id: 8045478405830590
+    identification: 
+      name: Administration
+      page-number: 10000
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:10000:&APP_SESSION.::&DEBUG.:::'
+        page: 10000 # Administration
+
+  - # ====== Entry: Personas =====================================
+    id: 8189951448383988
+    identification: 
+      name: Personas
+      page-number: 9
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:9:&APP_SESSION.::&DEBUG.:::'
+        page: 9 # Personas
+
+  - # ====== Entry: Clientes =====================================
+    id: 8268171500955855
+    identification: 
+      name: Clientes
+      page-number: 19
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:19:&APP_SESSION.::&DEBUG.:::'
+        page: 19 # Clientes
+
+  - # ====== Entry: Oficinas =====================================
+    id: 8287163970904534
+    identification: 
+      name: Oficinas
+      page-number: 21
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:21:&APP_SESSION.::&DEBUG.:::'
+        page: 21 # Oficinas
+
+  - # ====== Entry: Departamentos ================================
+    id: 8301224953887389
+    identification: 
+      name: Departamentos
+      page-number: 23
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:23:&APP_SESSION.::&DEBUG.:::'
+        page: 23 # Departamentos
+
+  - # ====== Entry: Ciudades =====================================
+    id: 8317094800859514
+    identification: 
+      name: Ciudades
+      page-number: 26
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:26:&APP_SESSION.::&DEBUG.:::'
+        page: 26 # Ciudades
+
+  - # ====== Entry: Ventas =======================================
+    id: 8353117399145095
+    identification: 
+      name: Ventas
+      page-number: 30
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:30:&SESSION.::&DEBUG.:::'
+        page: 30 # Ventas
+
+  - # ====== Entry: Empleados Roles ==============================
+    id: 8618294148071068
+    identification: 
+      name: Empleados Roles
+      page-number: 11
+
+    execution: 
+      sequence: 10
+
+    appearance: 
+      parent-entry: Personas # 8189951448383988
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:11:&APP_SESSION.::&DEBUG.:::'
+        page: 11 # Empleados Roles
+
+  - # ====== Entry: Roles ========================================
+    id: 8653533060896213
+    identification: 
+      name: Roles
+      page-number: 13
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:13:&APP_SESSION.::&DEBUG.:::'
+        page: 13 # Roles
+
+  - # ====== Entry: Empleados ====================================
+    id: 9477310147028232
+    identification: 
+      name: Empleados
+      page-number: 2
+
+    execution: 
+      sequence: 10
+
+    appearance: 
+      parent-entry: Personas # 8189951448383988
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:2:&APP_SESSION.::&DEBUG.:::'
+        page: 2 # Empleados
+
+  - # ====== Entry: PRUEBA C IG ==================================
+    id: 9652447111881537
+    identification: 
+      name: PRUEBA C IG
+      page-number: 28
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:28:&APP_SESSION.::&DEBUG.:::'
+        page: 28 # PRUEBA C IG
+
+  - # ====== Entry: Prueba Direccion IG ==========================
+    id: 9768494231480194
+    identification: 
+      name: Prueba Direccion IG
+      page-number: 34
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:34:&APP_SESSION.::&DEBUG.:::'
+        page: 34 # Prueba Direccion IG
+
+  - # ====== Entry: Proveedores IG ===============================
+    id: 9813031577312834
+    identification: 
+      name: Proveedores IG
+      page-number: 41
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:41:&APP_SESSION.::&DEBUG.:::'
+        page: 41 # Proveedores IG
+
+  - # ====== Entry: Contactos IG =================================
+    id: 9838815802464723
+    identification: 
+      name: Contactos IG
+      page-number: 43
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:43:&APP_SESSION.::&DEBUG.:::'
+        page: 43 # Contactos IG
+
+  - # ====== Entry: Empleados IG =================================
+    id: 11522340445464590
+    identification: 
+      name: Empleados IG
+      page-number: 16
+
+    execution: 
+      sequence: 10
+
+    appearance: 
+      parent-entry: Personas # 8189951448383988
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:16:&APP_SESSION.::&DEBUG.:::'
+        page: 16 # Empleados IG
+
+  - # ====== Entry: Productos ====================================
+    id: 11720741318104978
+    identification: 
+      name: Productos
+      page-number: 3
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:3:&APP_SESSION.::&DEBUG.:::'
+        page: 3 # Productos
+
+  - # ====== Entry: Productos ====================================
+    id: 11722476967122391
+    identification: 
+      name: Productos
+      page-number: 5
+
+    execution: 
+      sequence: 10
+
+    appearance: 
+      parent-entry: Productos # 11720741318104978
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:5:&APP_SESSION.::&DEBUG.:::'
+        page: 5 # Productos
+
+  - # ====== Entry: Precio por Categoria =========================
+    id: 11756972421189435
+    identification: 
+      name: Precio por Categoria
+      page-number: 8
+
+    execution: 
+      sequence: 10
+
+    appearance: 
+      parent-entry: Productos # 11720741318104978
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:8:&APP_SESSION.::&DEBUG.:::'
+        page: 8 # Precio por Categoria
+
+  - # ====== Entry: Producto Proveedor ===========================
+    id: 11778790388215867
+    identification: 
+      name: Producto Proveedor
+      page-number: 25
+
+    execution: 
+      sequence: 10
+
+    appearance: 
+      parent-entry: Productos # 11720741318104978
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:25:&APP_SESSION.::&DEBUG.:::'
+        page: 25 # Producto Proveedor
+
+  - # ====== Entry: Marcas =======================================
+    id: 11791461938241622
+    identification: 
+      name: Marcas
+      page-number: 37
+
+    execution: 
+      sequence: 10
+
+    appearance: 
+      parent-entry: Productos # 11720741318104978
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:37:&APP_SESSION.::&DEBUG.:::'
+        page: 37 # Marcas
+
+  - # ====== Entry: Categoria ====================================
+    id: 11803509483263060
+    identification: 
+      name: Categoria
+      page-number: 40
+
+    execution: 
+      sequence: 10
+
+    appearance: 
+      parent-entry: Productos # 11720741318104978
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:40:&APP_SESSION.::&DEBUG.:::'
+        page: 40 # Categoria
+
+  - # ====== Entry: Clientes =====================================
+    id: 11819917191293129
+    identification: 
+      name: Clientes
+      page-number: 4
+
+    execution: 
+      sequence: 10
+
+    appearance: 
+      parent-entry: Clientes # 8268171500955855
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:4:&APP_SESSION.::&DEBUG.:::'
+        page: 4 # Clientes
+
+  - # ====== Entry: Orden de Venta ===============================
+    id: 11875834982937408
+    identification: 
+      name: Orden de Venta
+      page-number: 52
+
+    execution: 
+      sequence: 10
+
+    appearance: 
+      parent-entry: Ventas # 8353117399145095
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:52:&APP_SESSION.::&DEBUG.:::'
+        page: 52 # Orden de Venta
+
+  - # ====== Entry: Inventarios ==================================
+    id: 12109684248618292
+    identification: 
+      name: Inventarios
+      page-number: 12
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:12:&APP_SESSION.::&DEBUG.:::'
+        page: 12 # Inventarios
+
+  - # ====== Entry: Ajuste Manual de Stock =======================
+    id: 12112623986630560
+    identification: 
+      name: Ajuste Manual de Stock
+      page-number: 32
+
+    execution: 
+      sequence: 10
+
+    appearance: 
+      parent-entry: Inventarios # 12109684248618292
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:32:&APP_SESSION.::&DEBUG.:::'
+        page: 32 # Ajuste Manual de Stock
+
+  - # ====== Entry: Stock de Productos ===========================
+    id: 12128394239676472
+    identification: 
+      name: Stock de Productos
+      page-number: 47
+
+    execution: 
+      sequence: 10
+
+    appearance: 
+      parent-entry: Inventarios # 12109684248618292
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:47:&APP_SESSION.::&DEBUG.:::'
+        page: 47 # Stock de Productos
+
+  - # ====== Entry: Reporte Inventario ===========================
+    id: 12139785487706401
+    identification: 
+      name: Reporte Inventario
+      page-number: 55
+
+    execution: 
+      sequence: 10
+
+    appearance: 
+      parent-entry: Inventarios # 12109684248618292
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:55:&APP_SESSION.::&DEBUG.:::'
+        page: 55 # Reporte Inventario
+
+  - # ====== Entry: Movimiento de Stock ==========================
+    id: 12142579617711544
+    identification: 
+      name: Movimiento de Stock
+      page-number: 56
+
+    execution: 
+      sequence: 10
+
+    appearance: 
+      parent-entry: Reporte Inventario # 12139785487706401
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:56:&APP_SESSION.::&DEBUG.:::'
+        page: 56 # Movimiento de Stock
+
+  - # ====== Entry: Reporte Orden ================================
+    id: 12149182229723969
+    identification: 
+      name: Reporte Orden
+      page-number: 58
+
+    execution: 
+      sequence: 10
+
+    appearance: 
+      parent-entry: Ventas # 8353117399145095
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:58:&APP_SESSION.::&DEBUG.:::'
+        page: 58 # Reporte Orden
+
+  - # ====== Entry: Reservas de Productos ========================
+    id: 12150645786730084
+    identification: 
+      name: Reservas de Productos
+      page-number: 59
+
+    execution: 
+      sequence: 10
+
+    appearance: 
+      parent-entry: Reporte Orden # 12149182229723969
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:59:&APP_SESSION.::&DEBUG.:::'
+        page: 59 # Reservas de Productos
+
+  - # ====== Entry: Monedas ======================================
+    id: 12645161378948694
+    identification: 
+      name: Monedas
+      page-number: 17
+
+    execution: 
+      sequence: 10
+
+    appearance: 
+      parent-entry: Administration # 8045478405830590
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:17:&APP_SESSION.::&DEBUG.:::'
+        page: 17 # Monedas
+
+  - # ====== Entry: Planes Cuota =================================
+    id: 12676453495939213
+    identification: 
+      name: Planes Cuota
+      page-number: 38
+
+    execution: 
+      sequence: 10
+
+    appearance: 
+      parent-entry: Administration # 8045478405830590
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:38:&APP_SESSION.::&DEBUG.:::'
+        page: 38 # Planes Cuota
+
+  - # ====== Entry: Talonarios ===================================
+    id: 12707381144943752
+    identification: 
+      name: Talonarios
+      page-number: 51
+
+    execution: 
+      sequence: 10
+
+    appearance: 
+      parent-entry: Administration # 8045478405830590
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:51:&APP_SESSION.::&DEBUG.:::'
+        page: 51 # Talonarios
+
+  - # ====== Entry: Metodos de Pago ==============================
+    id: 12724103542950199
+    identification: 
+      name: Metodos de Pago
+      page-number: 57
+
+    execution: 
+      sequence: 10
+
+    appearance: 
+      parent-entry: Administration # 8045478405830590
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:57:&SESSION.::&DEBUG.:::'
+        page: 57 # Metodos de Pago
+
+  - # ====== Entry: Configuracion de Cajas =======================
+    id: 12742248829987512
+    identification: 
+      name: Configuracion de Cajas
+      page-number: 63
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:63:&APP_SESSION.::&DEBUG.:::'
+        page: 63 # Configuracion de Cajas
+
+  - # ====== Entry: Apertura de Caja =============================
+    id: 12746890552199274
+    identification: 
+      name: Apertura de Caja
+      page-number: 65
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:65:&APP_SESSION.::&DEBUG.:::'
+        page: 65 # Apertura de Caja
+
+  - # ====== Entry: Proceso Ventas ===============================
+    id: 12814992323370651
+    identification: 
+      name: Proceso Ventas
+      page-number: 66
+
+    execution: 
+      sequence: 10
+
+    appearance: 
+      parent-entry: Ventas # 8353117399145095
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:66:&APP_SESSION.::&DEBUG.:::'
+        page: 66 # Proceso Ventas
+
+  - # ====== Entry: Compras ======================================
+    id: 12816872412378893
+    identification: 
+      name: Compras
+      page-number: 68
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:68:&APP_SESSION.::&DEBUG.:::'
+        page: 68 # Compras
+
+  - # ====== Entry: Proceso de Compras ===========================
+    id: 12853497179386528
+    identification: 
+      name: Proceso de Compras
+      page-number: 69
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:69:&SESSION.::&DEBUG.:::'
+        page: 69 # Proceso de Compras
+
+  - # ====== Entry: Orden de Compra ==============================
+    id: 12916236694928792
+    identification: 
+      name: Orden de Compra
+      page-number: 71
+
+    execution: 
+      sequence: 10
+
+    appearance: 
+      parent-entry: Compras # 12816872412378893
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:71:&APP_SESSION.::&DEBUG.:::'
+        page: 71 # Orden de Compra
+
+  - # ====== Entry: Cierre de Caja ===============================
+    id: 13321888981673452
+    identification: 
+      name: Cierre de Caja
+      page-number: 61
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:61:&APP_SESSION.::&DEBUG.:::'
+        page: 61 # Cierre de Caja
+
+  - # ====== Entry: Privilegios ==================================
+    id: 14193449510932481
+    identification: 
+      name: Privilegios
+      page-number: 75
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:75:&APP_SESSION.::&DEBUG.:::'
+        page: 75 # Privilegios
+
+  - # ====== Entry: Roles - Privilegios ==========================
+    id: 14246656017094634
+    identification: 
+      name: Roles - Privilegios
+      page-number: 81
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:81:&APP_SESSION.::&DEBUG.:::'
+        page: 81 # Roles - Privilegios
+
+  - # ====== Entry: Recursos =====================================
+    id: 14306756628158725
+    identification: 
+      name: Recursos
+      page-number: 77
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:77:&APP_SESSION.::&DEBUG.:::'
+        page: 77 # Recursos
+
+  - # ====== Entry: Proceso de Inventario ========================
+    id: 14747778088426962
+    identification: 
+      name: Proceso de Inventario
+      page-number: 79
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:79:&APP_SESSION.::&DEBUG.:::'
+        page: 79 # Proceso de Inventario
+
+  - # ====== Entry: Conteo Fisico ================================
+    id: 15269145792464028
+    identification: 
+      name: Conteo Fisico
+      page-number: 73
+
+    execution: 
+      sequence: 10
+
+    appearance: 
+      parent-entry: Inventarios # 12109684248618292
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:73:&APP_SESSION.::&DEBUG.:::'
+        page: 73 # Conteo Fisico
+
+  - # ====== Entry: Revision =====================================
+    id: 15380859695775396
+    identification: 
+      name: Revision
+      page-number: 80
+
+    execution: 
+      sequence: 10
+
+    appearance: 
+      parent-entry: Inventarios # 12109684248618292
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:80:&APP_SESSION.::&DEBUG.:::'
+        page: 80 # Revision
+
+  - # ====== Entry: Existencias ==================================
+    id: 15473857232391233
+    identification: 
+      name: Existencias
+      page-number: 88
+
+    execution: 
+      sequence: 10
+
+    appearance: 
+      parent-entry: Reporte Inventario # 12139785487706401
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:88:&APP_SESSION.::&DEBUG.:::'
+        page: 88 # Existencias
+
+  - # ====== Entry: Formas de Pago ===============================
+    id: 15935740162184595
+    identification: 
+      name: Formas de Pago
+      page-number: 89
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:89:&APP_SESSION.::&DEBUG.:::'
+        page: 89 # Formas de Pago
+
+  - # ====== Entry: Nota de Credito Proveedor ====================
+    id: 16002821881644360
+    identification: 
+      name: Nota de Credito Proveedor
+      page-number: 94
+
+    execution: 
+      sequence: 10
+
+    appearance: 
+      parent-entry: Proveedores IG # 9813031577312834
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:94:&APP_SESSION.::&DEBUG.:::'
+        page: 94 # Nota de Credito Proveedor
+
+  - # ====== Entry: Cobros =======================================
+    id: 16136245567245394
+    identification: 
+      name: Cobros
+      page-number: 93
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:93:&APP_SESSION.::&DEBUG.:::'
+        page: 93 # Cobros/Pagos
+
+  - # ====== Entry: Cobros =======================================
+    id: 16160235734363772
+    identification: 
+      name: Cobros
+      page-number: 95
+
+    execution: 
+      sequence: 10
+
+    appearance: 
+      parent-entry: Cobros # 16136245567245394
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:95:&APP_SESSION.::&DEBUG.:::'
+        page: 95 # Cobros
+
+  - # ====== Entry: Cotizacion ===================================
+    id: 16532152428171081
+    identification: 
+      name: Cotizacion
+      page-number: 101
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:101:&APP_SESSION.::&DEBUG.:::'
+        page: 101 # Cotizacion
+
+  - # ====== Entry: Recepción de Orden de Compra =================
+    id: 16590317432057884
+    identification: 
+      name: Recepción de Orden de Compra
+      page-number: 106
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:106:&APP_SESSION.::&DEBUG.:::'
+        page: 106 # Recepción de Orden de Compra
+
+  - # ====== Entry: Recepción de productos =======================
+    id: 16617411826670860
+    identification: 
+      name: Recepción de productos
+      page-number: 107
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:107:&APP_SESSION.::&DEBUG.:::'
+        page: 107 # Recepción de productos
+
+  - # ====== Entry: reset-password ===============================
+    id: 19214720891556511
+    identification: 
+      name: reset-password
+      page-number: 102
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:102:&APP_SESSION.::&DEBUG.:::'
+        page: 102 # Restablecer Contraseña
+

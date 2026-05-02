@@ -1,0 +1,1150 @@
+---
+- # ====== List of Values: ACCESS_ROLES ========================
+  id: 8024221089830825
+  identification: 
+    name: ACCESS_ROLES
+
+  subscription: 
+    version-number: 1
+
+  source: 
+    location: Local Database
+    type: SQL Query
+    sql-query: |
+      select role_name d, role_id r
+      from APEX_APPL_ACL_ROLES where application_id = :APP_ID 
+      order by 1
+
+  column-mapping: 
+    return: R
+    display: D
+    default-sort: Use Order By from Query
+
+- # ====== List of Values: EMAIL_USERNAME_FORMAT ===============
+  id: 8031656464830812
+  identification: 
+    name: EMAIL_USERNAME_FORMAT
+
+  subscription: 
+    version-number: 1
+
+  source: 
+    location: Static Values
+
+  entries: 
+  - # ====== Entry: Email Addresses ==============================
+    id: 8031937077830812
+    entry: 
+      sequence: 1
+      display: Email Addresses
+      return: EMAIL
+
+- # ====== List of Values: PERSONAS.NRO_DOCUMENTO ==============
+  id: 8198960032452668
+  identification: 
+    name: PERSONAS.NRO_DOCUMENTO
+
+  subscription: 
+    version-number: 39016075434622
+
+  source: 
+    location: Local Database
+    type: SQL Query
+    sql-query: select id_persona AS return_value, nro_documento AS display_value from PERSONAS;
+
+  column-mapping: 
+    return: RETURN_VALUE
+    display: DISPLAY_VALUE
+    default-sort: Use Order By from Query
+
+  columns: 
+  - # ====== Column: DISPLAY_VALUE ===============================
+    id: 9085369221741110
+    identification: 
+      column-name: DISPLAY_VALUE
+      show: true
+
+    layout: 
+      sequence: 10
+
+    source: 
+      data-type: VARCHAR2
+
+    advanced: 
+      searchable: true
+
+  - # ====== Column: RETURN_VALUE ================================
+    id: 9086101895741110
+    identification: 
+      column-name: RETURN_VALUE
+      show: false
+
+    layout: 
+      sequence: 10
+
+    source: 
+      data-type: NUMBER
+
+    advanced: 
+      searchable: false
+
+- # ====== List of Values: ROLES.DESCRIPCION ===================
+  id: 8200076655452666
+  identification: 
+    name: ROLES.DESCRIPCION
+
+  subscription: 
+    version-number: 39011082233173
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: ROLES
+
+  column-mapping: 
+    return: ID_ROL
+    display: NOMBRE_ROL
+    default-sort: ID_ROL
+    sort-direction: Ascending (Nulls Last)
+
+  columns: 
+  - # ====== Column: DESCRIPCION =================================
+    id: 9468917203652253
+    identification: 
+      column-name: DESCRIPCION
+      show: true
+
+    heading: 
+      heading: Descripcion
+
+    layout: 
+      sequence: 10
+
+    source: 
+      data-type: VARCHAR2
+
+    advanced: 
+      searchable: true
+
+  - # ====== Column: ID_ROL ======================================
+    id: 9469392075652252
+    identification: 
+      column-name: ID_ROL
+      show: false
+
+    layout: 
+      sequence: 10
+
+    source: 
+      data-type: NUMBER
+
+    advanced: 
+      searchable: false
+
+  - # ====== Column: NOMBRE_ROL ==================================
+    id: 9469724605652252
+    identification: 
+      column-name: NOMBRE_ROL
+      show: true
+
+    heading: 
+      heading: Nombre Rol
+
+    layout: 
+      sequence: 20
+
+    source: 
+      data-type: VARCHAR2
+
+    advanced: 
+      searchable: true
+
+- # ====== List of Values: OFICINAS.DESCRIPCION ================
+  id: 8245359747955872
+  identification: 
+    name: OFICINAS.DESCRIPCION
+
+  subscription: 
+    version-number: 1
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: OFICINAS
+
+  column-mapping: 
+    return: CODIGO_OFICINA
+    display: DESCRIPCION
+    default-sort: DESCRIPCION
+    sort-direction: Ascending (Nulls Last)
+
+- # ====== List of Values: DEPARTAMENTOS.DESCRIPCION ===========
+  id: 8271293998904544
+  identification: 
+    name: DEPARTAMENTOS.DESCRIPCION
+
+  subscription: 
+    version-number: 1
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: DEPARTAMENTOS
+
+  column-mapping: 
+    return: CODIGO_DEPARTAMENTO
+    display: DESCRIPCION
+    default-sort: DESCRIPCION
+    sort-direction: Ascending (Nulls Last)
+
+- # ====== List of Values: CIUDADES.DESCRIPCION ================
+  id: 8271971343904544
+  identification: 
+    name: CIUDADES.DESCRIPCION
+
+  subscription: 
+    version-number: 1
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: CIUDADES
+
+  column-mapping: 
+    return: CODIGO_CIUDAD
+    display: DESCRIPCION
+    default-sort: DESCRIPCION
+    sort-direction: Ascending (Nulls Last)
+
+- # ====== List of Values: LOV_PERSONAS_CLIENTES ===============
+  id: 9071179770229504
+  identification: 
+    name: LOV_PERSONAS_CLIENTES
+
+  subscription: 
+    version-number: 39016139655279
+
+  source: 
+    location: Local Database
+    type: SQL Query
+    sql-query: |
+      SELECT 
+        p.nro_documento AS display_value,
+        p.id_persona AS return_value,
+        p.primer_nombre || ' ' || NVL(p.segundo_nombre, '') || ' ' || p.primer_apellido || ' ' || NVL(p.segundo_apellido, '') AS NOMBRE_COMPLETO,
+        p.correo
+      FROM personas p
+
+  column-mapping: 
+    return: RETURN_VALUE
+    display: DISPLAY_VALUE
+    default-sort: Use Order By from Query
+
+  columns: 
+  - # ====== Column: RETURN_VALUE ================================
+    id: 9075994573402087
+    identification: 
+      column-name: RETURN_VALUE
+      show: false
+
+    layout: 
+      sequence: 10
+
+    source: 
+      data-type: NUMBER
+
+    advanced: 
+      searchable: false
+
+  - # ====== Column: DISPLAY_VALUE ===============================
+    id: 9076388704402088
+    identification: 
+      column-name: DISPLAY_VALUE
+      show: true
+
+    heading: 
+      heading: Display Value
+
+    layout: 
+      sequence: 20
+
+    source: 
+      data-type: VARCHAR2
+
+    advanced: 
+      searchable: true
+
+  - # ====== Column: CORREO ======================================
+    id: 9104426357335316
+    identification: 
+      column-name: CORREO
+      show: true
+
+    heading: 
+      heading: Correo
+
+    layout: 
+      sequence: 40
+
+    source: 
+      data-type: VARCHAR2
+
+    advanced: 
+      searchable: true
+
+  - # ====== Column: NOMBRE_COMPLETO =============================
+    id: 9111814547391636
+    identification: 
+      column-name: NOMBRE_COMPLETO
+      show: true
+
+    heading: 
+      heading: Nombre Completo
+
+    layout: 
+      sequence: 10
+
+    source: 
+      data-type: VARCHAR2
+
+    advanced: 
+      searchable: true
+
+- # ====== List of Values: PAISES_DESCRIPCION ==================
+  id: 9560292905251080
+  identification: 
+    name: PAISES_DESCRIPCION
+
+  subscription: 
+    version-number: 39016125460713
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: PAISES
+
+  column-mapping: 
+    return: ID_PAIS
+    display: DESCRIPCION
+    default-sort: DESCRIPCION
+    sort-direction: Ascending (Nulls Last)
+
+- # ====== List of Values: DEPARTAMENTOS_DESCRIPCION ===========
+  id: 9560460040296102
+  identification: 
+    name: DEPARTAMENTOS_DESCRIPCION
+
+  subscription: 
+    version-number: 39016125594267
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: DEPARTAMENTOS
+
+  column-mapping: 
+    return: CODIGO_DEPARTAMENTO
+    display: DESCRIPCION
+    default-sort: DESCRIPCION
+    sort-direction: Ascending (Nulls Last)
+
+- # ====== List of Values: PERSONAS.NRO_DOCUMENTO_1 ============
+  id: 9739886888480172
+  identification: 
+    name: PERSONAS.NRO_DOCUMENTO_1
+
+  subscription: 
+    version-number: 39016142453134
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: PERSONAS
+
+  column-mapping: 
+    return: ID_PERSONA
+    display: NRO_DOCUMENTO
+    default-sort: NRO_DOCUMENTO
+    sort-direction: Ascending (Nulls Last)
+
+- # ====== List of Values: NRO_DOCUMENTO_NO_CLIENTE ============
+  id: 9788490823092371
+  identification: 
+    name: NRO_DOCUMENTO_NO_CLIENTE
+
+  subscription: 
+    version-number: 39016147852318
+
+  source: 
+    location: Local Database
+    type: SQL Query
+    sql-query: |
+      SELECT ID_PERSONA,
+             NRO_DOCUMENTO ,
+             primer_nombre || ' ' || NVL(segundo_nombre, '') || ' ' || primer_apellido || ' ' || NVL(segundo_apellido, '') AS nombre_completo
+      FROM PERSONAS
+      WHERE ID_PERSONA NOT IN (
+        SELECT ID_PERSONA FROM CLIENTES WHERE ID_PERSONA IS NOT NULL
+      )
+
+  column-mapping: 
+    return: ID_PERSONA
+    display: ID_PERSONA
+    default-sort: Use Order By from Query
+
+  columns: 
+  - # ====== Column: NOMBRE_COMPLETO =============================
+    id: 9788848995098679
+    identification: 
+      column-name: NOMBRE_COMPLETO
+      show: true
+
+    heading: 
+      heading: Nombre Completo
+
+    layout: 
+      sequence: 30
+
+    source: 
+      data-type: VARCHAR2
+
+    advanced: 
+      searchable: true
+
+  - # ====== Column: ID_PERSONA ==================================
+    id: 9789299081098679
+    identification: 
+      column-name: ID_PERSONA
+      show: true
+
+    heading: 
+      heading: Id Persona
+
+    layout: 
+      sequence: 10
+
+    source: 
+      data-type: NUMBER
+
+    advanced: 
+      searchable: true
+
+  - # ====== Column: NRO_DOCUMENTO ===============================
+    id: 9789699261098680
+    identification: 
+      column-name: NRO_DOCUMENTO
+      show: true
+
+    heading: 
+      heading: Nro Documento
+
+    layout: 
+      sequence: 20
+
+    source: 
+      data-type: VARCHAR2
+
+    advanced: 
+      searchable: true
+
+- # ====== List of Values: NRO_DOCUMENTO_NO_EMPLEADO ===========
+  id: 9793773505161707
+  identification: 
+    name: NRO_DOCUMENTO_NO_EMPLEADO
+
+  subscription: 
+    version-number: 39016147982876
+
+  source: 
+    location: Local Database
+    type: SQL Query
+    sql-query: |
+      SELECT ID_PERSONA,
+             NRO_DOCUMENTO ,
+             primer_nombre || ' ' || NVL(segundo_nombre, '') || ' ' || primer_apellido || ' ' || NVL(segundo_apellido, '') AS nombre_completo
+      FROM PERSONAS
+      WHERE ID_PERSONA NOT IN (
+        SELECT ID_PERSONA FROM EMPLEADOS WHERE ID_PERSONA IS NOT NULL
+      )
+
+  column-mapping: 
+    return: ID_PERSONA
+    display: NRO_DOCUMENTO
+    default-sort: Use Order By from Query
+
+  columns: 
+  - # ====== Column: NOMBRE_COMPLETO =============================
+    id: 9794078939161708
+    identification: 
+      column-name: NOMBRE_COMPLETO
+      show: true
+
+    heading: 
+      heading: Nombre Completo
+
+    layout: 
+      sequence: 30
+
+    source: 
+      data-type: VARCHAR2
+
+    advanced: 
+      searchable: true
+
+  - # ====== Column: ID_PERSONA ==================================
+    id: 9794418840161709
+    identification: 
+      column-name: ID_PERSONA
+      show: true
+
+    heading: 
+      heading: Id Persona
+
+    layout: 
+      sequence: 10
+
+    source: 
+      data-type: NUMBER
+
+    advanced: 
+      searchable: true
+
+  - # ====== Column: NRO_DOCUMENTO ===============================
+    id: 9794815816161709
+    identification: 
+      column-name: NRO_DOCUMENTO
+      show: true
+
+    heading: 
+      heading: Nro Documento
+
+    layout: 
+      sequence: 20
+
+    source: 
+      data-type: VARCHAR2
+
+    advanced: 
+      searchable: true
+
+- # ====== List of Values: PROVEEDORES.CODIGO_USUARIO ==========
+  id: 9819860374464707
+  identification: 
+    name: PROVEEDORES.CODIGO_USUARIO
+
+  subscription: 
+    version-number: 39016148827827
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: PROVEEDORES
+
+  column-mapping: 
+    return: ID_PERSONA
+    display: CODIGO_USUARIO
+    default-sort: CODIGO_USUARIO
+    sort-direction: Ascending (Nulls Last)
+
+- # ====== List of Values: GENERO.PERSONAS =====================
+  id: 9862450697075304
+  identification: 
+    name: GENERO.PERSONAS
+
+  subscription: 
+    version-number: 39011248383820
+
+  source: 
+    location: Static Values
+
+  entries: 
+  - # ====== Entry: Femenino =====================================
+    id: 9862736885075289
+    entry: 
+      sequence: 1
+      display: Femenino
+      return: F
+
+  - # ====== Entry: Masculino ====================================
+    id: 9863151162075287
+    entry: 
+      sequence: 2
+      display: Masculino
+      return: M
+
+- # ====== List of Values: DOCUMENTOS.DESCRIPCION ==============
+  id: 9863458760030527
+  identification: 
+    name: DOCUMENTOS.DESCRIPCION
+
+  subscription: 
+    version-number: 39011248668789
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: DOCUMENTOS
+
+  column-mapping: 
+    return: ID_DOCUMENTO
+    display: TIPO_DOCUMENTO
+    default-sort: TIPO_DOCUMENTO
+    sort-direction: Ascending (Nulls Last)
+
+- # ====== List of Values: PERSONAS.TIPO_PERSONAS ==============
+  id: 9865384577955740
+  identification: 
+    name: PERSONAS.TIPO_PERSONAS
+
+  subscription: 
+    version-number: 39011248782681
+
+  source: 
+    location: Static Values
+
+  entries: 
+  - # ====== Entry: Fisica =======================================
+    id: 9865610198955740
+    entry: 
+      sequence: 1
+      display: Fisica
+      return: F
+
+  - # ====== Entry: Juridica =====================================
+    id: 9866045019955740
+    entry: 
+      sequence: 2
+      display: Juridica
+      return: J
+
+- # ====== List of Values: PERSONAS.ESTADO_CIVIL ===============
+  id: 9869190961536364
+  identification: 
+    name: PERSONAS.ESTADO_CIVIL
+
+  subscription: 
+    version-number: 39011250084240
+
+  source: 
+    location: Static Values
+
+  entries: 
+  - # ====== Entry: Soltero ======================================
+    id: 9869409245536364
+    entry: 
+      sequence: 1
+      display: Soltero
+      return: Soltero
+
+  - # ====== Entry: Casado =======================================
+    id: 9869854652536363
+    entry: 
+      sequence: 2
+      display: Casado
+      return: Casado
+
+- # ====== List of Values: MARCAS.NOMBRE =======================
+  id: 11731866542122404
+  identification: 
+    name: MARCAS.NOMBRE
+
+  subscription: 
+    version-number: 39016810856983
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: MARCAS
+
+  column-mapping: 
+    return: ID_MARCA
+    display: NOMBRE
+    default-sort: NOMBRE
+    sort-direction: Ascending (Nulls Last)
+
+- # ====== List of Values: CATEGORIAS_PRODUCTOS.NOMBRE =========
+  id: 11732567988122406
+  identification: 
+    name: CATEGORIAS_PRODUCTOS.NOMBRE
+
+  subscription: 
+    version-number: 39016810856984
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: CATEGORIAS_PRODUCTOS
+
+  column-mapping: 
+    return: ID_CATEGORIA
+    display: NOMBRE
+    default-sort: NOMBRE
+    sort-direction: Ascending (Nulls Last)
+
+- # ====== List of Values: PRODUCTOS.NOMBRE ====================
+  id: 11765368439189441
+  identification: 
+    name: PRODUCTOS.NOMBRE
+
+  subscription: 
+    version-number: 39016811080024
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: PRODUCTOS
+
+  column-mapping: 
+    return: ID_PRODUCTO
+    display: NOMBRE
+    default-sort: NOMBRE
+    sort-direction: Ascending (Nulls Last)
+
+- # ====== List of Values: CLIENTES.CODIGO_USUARIO =============
+  id: 11876156031937503
+  identification: 
+    name: CLIENTES.CODIGO_USUARIO
+
+  subscription: 
+    version-number: 39016828366252
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: CLIENTES
+
+  column-mapping: 
+    return: ID_PERSONA
+    display: CODIGO_USUARIO
+    default-sort: CODIGO_USUARIO
+    sort-direction: Ascending (Nulls Last)
+
+- # ====== List of Values: ORDENES_VENTA.ESTADO ================
+  id: 12151050193730169
+  identification: 
+    name: ORDENES_VENTA.ESTADO
+
+  subscription: 
+    version-number: 39016980485465
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: ORDENES_VENTA
+
+  column-mapping: 
+    return: ID_ORDEN
+    display: ESTADO
+    default-sort: ESTADO
+    sort-direction: Ascending (Nulls Last)
+
+- # ====== List of Values: EMPLEADOS.NOMBRE ====================
+  id: 12747961019199341
+  identification: 
+    name: EMPLEADOS.NOMBRE
+
+  subscription: 
+    version-number: 39017434676514
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: EMPLEADOS
+
+  column-mapping: 
+    return: ID_EMPLEADO
+    display: NOMBRE
+    default-sort: NOMBRE
+    sort-direction: Ascending (Nulls Last)
+
+- # ====== List of Values: CAJA_CONF.DESCRIPCION ===============
+  id: 12751376604199345
+  identification: 
+    name: CAJA_CONF.DESCRIPCION
+
+  subscription: 
+    version-number: 39017434676581
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: CAJA_CONF
+
+  column-mapping: 
+    return: ID_CAJA_CONF
+    display: DESCRIPCION
+    default-sort: DESCRIPCION
+    sort-direction: Ascending (Nulls Last)
+
+- # ====== List of Values: TALONARIOS.TIPO_COMPROBANTE =========
+  id: 12783043529370637
+  identification: 
+    name: TALONARIOS.TIPO_COMPROBANTE
+
+  subscription: 
+    version-number: 39017435287243
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: TALONARIOS
+
+  column-mapping: 
+    return: ID_TALONARIO
+    display: TIPO_COMPROBANTE
+    default-sort: TIPO_COMPROBANTE
+    sort-direction: Ascending (Nulls Last)
+
+- # ====== List of Values: ORDENES_COMPRA.OBSERVACION ==========
+  id: 12822757190386516
+  identification: 
+    name: ORDENES_COMPRA.OBSERVACION
+
+  subscription: 
+    version-number: 39017435340801
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: ORDENES_COMPRA
+
+  column-mapping: 
+    return: ID_ORDEN_COMPRA
+    display: OBSERVACION
+    default-sort: OBSERVACION
+    sort-direction: Ascending (Nulls Last)
+
+- # ====== List of Values: PRIVILEGIOS.CODIGO ==================
+  id: 14221605211057287
+  identification: 
+    name: PRIVILEGIOS.CODIGO
+
+  subscription: 
+    version-number: 39020633635585
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: PRIVILEGIOS
+
+  column-mapping: 
+    return: ID_PRIV
+    display: CODIGO
+    default-sort: CODIGO
+    sort-direction: Ascending (Nulls Last)
+
+- # ====== List of Values: PRIVILEGIOS =========================
+  id: 14274155546125607
+  identification: 
+    name: PRIVILEGIOS
+
+  subscription: 
+    version-number: 39020634237934
+
+  source: 
+    location: Local Database
+    type: SQL Query
+    sql-query: |
+      SELECT codigo || ' — ' || nombre d, id_priv r
+      FROM privilegios
+      WHERE activo = 'S'
+      ORDER BY codigo
+      
+
+  column-mapping: 
+    return: R
+    display: D
+    default-sort: Use Order By from Query
+
+- # ====== List of Values: PAGINAS =============================
+  id: 14307748367169201
+  identification: 
+    name: PAGINAS
+
+  subscription: 
+    version-number: 39020676987891
+
+  source: 
+    location: Local Database
+    type: SQL Query
+    sql-query: |
+      SELECT page_id || ' - ' || page_name d, page_id r
+      FROM apex_application_pages
+      WHERE application_id = :APP_ID
+      ORDER BY page_id
+      
+
+  column-mapping: 
+    return: R
+    display: D
+    default-sort: Use Order By from Query
+
+- # ====== List of Values: COMPONENTES =========================
+  id: 14309889205348202
+  identification: 
+    name: COMPONENTES
+
+  subscription: 
+    version-number: 39020677653435
+
+  source: 
+    location: Local Database
+    type: SQL Query
+    sql-query: |
+      SELECT label d, comp_key r
+      FROM (
+        -- Regiones
+        SELECT '['||region_name||'] Región' AS label,
+               'REG:'||region_name          AS comp_key
+        FROM apex_application_page_regions
+        WHERE application_id = :APP_ID
+          AND page_id        = :PAGE_ID
+          AND region_name    IS NOT NULL
+      
+        UNION ALL
+      
+        -- Botones
+        SELECT '['||button_name||'] Botón' AS label,
+               'BTN:'||button_name         AS comp_key
+        FROM apex_application_page_buttons
+        WHERE application_id = :APP_ID
+          AND page_id        = :PAGE_ID
+          AND button_name    IS NOT NULL
+      
+        UNION ALL
+      
+        -- Ítems
+        SELECT '['||item_name||'] Ítem'    AS label,
+               'ITEM:'||item_name          AS comp_key
+        FROM apex_application_page_items
+        WHERE application_id = :APP_ID
+          AND page_id        = :PAGE_ID
+          AND item_name      IS NOT NULL
+      )
+      ORDER BY 1
+      
+
+  column-mapping: 
+    return: R
+    display: D
+    default-sort: Use Order By from Query
+
+- # ====== List of Values: CUENTAS_COBRAR.ESTADO ===============
+  id: 16173138010278063
+  identification: 
+    name: CUENTAS_COBRAR.ESTADO
+
+  subscription: 
+    version-number: 39022415720973
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: CUENTAS_COBRAR
+
+  column-mapping: 
+    return: ID_CXC
+    display: ESTADO
+    default-sort: ESTADO
+    sort-direction: Ascending (Nulls Last)
+
+- # ====== List of Values: COMPROBANTES.NRO_COMPROBANTE ========
+  id: 16208674419497747
+  identification: 
+    name: COMPROBANTES.NRO_COMPROBANTE
+
+  subscription: 
+    version-number: 39022477403416
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: COMPROBANTES
+
+  column-mapping: 
+    return: ID_COMPROBANTE
+    display: NRO_COMPROBANTE
+    default-sort: NRO_COMPROBANTE
+    sort-direction: Ascending (Nulls Last)
+
+- # ====== List of Values: MONEDA.DESCRIPCION ==================
+  id: 16216046217015840
+  identification: 
+    name: MONEDA.DESCRIPCION
+
+  subscription: 
+    version-number: 39022479425179
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: MONEDAS
+
+  column-mapping: 
+    return: CODIGO_MONEDA
+    display: DESCRIPCION
+    default-sort: DESCRIPCION
+    sort-direction: Ascending (Nulls Last)
+
+- # ====== List of Values: PERSONA.NOMBRE ======================
+  id: 16219980276116331
+  identification: 
+    name: PERSONA.NOMBRE
+
+  subscription: 
+    version-number: 39022503543894
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: PERSONAS
+
+  column-mapping: 
+    return: ID_PERSONA
+    display: PRIMER_NOMBRE
+    default-sort: PRIMER_NOMBRE
+    sort-direction: Ascending (Nulls Last)
+
+- # ====== List of Values: PROVEEDORES.NOMBRE ==================
+  id: 16407555954331446
+  identification: 
+    name: PROVEEDORES.NOMBRE
+
+  subscription: 
+    version-number: 39022934645296
+
+  source: 
+    location: Local Database
+    type: SQL Query
+    sql-query: |
+      SELECT 
+        p.primer_nombre || ' ' || p.primer_apellido  AS display_value,
+        pr.id_persona                             AS return_value
+      FROM proveedores pr
+      JOIN personas p 
+           ON p.id_persona = pr.id_persona
+      ORDER BY p.primer_nombre, p.primer_apellido;
+      
+
+  column-mapping: 
+    return: RETURN_VALUE
+    display: DISPLAY_VALUE
+    default-sort: Use Order By from Query
+
+- # ====== List of Values: PRODUCTOS.PROVEEDOR.PRECIO ==========
+  id: 16414606219603120
+  identification: 
+    name: PRODUCTOS.PROVEEDOR.PRECIO
+
+  subscription: 
+    version-number: 39022939245471
+
+  source: 
+    location: Local Database
+    type: SQL Query
+    sql-query: |
+      select pro.nombre, pro.id_producto, per.primer_nombre||' '||per.primer_apellido as Proveedor, CAT.PRECIO
+      from productos pro, PRODUCTO_PROVEEDORES  cat, personas per
+          where pro.id_producto = cat.id_producto
+          and per.id_persona = cat.ID_PERSONA
+          and cat.ID_PERSONA = NVL(:P72_ID_PROVEEDOR,cat.ID_PERSONA);
+
+  column-mapping: 
+    return: ID_PRODUCTO
+    display: NOMBRE
+    default-sort: NOMBRE
+    sort-direction: Ascending (Nulls Last)
+
+  columns: 
+  - # ====== Column: ID_PRODUCTO =================================
+    id: 16415151760609025
+    identification: 
+      column-name: ID_PRODUCTO
+      show: false
+
+    layout: 
+      sequence: 10
+
+    source: 
+      data-type: NUMBER
+
+    advanced: 
+      searchable: false
+
+  - # ====== Column: NOMBRE ======================================
+    id: 16415540406609025
+    identification: 
+      column-name: NOMBRE
+      show: true
+
+    heading: 
+      heading: Nombre
+
+    layout: 
+      sequence: 20
+
+    source: 
+      data-type: VARCHAR2
+
+    advanced: 
+      searchable: true
+
+  - # ====== Column: PROVEEDOR ===================================
+    id: 16415981507609026
+    identification: 
+      column-name: PROVEEDOR
+      show: true
+
+    heading: 
+      heading: Proveedor
+
+    layout: 
+      sequence: 30
+
+    source: 
+      data-type: VARCHAR2
+
+    advanced: 
+      searchable: true
+
+  - # ====== Column: PRECIO ======================================
+    id: 16416346364609026
+    identification: 
+      column-name: PRECIO
+      show: true
+
+    heading: 
+      heading: Precio
+
+    layout: 
+      sequence: 40
+
+    source: 
+      data-type: NUMBER
+
+    advanced: 
+      searchable: true
+

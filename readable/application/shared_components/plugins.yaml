@@ -1,0 +1,2685 @@
+---
+- # ====== Plugin: KEBE.DASHBOARD ==============================
+  id: 22968942525547329
+  identification: 
+    name: KEBE.DASHBOARD
+    internal-name: THEME_42$KEBE_DASHBOARD
+    theme: Universal Theme # 42
+    type: Template Component
+
+  advanced: 
+    quick-pick: false
+
+  subscription: 
+    version-number: 39016828282546
+
+  templates: 
+    available-as: 
+    - Single (Partial)
+    - Multiple (Report)
+    partial: |
+      {if APEX$IS_LAZY_LOADING/}
+        <p>loading...</p>
+       
+      {else/}
+      
+       
+                 
+                
+                <div class="bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr from-#IMAGE_COLOR#-600 to-#IMAGE_COLOR#-400 text-white shadow-#IMAGE_COLOR#-500/40 shadow-lg absolute -mt-4 grid h-16 w-16 place-items-center">
+                  <img src="#IMAGE_URL#" class="w-6 h-6 text-white"> </img>
+                </div>
+                <div class="p-4 text-right">
+                  <p class="block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-600">#TITLE#</p>
+                  <h4 class="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">#VALUE#</h4>
+                </div>
+                <div class="border-t border-blue-gray-50 p-4">
+                  <p class="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">
+                    <strong class="text-#PERCENT_COLOR#-500">#PERCENT#</strong>&nbsp;#FOOTER#
+                  </p>
+                </div>
+      
+        
+      {endif/}
+    report-body: |2
+              <div class="mt-12 mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4" >#APEX$ROWS#</div>
+      
+      
+      
+    report-row: '<div class="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md"  #APEX$ROW_IDENTIFICATION# >#APEX$PARTIAL#</div>'
+    translate-templates: false
+    default-escape-mode: HTML
+    number-of-lazy-loading-skeletons: 3
+
+  callbacks: 
+    api-interface: Procedure with Legacy Attributes [deprecated]
+
+  custom-attributes: 
+    substitute-attribute-values: true
+
+  css: 
+    file-urls: 
+    - '#PLUGIN_FILES#style#MIN#.css'
+
+  information: 
+    version: 1.0
+
+  custom-attributes: 
+  - # ====== Custom Attribute: Percent ===========================
+    id: 22970053931547407
+    identification: 
+      static-id: PERCENT
+      attribute: 3
+      name: Percent
+      scope: Component
+
+    layout: 
+      sequence: 50
+
+    settings: 
+      type: Session State Value
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: false
+      data-types: 
+      - Varchar2
+      escape-mode: HTML
+
+  - # ====== Custom Attribute: Footer ============================
+    id: 23026304805244116
+    identification: 
+      static-id: FOOTER
+      attribute: 6
+      name: Footer
+      scope: Component
+
+    layout: 
+      sequence: 70
+
+    settings: 
+      type: Session State Value
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: false
+      data-types: 
+      - Varchar2
+      escape-mode: HTML
+
+  - # ====== Custom Attribute: Image Color =======================
+    id: 23026740166244118
+    identification: 
+      static-id: IMAGE_COLOR
+      attribute: 7
+      name: Image Color
+      scope: Component
+
+    layout: 
+      sequence: 30
+
+    settings: 
+      type: Session State Value
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: false
+      data-types: 
+      - Varchar2
+      escape-mode: HTML
+
+  - # ====== Custom Attribute: Image Url =========================
+    id: 23027151260244119
+    identification: 
+      static-id: IMAGE_URL
+      attribute: 8
+      name: Image Url
+      scope: Component
+
+    layout: 
+      sequence: 20
+
+    settings: 
+      type: Session State Value
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: false
+      data-types: 
+      - Varchar2
+      escape-mode: HTML
+
+  - # ====== Custom Attribute: Title =============================
+    id: 23027537411244119
+    identification: 
+      static-id: TITLE
+      attribute: 9
+      name: Title
+      scope: Component
+
+    layout: 
+      sequence: 10
+
+    settings: 
+      type: Session State Value
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: false
+      data-types: 
+      - Varchar2
+      escape-mode: HTML
+
+  - # ====== Custom Attribute: Value =============================
+    id: 23031236074261721
+    identification: 
+      static-id: VALUE
+      attribute: 10
+      name: Value
+      scope: Component
+
+    layout: 
+      sequence: 40
+
+    settings: 
+      type: Session State Value
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: false
+      data-types: 
+      - Varchar2
+      escape-mode: HTML
+
+  - # ====== Custom Attribute: Percent Color =====================
+    id: 23033011999273002
+    identification: 
+      static-id: PERCENT_COLOR
+      attribute: 4
+      name: Percent Color
+      scope: Component
+
+    layout: 
+      sequence: 60
+
+    settings: 
+      type: Session State Value
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: false
+      data-types: 
+      - Varchar2
+      escape-mode: HTML
+
+  files: 
+  - # ====== File: style.css =====================================
+    id: 23046126135465591
+    identification: 
+      file-name: style.css
+
+    attributes: 
+      mime-type: text/css
+      file-character-set: Unicode UTF-8
+
+  - # ====== File: style.min.css =================================
+    id: 23046887620466729
+    identification: 
+      file-name: style.min.css
+
+    attributes: 
+      mime-type: text/css
+      file-character-set: Unicode UTF-8
+
+- # ====== Plugin: KEBE.DASHBOARD ==============================
+  id: 24274499956990726
+  identification: 
+    name: KEBE.DASHBOARD
+    internal-name: KEBE_DASHBOARD
+    type: Template Component
+
+  advanced: 
+    quick-pick: false
+
+  subscription: 
+    version-number: 39017542727143
+
+  templates: 
+    available-as: 
+    - Single (Partial)
+    - Multiple (Report)
+    partial: |
+      {if APEX$IS_LAZY_LOADING/}
+        <p>loading...</p>
+       
+      {else/}
+      
+       
+                 
+                
+                <div class="bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr from-#IMAGE_COLOR#-600 to-#IMAGE_COLOR#-400 text-white shadow-#IMAGE_COLOR#-500/40 shadow-lg absolute -mt-4 grid h-16 w-16 place-items-center">
+                  <img src="#IMAGE_URL#" class="w-6 h-6 text-white"> </img>
+                </div>
+                <div class="p-4 text-right">
+                  <p class="block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-600">#TITLE#</p>
+                  <h4 class="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">#VALUE#</h4>
+                </div>
+                <div class="border-t border-blue-gray-50 p-4">
+                  <p class="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">
+                    <strong class="text-#PERCENT_COLOR#-500">#PERCENT#</strong>&nbsp;#FOOTER#
+                  </p>
+                </div>
+      
+        
+      {endif/}
+    report-body: |2
+              <div class="mt-12 mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4" >#APEX$ROWS#</div>
+      
+      
+      
+    report-row: '<div class="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md"  #APEX$ROW_IDENTIFICATION# >#APEX$PARTIAL#</div>'
+    translate-templates: false
+    default-escape-mode: HTML
+    number-of-lazy-loading-skeletons: 3
+
+  callbacks: 
+    api-interface: Procedure with Legacy Attributes [deprecated]
+
+  custom-attributes: 
+    substitute-attribute-values: true
+
+  css: 
+    file-urls: 
+    - '#PLUGIN_FILES#style#MIN#.css'
+
+  information: 
+    version: 1.0
+
+  custom-attributes: 
+  - # ====== Custom Attribute: Percent ===========================
+    id: 24275611362990804
+    identification: 
+      static-id: PERCENT
+      attribute: 3
+      name: Percent
+      scope: Component
+
+    layout: 
+      sequence: 50
+
+    settings: 
+      type: Session State Value
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: false
+      data-types: 
+      - Varchar2
+      escape-mode: HTML
+
+  - # ====== Custom Attribute: Footer ============================
+    id: 24331862236687513
+    identification: 
+      static-id: FOOTER
+      attribute: 6
+      name: Footer
+      scope: Component
+
+    layout: 
+      sequence: 70
+
+    settings: 
+      type: Session State Value
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: false
+      data-types: 
+      - Varchar2
+      escape-mode: HTML
+
+  - # ====== Custom Attribute: Image Color =======================
+    id: 24332297597687515
+    identification: 
+      static-id: IMAGE_COLOR
+      attribute: 7
+      name: Image Color
+      scope: Component
+
+    layout: 
+      sequence: 30
+
+    settings: 
+      type: Session State Value
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: false
+      data-types: 
+      - Varchar2
+      escape-mode: HTML
+
+  - # ====== Custom Attribute: Image Url =========================
+    id: 24332708691687516
+    identification: 
+      static-id: IMAGE_URL
+      attribute: 8
+      name: Image Url
+      scope: Component
+
+    layout: 
+      sequence: 20
+
+    settings: 
+      type: Session State Value
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: false
+      data-types: 
+      - Varchar2
+      escape-mode: HTML
+
+  - # ====== Custom Attribute: Title =============================
+    id: 24333094842687516
+    identification: 
+      static-id: TITLE
+      attribute: 9
+      name: Title
+      scope: Component
+
+    layout: 
+      sequence: 10
+
+    settings: 
+      type: Session State Value
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: false
+      data-types: 
+      - Varchar2
+      escape-mode: HTML
+
+  - # ====== Custom Attribute: Value =============================
+    id: 24336793505705118
+    identification: 
+      static-id: VALUE
+      attribute: 10
+      name: Value
+      scope: Component
+
+    layout: 
+      sequence: 40
+
+    settings: 
+      type: Session State Value
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: false
+      data-types: 
+      - Varchar2
+      escape-mode: HTML
+
+  - # ====== Custom Attribute: Percent Color =====================
+    id: 24338569430716399
+    identification: 
+      static-id: PERCENT_COLOR
+      attribute: 4
+      name: Percent Color
+      scope: Component
+
+    layout: 
+      sequence: 60
+
+    settings: 
+      type: Session State Value
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: false
+      data-types: 
+      - Varchar2
+      escape-mode: HTML
+
+  files: 
+  - # ====== File: style.css =====================================
+    id: 24351683566908988
+    identification: 
+      file-name: style.css
+
+    attributes: 
+      mime-type: text/css
+      file-character-set: Unicode UTF-8
+
+  - # ====== File: style.min.css =================================
+    id: 24352445051910126
+    identification: 
+      file-name: style.min.css
+
+    attributes: 
+      mime-type: text/css
+      file-character-set: Unicode UTF-8
+
+- # ====== Plugin: Sweet Alert =================================
+  id: 44301152978259047
+  identification: 
+    name: Sweet Alert
+    internal-name: BBE_SWEET_ALERT
+    type: Dynamic Action
+
+  advanced: 
+    category: Notification
+    quick-pick: false
+
+  subscription: 
+    version-number: 41136746102695
+
+  callbacks: 
+    api-interface: Function
+    render-procedure/function-name: bbe_plugin.render
+
+  standard-attributes: 
+    attributes: 
+    - Check "Fire on Initialization"
+    - Has "Initialization JavaScript Code" Attribute
+
+  custom-attributes: 
+    substitute-attribute-values: true
+
+  css: 
+    file-urls: 
+    - '#PLUGIN_FILES#sweetalert2.min.css'
+
+  javascript: 
+    file-urls: 
+    - '#PLUGIN_FILES#sweetalert2.all.min.js'
+    - '#PLUGIN_FILES#bbesweetalertPlugin#MIN#.js'
+
+  information: 
+    version: 1.0
+    about-url: 'https://github.com/APEX88/bbe-sweet-alert-2'
+    help-text: 'A beautiful, responsive, customizable Oracle APEX dynamic action plug-in built on top of the SweetAlert2 library https://sweetalert2.github.io/'
+
+  comments: 
+    comments: 'A beautiful, responsive, customizable Oracle APEX dynamic action plug-in built on top of the SweetAlert2 library https://sweetalert2.github.io/'
+
+  standard-attributes: 
+  - # ====== Standard Attribute: INIT_JAVASCRIPT_CODE ============
+    id: 44301429944259054
+    identification: 
+      name: INIT_JAVASCRIPT_CODE
+
+    value: 
+      required: false
+
+  custom-attributes: 
+  - # ====== Custom Attribute: Timer =============================
+    id: 34664051673159372
+    identification: 
+      attribute: 11
+      name: Timer
+      scope: Component
+
+    layout: 
+      sequence: 110
+
+    settings: 
+      type: Number
+      common: true
+      show-in-wizard: true
+      required: true
+      translatable: false
+
+    default: 
+      value: 1500
+
+    condition: 
+      depending-on-custom-attribute: OK Button # 44383014464856894
+      depending-on-condition-type: equal to
+      expression: N
+      always-evaluate: true
+
+    help: 
+      help-text: Auto close timer of the popup. Set in ms (milliseconds)
+
+  - # ====== Custom Attribute: Timer Progress Bar ================
+    id: 34668221511168394
+    identification: 
+      attribute: 12
+      name: Timer Progress Bar
+      scope: Component
+
+    layout: 
+      sequence: 120
+
+    settings: 
+      type: Yes/No
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: false
+
+    default: 
+      value: N
+
+    condition: 
+      depending-on-custom-attribute: Timer # 34664051673159372
+      depending-on-condition-type: NOT_NULL
+      always-evaluate: true
+
+    help: 
+      help-text: If set to true, the timer will have a progress bar at the bottom of a popup. Mostly, this feature is useful with toasts (as notification).
+
+  - # ====== Custom Attribute: Toast =============================
+    id: 34678649541270555
+    identification: 
+      attribute: 13
+      name: Toast
+      scope: Component
+
+    layout: 
+      sequence: 105
+
+    settings: 
+      type: Yes/No
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: false
+
+    default: 
+      value: N
+
+    condition: 
+      depending-on-custom-attribute: OK Button # 44383014464856894
+      depending-on-condition-type: equal to
+      expression: N
+      always-evaluate: true
+
+    help: 
+      help-text: Whether or not an alert should be treated as a toast notification. This option is normally coupled with the position (top end) and a timer parameter.
+
+  - # ====== Custom Attribute: Title =============================
+    id: 44305160261268457
+    identification: 
+      attribute: 1
+      name: Title
+      scope: Component
+
+    layout: 
+      sequence: 10
+
+    settings: 
+      type: Text
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: true
+
+    help: 
+      help-text: The title of the Alert
+
+  - # ====== Custom Attribute: Message ===========================
+    id: 44305491035269073
+    identification: 
+      attribute: 2
+      name: Message
+      scope: Component
+
+    layout: 
+      sequence: 20
+
+    settings: 
+      type: Text
+      common: true
+      show-in-wizard: true
+      required: true
+      translatable: true
+
+    default: 
+      value: my message ....
+
+    help: 
+      help-text: The required message of the Alert
+
+  - # ====== Custom Attribute: Icon List =========================
+    id: 44305754302270949
+    identification: 
+      attribute: 3
+      name: Icon List
+      scope: Component
+
+    layout: 
+      sequence: 30
+
+    settings: 
+      type: Select List
+      lov-type: Static
+      common: true
+      show-in-wizard: true
+      required: true
+      translatable: false
+
+    default: 
+      value: info
+
+    condition: 
+      depending-on-custom-attribute: Icon # 44344196498903928
+      depending-on-condition-type: equal to
+      expression: Y
+      always-evaluate: true
+
+    help: 
+      help-text: Predefined most used icons and associated colors (Success, Error, Warning, Information or Question)
+
+    entries: 
+    - # ====== Entry: Success ======================================
+      id: 44306013428271528
+      entry: 
+        sequence: 10
+        display: Success
+        return: success
+
+      advanced: 
+        quick-pick: false
+
+    - # ====== Entry: Error ========================================
+      id: 44306420289271980
+      entry: 
+        sequence: 20
+        display: Error
+        return: error
+
+      advanced: 
+        quick-pick: false
+
+    - # ====== Entry: Warning ======================================
+      id: 44306838240272548
+      entry: 
+        sequence: 30
+        display: Warning
+        return: warning
+
+      advanced: 
+        quick-pick: false
+
+    - # ====== Entry: Information ==================================
+      id: 44307194593273213
+      entry: 
+        sequence: 40
+        display: Information
+        return: info
+
+      advanced: 
+        quick-pick: false
+
+    - # ====== Entry: Question =====================================
+      id: 44307598205273743
+      entry: 
+        sequence: 50
+        display: Question
+        return: question
+
+      advanced: 
+        quick-pick: false
+
+  - # ====== Custom Attribute: Icon Color ========================
+    id: 44308188628276772
+    identification: 
+      attribute: 4
+      name: Icon Color
+      scope: Component
+
+    layout: 
+      sequence: 40
+
+    settings: 
+      type: Text
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: false
+
+    condition: 
+      depending-on-custom-attribute: Icon # 44344196498903928
+      depending-on-condition-type: equal to
+      expression: Y
+      always-evaluate: true
+
+    help: 
+      help-text: Modify the color of the selected Icon (List or Font Class)
+
+    examples: 
+      examples: |
+        To modify the color of an Icon; enter either the color name, hexa code or CSS variable as in the example bellow :
+        <ul>
+        <li>Color name   : Orange</li>
+        <li>Hexa code    : #e18212</li>
+        <li>CSS variable : var(--rw-palette-orange-80)</li>
+        </ul>
+
+  - # ====== Custom Attribute: Icon Animation ====================
+    id: 44308768055281141
+    identification: 
+      attribute: 6
+      name: Icon Animation
+      scope: Component
+
+    layout: 
+      sequence: 60
+
+    settings: 
+      type: Select List
+      lov-type: Static
+      common: true
+      show-in-wizard: true
+      required: true
+      translatable: false
+
+    default: 
+      value: true
+
+    condition: 
+      depending-on-custom-attribute: Icon # 44344196498903928
+      depending-on-condition-type: equal to
+      expression: Y
+      always-evaluate: true
+
+    help: 
+      help-text: To animate either the Icon List or Font Class, by default is set to Yes (true)
+
+    examples: 
+      examples: In case of Font Class (custom), you can pick between Font List (Error, Warning, Information, Question) to apply the same animation effect.
+
+    entries: 
+    - # ====== Entry: Yes ==========================================
+      id: 44308994850281866
+      entry: 
+        sequence: 10
+        display: Yes
+        return: true
+
+      advanced: 
+        quick-pick: false
+
+    - # ====== Entry: No ===========================================
+      id: 44309453052282696
+      entry: 
+        sequence: 20
+        display: No
+        return: false
+
+      advanced: 
+        quick-pick: false
+
+  - # ====== Custom Attribute: Font Class ========================
+    id: 44319333081593650
+    identification: 
+      attribute: 5
+      name: Font Class
+      scope: Component
+
+    layout: 
+      sequence: 35
+
+    settings: 
+      type: Text
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: false
+
+    condition: 
+      depending-on-custom-attribute: Icon # 44344196498903928
+      depending-on-condition-type: equal to
+      expression: Y
+      always-evaluate: true
+
+    help: 
+      help-text: |
+        https://apex.oracle.com/pls/apex/r/apex_pm/ut211/icons
+        <BR>Font APEX icons - There are over 1150 icons in Font APEX, and there are 25 modifiers you can place on top of any existing icons so you can customize any icon to fit your needs
+
+    examples: 
+      examples: fa fa-404 fa-2x
+
+  - # ====== Custom Attribute: Icon ==============================
+    id: 44344196498903928
+    identification: 
+      attribute: 7
+      name: Icon
+      scope: Component
+
+    layout: 
+      sequence: 25
+
+    settings: 
+      type: Yes/No
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: false
+
+    default: 
+      value: Y
+
+    help: 
+      help-text: To have an Icon or not in the alert.
+
+  - # ====== Custom Attribute: OK Button =========================
+    id: 44383014464856894
+    identification: 
+      attribute: 8
+      name: OK Button
+      scope: Component
+
+    layout: 
+      sequence: 80
+
+    settings: 
+      type: Yes/No
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: false
+
+    default: 
+      value: Y
+
+  - # ====== Custom Attribute: OK Label ==========================
+    id: 44383772215859976
+    identification: 
+      attribute: 9
+      name: OK Label
+      scope: Component
+
+    layout: 
+      sequence: 90
+
+    settings: 
+      type: Text
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: true
+
+    default: 
+      value: OK
+
+    condition: 
+      depending-on-custom-attribute: OK Button # 44383014464856894
+      depending-on-condition-type: equal to
+      expression: Y
+      always-evaluate: true
+
+  - # ====== Custom Attribute: OK Color ==========================
+    id: 44394828713967137
+    identification: 
+      attribute: 10
+      name: OK Color
+      scope: Component
+
+    layout: 
+      sequence: 100
+
+    settings: 
+      type: Color
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: false
+
+    default: 
+      value: '#3085d6'
+
+    condition: 
+      depending-on-custom-attribute: OK Button # 44383014464856894
+      depending-on-condition-type: equal to
+      expression: Y
+      always-evaluate: true
+
+  - # ====== Custom Attribute: Position ==========================
+    id: 45766260118548640
+    identification: 
+      attribute: 14
+      name: Position
+      scope: Component
+
+    layout: 
+      sequence: 22
+
+    settings: 
+      type: Select List
+      lov-type: Static
+      common: true
+      show-in-wizard: true
+      required: true
+      translatable: false
+
+    default: 
+      value: center
+
+    help: 
+      help-text: To manage the popup window position, can be 'Top', 'Top Start', 'Top End', 'Center', 'Center Start', 'Center End', 'Bottom', 'Bottom Start', or 'Bottom End'.
+
+    examples: 
+      examples: |
+        To manage the popup window position, can be :
+        <ul>
+        <li>Top</li>
+        <li>Top Start</li>
+        <li>Top End</li>
+        <li>Center</li>
+        <li>Center Start</li>
+        <li>Center End</li>
+        <li>Bottom</li>
+        <li>Bottom Start</li>
+        <li>Bottom End</li>
+        </ul>
+
+    entries: 
+    - # ====== Entry: Top ==========================================
+      id: 45769301180549943
+      entry: 
+        sequence: 10
+        display: Top
+        return: top
+
+      advanced: 
+        quick-pick: false
+
+    - # ====== Entry: Top Start ====================================
+      id: 45772454212552738
+      entry: 
+        sequence: 20
+        display: Top Start
+        return: top-start
+
+      advanced: 
+        quick-pick: false
+
+    - # ====== Entry: Top End ======================================
+      id: 45772888063554582
+      entry: 
+        sequence: 30
+        display: Top End
+        return: top-end
+
+      advanced: 
+        quick-pick: false
+
+    - # ====== Entry: Center =======================================
+      id: 45773239052555262
+      entry: 
+        sequence: 40
+        display: Center
+        return: center
+
+      advanced: 
+        quick-pick: false
+
+    - # ====== Entry: Center Start =================================
+      id: 45773661133557438
+      entry: 
+        sequence: 50
+        display: Center Start
+        return: center-start
+
+      advanced: 
+        quick-pick: false
+
+    - # ====== Entry: Center End ===================================
+      id: 45774027845559193
+      entry: 
+        sequence: 60
+        display: Center End
+        return: center-end
+
+      advanced: 
+        quick-pick: false
+
+    - # ====== Entry: Bottom =======================================
+      id: 45774446628560486
+      entry: 
+        sequence: 70
+        display: Bottom
+        return: bottom
+
+      advanced: 
+        quick-pick: false
+
+    - # ====== Entry: Bottom Start =================================
+      id: 45774858002562205
+      entry: 
+        sequence: 80
+        display: Bottom Start
+        return: bottom-start
+
+      advanced: 
+        quick-pick: false
+
+    - # ====== Entry: Bottom End ===================================
+      id: 45775260630563610
+      entry: 
+        sequence: 90
+        display: Bottom End
+        return: bottom-start
+
+      advanced: 
+        quick-pick: false
+
+  - # ====== Custom Attribute: Background ========================
+    id: 45801828532144547
+    identification: 
+      attribute: 15
+      name: Background
+      scope: Component
+
+    layout: 
+      sequence: 23
+
+    settings: 
+      type: Color
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: false
+
+    default: 
+      value: '#fff'
+
+    help: 
+      help-text: To manage the popup window background (CSS background property). The default background is '#fff'.
+
+    examples: 
+      examples: '#9387bd'
+
+  files: 
+  - # ====== File: bbesweetalertPlugin.min.js ====================
+    id: 34696735581343944
+    identification: 
+      file-name: bbesweetalertPlugin.min.js
+
+    attributes: 
+      mime-type: text/javascript
+      file-character-set: Unicode UTF-8
+
+  - # ====== File: bbesweetalertPlugin.js ========================
+    id: 44301917465263934
+    identification: 
+      file-name: bbesweetalertPlugin.js
+
+    attributes: 
+      mime-type: text/javascript
+      file-character-set: Unicode UTF-8
+
+  - # ====== File: sweetalert2.all.min.js ========================
+    id: 45854515282754567
+    identification: 
+      file-name: sweetalert2.all.min.js
+
+    attributes: 
+      mime-type: text/javascript
+      file-character-set: Unicode UTF-8
+
+  - # ====== File: sweetalert2.min.css ===========================
+    id: 45855483146758014
+    identification: 
+      file-name: sweetalert2.min.css
+
+    attributes: 
+      mime-type: text/css
+      file-character-set: Unicode UTF-8
+
+- # ====== Plugin: Bootstrap Carousel Extension ================
+  id: 710321987001341839
+  identification: 
+    name: Bootstrap Carousel Extension
+    internal-name: ORCLKING.BOOTSTRAP.CAROUSEL.EXTENSION
+    type: Region
+
+  advanced: 
+    quick-pick: false
+
+  subscription: 
+    version-number: 39017542615990
+
+  source: 
+    pl/sql-code: |
+      FUNCTION render_bootstrap_carousel (p_region              IN apex_plugin.t_region, 
+                                      p_plugin              IN apex_plugin.t_plugin, 
+                                      p_is_printer_friendly IN boolean) 
+      RETURN apex_plugin.t_region_render_result 
+      AS 
+        subtype plugin_attr IS VARCHAR2(32767); 
+        l_column_value_list apex_plugin_util.t_column_value_list; 
+        l_region            VARCHAR2(100); -- To keep region static id 
+        l_data              CLOB; -- To store column values 
+        l_html_body         CLOB;
+        l_img_height        apex_application_page_regions.attribute_01%TYPE:= p_region.attribute_01;
+        l_img_width         apex_application_page_regions.attribute_02%TYPE:= p_region.attribute_02;
+        l_pause             apex_application_page_regions.attribute_03%TYPE:= p_region.attribute_03;
+        l_interval          apex_application_page_regions.attribute_04%TYPE:= p_region.attribute_04;
+        l_border_radius     apex_application_page_regions.attribute_05%TYPE:= p_region.attribute_05;
+        l_class             VARCHAR2(100);
+        l_row_count         NUMBER;
+      BEGIN 
+          -- Debug information will be logged when application's debug mode enabled 
+          IF apex_application.g_debug THEN 
+            apex_plugin_util.debug_region (p_plugin => p_plugin, p_region => p_region, 
+            p_is_printer_friendly => p_is_printer_friendly); 
+          END IF;
+          
+          -- Get region static id  
+          l_region := CASE 
+                        WHEN p_region.static_id IS NOT NULL THEN p_region.static_id 
+                        ELSE 'R' 
+                             ||p_region.ID 
+                      END; 
+      
+          -- Get data from region source (sql query) 
+          l_column_value_list := apex_plugin_util.get_data ( p_sql_statement => p_region.SOURCE, 
+                                                             p_min_columns => 2, 
+                                                             p_max_columns => 2, 
+                                                             p_component_name => p_region.NAME); 
+          
+          
+        
+         l_html_body := '<!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <title>Bootstrap Example</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+      </head>
+      <body>
+      
+      <div class="container">
+        <div id="myCarousel_'||l_region||'" class="carousel slide" %INTERVAL% %PAUSE% style="width: '||nvl(l_img_width,600)||'px;">
+          <!-- Indicators -->
+          <ol class="carousel-indicators">';
+          
+       FOR i IN 1..l_column_value_list(1).count loop
+          l_class := case when i = 1 then 'class="active"' else null end;
+          l_row_count := case when i = 1 then 0 else i-1 end;
+          l_html_body := l_html_body ||' '||case when l_row_count = 0 then '<li data-target="#myCarousel_'||l_region||'" data-slide-to="'||l_row_count||'" class="active"></li>'
+          else '<li data-target="#myCarousel_'||l_region||'" data-slide-to="'||l_row_count||'"></li>'
+          end;
+         
+        END loop;
+        
+             l_html_body := l_html_body ||' '||'</ol> <div class="carousel-inner" style="border-radius:'||nvl(l_border_radius,0)||'px;">';
+             
+             FOR j IN 1..l_column_value_list(1).count loop
+             
+          
+          l_html_body := l_html_body ||' '||case when j = 1 then '<div class="item active">
+              <img src="'||l_column_value_list(2)(j)||'"style="width:100%;height:'||nvl(l_img_height,300)||'px;border-radius:'||nvl(l_border_radius,0)||'px;">
+            </div>' else '<div class="item">
+              <img src="'||l_column_value_list(2)(j)||'"style="width:100%;height:'||nvl(l_img_height,300)||'px;border-radius:'||nvl(l_border_radius,0)||'px;">
+            </div>' end;
+          
+        END loop;
+        
+        l_html_body := l_html_body ||' '||'</div>
+      
+          <!-- Left and right controls -->
+          <a class="left carousel-control" href="#myCarousel_'||l_region||'" data-slide="prev" style="border-radius:'||nvl(l_border_radius,0)||'px;">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="right carousel-control" href="#myCarousel_'||l_region||'" data-slide="next" style="border-radius:'||nvl(l_border_radius,0)||'px;">
+            <span class="glyphicon glyphicon-chevron-right"></span>
+            <span class="sr-only">Next</span>
+          </a>
+        </div>
+      </div>
+      </body>
+      </html>';
+      
+         
+      
+       IF l_interval IS NULL THEN
+                  l_html_body := REPLACE(l_html_body, '%INTERVAL%', 'data-ride="carousel"');
+            ELSE
+                  l_html_body := REPLACE(l_html_body, '%INTERVAL%', 'data-interval="' || l_interval*1000 ||'"' || 'data-ride="carousel"');
+            END IF; 
+            
+            IF l_pause = 'Y' THEN
+                  l_html_body := REPLACE(l_html_body, '%PAUSE%', 'data-pause="hover"');
+            ELSE
+                  l_html_body := REPLACE(l_html_body, '%PAUSE%', 'data-pause=""');
+            END IF;  
+            
+            -- Load CSS File
+            apex_css.add_file(
+               p_name      => 'bootstrap.min',
+               p_directory => p_plugin.file_prefix,
+               p_version   => NULL
+            );  -- Load bootstrap.min.css
+            
+            -- Load javascript Libraries
+            apex_javascript.add_library(
+                p_name => 'bootstrap.min',
+                p_directory => p_plugin.file_prefix,
+                p_version => null); -- Load bootstrap.min.js
+                
+                -- Load javascript Libraries
+            apex_javascript.add_library(
+                p_name => 'jquery.min',
+                p_directory => p_plugin.file_prefix,
+                p_version => null); -- Load bootstrap.min.js
+                
+          sys.htp.p(l_html_body); 
+          
+          RETURN NULL; 
+      END render_bootstrap_carousel; 
+
+  callbacks: 
+    api-interface: Function
+    render-procedure/function-name: render_bootstrap_carousel
+
+  standard-attributes: 
+    attributes: 
+    - Region Source is SQL Statement [Deprecated]
+    - Has "Page Items to Submit" Attribute
+    - Has "No Data Found Message" Attribute
+
+  custom-attributes: 
+    substitute-attribute-values: true
+
+  information: 
+    version: 1.0
+    about-url: 'https://github.com/tkarkuvelraja/bootstrap_carousel_extension_region_apex_plugin'
+
+  standard-attributes: 
+  - # ====== Standard Attribute: SOURCE_SQL ======================
+    id: 710330363746341904
+    identification: 
+      name: SOURCE_SQL
+
+    value: 
+      required: true
+
+  custom-attributes: 
+  - # ====== Custom Attribute: Img. Width ========================
+    id: 538445911321852272
+    identification: 
+      static-id: attribute_02
+      attribute: 2
+      name: Img. Width
+      scope: Component
+
+    layout: 
+      sequence: 20
+
+    settings: 
+      type: Number
+      common: true
+      show-in-wizard: true
+      required: true
+      translatable: false
+
+    default: 
+      value: 600
+
+  - # ====== Custom Attribute: Pause on Hover ====================
+    id: 538448489414853965
+    identification: 
+      static-id: attribute_03
+      attribute: 3
+      name: Pause on Hover
+      scope: Component
+
+    layout: 
+      sequence: 30
+
+    settings: 
+      type: Select List
+      lov-type: Static
+      common: true
+      show-in-wizard: true
+      required: true
+      translatable: false
+
+    default: 
+      value: Y
+
+    entries: 
+    - # ====== Entry: Yes ==========================================
+      id: 538449064979854467
+      entry: 
+        sequence: 10
+        display: Yes
+        return: Y
+
+      advanced: 
+        quick-pick: false
+
+    - # ====== Entry: No ===========================================
+      id: 538449570934854867
+      entry: 
+        sequence: 20
+        display: No
+        return: N
+
+      advanced: 
+        quick-pick: false
+
+  - # ====== Custom Attribute: Interval (Sec) ====================
+    id: 538451757468857174
+    identification: 
+      static-id: attribute_04
+      attribute: 4
+      name: Interval (Sec)
+      scope: Component
+
+    layout: 
+      sequence: 40
+
+    settings: 
+      type: Select List
+      lov-type: Static
+      common: true
+      show-in-wizard: true
+      required: true
+      translatable: false
+
+    default: 
+      value: 3
+
+    entries: 
+    - # ====== Entry: 1 ============================================
+      id: 538452354243857843
+      entry: 
+        sequence: 10
+        display: 1
+        return: 1
+
+      advanced: 
+        quick-pick: false
+
+    - # ====== Entry: 3 ============================================
+      id: 538452672053858243
+      entry: 
+        sequence: 20
+        display: 3
+        return: 3
+
+      advanced: 
+        quick-pick: false
+
+    - # ====== Entry: 5 ============================================
+      id: 538453149547859487
+      entry: 
+        sequence: 30
+        display: 5
+        return: 5
+
+      advanced: 
+        quick-pick: false
+
+    - # ====== Entry: 10 ===========================================
+      id: 538453483759860766
+      entry: 
+        sequence: 40
+        display: 10
+        return: 10
+
+      advanced: 
+        quick-pick: false
+
+    - # ====== Entry: 15 ===========================================
+      id: 538453951467861169
+      entry: 
+        sequence: 50
+        display: 15
+        return: 15
+
+      advanced: 
+        quick-pick: false
+
+    - # ====== Entry: 20 ===========================================
+      id: 538454339988861604
+      entry: 
+        sequence: 60
+        display: 20
+        return: 20
+
+      advanced: 
+        quick-pick: false
+
+    - # ====== Entry: 25 ===========================================
+      id: 538454751714861983
+      entry: 
+        sequence: 70
+        display: 25
+        return: 25
+
+      advanced: 
+        quick-pick: false
+
+    - # ====== Entry: 30 ===========================================
+      id: 538455098224862447
+      entry: 
+        sequence: 80
+        display: 30
+        return: 30
+
+      advanced: 
+        quick-pick: false
+
+  - # ====== Custom Attribute: Border Radius =====================
+    id: 538474602041994606
+    identification: 
+      static-id: attribute_05
+      attribute: 5
+      name: Border Radius
+      scope: Component
+
+    layout: 
+      sequence: 50
+
+    settings: 
+      type: Select List
+      lov-type: Static
+      common: true
+      show-in-wizard: true
+      required: true
+      translatable: false
+
+    default: 
+      value: 0
+
+    entries: 
+    - # ====== Entry: 0 ============================================
+      id: 538475241343995203
+      entry: 
+        sequence: 10
+        display: 0
+        return: 0
+
+      advanced: 
+        quick-pick: false
+
+    - # ====== Entry: 5 ============================================
+      id: 538475639007995631
+      entry: 
+        sequence: 20
+        display: 5
+        return: 5
+
+      advanced: 
+        quick-pick: false
+
+    - # ====== Entry: 10 ===========================================
+      id: 538476012561996224
+      entry: 
+        sequence: 30
+        display: 10
+        return: 10
+
+      advanced: 
+        quick-pick: false
+
+    - # ====== Entry: 15 ===========================================
+      id: 538476387003996683
+      entry: 
+        sequence: 40
+        display: 15
+        return: 15
+
+      advanced: 
+        quick-pick: false
+
+    - # ====== Entry: 20 ===========================================
+      id: 538476771247997090
+      entry: 
+        sequence: 50
+        display: 20
+        return: 20
+
+      advanced: 
+        quick-pick: false
+
+    - # ====== Entry: 25 ===========================================
+      id: 538477182688997884
+      entry: 
+        sequence: 60
+        display: 25
+        return: 25
+
+      advanced: 
+        quick-pick: false
+
+  - # ====== Custom Attribute: Img. Height =======================
+    id: 710322157560341874
+    identification: 
+      static-id: attribute_01
+      attribute: 1
+      name: Img. Height
+      scope: Component
+
+    layout: 
+      sequence: 10
+
+    settings: 
+      type: Number
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: false
+      display-width: 3
+      maximum-length: 3
+
+    default: 
+      value: 300
+
+  files: 
+  - # ====== File: jquery.min.js =================================
+    id: 188300599242678023
+    identification: 
+      file-name: jquery.min.js
+
+    attributes: 
+      mime-type: application/javascript
+      file-character-set: Unicode UTF-8
+
+  - # ====== File: glyphicons-halflings-regular.eot ==============
+    id: 536879525303776191
+    identification: 
+      file-name: glyphicons-halflings-regular.eot
+
+    attributes: 
+      mime-type: application/vnd.ms-fontobject
+      file-character-set: Unicode UTF-8
+
+  - # ====== File: bootstrap.min.js ==============================
+    id: 536879782245776201
+    identification: 
+      file-name: bootstrap.min.js
+
+    attributes: 
+      mime-type: application/javascript
+      file-character-set: Unicode UTF-8
+
+  - # ====== File: bootstrap.min.css =============================
+    id: 536880170910776205
+    identification: 
+      file-name: bootstrap.min.css
+
+    attributes: 
+      mime-type: text/css
+      file-character-set: Unicode UTF-8
+
+  - # ====== File: glyphicons-halflings-regular.ttf ==============
+    id: 536880582116776210
+    identification: 
+      file-name: glyphicons-halflings-regular.ttf
+
+    attributes: 
+      mime-type: application/x-font-ttf
+      file-character-set: Unicode UTF-8
+
+  - # ====== File: glyphicons-halflings-regular.woff =============
+    id: 536881053973776216
+    identification: 
+      file-name: glyphicons-halflings-regular.woff
+
+    attributes: 
+      mime-type: application/x-font-woff
+      file-character-set: Unicode UTF-8
+
+  - # ====== File: glyphicons-halflings-regular.woff2 ============
+    id: 536881377606776220
+    identification: 
+      file-name: glyphicons-halflings-regular.woff2
+
+    attributes: 
+      mime-type: font/woff2
+      file-character-set: Unicode UTF-8
+
+- # ====== Plugin: Print Region Into PDF V 2.0 =================
+  id: 2848515265607435420
+  identification: 
+    name: Print Region Into PDF V 2.0
+    internal-name: PRINT.REGION.TO.PDF.V.2.0
+    type: Dynamic Action
+
+  advanced: 
+    category: Execute
+    quick-pick: false
+
+  subscription: 
+    version-number: 39021728322710
+
+  source: 
+    pl/sql-code: |
+      FUNCTION PREVIEW_REGION_TO_PDF (
+          P_DYNAMIC_ACTION   IN APEX_PLUGIN.T_DYNAMIC_ACTION,
+          P_PLUGIN           IN APEX_PLUGIN.T_PLUGIN
+      ) RETURN APEX_PLUGIN.T_DYNAMIC_ACTION_RENDER_RESULT AS
+          VR_RESULT         APEX_PLUGIN.T_DYNAMIC_ACTION_RENDER_RESULT;
+      BEGIN
+      
+          APEX_JAVASCRIPT.ADD_LIBRARY(
+              P_NAME        => 'printpdf',
+              P_DIRECTORY   => P_PLUGIN.FILE_PREFIX,
+              P_VERSION     => NULL
+              , p_check_to_add_minified => true
+          ); 
+          
+          VR_RESULT.JAVASCRIPT_FUNCTION   := '
+          function () {printpdf(this); }';
+      
+          RETURN VR_RESULT;
+      END;
+
+  callbacks: 
+    api-interface: Procedure with Legacy Attributes [deprecated]
+    render-procedure/function-name: PREVIEW_REGION_TO_PDF
+
+  standard-attributes: 
+    attributes: 
+    - For Region
+
+  custom-attributes: 
+    substitute-attribute-values: true
+
+  javascript: 
+    file-urls: 
+    - 'http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'
+    - null
+
+  information: 
+    version: 2.0
+
+  files: 
+  - # ====== File: printpdf.min.js ===============================
+    id: 2848604533293060767
+    identification: 
+      file-name: printpdf.min.js
+
+    attributes: 
+      mime-type: text/javascript
+      file-character-set: Unicode UTF-8
+
+- # ====== Plugin: MULTI PURPOSE CARD ==========================
+  id: 23080471214631822055
+  identification: 
+    name: MULTI PURPOSE CARD
+    internal-name: MULTI_PURPOSE_CARD
+    type: Template Component
+
+  advanced: 
+    quick-pick: false
+
+  subscription: 
+    version-number: 39017542601723
+
+  templates: 
+    available-as: 
+    - Single (Partial)
+    - Multiple (Report)
+    partial: |
+      <!DOCTYPE html>
+      <html>
+      <head>
+      <style>
+      .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(235px, 1fr));
+        grid-gap: 10px;
+        padding: 3px;
+      }
+      
+      @media (max-width: 600px) {
+            /* For screens 600px and below */
+            .grid-container {
+              grid-template-columns: repeat(2, 1fr);
+            }
+          }
+      
+      .grid-item {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        
+        color: black;
+        border:solid 1px #BORDER_COLOR#;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+        padding: 10px;
+        text-align: center;
+        border-radius: #RADIUS#%;
+        transition: transform 0.4s ease-in-out;
+      }
+      
+      .grid-item:hover {
+        transform: translateY(-5px); 
+        transform: rotate3d(5, 5, 2, -360deg);
+        box-shadow: rgba(50, 100, 40, 0.3) 30px 50px 25px -40px, rgba(50, 100, 40, 0.1) 0px 25px 30px 0px;
+      }
+      
+      
+      .grid-item i {
+        font-size: 25px;
+        margin-bottom: 8px;
+      }
+      
+      .grid-item p {
+        margin: 0;
+      }
+      </style>
+      </head>
+      <body>
+      
+        <a href="#LINK#">
+          <div class="grid-item" style="background-color: #BG_COLOR#;">
+            <img src="#IMG#" width="#IMG_WIDTH#" height="#IMG_HEIGHT#">
+            <b>#TITLE#</b>
+            <p>#SUB_TITLE#</p>
+          </div>
+        </a>    
+      
+      </body>
+      </html>
+      
+    report-body: '<div class="grid-container"> #APEX$ROWS#</div>'
+    report-row: '<span #APEX$ROW_IDENTIFICATION#>#APEX$PARTIAL#</span>'
+    translate-templates: false
+    default-escape-mode: HTML
+    number-of-lazy-loading-skeletons: 3
+
+  callbacks: 
+    api-interface: Procedure with Legacy Attributes [deprecated]
+
+  custom-attributes: 
+    substitute-attribute-values: true
+
+  information: 
+    version: 1.0
+
+  custom-attributes: 
+  - # ====== Custom Attribute: Sub Title =========================
+    id: 23079893384305138315
+    identification: 
+      static-id: SUB_TITLE
+      attribute: 5
+      name: Sub Title
+      scope: Component
+
+    layout: 
+      sequence: 50
+
+    settings: 
+      type: Session State Value
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: false
+      data-types: 
+      - Varchar2
+      escape-mode: HTML
+
+  - # ====== Custom Attribute: Title =============================
+    id: 23079893787528138315
+    identification: 
+      static-id: TITLE
+      attribute: 6
+      name: Title
+      scope: Component
+
+    layout: 
+      sequence: 60
+
+    settings: 
+      type: Session State Value
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: false
+      data-types: 
+      - Varchar2
+      escape-mode: HTML
+
+  - # ====== Custom Attribute: Bg Color ==========================
+    id: 23080471565525822069
+    identification: 
+      static-id: BG_COLOR
+      attribute: 1
+      name: Bg Color
+      scope: Component
+
+    layout: 
+      sequence: 10
+
+    settings: 
+      type: Session State Value
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: false
+      data-types: 
+      - Varchar2
+      escape-mode: HTML
+
+  - # ====== Custom Attribute: Border Color ======================
+    id: 23080471938233822069
+    identification: 
+      static-id: BORDER_COLOR
+      attribute: 2
+      name: Border Color
+      scope: Component
+
+    layout: 
+      sequence: 20
+
+    settings: 
+      type: Session State Value
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: false
+      data-types: 
+      - Varchar2
+      escape-mode: HTML
+
+  - # ====== Custom Attribute: Img ===============================
+    id: 23080472325386822070
+    identification: 
+      static-id: IMG
+      attribute: 3
+      name: Img
+      scope: Component
+
+    layout: 
+      sequence: 30
+
+    settings: 
+      type: Media
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: false
+      escape-mode: HTML Attribute
+
+  - # ====== Custom Attribute: Radius ============================
+    id: 23080472702256822070
+    identification: 
+      static-id: RADIUS
+      attribute: 4
+      name: Radius
+      scope: Component
+
+    layout: 
+      sequence: 40
+
+    settings: 
+      type: Text
+      common: true
+      show-in-wizard: true
+      required: true
+      translatable: false
+      maximum-length: 2
+      escape-mode: HTML
+
+    default: 
+      value: 10
+
+  - # ====== Custom Attribute: Link ==============================
+    id: 23080710765832189729
+    identification: 
+      static-id: LINK
+      attribute: 7
+      name: Link
+      scope: Component
+
+    layout: 
+      sequence: 70
+
+    settings: 
+      type: Link to Target Page/URL
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: false
+      escape-mode: HTML Attribute
+
+  - # ====== Custom Attribute: Img Height ========================
+    id: 23085792386862966734
+    identification: 
+      static-id: IMG_HEIGHT
+      attribute: 8
+      name: Img Height
+      scope: Component
+
+    layout: 
+      sequence: 80
+
+    settings: 
+      type: Session State Value
+      common: true
+      show-in-wizard: true
+      required: true
+      translatable: false
+      data-types: 
+      - Number
+      escape-mode: HTML
+
+  - # ====== Custom Attribute: Img Width =========================
+    id: 23085792829285966734
+    identification: 
+      static-id: IMG_WIDTH
+      attribute: 9
+      name: Img Width
+      scope: Component
+
+    layout: 
+      sequence: 90
+
+    settings: 
+      type: Session State Value
+      common: true
+      show-in-wizard: true
+      required: true
+      translatable: false
+      data-types: 
+      - Number
+      escape-mode: HTML
+
+- # ====== Plugin: APEX Notification Menu ======================
+  id: 138298647230325881081
+  identification: 
+    name: APEX Notification Menu
+    internal-name: APEX.NOTIFICATION
+    type: Dynamic Action
+
+  advanced: 
+    category: Notification
+    quick-pick: false
+
+  subscription: 
+    version-number: 39017542570471
+
+  source: 
+    pl/sql-code: |
+      FUNCTION F_AJAX (
+          P_DYNAMIC_ACTION   IN APEX_PLUGIN.T_DYNAMIC_ACTION,
+          P_PLUGIN           IN APEX_PLUGIN.T_PLUGIN
+      ) RETURN APEX_PLUGIN.T_DYNAMIC_ACTION_AJAX_RESULT IS
+          VR_RESULT         APEX_PLUGIN.T_DYNAMIC_ACTION_AJAX_RESULT;
+      BEGIN
+          APEX_UTIL.JSON_FROM_SQL( SQLQ   => P_DYNAMIC_ACTION.ATTRIBUTE_04 );
+          RETURN VR_RESULT;
+      END;
+      
+      FUNCTION F_RENDER (
+          P_DYNAMIC_ACTION   IN APEX_PLUGIN.T_DYNAMIC_ACTION,
+          P_PLUGIN           IN APEX_PLUGIN.T_PLUGIN
+      ) RETURN APEX_PLUGIN.T_DYNAMIC_ACTION_RENDER_RESULT AS
+          VR_RESULT         APEX_PLUGIN.T_DYNAMIC_ACTION_RENDER_RESULT;
+          VR_REQUIRE_ESCAPE BOOLEAN := TRUE;
+          VR_SANITIZE       BOOLEAN := TRUE;
+      BEGIN
+          APEX_CSS.ADD_FILE(
+              P_NAME        => 'anm.pkgd.min',
+              P_DIRECTORY   => P_PLUGIN.FILE_PREFIX,
+              P_VERSION     => NULL,
+              P_KEY         => 'noteMenuStyle'
+          );
+      
+          APEX_JAVASCRIPT.ADD_LIBRARY(
+              P_NAME        => 'anm.pkgd.min',
+              P_DIRECTORY   => P_PLUGIN.FILE_PREFIX,
+              P_VERSION     => NULL,
+              P_KEY         => 'noteMenuSource'
+          );
+      
+          IF
+              P_DYNAMIC_ACTION.ATTRIBUTE_05 = 'N'
+          THEN
+              VR_REQUIRE_ESCAPE   := FALSE;
+          ELSE
+              VR_REQUIRE_ESCAPE   := TRUE;
+          END IF;
+          
+          IF
+              P_DYNAMIC_ACTION.ATTRIBUTE_06 = 'N'
+          THEN
+              VR_SANITIZE   := FALSE;
+          ELSE
+              VR_SANITIZE   := TRUE;
+          END IF;
+      
+          VR_RESULT.JAVASCRIPT_FUNCTION   := 'function () {
+        notificationMenu.initialize(' ||
+          APEX_JAVASCRIPT.ADD_VALUE( P_DYNAMIC_ACTION.ATTRIBUTE_02, TRUE ) ||
+          APEX_JAVASCRIPT.ADD_VALUE( APEX_PLUGIN.GET_AJAX_IDENTIFIER, TRUE ) ||
+          APEX_JAVASCRIPT.ADD_VALUE( P_DYNAMIC_ACTION.ATTRIBUTE_01, TRUE ) ||
+          APEX_JAVASCRIPT.ADD_VALUE( APEX_PLUGIN_UTIL.PAGE_ITEM_NAMES_TO_JQUERY(P_DYNAMIC_ACTION.ATTRIBUTE_03), TRUE ) ||
+          APEX_JAVASCRIPT.ADD_VALUE( VR_REQUIRE_ESCAPE, TRUE ) ||
+          APEX_JAVASCRIPT.ADD_VALUE( VR_SANITIZE, TRUE ) ||
+          APEX_JAVASCRIPT.ADD_VALUE( P_DYNAMIC_ACTION.ATTRIBUTE_07, FALSE ) ||
+          ');}';
+      
+          RETURN VR_RESULT;
+      END;
+
+  callbacks: 
+    api-interface: Function
+    render-procedure/function-name: F_RENDER
+    ajax-procedure/function-name: F_AJAX
+
+  custom-attributes: 
+    substitute-attribute-values: true
+
+  information: 
+    version: 1.6.5
+    about-url: 'https://github.com/RonnyWeiss/Apex-Notification-Menu-for-NavBar'
+    help-text: |
+      This dynamic action plugin allows to render a notification menu which gets its information through an SQL statement. It also has many configuration options and an automatic refresh (if desired). Unfortunately, it is only available with the Universal Theme 1.1 in Apex 5.1.1 or above. If you want to use it in older Themes then you have to customize the CSS style.
+      
+      To Trigger a manual refresh just create a dynmic action e.g. on button click with the action "Refresh" and set as "Affected Element" a jQuery Selector. Then enter the ID that was set as Element ID for Notification Menu.
+
+  custom-attributes: 
+  - # ====== Custom Attribute: Sanitize HTML =====================
+    id: 27553318160705733980
+    identification: 
+      attribute: 6
+      name: Sanitize HTML
+      scope: Component
+
+    layout: 
+      sequence: 60
+
+    settings: 
+      type: Yes/No
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: false
+
+    default: 
+      value: Y
+
+    condition: 
+      depending-on-custom-attribute: Escape special Characters # 73279024470014277649
+      depending-on-condition-type: not equal to
+      expression: Y
+      always-evaluate: true
+
+    help: 
+      help-text: Sanitizes HTML e.g. &lt;script&gt; tags will be removed.
+
+  - # ====== Custom Attribute: Sanitize HTML Options =============
+    id: 27553342416740736640
+    identification: 
+      attribute: 7
+      name: Sanitize HTML Options
+      scope: Component
+
+    layout: 
+      sequence: 70
+
+    settings: 
+      type: JavaScript Code
+      common: true
+      show-in-wizard: true
+      required: true
+      translatable: false
+
+    default: 
+      value: |
+        {
+          "ALLOWED_ATTR": [
+            "accesskey",
+            "align",
+            "alt",
+            "always",
+            "autocomplete",
+            "autoplay",
+            "border",
+            "cellpadding",
+            "cellspacing",
+            "charset",
+            "class",
+            "colspan",
+            "dir",
+            "height",
+            "href",
+            "id",
+            "lang",
+            "name",
+            "rel",
+            "required",
+            "rowspan",
+            "src",
+            "style",
+            "summary",
+            "tabindex",
+            "target",
+            "title",
+            "type",
+            "value",
+            "width"
+          ],
+          "ALLOWED_TAGS": [
+            "a",
+            "address",
+            "b",
+            "blockquote",
+            "br",
+            "caption",
+            "code",
+            "dd",
+            "div",
+            "dl",
+            "dt",
+            "em",
+            "figcaption",
+            "figure",
+            "h1",
+            "h2",
+            "h3",
+            "h4",
+            "h5",
+            "h6",
+            "hr",
+            "i",
+            "img",
+            "label",
+            "li",
+            "nl",
+            "ol",
+            "p",
+            "pre",
+            "s",
+            "span",
+            "strike",
+            "strong",
+            "sub",
+            "sup",
+            "table",
+            "tbody",
+            "td",
+            "th",
+            "thead",
+            "tr",
+            "u",
+            "ul"
+          ]
+        }
+
+    condition: 
+      depending-on-custom-attribute: Sanitize HTML # 27553318160705733980
+      depending-on-condition-type: equal to
+      expression: Y
+      always-evaluate: true
+
+    help: 
+      help-text: |
+        This Clob Loader includes a sanitizer for HTML as option to use:
+        A Full Description you will find on: https://github.com/cure53/DOMPurify
+        Example: 
+        <pre>
+        {
+          "ALLOWED_ATTR": [
+            "accesskey",
+            "align",
+            "alt",
+            "always",
+            "autocomplete",
+            "autoplay",
+            "border",
+            "cellpadding",
+            "cellspacing",
+            "charset",
+            "class",
+            "colspan",
+            "dir",
+            "height",
+            "href",
+            "id",
+            "lang",
+            "name",
+            "rel",
+            "required",
+            "rowspan",
+            "src",
+            "style",
+            "summary",
+            "tabindex",
+            "target",
+            "title",
+            "type",
+            "value",
+            "width"
+          ],
+          "ALLOWED_TAGS": [
+            "a",
+            "address",
+            "b",
+            "blockquote",
+            "br",
+            "caption",
+            "code",
+            "dd",
+            "div",
+            "dl",
+            "dt",
+            "em",
+            "figcaption",
+            "figure",
+            "h1",
+            "h2",
+            "h3",
+            "h4",
+            "h5",
+            "h6",
+            "hr",
+            "i",
+            "img",
+            "label",
+            "li",
+            "nl",
+            "ol",
+            "p",
+            "pre",
+            "s",
+            "span",
+            "strike",
+            "strong",
+            "sub",
+            "sup",
+            "table",
+            "tbody",
+            "td",
+            "th",
+            "thead",
+            "tr",
+            "u",
+            "ul"
+          ]
+        }
+        </pre>
+        <pre>
+        # make output safe for usage in jQuery's $()/html() method (default is false)
+        SAFE_FOR_JQUERY: true
+        
+        # strip {{ ... }} and &amp;lt;% ... %&amp;gt; to make output safe for template systems
+        # be careful please, this mode is not recommended for production usage.
+        # allowing template parsing in user-controlled HTML is not advised at all.
+        # only use this mode if there is really no alternative.
+        SAFE_FOR_TEMPLATES: true
+        
+        # allow only &amp;lt;b&amp;gt;
+        ALLOWED_TAGS: ['b']
+        
+        # allow only &amp;lt;b&amp;gt; and &amp;lt;q&amp;gt; with style attributes (for whatever reason)
+        ALLOWED_TAGS: ['b', 'q'], ALLOWED_ATTR: ['style']
+        
+        # allow all safe HTML elements but neither SVG nor MathML
+        USE_PROFILES: {html: true}
+        
+        # allow all safe SVG elements and SVG Filters
+        USE_PROFILES: {svg: true, svgFilters: true}
+        
+        # allow all safe MathML elements and SVG
+        USE_PROFILES: {mathMl: true, svg: true}
+        
+        # leave all as it is but forbid &amp;lt;style&amp;gt;
+        FORBID_TAGS: ['style']
+        
+        # leave all as it is but forbid style attributes
+        FORBID_ATTR: ['style']
+        
+        # extend the existing array of allowed tags
+        ADD_TAGS: ['my-tag']
+        
+        # extend the existing array of attributes
+        ADD_ATTR: ['my-attr']
+        
+        # prohibit HTML5 data attributes (default is true)
+        ALLOW_DATA_ATTR: false
+        
+        # allow external protocol handlers in URL attributes (default is false)
+        # by default only http, https, ftp, ftps, tel, mailto, callto, cid and xmpp are allowed.
+        ALLOW_UNKNOWN_PROTOCOLS: true
+        </pre>
+
+  - # ====== Custom Attribute: Escape special Characters =========
+    id: 73279024470014277649
+    identification: 
+      attribute: 5
+      name: Escape special Characters
+      scope: Component
+
+    layout: 
+      sequence: 50
+
+    settings: 
+      type: Yes/No
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: false
+
+    default: 
+      value: Y
+
+    help: 
+      help-text: This value determines whether all texts that the plug-in inserts into the page should be escaped. This is necessary if texts come from user input or insecure sources to prevent XSS.
+
+  - # ====== Custom Attribute: ConfigJSON ========================
+    id: 138298647495179881084
+    identification: 
+      attribute: 1
+      name: ConfigJSON
+      scope: Component
+
+    layout: 
+      sequence: 4
+
+    settings: 
+      type: JavaScript Code
+      common: true
+      show-in-wizard: true
+      required: true
+      translatable: false
+
+    default: 
+      value: |
+        {
+            "refresh": 0,
+            "mainIcon": "fa-bell",
+            "mainIconColor": "white",
+            "mainIconBackgroundColor": "rgba(70,70,70,0.9)",
+            "mainIconBlinking": false,
+            "counterBackgroundColor": "rgb(232, 55, 55 )",
+            "counterFontColor": "white",
+            "linkTargetBlank": false,
+            "showAlways": false,
+            "browserNotifications": {
+                "enabled": true,
+                "cutBodyTextAfter": 100,
+                "link": false
+            },
+            "accept": {
+                "color": "#44e55c",
+                "icon": "fa-check"
+            },
+            "decline": {
+                "color": "#b73a21",
+                "icon": "fa-close"
+            },
+            "hideOnRefresh": true
+        }
+
+    help: 
+      help-text: |
+        <pre>
+        {
+            "refresh": 0,
+            "mainIcon": "fa-bell",
+            "mainIconColor": "white",
+            "mainIconBackgroundColor": "rgba(70,70,70,0.9)",
+            "mainIconBlinking": false,
+            "counterBackgroundColor": "rgb(232, 55, 55 )",
+            "counterFontColor": "white",
+            "linkTargetBlank": false,
+            "showAlways": false,
+            "browserNotifications": {
+                "enabled": true,
+                "cutBodyTextAfter": 100,
+                "link": false
+            },
+            "accept": {
+                "color": "#44e55c",
+                "icon": "fa-check"
+            },
+            "decline": {
+                "color": "#b73a21",
+                "icon": "fa-close"
+            },
+            "hideOnRefresh": true
+        }
+        </pre>
+        <br>
+        <h3>Explanation:</h3>
+          <dl>
+          <dt>refresh (number)</dt>
+          <dd>refresh time of cards in seconds if 0 then no refresh will be set</dd>
+          <dl>
+          <dt>mainIcon(string)</dt>
+          <dd>icon of the menu</dd>
+          <dl>
+          <dt>mainIconColor(string)</dt>
+          <dd>color of the icon e.g. #ffffff, green...</dd>
+          <dl>
+          <dt>counterBackgroundColor(string)</dt>
+          <dd>color of the icon background e.g. #ffffff, green...</dd>
+          <dl>
+          <dt>mainIconBlinking(boolean)</dt>
+          <dd>used to get icon blinking</dd>
+          <dl>
+          <dt>counterBackgroundColor(string)</dt>
+          <dd>color of the counter background e.g. #ffffff, green...</dd>
+          <dl>
+          <dt>counterFontColor(string)</dt>
+          <dd>color of the counter font color e.g. #ffffff, green...</dd>
+          <dl>
+          <dt>linkTargetBlank(boolean)</dt>
+          <dd>link to target blank or not</dd>
+          <dl>
+          <dt>showAlways(boolean)</dt>
+          <dd>Use to set if also shown when no notifications occured</dd>
+          <dt>browserNotifications.enable(boolean)</dt>
+          <dd>Use the notification API of the browser to show notifications</dd>
+          <dt>browserNotifications.cutBodyTextAfter(number)</dt>
+          <dd>Set max length of shown body text</dd>
+          <dt>browserNotifications.link(boolean)</dt>
+          <dd>set if link of node entry is directly called or if just when click on notification the browser tab is openend where notification was fired</dd>
+          <dt>accept.color(string)</dt>
+          <dd>color of accept icon</dd>
+          <dt>accept.icon(string)</dt>
+          <dd>accept icon</dd>
+          <dt>decline.color(string)</dt>
+          <dd>color of decline icon</dd>
+          <dt>decline.icon(string)</dt>
+          <dd>decline icon</dd>
+          <dt>hideOnRefresh(boolean)</dt>
+          <dd>Set if Notification menu should hide on Refresh.</dd>
+
+  - # ====== Custom Attribute: Element ID ========================
+    id: 138300254095017058713
+    identification: 
+      attribute: 2
+      name: Element ID
+      scope: Component
+
+    layout: 
+      sequence: 3
+
+    settings: 
+      type: Text
+      common: true
+      show-in-wizard: true
+      required: true
+      translatable: false
+
+    default: 
+      value: notification-menu
+
+  - # ====== Custom Attribute: Items to Submit ===================
+    id: 138329528594487147386
+    identification: 
+      attribute: 3
+      name: Items to Submit
+      scope: Component
+
+    layout: 
+      sequence: 2
+
+    settings: 
+      type: Page Items
+      common: true
+      show-in-wizard: true
+      required: false
+      translatable: false
+
+  - # ====== Custom Attribute: SQL Source ========================
+    id: 138329540171240150351
+    identification: 
+      attribute: 4
+      name: SQL Source
+      scope: Component
+
+    layout: 
+      sequence: 1
+
+    settings: 
+      type: SQL Query
+      common: true
+      show-in-wizard: true
+      required: true
+      translatable: false
+      minimum-columns: 1
+
+    default: 
+      value: |
+        SELECT /* sets the icon of the list item */
+            'fa-exclamation-triangle' AS NOTE_ICON, 
+            /* sets the color of the list icon */
+            'rgb(192,0,15)' AS NOTE_ICON_COLOR, 
+            /* sets the title of the list item (html possible) */
+            'Alarm occurred' AS NOTE_HEADER,
+            /* sets the text of the list item (html possible */
+            'There''s an alarm in <b>Station 3</b>. Error code is <b style="color:rgba(192,0,15);">#304-AD. </b>' AS NOTE_TEXT, 
+            /* set the link when click on list item */
+            'javascript:alert("Click on Notification Entry");void(0);' AS NOTE_LINK, 
+            /* sets the color of the left box shadow */
+            'rgb(192,0,15)' AS NOTE_COLOR,
+            /* Link or js that is executed when press accept link (if left or null not accept is shown */ 
+            'javascript:alert("Accepted");void(0);' AS NOTE_ACCEPT,
+            /* Link or js that is executed when press decline link (if left or null not decline is shown */ 
+            'javascript:alert("Declined");void(0);' AS NOTE_DECLINE,
+            /* When enable Browser Notifications in ConfigJSON then you can select which notifications should not be fire browser not. */
+            0 AS NO_BROWSER_NOTIFICATION
+        FROM
+            DUAL
+        UNION ALL
+        SELECT
+            'fa-wrench' AS NOTE_ICON,
+            '#3e6ebc' AS NOTE_ICON_COLOR,
+            'System maintenance' AS NOTE_HEADER,
+            'In the time between <b>08:30</b> and <b>11:00</b> a system maintenance takes place. The systems can only be used in read-only mode and are limited in use' AS NOTE_TEXT,
+            'https://apex.world' AS NOTE_LINK,
+            '#3e6ebc' AS NOTE_COLOR,
+            NULL AS NOTE_ACCEPT,
+            'javascript:alert("Declined");void(0);' AS NOTE_DECLINE,
+            /* When enable Browser Notifications in ConfigJSON then you can select which notifications should not be fire browser not. */
+            0 AS NO_BROWSER_NOTIFICATION
+        FROM
+            DUAL
+        WHERE
+            2 = ROUND(
+                DBMS_RANDOM.VALUE(
+                    1,
+                    2
+                )
+            )
+
+    help: 
+      help-text: |
+        <pre>
+        SELECT /* sets the icon of the list item */
+            'fa-exclamation-triangle' AS NOTE_ICON, 
+            /* sets the color of the list icon */
+            'rgb(192,0,15)' AS NOTE_ICON_COLOR, 
+            /* sets the title of the list item (html possible) */
+            'Alarm occurred' AS NOTE_HEADER,
+            /* sets the text of the list item (html possible */
+            'There''s an alarm in <b>Station 3</b>. Error code is <b style="color:rgba(192,0,15);">#304-AD. </b>' AS NOTE_TEXT, 
+            /* set the link when click on list item */
+            'javascript:alert("Click on Notification Entry");void(0);' AS NOTE_LINK, 
+            /* sets the color of the left box shadow */
+            'rgb(192,0,15)' AS NOTE_COLOR,
+            /* Link or js that is executed when press accept link (if left or null not accept is shown */ 
+            'javascript:alert("Accepted");void(0);' AS NOTE_ACCEPT,
+            /* Link or js that is executed when press decline link (if left or null not decline is shown */ 
+            'javascript:alert("Declined");void(0);' AS NOTE_DECLINE,
+            /* When enable Browser Notifications in ConfigJSON then you can select which notifications should not be fire browser not. */
+            0 AS NO_BROWSER_NOTIFICATION
+        FROM
+            DUAL
+        UNION ALL
+        SELECT
+            'fa-wrench' AS NOTE_ICON,
+            '#3e6ebc' AS NOTE_ICON_COLOR,
+            'System maintenance' AS NOTE_HEADER,
+            'In the time between <b>08:30</b> and <b>11:00</b> a system maintenance takes place. The systems can only be used in read-only mode and are limited in use' AS NOTE_TEXT,
+            'https://apex.world' AS NOTE_LINK,
+            '#3e6ebc' AS NOTE_COLOR,
+            NULL AS NOTE_ACCEPT,
+            'javascript:alert("Declined");void(0);' AS NOTE_DECLINE,
+            /* When enable Browser Notifications in ConfigJSON then you can select which notifications should not be fire browser not. */
+            0 AS NO_BROWSER_NOTIFICATION
+        FROM
+            DUAL
+        WHERE
+            2 = ROUND(
+                DBMS_RANDOM.VALUE(
+                    1,
+                    2
+                )
+            )
+        </pre>
+
+  events: 
+  - # ====== Event: refresh-apex-notification-menu ===============
+    id: 17265940400570620141
+    identification: 
+      name: Refresh Notification Menu
+      internal-name: refresh-apex-notification-menu
+
+  files: 
+  - # ====== File: LICENSE4LIBS ==================================
+    id: 27552575119324705470
+    identification: 
+      file-name: LICENSE4LIBS
+
+    attributes: 
+      mime-type: application/octet-stream
+      file-character-set: Unicode UTF-8
+
+  - # ====== File: anm.pkgd.min.css ==============================
+    id: 27554203095581748205
+    identification: 
+      file-name: anm.pkgd.min.css
+
+    attributes: 
+      mime-type: text/css
+      file-character-set: Unicode UTF-8
+
+  - # ====== File: anm.pkgd.min.js ===============================
+    id: 27554203373099748206
+    identification: 
+      file-name: anm.pkgd.min.js
+
+    attributes: 
+      mime-type: text/javascript
+      file-character-set: Unicode UTF-8
+
+  - # ====== File: LICENSE =======================================
+    id: 138298648572898881092
+    identification: 
+      file-name: LICENSE
+
+    attributes: 
+      mime-type: application/octet-stream
+      file-character-set: Unicode UTF-8
+

@@ -1,0 +1,463 @@
+---
+# ====== Page: Reporte de Conteo =============================
+id: 86
+identification: 
+  name: Reporte de Conteo
+  alias: REPORTE-DE-CONTEO
+  title: Reporte de Conteo
+
+appearance: 
+  page-mode: Modal Dialog
+  dialog-template: Theme Default
+  template-options: 
+  - '#DEFAULT#'
+
+dialog: 
+  chained: true
+  resizable: true
+
+navigation-menu: 
+  override-user-interface-level: false
+
+navigation: 
+  cursor-focus: Do not focus cursor
+  warn-on-unsaved-changes: true
+
+css: 
+  inline: |
+    /* heading */
+    
+    h1 { font: bold 100% sans-serif; letter-spacing: 0.5em; text-align: center; text-transform: uppercase; }
+    
+    /* table */
+    
+    table { font-size: 75%; table-layout: auto; width: 100%; }
+    table { border-collapse: separate; border-spacing: 2px; }
+    th, td { border-width: 1px; padding: 0.5em; position: relative; text-align: left; }
+    th, td { border-radius: 0.25em; border-style: solid; }
+    th { background: #EEE; border-color: #BBB; }
+    td { border-color: #DDD; }
+    
+    /* page */
+    
+    html { font: 16px/1 'Open Sans', sans-serif; overflow: auto; }
+    html { background: #999; cursor: default; }
+    
+    body { box-sizing: border-box; margin: 0 auto; overflow: hidden; width: 8.5in; }
+    body { background: #FFF; border-radius: 1px; box-shadow: 0 0 0in -0.25in rgba(0, 0, 0, 0.5); }
+    
+    
+    /* header */
+    
+    header { margin: 0 0 0; }
+    header:after { clear: both; content: ""; display: table; }
+    
+    header h1 { background: #000; border-radius: 0.25em; color: #FFF; margin: 0 0 1em; padding: 0.5em 0; }
+    
+    /* article */
+    
+    article, article address, table.meta, table.inventory { margin: 0 0 3em; }
+    article:after { clear: both; content: ""; display: table; }
+    article h1 { clip: rect(0 0 0 0); position: absolute; }
+    
+    article address { float: left; font-size: 125%; font-weight: bold; }
+    
+    /* table meta & balance */
+    
+    table.meta, table.balance { float: right; width: 36%; }
+    table.meta:after, table.balance:after { clear: both; content: ""; display: table; }
+    
+    /* table meta */
+    
+    table.meta th { width: 40%; }
+    table.meta td { width: 60%; }
+    
+    /* table items */
+    
+    table.inventory { clear: both; width: 100%; }
+    table.inventory th { font-weight: bold; text-align: center; }
+    
+    table.inventory td:nth-child(1) { max-width: 10%; }
+    table.inventory td:nth-child(2) { min-width: 50%; }
+    table.inventory td:nth-child(3) { text-align: right; max-width: 10%; }
+    table.inventory td:nth-child(4) { text-align: right; max-width: 10%; }
+    table.inventory td:nth-child(5) { text-align: right; max-width: 10%; }
+    table.inventory td:nth-child(6) { text-align: right; max-width: 10%; }
+    
+    /* table balance */
+    
+    table.balance th, table.balance td { width: 50%; }
+    table.balance td { text-align: right; }
+    
+    /* aside */
+    
+    aside h1 { border: none; border-width: 0 0 1px; margin: 0 0 1em; }
+    aside h1 { border-color: #999; border-bottom-style: solid; }
+    
+    /* javascript */
+    
+    .add, .cut
+    {
+    	border-width: 1px;
+    	display: block;
+    	font-size: .8rem;
+    	padding: 0.25em 0.5em;	
+    	float: left;
+    	text-align: center;
+    	width: 0.6em;
+    }
+    
+    .add, .cut
+    {
+    	background: #9AF;
+    	box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    	background-image: -moz-linear-gradient(#00ADEE 5%, #0078A5 100%);
+    	background-image: -webkit-linear-gradient(#00ADEE 5%, #0078A5 100%);
+    	border-radius: 0.5em;
+    	border-color: #0076A3;
+    	color: #FFF;
+    	cursor: pointer;
+    	font-weight: bold;
+    	text-shadow: 0 -1px 2px rgba(0,0,0,0.333);
+    }
+    
+    .add { margin: 0 0 0; }
+    
+    .add:hover { background: #00ADEE; }
+    
+    .cut { opacity: 0; position: absolute; top: 0; left: -1.5em; }
+    .cut { -webkit-transition: opacity 100ms ease-in; }
+    
+    tr:hover .cut { opacity: 1; }
+    
+    @media print {
+    	* { -webkit-print-color-adjust: exact; }
+    	html { background: none; padding: 0; }
+    	body { box-shadow: none; margin: 0; }
+    	span:empty { display: none; }
+    	.add, .cut { display: none; }
+    }
+    
+    @page { margin: 0; }
+
+security: 
+  authentication: Page Requires Authentication
+  deep-linking: Application Default
+  page-access-protection: Arguments Must Have Checksum
+  form-auto-complete: Off
+  browser-cache: Application Default
+
+session-management: 
+  rejoin-sessions: Application Default
+
+advanced: 
+  enable-duplicate-page-submissions: Yes - Enable page to be re-posted
+  reload-on-submit: Only for Success
+
+server-cache: 
+  caching: Disabled
+
+regions: 
+- # ====== Region: Region de Botones ===========================
+  id: 15281101793490649
+  identification: 
+    name: Region de Botones
+    type: Static Content
+
+  layout: 
+    sequence: 10
+    parent-region: No Parent
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Standard
+    template-options: 
+    - '#DEFAULT#'
+    - t-Region--hideHeader js-addHiddenHeadingRoleDesc
+    - t-Region--scrollBody
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    settings: 
+      output-as: HTML
+      expand-shortcuts: false
+
+- # ====== Region: Vista Previa ================================
+  id: 15460895177249301
+  identification: 
+    name: Vista Previa
+    type: Dynamic Content
+
+  source: 
+    language: PL/SQL
+    pl/sql-function-body-returning-a-clob: |
+      DECLARE
+        -- Cursor de cabecera
+        CURSOR cr_inv IS
+          SELECT 
+            i.ID_INVENTARIO,
+            i.NRO_DOCUMENTO,
+            o.DESCRIPCION AS OFICINA,
+            TRUNC(i.FECHA_INVENTARIO) AS FECHA_INVENTARIO,
+            i.ESTADO,
+            i.USUARIO_CREADOR,
+            i.FECHA_CREACION,
+            i.USUARIO_ENVIO,
+            i.FECHA_ENVIO
+          FROM INVENTARIO i
+          JOIN OFICINAS o ON o.CODIGO_OFICINA = i.ID_OFICINA
+          WHERE i.ID_INVENTARIO = :P86_ID_INVENTARIO;
+      
+        -- Cursor de detalle
+        CURSOR cr_det IS
+          SELECT
+            NVL(s.NOMBRE,'(Sin sector)') AS SECTOR,
+            NVL(u.CODIGO,'-') AS UBICACION,
+            p.NOMBRE || NVL2(p.MODELO,' - '||p.MODELO,'') AS PRODUCTO,
+            p.CODIGO_PROVEEDOR AS COD_PROV,
+            CASE
+              WHEN :P95_MODO = 'EN_BLANCO' OR :P95_MODO = '0' THEN NULL
+              ELSE d.CANTIDAD_FISICA
+            END AS CANTIDAD_A_CONTAR,
+            CAST(NULL AS VARCHAR2(200)) AS OBSERVACION
+          FROM INVENTARIO_DETALLE d
+          LEFT JOIN SECTORES s ON s.ID_SECTOR = d.ID_SECTOR
+          LEFT JOIN UBICACIONES u ON u.ID_UBICACION = d.ID_UBICACION
+          JOIN PRODUCTOS p ON p.ID_PRODUCTO = d.ID_PRODUCTO
+          WHERE d.ID_INVENTARIO = :P86_ID_INVENTARIO
+          ORDER BY d.ORDEN_SECTOR, d.ORDEN_UBICACION, p.NOMBRE, p.MODELO;
+      
+        v_html CLOB;
+        v_sector_actual VARCHAR2(200);
+        v_ubicacion_actual VARCHAR2(200);
+      BEGIN
+        FOR v_cab IN cr_inv LOOP
+          v_html := '
+          <header>
+            <h1>REPORTE DE INVENTARIO</h1>
+            <address>
+              <h4>Oficina: '||v_cab.OFICINA||'<br>
+              N° Documento: '||v_cab.NRO_DOCUMENTO||'<br>
+              Fecha de Inventario: '||TO_CHAR(v_cab.FECHA_INVENTARIO, 'DD/MM/YYYY')||'<br>
+              Estado: '||v_cab.ESTADO||'</h4>
+            </address>
+          </header>
+      
+          <article>
+            <table class="inventory">
+              <thead>
+                <tr>
+                  <th><span>Sector</span></th>
+                  <th><span>Ubicación</span></th>
+                  <th><span>Producto</span></th>
+                  <th><span>Código Prov.</span></th>
+                  <th><span>Cantidad a Contar</span></th>
+                  <th><span>Observación</span></th>
+                </tr>
+              </thead>
+              <tbody>';
+      
+          v_sector_actual := NULL;
+          v_ubicacion_actual := NULL;
+      
+          FOR v_det IN cr_det LOOP
+            -- Si cambia el sector, agregar una fila de grupo
+            IF v_sector_actual IS NULL OR v_sector_actual <> v_det.SECTOR THEN
+              v_sector_actual := v_det.SECTOR;
+              v_html := v_html || '
+                <tr style="background:#f3f3f3;">
+                  <td colspan="6"><strong>Sector: '||v_sector_actual||'</strong></td>
+                </tr>';
+            END IF;
+      
+            -- Si cambia la ubicación, agregar subgrupo
+            IF v_ubicacion_actual IS NULL OR v_ubicacion_actual <> v_det.UBICACION THEN
+              v_ubicacion_actual := v_det.UBICACION;
+              v_html := v_html || '
+                <tr style="background:#fafafa;">
+                  <td colspan="6"><em>Ubicación: '||v_ubicacion_actual||'</em></td>
+                </tr>';
+            END IF;
+      
+            -- Detalle de producto
+            v_html := v_html || '
+              <tr>
+                <td></td>
+                <td></td>
+                <td>'||v_det.PRODUCTO||'</td>
+                <td>'||v_det.COD_PROV||'</td>
+                <td style="border-bottom:1px solid #000;">'||NVL(TO_CHAR(v_det.CANTIDAD_A_CONTAR),'')||'</td>
+                <td style="border-bottom:1px solid #000;">'||NVL(v_det.OBSERVACION,'')||'</td>
+              </tr>';
+          END LOOP;
+      
+          v_html := v_html || '
+              </tbody>
+            </table>
+          </article>
+      
+          <footer style="margin-top:50px;">
+            <table style="width:100%; border:none;">
+              <tr>
+                <td style="width:50%; text-align:center;">
+                  ___________________________<br>
+                  <strong>Firma del Operario</strong>
+                </td>
+                <td style="width:50%; text-align:center;">
+                  ___________________________<br>
+                  <strong>Fecha</strong>
+                </td>
+              </tr>
+            </table>
+          </footer>';
+        END LOOP;
+      
+        RETURN v_html;
+      END;
+      
+
+  layout: 
+    sequence: 30
+    parent-region: No Parent
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Standard
+    template-options: 
+    - '#DEFAULT#'
+    - t-Region--removeHeader js-removeLandmark
+    - t-Region--scrollBody
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  server-cache: 
+    caching: Disabled
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    performance: 
+      lazy-loading: false
+
+page-items: 
+- # ====== Page Item: P86_ID_INVENTARIO ========================
+  id: 15460981970249302
+  identification: 
+    name: P86_ID_INVENTARIO
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 20
+    region: No Parent
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Session (Persistent)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+buttons: 
+- # ====== Button: Imprimir ====================================
+  id: 15281225287490650
+  identification: 
+    button-name: Imprimir
+    label: Imprimir
+
+  layout: 
+    sequence: 10
+    region: Region de Botones # 15281101793490649
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    alignment: Left center
+
+  appearance: 
+    button-template: Text with Icon
+    hot: true
+    template-options: 
+    - '#DEFAULT#'
+    - t-Button--iconLeft
+    icon: fa-print
+
+  behavior: 
+    action: Defined by Dynamic Action
+    execute-validations: true
+
+dynamic-actions: 
+- # ====== Dynamic Action: New =================================
+  id: 15461553141249308
+  identification: 
+    name: New
+
+  execution: 
+    sequence: 10
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Click
+    selection-type: Button
+    button: Imprimir # 15281225287490650
+
+  actions: 
+  - # ====== Action: Print Region Into PDF V 2.0 =================
+    id: 15461645410249309
+    identification: 
+      action: Print Region Into PDF V 2.0
+
+    affected-elements: 
+      selection-type: Region
+      region: Vista Previa # 15460895177249301
+
+    execution: 
+      sequence: 10
+      event: New # 15461553141249308
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+

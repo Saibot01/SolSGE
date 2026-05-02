@@ -1,0 +1,2827 @@
+---
+# ====== Page: Inventario MD =================================
+id: 84
+identification: 
+  name: Inventario MD
+  alias: INVENTARIO-MD
+  title: Inventario MD
+
+appearance: 
+  page-mode: Modal Dialog
+  dialog-template: Theme Default
+  template-options: 
+  - '#DEFAULT#'
+  - ui-dialog--stretch
+
+dialog: 
+  chained: true
+  resizable: true
+
+navigation-menu: 
+  override-user-interface-level: false
+
+navigation: 
+  cursor-focus: Do not focus cursor
+  warn-on-unsaved-changes: true
+
+security: 
+  authentication: Page Requires Authentication
+  deep-linking: Application Default
+  page-access-protection: Arguments Must Have Checksum
+  form-auto-complete: Off
+  browser-cache: Application Default
+
+session-management: 
+  rejoin-sessions: Application Default
+
+advanced: 
+  enable-duplicate-page-submissions: Yes - Enable page to be re-posted
+  reload-on-submit: Only for Success
+
+server-cache: 
+  caching: Disabled
+
+regions: 
+- # ====== Region: Inventario DE ===============================
+  id: 13349996967104017
+  identification: 
+    name: Inventario DE
+    type: Interactive Grid
+
+  source: 
+    location: Local Database
+    type: SQL Query
+    sql-query: |
+      SELECT seq_id,
+             n001 AS id_producto,
+             c001 AS nombre,
+             n002 AS stock_sistema,
+             n003 AS cantidad_fisica,
+             c002 AS observacion,
+             c008 AS row_status
+        FROM apex_collections
+       WHERE collection_name = 'COL_INV_DETALLE'
+      
+
+  layout: 
+    sequence: 220
+    parent-region: Inventario MD # 14753551749921162
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Interactive Report
+    template-options: 
+    - '#DEFAULT#'
+    - t-IRR-region--hideHeader js-addHiddenHeadingRoleDesc
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    id: 13350021450104018
+    edit: 
+      enabled: true
+      allowed-operations: 
+      - Add Row
+      - Update Row
+      - Delete Row
+      lost-update-type: Row Values
+      add-row-if-empty: true
+
+    performance: 
+      lazy-loading: false
+
+    appearance: 
+      select-first-row: true
+      fixed-row-height: true
+
+    pagination: 
+      type: Scroll
+      show-total-count: true
+
+    toolbar: 
+      show: true
+      controls: 
+      - Search Column Selection
+      - Search Field
+      - Actions Menu
+      - Reset Button
+      - Save Button
+
+    enable-users-to: 
+      save-public-report: false
+      flashback: true
+      define-chart-view: true
+      download: true
+
+    download: 
+      formats: 
+      - CSV
+      - HTML
+      - Excel
+      - PDF
+      send-as-email: true
+
+    heading: 
+      fixed-to: Page
+
+    icon-view: 
+      show: false
+
+    detail-view: 
+      show: false
+
+    advanced: 
+      initialization-javascript-function: |
+        function(config){
+            config.defaultGridViewOptions = {
+                footer: false
+            }
+            return config;
+        }
+
+    saved-reports: 
+    - # ====== Saved Report: Primary Report ========================
+      id: 15193145517377358
+      identification: 
+        name: Primary Report
+        alias: 151932
+
+  columns: 
+  - # ====== Column: ID_PRODUCTO =================================
+    id: 13350223213104020
+    identification: 
+      column-name: ID_PRODUCTO
+      type: Number Field
+
+    heading: 
+      heading: Id Producto
+      alignment: end
+
+    settings: 
+      number-alignment: Start
+      virtual-keyboard: Decimal
+
+    layout: 
+      sequence: 40
+      column-alignment: end
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: true
+
+    source: 
+      type: Database Column
+      database-column: ID_PRODUCTO
+      data-type: NUMBER
+      query-only: false
+      primary-key: true
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: STOCK_SISTEMA ===============================
+    id: 13350350141104021
+    identification: 
+      column-name: STOCK_SISTEMA
+      type: Hidden
+
+    settings: 
+      value-protected: true
+
+    layout: 
+      sequence: 60
+
+    accessibility: 
+      value-identifies-row: false
+
+    source: 
+      type: Database Column
+      database-column: STOCK_SISTEMA
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    session-state: 
+      data-type: VARCHAR2
+
+    export-/-printing: 
+      include-in-export-/-print: false
+
+    enable-users-to: 
+      sort: false
+
+  - # ====== Column: CANTIDAD_FISICA =============================
+    id: 13350498870104022
+    identification: 
+      column-name: CANTIDAD_FISICA
+      type: Number Field
+
+    heading: 
+      heading: Cantidad Fisica
+      alignment: end
+
+    settings: 
+      number-alignment: Start
+      virtual-keyboard: Decimal
+
+    layout: 
+      sequence: 70
+      column-alignment: end
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: true
+
+    source: 
+      type: Database Column
+      database-column: CANTIDAD_FISICA
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: OBSERVACION =================================
+    id: 13350600891104024
+    identification: 
+      column-name: OBSERVACION
+      type: Hidden
+
+    settings: 
+      value-protected: true
+
+    layout: 
+      sequence: 80
+
+    accessibility: 
+      value-identifies-row: false
+
+    source: 
+      type: Database Column
+      database-column: OBSERVACION
+      data-type: VARCHAR2
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    session-state: 
+      data-type: VARCHAR2
+
+    export-/-printing: 
+      include-in-export-/-print: false
+
+    enable-users-to: 
+      sort: false
+
+  - # ====== Column: APEX$ROW_ACTION =============================
+    id: 13350735630104025
+    identification: 
+      column-name: APEX$ROW_ACTION
+      type: Actions Menu
+
+    layout: 
+      sequence: 20
+
+  - # ====== Column: APEX$ROW_SELECTOR ===========================
+    id: 13350811217104026
+    identification: 
+      column-name: APEX$ROW_SELECTOR
+      type: Row Selector
+
+    settings: 
+      enable-multi-select: true
+      show-select-all: true
+      hide-control: false
+
+    layout: 
+      sequence: 10
+
+  - # ====== Column: SEQ_ID ======================================
+    id: 13351489226104032
+    identification: 
+      column-name: SEQ_ID
+      type: Hidden
+
+    settings: 
+      value-protected: true
+
+    layout: 
+      sequence: 90
+
+    accessibility: 
+      value-identifies-row: false
+
+    source: 
+      type: Database Column
+      database-column: SEQ_ID
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    session-state: 
+      data-type: VARCHAR2
+
+    export-/-printing: 
+      include-in-export-/-print: false
+
+    enable-users-to: 
+      sort: false
+
+  - # ====== Column: NOMBRE ======================================
+    id: 13351523988104033
+    identification: 
+      column-name: NOMBRE
+      type: Textarea
+
+    heading: 
+      heading: Nombre
+      alignment: start
+
+    settings: 
+      resizable: true
+      auto-height: false
+      character-counter: false
+      trim-spaces: Leading and Trailing
+
+    layout: 
+      sequence: 50
+      column-alignment: start
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: false
+      maximum-length: 32767
+
+    source: 
+      type: Database Column
+      database-column: NOMBRE
+      data-type: VARCHAR2
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    session-state: 
+      data-type: VARCHAR2
+
+    column-filter: 
+      enabled: true
+      performance-impacting-operators: 
+      - Contains
+      - Starts With
+      - Case Insensitive
+      - Regular Expression
+      text-case: Mixed
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: false
+      hide: true
+
+  - # ====== Column: ROW_STATUS ==================================
+    id: 13352039107104038
+    identification: 
+      column-name: ROW_STATUS
+      type: Hidden
+
+    settings: 
+      value-protected: true
+
+    layout: 
+      sequence: 110
+
+    accessibility: 
+      value-identifies-row: false
+
+    source: 
+      type: Database Column
+      database-column: ROW_STATUS
+      data-type: VARCHAR2
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    session-state: 
+      data-type: VARCHAR2
+
+    export-/-printing: 
+      include-in-export-/-print: false
+
+    enable-users-to: 
+      sort: false
+
+  printing: 
+    page: 
+      size: A4
+      orientation: Landscape
+      units: Millimeters
+      width: 297
+      height: 210
+      border-width: 0.5
+      border-color: '#666666'
+
+    page-header: 
+      font: Helvetica
+      font-weight: Normal
+      font-size: 12
+      font-color: '#000000'
+      alignment: center
+
+    column-headings: 
+      font: Helvetica
+      font-weight: Bold
+      font-size: 10
+      font-color: '#000000'
+      background-color: '#EEEEEE'
+
+    columns: 
+      font: Helvetica
+      font-weight: Normal
+      font-size: 10
+      font-color: '#000000'
+      background-color: '#FFFFFF'
+
+    page-footer: 
+      font: Helvetica
+      font-weight: Normal
+      font-size: 12
+      font-color: '#000000'
+      alignment: center
+
+- # ====== Region: Buttons =====================================
+  id: 14752711635921158
+  identification: 
+    name: Buttons
+    type: Static Content
+
+  layout: 
+    sequence: 10
+    parent-region: No Parent
+    slot: REGION_POSITION_03
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Buttons Container
+    template-options: 
+    - '#DEFAULT#'
+    - t-ButtonRegion--noPadding
+    - t-ButtonRegion--noUI
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    settings: 
+      output-as: HTML
+      expand-shortcuts: false
+
+- # ====== Region: Inventario MD ===============================
+  id: 14753551749921162
+  identification: 
+    name: Inventario MD
+    title: Cabecera
+    type: Form
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: INVENTARIO
+    include-rowid-column: false
+    page-items-to-submit: 
+    - P84_ID_INVENTARIO
+
+  layout: 
+    sequence: 20
+    parent-region: No Parent
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Interactive Report
+    template-options: 
+    - '#DEFAULT#'
+    - t-IRR-region--hideHeader js-addHiddenHeadingRoleDesc
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  server-side-condition: 
+    type: Item is NULL
+    item: P84_ID_INVENTARIO
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    edit: 
+      enabled: false
+
+- # ====== Region: Inventario - Detalle ========================
+  id: 14772647860921552
+  identification: 
+    name: Inventario - Detalle
+    type: Interactive Grid
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: INVENTARIO_DETALLE
+    include-rowid-column: false
+    where-clause: |
+      ID_INVENTARIO = :P84_ID_INVENTARIO
+      AND (
+            :P84_ESTADO <> 'BORRADOR'
+         OR ID_PRODUCTO IN (
+              SELECT p.ID_PRODUCTO
+                FROM PRODUCTOS p
+                LEFT JOIN STOCK_PRODUCTO s
+                       ON s.ID_PRODUCTO = p.ID_PRODUCTO
+                      AND s.ID_OFICINA  = :P84_ID_OFICINA
+               WHERE NVL(p.ACTIVO,'S') = 'S'
+                 AND (:P84_FILTRO_CATEGORIA IS NULL OR p.ID_CATEGORIA = :P84_FILTRO_CATEGORIA)
+                 AND (:P84_FILTRO_MARCA    IS NULL OR p.ID_MARCA     = :P84_FILTRO_MARCA)
+                 AND ( :P84_SOLO_STOCK = 'N' OR NVL(s.CANTIDAD,0) > 0 )
+            )
+      )
+      
+    page-items-to-submit: 
+    - P84_ID_INVENTARIO
+    - P84_ESTADO
+    - P84_ID_OFICINA
+    - P84_FILTRO_CATEGORIA
+    - P84_FILTRO_MARCA
+    - P84_SOLO_STOCK
+
+  layout: 
+    sequence: 40
+    parent-region: No Parent
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Interactive Report
+    template-options: 
+    - '#DEFAULT#'
+    - t-IRR-region--hideHeader js-addHiddenHeadingRoleDesc
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  read-only: 
+    type: Item != Value
+    item: P84_ESTADO
+    value: BORRADOR
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  configuration: 
+    build-option: Commented Out # 7705349298831252
+
+  attributes: 
+    id: 14773084112921552
+    edit: 
+      enabled: true
+      allowed-operations: 
+      - Add Row
+      - Update Row
+      - Delete Row
+      lost-update-type: Row Values
+      add-row-if-empty: true
+
+    performance: 
+      lazy-loading: false
+
+    appearance: 
+      select-first-row: true
+      fixed-row-height: true
+
+    pagination: 
+      type: Scroll
+      show-total-count: true
+
+    toolbar: 
+      show: true
+      controls: 
+      - Search Column Selection
+      - Search Field
+      - Actions Menu
+      - Reset Button
+
+    enable-users-to: 
+      save-public-report: false
+      flashback: true
+      define-chart-view: true
+      download: true
+
+    download: 
+      formats: 
+      - CSV
+      - HTML
+      - PDF
+      - Excel
+      send-as-email: true
+
+    heading: 
+      fixed-to: Region
+      fixed-report-height: 300
+
+    icon-view: 
+      show: false
+
+    detail-view: 
+      show: false
+
+    saved-reports: 
+    - # ====== Saved Report: Primary Report ========================
+      id: 14773410161921553
+      identification: 
+        name: Primary Report
+        alias: 147735
+
+  columns: 
+  - # ====== Column: APEX$ROW_SELECTOR ===========================
+    id: 14773816964921553
+    identification: 
+      column-name: APEX$ROW_SELECTOR
+      type: Row Selector
+
+    settings: 
+      enable-multi-select: true
+      show-select-all: true
+      hide-control: false
+
+    layout: 
+      sequence: 10
+
+  - # ====== Column: APEX$ROW_ACTION =============================
+    id: 14774379166921553
+    identification: 
+      column-name: APEX$ROW_ACTION
+      type: Actions Menu
+
+    layout: 
+      sequence: 20
+
+  - # ====== Column: ID_INVENTARIO_DETALLE =======================
+    id: 14775345202921554
+    identification: 
+      column-name: ID_INVENTARIO_DETALLE
+      type: Hidden
+
+    settings: 
+      value-protected: true
+
+    layout: 
+      sequence: 30
+
+    accessibility: 
+      value-identifies-row: false
+
+    source: 
+      type: Database Column
+      database-column: ID_INVENTARIO_DETALLE
+      data-type: NUMBER
+      query-only: true
+      primary-key: true
+
+    session-state: 
+      data-type: VARCHAR2
+
+    export-/-printing: 
+      include-in-export-/-print: false
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+
+  - # ====== Column: ID_INVENTARIO ===============================
+    id: 14776325080921554
+    identification: 
+      column-name: ID_INVENTARIO
+      type: Hidden
+
+    settings: 
+      value-protected: true
+
+    layout: 
+      sequence: 40
+
+    accessibility: 
+      value-identifies-row: false
+
+    source: 
+      type: Database Column
+      database-column: ID_INVENTARIO
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      type: Item
+      item: P84_ID_INVENTARIO
+      duplicate-copies-existing-value: true
+
+    session-state: 
+      data-type: VARCHAR2
+
+    export-/-printing: 
+      include-in-export-/-print: false
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+
+  - # ====== Column: ID_PRODUCTO =================================
+    id: 14777338653921555
+    identification: 
+      column-name: ID_PRODUCTO
+      type: Select List
+
+    heading: 
+      heading: Id Producto
+      alignment: start
+
+    layout: 
+      sequence: 50
+      column-alignment: start
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: true
+
+    list-of-values: 
+      type: SQL Query
+      sql-query: |
+        SELECT p.NOMBRE||NVL2(p.MODELO,' - '||p.MODELO,'') d,
+               p.ID_PRODUCTO r
+          FROM PRODUCTOS p
+          LEFT JOIN STOCK_PRODUCTO s
+                 ON s.ID_PRODUCTO = p.ID_PRODUCTO
+                AND s.ID_OFICINA  = :P84_ID_OFICINA
+         WHERE NVL(p.ACTIVO,'S')='S'
+           AND (:P84_FILTRO_CATEGORIA IS NULL OR p.ID_CATEGORIA = :P84_FILTRO_CATEGORIA)
+           AND (:P84_FILTRO_MARCA    IS NULL OR p.ID_MARCA     = :P84_FILTRO_MARCA)
+           AND ( :P84_SOLO_STOCK = 'N' OR NVL(s.CANTIDAD,0) > 0 )
+         ORDER BY 1
+        
+      display-extra-values: true
+      display-null-value: true
+
+    source: 
+      type: Database Column
+      database-column: ID_PRODUCTO
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      performance-impacting-operators: 
+      - Contains
+      - Starts With
+      - Case Insensitive
+      - Regular Expression
+      text-case: Mixed
+      lov-type: Use List of Values
+      exact-match: true
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: STOCK_SISTEMA ===============================
+    id: 14778323101921555
+    identification: 
+      column-name: STOCK_SISTEMA
+      type: Number Field
+
+    heading: 
+      heading: Stock Sistema
+      alignment: end
+
+    settings: 
+      number-alignment: Start
+      virtual-keyboard: Decimal
+
+    layout: 
+      sequence: 60
+      column-alignment: end
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: true
+
+    source: 
+      type: Database Column
+      database-column: STOCK_SISTEMA
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: CANTIDAD_FISICA =============================
+    id: 14779314071921556
+    identification: 
+      column-name: CANTIDAD_FISICA
+      type: Number Field
+
+    heading: 
+      heading: Cantidad Fisica
+      alignment: end
+
+    settings: 
+      number-alignment: Start
+      virtual-keyboard: Decimal
+
+    layout: 
+      sequence: 70
+      column-alignment: end
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: true
+
+    source: 
+      type: Database Column
+      database-column: CANTIDAD_FISICA
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: DIFERENCIA ==================================
+    id: 14780373962921556
+    identification: 
+      column-name: DIFERENCIA
+      type: Number Field
+
+    heading: 
+      heading: Diferencia
+      alignment: end
+
+    settings: 
+      number-alignment: Start
+      virtual-keyboard: Decimal
+
+    layout: 
+      sequence: 80
+      column-alignment: end
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: true
+
+    source: 
+      type: Database Column
+      database-column: DIFERENCIA
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: OBSERVACION =================================
+    id: 14781371941921556
+    identification: 
+      column-name: OBSERVACION
+      type: Textarea
+
+    heading: 
+      heading: Observacion
+      alignment: start
+
+    settings: 
+      resizable: true
+      auto-height: false
+      character-counter: false
+      trim-spaces: Leading and Trailing
+
+    layout: 
+      sequence: 90
+      column-alignment: start
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: false
+      maximum-length: 1000
+
+    source: 
+      type: Database Column
+      database-column: OBSERVACION
+      data-type: VARCHAR2
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    session-state: 
+      data-type: VARCHAR2
+
+    column-filter: 
+      enabled: true
+      performance-impacting-operators: 
+      - Contains
+      - Starts With
+      - Case Insensitive
+      - Regular Expression
+      text-case: Mixed
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: false
+      hide: true
+
+  printing: 
+    page: 
+      size: Letter
+      orientation: Landscape
+      units: Inches
+      width: 11
+      height: 8.5
+      border-width: 0.5
+      border-color: '#666666'
+
+    page-header: 
+      font: Helvetica
+      font-weight: Normal
+      font-size: 12
+      font-color: '#000000'
+      alignment: center
+      page-header-text: Inventario - Detalle
+
+    column-headings: 
+      font: Helvetica
+      font-weight: Bold
+      font-size: 10
+      font-color: '#000000'
+      background-color: '#EEEEEE'
+
+    columns: 
+      font: Helvetica
+      font-weight: Normal
+      font-size: 10
+      font-color: '#000000'
+      background-color: '#FFFFFF'
+
+    page-footer: 
+      font: Helvetica
+      font-weight: Normal
+      font-size: 12
+      font-color: '#000000'
+      alignment: center
+
+page-items: 
+- # ====== Page Item: P84_ID_INVENTARIO ========================
+  id: 9718360791137631
+  identification: 
+    name: P84_ID_INVENTARIO
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 10
+    region: Inventario MD # 14753551749921162
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Inventario MD # 14753551749921162
+    column: ID_INVENTARIO
+    data-type: NUMBER
+    query-only: true
+    primary-key: true
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Request (Memory Only)
+
+  security: 
+    session-state-protection: Checksum Required - Session Level
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P84_NRO_DOCUMENTO ========================
+  id: 9718492202137632
+  identification: 
+    name: P84_NRO_DOCUMENTO
+    type: Display Only
+
+  label: 
+    label: Nro Documento
+    alignment: Left
+
+  settings: 
+    format: Plain Text
+    based-on: Item Value
+    show-line-breaks: true
+    send-on-page-submit: true
+
+  layout: 
+    sequence: 20
+    region: Inventario MD # 14753551749921162
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Inventario MD # 14753551749921162
+    column: NRO_DOCUMENTO
+    data-type: VARCHAR2
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Request (Memory Only)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P84_ID_OFICINA ===========================
+  id: 9718580806137633
+  identification: 
+    name: P84_ID_OFICINA
+    type: Select List
+
+  label: 
+    label: Oficina
+    alignment: Left
+
+  settings: 
+    page-action-on-selection: None
+
+  multiple-values: 
+    type: No
+
+  layout: 
+    sequence: 30
+    region: Inventario MD # 14753551749921162
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    height: 1
+
+  validation: 
+    value-required: true
+
+  list-of-values: 
+    type: Shared Component
+    list-of-values: OFICINAS.DESCRIPCION # 8245359747955872
+    display-extra-values: false
+    display-null-value: false
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Inventario MD # 14753551749921162
+    column: ID_OFICINA
+    data-type: NUMBER
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P84_FECHA_INVENTARIO =====================
+  id: 9718626736137634
+  identification: 
+    name: P84_FECHA_INVENTARIO
+    type: Date Picker
+
+  label: 
+    label: Fecha Inventario
+    alignment: Left
+
+  settings: 
+    show-time: false
+    display-as: Popup
+    minimum-date: None
+    maximum-date: None
+    multiple-months: No
+    use-defaults: true
+
+  layout: 
+    sequence: 40
+    region: Inventario MD # 14753551749921162
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 30
+
+  validation: 
+    value-required: true
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Inventario MD # 14753551749921162
+    column: FECHA_INVENTARIO
+    data-type: DATE
+    query-only: false
+    primary-key: false
+
+  default: 
+    type: SQL Query (return single value)
+    sql-query-(return-single-value): |
+      SELECT CURRENT_TIMESTAMP AT TIME ZONE 'America/Asuncion' AS fecha_paraguay
+      FROM dual;
+      
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P84_ESTADO ===============================
+  id: 9718753732137635
+  identification: 
+    name: P84_ESTADO
+    type: Select List
+
+  label: 
+    label: Estado
+    alignment: Left
+
+  settings: 
+    page-action-on-selection: None
+
+  multiple-values: 
+    type: No
+
+  layout: 
+    sequence: 50
+    region: Inventario MD # 14753551749921162
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    height: 1
+
+  validation: 
+    value-required: true
+
+  list-of-values: 
+    type: Static Values
+    static-values: 'STATIC:BORRADOR;BORRADOR,ENVIADO;ENVIADO,APROBADO;APROBADO,POSTEADO;POSTEADO,RECHAZADO;RECHAZADO'
+    display-extra-values: true
+    display-null-value: true
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Inventario MD # 14753551749921162
+    column: ESTADO
+    data-type: VARCHAR2
+    query-only: false
+    primary-key: false
+
+  default: 
+    type: Static
+    static-value: BORRADOR
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  server-side-condition: 
+    type: Item is NULL
+    item: P84_ID_INVENTARIO
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P84_OBSERVACION ==========================
+  id: 9718836633137636
+  identification: 
+    name: P84_OBSERVACION
+    type: Textarea
+
+  label: 
+    label: Observacion
+    alignment: Left
+
+  settings: 
+    resizable: true
+    auto-height: false
+    character-counter: false
+    trim-spaces: Leading and Trailing
+
+  layout: 
+    sequence: 170
+    region: Inventario MD # 14753551749921162
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 30
+    height: 5
+
+  validation: 
+    value-required: false
+    maximum-length: 4000
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Inventario MD # 14753551749921162
+    column: OBSERVACION
+    data-type: VARCHAR2
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P84_USUARIO_CREADOR ======================
+  id: 9718914580137637
+  identification: 
+    name: P84_USUARIO_CREADOR
+    type: Text Field
+
+  label: 
+    label: Usuario Creador
+    alignment: Left
+
+  settings: 
+    subtype: Text
+    trim-spaces: Leading and Trailing
+    text-case: NO CHANGE
+    submit-when-enter-pressed: false
+    disabled: false
+
+  layout: 
+    sequence: 70
+    region: Inventario MD # 14753551749921162
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 30
+
+  validation: 
+    value-required: true
+    maximum-length: 100
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Inventario MD # 14753551749921162
+    column: USUARIO_CREADOR
+    data-type: VARCHAR2
+    query-only: true
+    primary-key: false
+
+  default: 
+    type: Static
+    static-value: '&APP_USER.'
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P84_FECHA_CREACION =======================
+  id: 9719015350137638
+  identification: 
+    name: P84_FECHA_CREACION
+    type: Date Picker
+
+  label: 
+    label: Fecha Creacion
+    alignment: Left
+
+  settings: 
+    show-time: false
+    display-as: Popup
+    minimum-date: None
+    maximum-date: None
+    multiple-months: No
+    use-defaults: true
+
+  layout: 
+    sequence: 80
+    region: Inventario MD # 14753551749921162
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 30
+
+  validation: 
+    value-required: true
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Inventario MD # 14753551749921162
+    column: FECHA_CREACION
+    data-type: DATE
+    query-only: true
+    primary-key: false
+
+  default: 
+    type: SQL Query (return single value)
+    sql-query-(return-single-value): |
+      SELECT CURRENT_TIMESTAMP AT TIME ZONE 'America/Asuncion' AS fecha_paraguay
+      FROM dual;
+      
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P84_USUARIO_ENVIO ========================
+  id: 9719140453137639
+  identification: 
+    name: P84_USUARIO_ENVIO
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 90
+    region: Inventario MD # 14753551749921162
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Inventario MD # 14753551749921162
+    column: USUARIO_ENVIO
+    data-type: VARCHAR2
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Request (Memory Only)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P84_FECHA_ENVIO ==========================
+  id: 9719269117137640
+  identification: 
+    name: P84_FECHA_ENVIO
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 100
+    region: Inventario MD # 14753551749921162
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Inventario MD # 14753551749921162
+    column: FECHA_ENVIO
+    data-type: DATE
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Request (Memory Only)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P84_USUARIO_APROBACION ===================
+  id: 9719399621137641
+  identification: 
+    name: P84_USUARIO_APROBACION
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 110
+    region: Inventario MD # 14753551749921162
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Inventario MD # 14753551749921162
+    column: USUARIO_APROBACION
+    data-type: VARCHAR2
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Request (Memory Only)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P84_FECHA_APROBACION =====================
+  id: 9719472969137642
+  identification: 
+    name: P84_FECHA_APROBACION
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 120
+    region: Inventario MD # 14753551749921162
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Inventario MD # 14753551749921162
+    column: FECHA_APROBACION
+    data-type: DATE
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Request (Memory Only)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P84_USUARIO_POSTEO =======================
+  id: 9719570369137643
+  identification: 
+    name: P84_USUARIO_POSTEO
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 130
+    region: Inventario MD # 14753551749921162
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Inventario MD # 14753551749921162
+    column: USUARIO_POSTEO
+    data-type: VARCHAR2
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Request (Memory Only)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P84_FECHA_POSTEO =========================
+  id: 9719658983137644
+  identification: 
+    name: P84_FECHA_POSTEO
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 140
+    region: Inventario MD # 14753551749921162
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Inventario MD # 14753551749921162
+    column: FECHA_POSTEO
+    data-type: DATE
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Request (Memory Only)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P84_USUARIO_RECHAZO ======================
+  id: 9719784359137645
+  identification: 
+    name: P84_USUARIO_RECHAZO
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 150
+    region: Inventario MD # 14753551749921162
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Inventario MD # 14753551749921162
+    column: USUARIO_RECHAZO
+    data-type: VARCHAR2
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Request (Memory Only)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P84_FECHA_RECHAZO ========================
+  id: 9719891441137646
+  identification: 
+    name: P84_FECHA_RECHAZO
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 160
+    region: Inventario MD # 14753551749921162
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Inventario MD # 14753551749921162
+    column: FECHA_RECHAZO
+    data-type: DATE
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Request (Memory Only)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P84_FILTRO_CATEGORIA =====================
+  id: 9720182922137649
+  identification: 
+    name: P84_FILTRO_CATEGORIA
+    type: Select List
+
+  label: 
+    label: Filtro Categoria
+    alignment: Left
+
+  settings: 
+    page-action-on-selection: None
+
+  multiple-values: 
+    type: No
+
+  layout: 
+    sequence: 180
+    region: Inventario MD # 14753551749921162
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    height: 1
+
+  validation: 
+    value-required: false
+
+  list-of-values: 
+    type: SQL Query
+    sql-query: |
+      SELECT NOMBRE d, ID_CATEGORIA r
+        FROM CATEGORIAS_PRODUCTOS
+       ORDER BY 1
+      
+    display-extra-values: true
+    display-null-value: true
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  session-state: 
+    storage: Per Session (Persistent)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P84_FILTRO_MARCA =========================
+  id: 9720283716137650
+  identification: 
+    name: P84_FILTRO_MARCA
+    type: Select List
+
+  label: 
+    label: Filtro Marca
+    alignment: Left
+
+  settings: 
+    page-action-on-selection: None
+
+  multiple-values: 
+    type: No
+
+  layout: 
+    sequence: 190
+    region: Inventario MD # 14753551749921162
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    height: 1
+
+  validation: 
+    value-required: false
+
+  list-of-values: 
+    type: SQL Query
+    sql-query: |
+      SELECT NOMBRE d, ID_MARCA r
+        FROM MARCAS
+       ORDER BY 1
+      
+    display-extra-values: true
+    display-null-value: true
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  session-state: 
+    storage: Per Session (Persistent)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P84_SOLO_STOCK ===========================
+  id: 14817675891450401
+  identification: 
+    name: P84_SOLO_STOCK
+    type: Switch
+
+  label: 
+    label: Solo Stock
+    alignment: Left
+
+  settings: 
+    use-defaults: true
+
+  layout: 
+    sequence: 200
+    region: Inventario MD # 14753551749921162
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+
+  validation: 
+    value-required: false
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Static Value
+    static-value: S
+    used: Only when current value in session state is null
+
+  session-state: 
+    storage: Per Session (Persistent)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+buttons: 
+- # ====== Button: Cancel ======================================
+  id: 9718167658137629
+  identification: 
+    button-name: Cancel
+    label: Cancelar
+
+  layout: 
+    sequence: 10
+    region: Buttons # 14752711635921158
+    slot: CLOSE
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text
+    hot: false
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Submit Page
+    execute-validations: true
+    show-processing: false
+    warn-on-unsaved-changes: Do Not Check
+
+- # ====== Button: Inicair_Inventario ==========================
+  id: 13349738830104015
+  identification: 
+    button-name: Inicair_Inventario
+    label: Iniciar Inventario
+
+  layout: 
+    sequence: 220
+    region: Buttons # 14752711635921158
+    slot: NEXT
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text
+    hot: true
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Submit Page
+    execute-validations: true
+    show-processing: false
+    warn-on-unsaved-changes: Do Not Check
+    database-action: SQL INSERT action
+
+  server-side-condition: 
+    type: Item is NULL
+    item: P84_ID_INVENTARIO
+
+- # ====== Button: SAVE ========================================
+  id: 14753170785921159
+  identification: 
+    button-name: SAVE
+    label: Guardar
+
+  layout: 
+    sequence: 10
+    region: Buttons # 14752711635921158
+    slot: EDIT
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text
+    hot: true
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Submit Page
+    execute-validations: true
+    show-processing: false
+    warn-on-unsaved-changes: Do Not Check
+
+  configuration: 
+    build-option: Commented Out # 7705349298831252
+
+- # ====== Button: PRECARGAR ===================================
+  id: 14818371867450408
+  identification: 
+    button-name: PRECARGAR
+    label: Precargar
+
+  layout: 
+    sequence: 210
+    region: Inventario MD # 14753551749921162
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    alignment: Left center
+
+  appearance: 
+    button-template: Text
+    hot: true
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Defined by Dynamic Action
+    execute-validations: true
+
+  confirmation: 
+    message: Desea precargar los registros?
+    style: Default
+
+  server-side-condition: 
+    type: Item = Value
+    item: P84_ESTADO
+    value: BORRADOR
+
+- # ====== Button: INICIAR =====================================
+  id: 14819103513450416
+  identification: 
+    button-name: INICIAR
+    label: Iniciar inventario
+
+  layout: 
+    sequence: 10
+    region: Buttons # 14752711635921158
+    slot: CREATE
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text with Icon
+    hot: true
+    template-options: 
+    - '#DEFAULT#'
+    - t-Button--success
+    - t-Button--iconLeft
+
+  behavior: 
+    action: Submit Page
+    execute-validations: true
+    show-processing: false
+    warn-on-unsaved-changes: Do Not Check
+
+  configuration: 
+    build-option: Commented Out # 7705349298831252
+
+dynamic-actions: 
+- # ====== Dynamic Action: REFRESCAR IG ========================
+  id: 14817765118450402
+  identification: 
+    name: REFRESCAR IG
+
+  execution: 
+    sequence: 10
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Change
+    selection-type: Item(s)
+    item(s): 
+    - P84_FILTRO_CATEGORIA
+
+  actions: 
+  - # ====== Action: REFRESH =====================================
+    id: 14817834805450403
+    identification: 
+      name: REFRESH
+      action: Refresh
+
+    settings: 
+      maintain-pagination: false
+
+    affected-elements: 
+      selection-type: Region
+      region: Inventario - Detalle # 14772647860921552
+
+    execution: 
+      sequence: 10
+      event: REFRESCAR IG # 14817765118450402
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+- # ====== Dynamic Action: REFRESCAR IG M ======================
+  id: 14817920138450404
+  identification: 
+    name: REFRESCAR IG M
+
+  execution: 
+    sequence: 20
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Change
+    selection-type: Item(s)
+    item(s): 
+    - P84_FILTRO_MARCA
+
+  actions: 
+  - # ====== Action: REFRESH =====================================
+    id: 14818017005450405
+    identification: 
+      name: REFRESH
+      action: Refresh
+
+    settings: 
+      maintain-pagination: false
+
+    affected-elements: 
+      selection-type: Region
+      region: Inventario - Detalle # 14772647860921552
+
+    execution: 
+      sequence: 10
+      event: REFRESCAR IG M # 14817920138450404
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+- # ====== Dynamic Action: REGRESCAR IG ========================
+  id: 14818188455450406
+  identification: 
+    name: REGRESCAR IG
+
+  execution: 
+    sequence: 30
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Change
+    selection-type: Item(s)
+    item(s): 
+    - P84_SOLO_STOCK
+
+  actions: 
+  - # ====== Action: REFRESH =====================================
+    id: 14818285787450407
+    identification: 
+      name: REFRESH
+      action: Refresh
+
+    settings: 
+      maintain-pagination: false
+
+    affected-elements: 
+      selection-type: Region
+      region: Inventario - Detalle # 14772647860921552
+
+    execution: 
+      sequence: 10
+      event: REGRESCAR IG # 14818188455450406
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+- # ====== Dynamic Action: PRECARGAR ===========================
+  id: 14818430227450409
+  identification: 
+    name: PRECARGAR
+
+  execution: 
+    sequence: 40
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Click
+    selection-type: Button
+    button: PRECARGAR # 14818371867450408
+
+  actions: 
+  - # ====== Action: Inserta en coleccion ========================
+    id: 13351385864104031
+    identification: 
+      name: Inserta en coleccion
+      action: Execute Server-side Code
+
+    settings: 
+      language: PE.PROPERTY.SOURCE_SNIPPET_LANG.LOV.PLSQL.D
+      pl/sql-code: |
+        BEGIN
+          apex_collection.create_or_truncate_collection('COL_INV_DETALLE');
+        
+          FOR r IN (
+            SELECT p.id_producto,
+                   p.nombre,
+                   NVL(s.cantidad,0) AS stock
+              FROM productos p
+              LEFT JOIN stock_producto s
+                     ON s.id_producto = p.id_producto
+                    AND s.id_oficina = :P84_ID_OFICINA
+             WHERE NVL(p.activo,'S') = 'S'
+               AND (:P84_FILTRO_CATEGORIA IS NULL OR p.id_categoria = :P84_FILTRO_CATEGORIA)
+               AND (:P84_FILTRO_MARCA    IS NULL OR p.id_marca     = :P84_FILTRO_MARCA)
+               AND (:P84_SOLO_STOCK = 'N' OR NVL(s.cantidad,0) > 0)
+          ) LOOP
+            apex_collection.add_member(
+              p_collection_name => 'COL_INV_DETALLE',
+              p_n001 => r.id_producto,
+              p_c001 => r.nombre,
+              p_n002 => r.stock,
+              p_n003 => 0,      -- cantidad física
+              p_c002 => NULL,   -- observación
+              p_c008 => 'C'     -- status: C = creado
+            );
+          END LOOP;
+        END;
+        
+      items-to-submit: 
+      - P84_FILTRO_CATEGORIA
+      - P84_FILTRO_MARCA
+      - P84_SOLO_STOCK
+      - P84_ID_OFICINA
+
+    execution: 
+      sequence: 20
+      event: PRECARGAR # 14818430227450409
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+      stop-execution-on-error: true
+      wait-for-result: true
+
+  - # ====== Action: Insert ======================================
+    id: 14818580978450410
+    identification: 
+      name: Insert
+      action: Execute Server-side Code
+
+    settings: 
+      language: PE.PROPERTY.SOURCE_SNIPPET_LANG.LOV.PLSQL.D
+      pl/sql-code: |
+        BEGIN
+          INSERT INTO INVENTARIO_DETALLE (ID_INVENTARIO, ID_PRODUCTO, CANTIDAD_FISICA, OBSERVACION)
+          SELECT :P84_ID_INVENTARIO,
+                 p.ID_PRODUCTO,
+                 0,
+                 NULL
+            FROM PRODUCTOS p
+            LEFT JOIN STOCK_PRODUCTO s
+                   ON s.ID_PRODUCTO = p.ID_PRODUCTO
+                  AND s.ID_OFICINA  = :P84_ID_OFICINA
+            LEFT JOIN INVENTARIO_DETALLE d
+                   ON d.ID_INVENTARIO = :P84_ID_INVENTARIO
+                  AND d.ID_PRODUCTO   = p.ID_PRODUCTO
+           WHERE d.ID_INVENTARIO_DETALLE IS NULL
+             AND NVL(p.ACTIVO,'S') = 'S'
+             AND (:P84_FILTRO_CATEGORIA IS NULL OR p.ID_CATEGORIA = :P84_FILTRO_CATEGORIA)
+             AND (:P84_FILTRO_MARCA    IS NULL OR p.ID_MARCA     = :P84_FILTRO_MARCA)
+             AND ( :P84_SOLO_STOCK = 'N' OR NVL(s.CANTIDAD,0) > 0 );
+        
+          -- Opcional, pero útil en DA/AJAX para que el IG vea de inmediato los inserts:
+          COMMIT;
+        
+          APEX_APPLICATION.G_PRINT_SUCCESS_MESSAGE := 'Líneas precargadas según filtros.';
+          EXCEPTION
+            WHEN OTHERS THEN
+                APEX_ERROR.ADD_ERROR (
+                    p_message => 'Error al precargar los productos: ' || SQLERRM,
+                    p_display_location => APEX_ERROR.C_ON_ERROR_PAGE
+                );
+        END;
+      items-to-submit: 
+      - P84_ID_INVENTARIO
+      - ' P84_ID_OFICINA'
+      - ' P84_FILTRO_CATEGORIA'
+      - ' P84_FILTRO_MARCA'
+      - ' P84_SOLO_STOCK'
+
+    execution: 
+      sequence: 10
+      event: PRECARGAR # 14818430227450409
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+      stop-execution-on-error: true
+      wait-for-result: true
+
+    configuration: 
+      build-option: Commented Out # 7705349298831252
+
+  - # ====== Action: refresh =====================================
+    id: 14818669037450411
+    identification: 
+      name: refresh
+      action: Refresh
+
+    settings: 
+      maintain-pagination: false
+
+    affected-elements: 
+      selection-type: Region
+      region: Inventario DE # 13349996967104017
+
+    execution: 
+      sequence: 30
+      event: PRECARGAR # 14818430227450409
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+- # ====== Dynamic Action: New =================================
+  id: 14818777869450412
+  identification: 
+    name: New
+
+  execution: 
+    sequence: 50
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Change
+    selection-type: Item(s)
+    item(s): 
+    - P84_ESTADO
+
+  actions: 
+  - # ====== Action: Refresh =====================================
+    id: 14818830218450413
+    identification: 
+      action: Refresh
+
+    settings: 
+      maintain-pagination: false
+
+    affected-elements: 
+      selection-type: Region
+      region: Inventario - Detalle # 14772647860921552
+
+    execution: 
+      sequence: 10
+      event: New # 14818777869450412
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+processes: 
+- # ====== Process: Initialize form Inventario MD ==============
+  id: 9718299941137630
+  identification: 
+    name: Initialize form Inventario MD
+    type: Form - Initialization
+    execution-chain: None
+    form-region: Inventario MD # 14753551749921162
+
+  execution: 
+    sequence: 20
+    point: Before Header
+    run-process: Once Per Page Visit (default)
+
+- # ====== Process: Close ======================================
+  id: 13349640609104014
+  identification: 
+    name: Close
+    type: Close Dialog
+    execution-chain: None
+
+  settings: 
+    show-success-messages: true
+
+  execution: 
+    sequence: 60
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+
+- # ====== Process: Process form Inventario ====================
+  id: 13349834081104016
+  identification: 
+    name: Process form Inventario
+    type: Form - Automatic Row Processing (DML)
+    execution-chain: None
+    form-region: Inventario MD # 14753551749921162
+
+  settings: 
+    target-type: Region Source
+    prevent-lost-updates: true
+    lock-row: Yes
+    return-primary-key(s)-after-insert: true
+
+  execution: 
+    sequence: 50
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  success-message: 
+    success-message: AA
+
+  error: 
+    display-location: Inline in Notification
+
+  server-side-condition: 
+    when-button-pressed: Inicair_Inventario # 13349738830104015
+
+  configuration: 
+    build-option: Commented Out # 7705349298831252
+
+- # ====== Process: Inventario DE - Save Interactive Grid Data =
+  id: 13350915027104027
+  identification: 
+    name: Inventario DE - Save Interactive Grid Data
+    type: Interactive Grid - Automatic Row Processing (DML)
+    execution-chain: None
+    editable-region: Inventario DE # 13349996967104017
+
+  settings: 
+    target-type: PL/SQL Code
+    pl/sql-code-to-insert/update/delete: |
+      DECLARE
+        l_rec apex_collections%ROWTYPE;  -- tipo basado en la tabla de vistas
+      BEGIN
+        FOR l_rec IN (SELECT * FROM apex_collections
+                        WHERE collection_name = 'COL_INV_DETALLE') LOOP
+      
+          -- Usás los campos n001, c001, n002, etc. según lo definiste
+          CASE l_rec.c008  -- supongamos que guardaste el status aquí: 'C','U','D'
+            WHEN 'C' THEN
+              INSERT INTO inventario_detalle (
+                id_inventario,
+                id_producto,
+                stock_sistema,
+                cantidad_fisica,
+                observacion,
+                id_sector,
+                id_ubicacion
+              )
+              VALUES (
+                :P84_ID_INVENTARIO,
+                l_rec.n001,
+                l_rec.n002,
+                l_rec.n003,
+                l_rec.c002,
+                l_rec.n004,
+                l_rec.n005
+              );
+      
+            WHEN 'U' THEN
+              UPDATE inventario_detalle
+                   SET cantidad_fisica = l_rec.n003,
+                     observacion     = l_rec.c002,
+                     id_sector       = l_rec.n004,
+                     id_ubicacion    = l_rec.n005
+               WHERE id_inventario = :P84_ID_INVENTARIO
+                 AND id_producto   = l_rec.n001;
+      
+            WHEN 'D' THEN
+              DELETE FROM inventario_detalle
+               WHERE id_inventario = :P84_ID_INVENTARIO
+                 AND id_producto   = l_rec.n001;
+          END CASE;
+          INSERT INTO inventario_detalle (
+                id_inventario,
+                id_producto,
+                stock_sistema,
+                cantidad_fisica,
+                observacion,
+                id_sector,
+                id_ubicacion
+              )
+              VALUES (
+                :P84_ID_INVENTARIO,
+                l_rec.n001,
+                l_rec.n002,
+                l_rec.n003,
+                l_rec.c002,
+                l_rec.n004,
+                l_rec.n005
+              );
+        END LOOP;
+      
+        COMMIT;
+      END;
+      
+    prevent-lost-updates: true
+    lock-row: Yes
+
+  execution: 
+    sequence: 40
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  success-message: 
+    success-message: Guardando Detalle
+
+  error: 
+    error-message: ERR
+    display-location: Inline in Notification
+
+  server-side-condition: 
+    when-button-pressed: Inicair_Inventario # 13349738830104015
+    execution-scope: For Created and Modified Rows
+
+  configuration: 
+    build-option: Commented Out # 7705349298831252
+
+- # ====== Process: Crear Coleccion ============================
+  id: 13351214969104030
+  identification: 
+    name: Crear Coleccion
+    type: Execute Code
+    execution-chain: None
+
+  source: 
+    location: Local Database
+    language: PL/SQL
+    pl/sql-code: |
+      BEGIN
+        IF NOT apex_collection.collection_exists('COL_INV_DETALLE') THEN
+          apex_collection.create_collection('COL_INV_DETALLE');
+        ELSE
+          apex_collection.truncate_collection('COL_INV_DETALLE');
+        END IF;
+      END;
+      
+
+  execution: 
+    sequence: 30
+    point: Before Header
+    run-process: Once Per Page Visit (default)
+
+- # ====== Process: Inserta Detalle ============================
+  id: 13351970876104037
+  identification: 
+    name: Inserta Detalle
+    type: Execute Code
+    execution-chain: None
+
+  source: 
+    location: Local Database
+    language: PL/SQL
+    pl/sql-code: |
+      DECLARE
+        l_rec apex_collections%ROWTYPE;
+      BEGIN
+        FOR l_rec IN (SELECT * FROM apex_collections
+                       WHERE collection_name = 'COL_INV_DETALLE') LOOP
+      
+          CASE l_rec.c008
+            WHEN 'C' THEN
+              INSERT INTO inventario_detalle (
+                id_inventario,
+                id_producto,
+                stock_sistema,
+                cantidad_fisica,
+                observacion
+              )
+              VALUES (
+                :P84_ID_INVENTARIO,
+                l_rec.n001,
+                l_rec.n002,
+                l_rec.n003,
+                l_rec.c002
+              );
+      
+            WHEN 'U' THEN
+              UPDATE inventario_detalle
+                 SET cantidad_fisica = l_rec.n003,
+                     observacion     = l_rec.c002
+               WHERE id_inventario = :P84_ID_INVENTARIO
+                 AND id_producto   = l_rec.n001;
+      
+            WHEN 'D' THEN
+              DELETE FROM inventario_detalle
+               WHERE id_inventario = :P84_ID_INVENTARIO
+                 AND id_producto   = l_rec.n001;
+          END CASE;
+      
+        END LOOP;
+        COMMIT;
+      END;
+      
+
+  execution: 
+    sequence: 20
+    point: After Submit
+    run-process: Once Per Page Visit (default)
+
+  success-message: 
+    success-message: Inventario Generado
+
+  error: 
+    display-location: Inline in Notification
+
+- # ====== Process: Cabecera ===================================
+  id: 13352145402104039
+  identification: 
+    name: Cabecera
+    type: Form - Automatic Row Processing (DML)
+    execution-chain: None
+    form-region: Inventario MD # 14753551749921162
+
+  settings: 
+    target-type: Region Source
+    prevent-lost-updates: true
+    lock-row: Yes
+    return-primary-key(s)-after-insert: true
+
+  execution: 
+    sequence: 10
+    point: After Submit
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+
+- # ====== Process: Inventario - Detalle - Save Interactive Grid
+  id: 14782333294921557
+  identification: 
+    name: Inventario - Detalle - Save Interactive Grid Data
+    type: Interactive Grid - Automatic Row Processing (DML)
+    execution-chain: None
+    editable-region: Inventario - Detalle # 14772647860921552
+
+  settings: 
+    target-type: PL/SQL Code
+    pl/sql-code-to-insert/update/delete: |
+      begin
+          case:APEX$ROW_STATUS
+              WHEN 'C' THEN
+                  INSERT INTO DETALLE_ORDEN(ID_ORDEN,ID_PRODUCTO,CANTIDAD,PRECIO_UNITARIO,TOTAL)
+                  VALUES (:P54_ID_ORDEN,:ID_PRODUCTO,:CANTIDAD,:PRECIO_UNITARIO,:TOTAL);
+              WHEN 'U' THEN
+                  UPDATE DETALLE_ORDEN
+                  SET ID_PRODUCTO = :ID_PRODUCTO,
+                      CANTIDAD = :CANTIDAD,
+                      PRECIO_UNITARIO = :PRECIO_UNITARIO,
+                      TOTAL = :TOTAL
+                  WHERE ID_ORDEN = :P54_ID_ORDEN;
+              WHEN 'D' THEN
+                  DELETE DETALLE_ORDEN WHERE ID_ORDEN = :ID_ORDEN;
+          END CASE;
+      END;
+    prevent-lost-updates: true
+    lock-row: Yes
+
+  execution: 
+    sequence: 20
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+
+  server-side-condition: 
+    when-button-pressed: SAVE # 14753170785921159
+    execution-scope: For Created and Modified Rows
+
+  configuration: 
+    build-option: Commented Out # 7705349298831252
+

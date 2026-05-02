@@ -1,0 +1,2154 @@
+---
+# ====== Page: Proceso de Compras ============================
+id: 70
+identification: 
+  name: Proceso de Compras
+  alias: ORDEN-DE-COMPRAS
+  title: Proceso de Compras
+
+appearance: 
+  page-mode: Modal Dialog
+  dialog-template: Theme Default
+  template-options: 
+  - '#DEFAULT#'
+  - ui-dialog--stretch
+
+dialog: 
+  chained: false
+  resizable: true
+
+navigation-menu: 
+  override-user-interface-level: false
+
+navigation: 
+  cursor-focus: Do not focus cursor
+  warn-on-unsaved-changes: true
+
+javascript: 
+  function-and-global-variable-declaration: |
+    function recalculaImporte() {
+        var model = apex.region("Detalle_Compra").widget().interactiveGrid("getCurrentView").model;
+        var col_gl_amount = model.getFieldKey("TOTAL_DETALLE");
+        var n_total = 0;
+    
+        model.forEach(function(igrow) {
+            var raw_value = igrow[col_gl_amount];
+    
+            if (raw_value !== null && raw_value !== undefined) {
+                // Elimina símbolo de moneda y formato
+                var clean_value = raw_value
+                    .toString()
+                    .replace(/[^0-9,.-]/g, '')
+                    .replace(/\./g, '')
+                    .replace(',', '.');
+    
+                var n_dist_amount = parseFloat(clean_value);
+    
+                if (!isNaN(n_dist_amount)) {
+                    n_total += n_dist_amount;
+                    console.log("N_DIST_AMOUNT: " + n_dist_amount);
+                }
+            }
+        });
+    
+        console.log("n_total: " + n_total);
+        apex.item('P70_TOTAL_COMPROBANTE').setValue(Math.round(n_total));
+    
+        //apex.item('P54_TOTAL').setValue(n_total.toFixed(2));
+    }
+    function applyMask(input) {
+        // Solo números
+        let value = input.value.replace(/\D/g, '');
+    
+        // Limitar a 13 dígitos máximo (3+3+7)
+        value = value.substring(0, 13);
+    
+        // Aplicar máscara 000-000-0000000
+        if (value.length > 6) {
+            value = value.substring(0, 3) + '-' + value.substring(3, 6) + '-' + value.substring(6);
+        } else if (value.length > 3) {
+            value = value.substring(0, 3) + '-' + value.substring(3);
+        }
+    
+        input.value = value;
+    }
+    
+
+css: 
+  inline: |
+    .campo-grande-negrita input {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+security: 
+  authentication: Page Requires Authentication
+  deep-linking: Application Default
+  page-access-protection: Arguments Must Have Checksum
+  form-auto-complete: Off
+  browser-cache: Application Default
+
+session-management: 
+  rejoin-sessions: Application Default
+
+advanced: 
+  enable-duplicate-page-submissions: Yes - Enable page to be re-posted
+  reload-on-submit: Only for Success
+
+server-cache: 
+  caching: Disabled
+
+regions: 
+- # ====== Region: Proceso de Compras ==========================
+  id: 12817469420386513
+  identification: 
+    name: Proceso de Compras
+    type: Form
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: COMPROBANTES_PROVEEDOR
+    include-rowid-column: false
+
+  layout: 
+    sequence: 10
+    parent-region: No Parent
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Blank with Attributes
+    template-options: 
+    - '#DEFAULT#'
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    edit: 
+      enabled: true
+      allowed-operations: 
+      - Add Row
+      - Update Row
+      - Delete Row
+      lost-update-type: Row Values
+
+- # ====== Region: Buttons =====================================
+  id: 12828626186386518
+  identification: 
+    name: Buttons
+    type: Static Content
+
+  layout: 
+    sequence: 20
+    parent-region: No Parent
+    slot: REGION_POSITION_03
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Buttons Container
+    template-options: 
+    - '#DEFAULT#'
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    settings: 
+      output-as: Text (escape special characters)
+      show-line-breaks: true
+
+- # ====== Region: Cabecera ====================================
+  id: 12856286435396822
+  identification: 
+    name: Cabecera
+    type: Static Content
+
+  layout: 
+    sequence: 160
+    parent-region: Proceso de Compras # 12817469420386513
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Standard
+    template-options: 
+    - '#DEFAULT#'
+    - t-Region--scrollBody
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    settings: 
+      output-as: HTML
+      expand-shortcuts: false
+
+- # ====== Region: Detalle =====================================
+  id: 12856338085396823
+  identification: 
+    name: Detalle
+    type: Static Content
+
+  layout: 
+    sequence: 170
+    parent-region: Proceso de Compras # 12817469420386513
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Standard
+    template-options: 
+    - '#DEFAULT#'
+    - t-Region--scrollBody
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    settings: 
+      output-as: HTML
+      expand-shortcuts: false
+
+- # ====== Region: Totalizador =================================
+  id: 12856464709396824
+  identification: 
+    name: Totalizador
+    type: Static Content
+
+  layout: 
+    sequence: 180
+    parent-region: Proceso de Compras # 12817469420386513
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Standard
+    template-options: 
+    - '#DEFAULT#'
+    - t-Region--scrollBody
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    settings: 
+      output-as: HTML
+      expand-shortcuts: false
+
+- # ====== Region: Detalle_Compra ==============================
+  id: 13113560524342804
+  identification: 
+    name: Detalle_Compra
+    type: Interactive Grid
+
+  source: 
+    location: Local Database
+    type: SQL Query
+    sql-query: |
+      select DET.ID_ORDEN_COMPRA,DET.ID_PRODUCTO, PR.NOMBRE, DET.CANTIDAD, DET.PRECIO_UNITARIO,DET.TOTAL_DETALLE 
+      from ORDENES_COMPRA CAB, DETALLE_ORDEN_COMPRA DET, PRODUCTOS PR
+      WHERE CAB.ID_ORDEN_COMPRA = DET.ID_ORDEN_COMPRA
+      AND PR.ID_PRODUCTO = DET.ID_PRODUCTO
+      AND DET.ID_ORDEN_COMPRA = :P70_ID_ORDEN_COMPRA;
+    page-items-to-submit: 
+    - P70_ID_ORDEN_COMPRA
+
+  layout: 
+    sequence: 20
+    parent-region: Detalle # 12856338085396823
+    slot: SUB_REGIONS
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Interactive Report
+    template-options: 
+    - '#DEFAULT#'
+    - t-IRR-region--hideHeader js-addHiddenHeadingRoleDesc
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    static-id: Detalle_Compra
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    id: 13113682548342805
+    edit: 
+      enabled: true
+      allowed-operations: 
+      - Add Row
+      - Update Row
+      - Delete Row
+      lost-update-type: Row Values
+      add-row-if-empty: true
+
+    performance: 
+      lazy-loading: false
+
+    appearance: 
+      select-first-row: true
+      fixed-row-height: true
+
+    pagination: 
+      type: Scroll
+      show-total-count: true
+
+    toolbar: 
+      show: true
+      controls: 
+      - Search Column Selection
+      - Search Field
+      - Actions Menu
+      - Reset Button
+      - Save Button
+
+    enable-users-to: 
+      save-public-report: false
+      flashback: true
+      define-chart-view: true
+      download: true
+
+    download: 
+      formats: 
+      - CSV
+      - HTML
+      - Excel
+      - PDF
+      send-as-email: true
+
+    heading: 
+      fixed-to: Page
+
+    icon-view: 
+      show: false
+
+    detail-view: 
+      show: false
+
+    saved-reports: 
+    - # ====== Saved Report: Primary Report ========================
+      id: 13129054377331468
+      identification: 
+        name: Primary Report
+        alias: 131291
+
+  columns: 
+  - # ====== Column: APEX$ROW_SELECTOR ===========================
+    id: 13113769565342806
+    identification: 
+      column-name: APEX$ROW_SELECTOR
+      type: Row Selector
+
+    settings: 
+      enable-multi-select: true
+      show-select-all: true
+      hide-control: false
+
+    layout: 
+      sequence: 10
+
+  - # ====== Column: APEX$ROW_ACTION =============================
+    id: 13113803778342807
+    identification: 
+      column-name: APEX$ROW_ACTION
+      type: Actions Menu
+
+    layout: 
+      sequence: 20
+
+  - # ====== Column: ID_PRODUCTO =================================
+    id: 13113906353342808
+    identification: 
+      column-name: ID_PRODUCTO
+      type: Number Field
+
+    heading: 
+      heading: Producto
+      alignment: center
+
+    settings: 
+      number-alignment: Start
+      virtual-keyboard: Decimal
+
+    layout: 
+      sequence: 30
+      column-alignment: center
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: true
+
+    source: 
+      type: Database Column
+      database-column: ID_PRODUCTO
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: NOMBRE ======================================
+    id: 13114074093342809
+    identification: 
+      column-name: NOMBRE
+      type: Text Field
+
+    heading: 
+      heading: Nombre
+      alignment: start
+
+    settings: 
+      trim-spaces: Leading and Trailing
+      text-case: NO CHANGE
+
+    layout: 
+      sequence: 40
+      column-alignment: start
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: true
+      maximum-length: 255
+
+    source: 
+      type: Database Column
+      database-column: NOMBRE
+      data-type: VARCHAR2
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      performance-impacting-operators: 
+      - Contains
+      - Starts With
+      - Case Insensitive
+      - Regular Expression
+      text-case: Mixed
+      lov-type: Distinct Column
+      exact-match: true
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: CANTIDAD ====================================
+    id: 13114131982342810
+    identification: 
+      column-name: CANTIDAD
+      type: Number Field
+
+    heading: 
+      heading: Cantidad
+      alignment: center
+
+    settings: 
+      number-alignment: Start
+      virtual-keyboard: Decimal
+
+    layout: 
+      sequence: 50
+      column-alignment: center
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: true
+
+    source: 
+      type: Database Column
+      database-column: CANTIDAD
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: PRECIO_UNITARIO =============================
+    id: 13114252164342811
+    identification: 
+      column-name: PRECIO_UNITARIO
+      type: Number Field
+
+    heading: 
+      heading: Precio Unitario
+      alignment: center
+
+    settings: 
+      number-alignment: Start
+      virtual-keyboard: Decimal
+
+    layout: 
+      sequence: 60
+      column-alignment: center
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: false
+
+    source: 
+      type: Database Column
+      database-column: PRECIO_UNITARIO
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: ID_ORDEN_COMPRA =============================
+    id: 13114343972342812
+    identification: 
+      column-name: ID_ORDEN_COMPRA
+      type: Hidden
+
+    settings: 
+      value-protected: true
+
+    layout: 
+      sequence: 70
+
+    accessibility: 
+      value-identifies-row: false
+
+    source: 
+      type: Database Column
+      database-column: ID_ORDEN_COMPRA
+      data-type: NUMBER
+      query-only: false
+      primary-key: true
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    session-state: 
+      data-type: VARCHAR2
+
+    export-/-printing: 
+      include-in-export-/-print: false
+
+    enable-users-to: 
+      sort: false
+
+  - # ====== Column: TOTAL_DETALLE ===============================
+    id: 13114437524342813
+    identification: 
+      column-name: TOTAL_DETALLE
+      type: Number Field
+
+    heading: 
+      heading: Total Detalle
+      alignment: center
+
+    settings: 
+      number-alignment: Start
+      virtual-keyboard: Decimal
+
+    layout: 
+      sequence: 80
+      column-alignment: center
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: false
+
+    source: 
+      type: Database Column
+      database-column: TOTAL_DETALLE
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  printing: 
+    page: 
+      size: A4
+      orientation: Landscape
+      units: Millimeters
+      width: 297
+      height: 210
+      border-width: 0.5
+      border-color: '#666666'
+
+    page-header: 
+      font: Helvetica
+      font-weight: Normal
+      font-size: 12
+      font-color: '#000000'
+      alignment: center
+
+    column-headings: 
+      font: Helvetica
+      font-weight: Bold
+      font-size: 10
+      font-color: '#000000'
+      background-color: '#EEEEEE'
+
+    columns: 
+      font: Helvetica
+      font-weight: Normal
+      font-size: 10
+      font-color: '#000000'
+      background-color: '#FFFFFF'
+
+    page-footer: 
+      font: Helvetica
+      font-weight: Normal
+      font-size: 12
+      font-color: '#000000'
+      alignment: center
+
+page-items: 
+- # ====== Page Item: P70_ID_COMPROBANTE =======================
+  id: 12817801655386514
+  identification: 
+    name: P70_ID_COMPROBANTE
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 10
+    region: Proceso de Compras # 12817469420386513
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso de Compras # 12817469420386513
+    column: ID_COMPROBANTE
+    data-type: NUMBER
+    query-only: true
+    primary-key: true
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Request (Memory Only)
+
+  security: 
+    session-state-protection: Checksum Required - Session Level
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P70_TIPO_COMPROBANTE =====================
+  id: 12818276528386514
+  identification: 
+    name: P70_TIPO_COMPROBANTE
+    type: Select List
+
+  label: 
+    label: Tipo Comprobante
+    alignment: Left
+
+  settings: 
+    page-action-on-selection: None
+
+  multiple-values: 
+    type: No
+
+  layout: 
+    sequence: 20
+    region: Cabecera # 12856286435396822
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Required - Floating
+    template-options: 
+    - '#DEFAULT#'
+    height: 1
+
+  validation: 
+    value-required: true
+
+  list-of-values: 
+    type: Static Values
+    static-values: 'STATIC:FA;FA'
+    display-extra-values: true
+    display-null-value: true
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso de Compras # 12817469420386513
+    column: TIPO_COMPROBANTE
+    data-type: VARCHAR2
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P70_ID_PROVEEDOR =========================
+  id: 12818640981386514
+  identification: 
+    name: P70_ID_PROVEEDOR
+    type: Popup LOV
+
+  label: 
+    label: Proveedor
+    alignment: Left
+
+  settings: 
+    display-as: Inline Popup
+    initial-fetch: Automatic
+    manual-entry: false
+    fetch-on-search: false
+
+  search: 
+    match-type: Contains
+    case-sensitive: false
+    minimum-characters: 0
+
+  multiple-values: 
+    type: No
+
+  layout: 
+    sequence: 30
+    region: Cabecera # 12856286435396822
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Required - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 30
+
+  validation: 
+    value-required: true
+
+  list-of-values: 
+    type: Shared Component
+    list-of-values: PROVEEDORES.NOMBRE # 16407555954331446
+    display-extra-values: true
+    display-null-value: true
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso de Compras # 12817469420386513
+    column: ID_PROVEEDOR
+    data-type: NUMBER
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P70_FECHA_EMISION ========================
+  id: 12819012850386514
+  identification: 
+    name: P70_FECHA_EMISION
+    type: Date Picker
+
+  label: 
+    label: Fecha Emision
+    alignment: Left
+
+  settings: 
+    show-time: false
+    display-as: Popup
+    minimum-date: None
+    maximum-date: None
+    multiple-months: No
+    use-defaults: true
+
+  layout: 
+    sequence: 40
+    region: Cabecera # 12856286435396822
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 32
+
+  validation: 
+    value-required: false
+    maximum-length: 255
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso de Compras # 12817469420386513
+    column: FECHA_EMISION
+    data-type: DATE
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P70_NRO_COMPROBANTE ======================
+  id: 12819437179386514
+  identification: 
+    name: P70_NRO_COMPROBANTE
+    type: Text Field
+
+  label: 
+    label: Nro Comprobante
+    alignment: Left
+
+  settings: 
+    subtype: Text
+    trim-spaces: Leading and Trailing
+    text-case: NO CHANGE
+    submit-when-enter-pressed: false
+    disabled: false
+
+  layout: 
+    sequence: 50
+    region: Cabecera # 12856286435396822
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 32
+
+  validation: 
+    value-required: false
+    maximum-length: 50
+
+  advanced: 
+    custom-attributes: 
+    - oninput="applyMask(this)"
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso de Compras # 12817469420386513
+    column: NRO_COMPROBANTE
+    data-type: VARCHAR2
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P70_NRO_TIMBRADO =========================
+  id: 12819813318386515
+  identification: 
+    name: P70_NRO_TIMBRADO
+    type: Text Field
+
+  label: 
+    label: Nro Timbrado
+    alignment: Left
+
+  settings: 
+    subtype: Text
+    trim-spaces: Leading and Trailing
+    text-case: NO CHANGE
+    submit-when-enter-pressed: false
+    disabled: false
+
+  layout: 
+    sequence: 60
+    region: Cabecera # 12856286435396822
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 32
+
+  validation: 
+    value-required: false
+    maximum-length: 20
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso de Compras # 12817469420386513
+    column: NRO_TIMBRADO
+    data-type: VARCHAR2
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P70_FECHA_INICIO_TIMBRADO ================
+  id: 12820244208386515
+  identification: 
+    name: P70_FECHA_INICIO_TIMBRADO
+    type: Date Picker
+
+  label: 
+    label: Fecha Inicio Timbrado
+    alignment: Left
+
+  settings: 
+    show-time: false
+    display-as: Popup
+    minimum-date: None
+    maximum-date: None
+    multiple-months: No
+    use-defaults: true
+
+  layout: 
+    sequence: 70
+    region: Cabecera # 12856286435396822
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 32
+
+  validation: 
+    value-required: false
+    maximum-length: 255
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso de Compras # 12817469420386513
+    column: FECHA_INICIO_TIMBRADO
+    data-type: DATE
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P70_FECHA_FIN_TIMBRADO ===================
+  id: 12820678233386515
+  identification: 
+    name: P70_FECHA_FIN_TIMBRADO
+    type: Date Picker
+
+  label: 
+    label: Fecha Fin Timbrado
+    alignment: Left
+
+  settings: 
+    show-time: false
+    display-as: Popup
+    minimum-date: None
+    maximum-date: None
+    multiple-months: No
+    use-defaults: true
+
+  layout: 
+    sequence: 80
+    region: Cabecera # 12856286435396822
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 32
+
+  validation: 
+    value-required: false
+    maximum-length: 255
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso de Compras # 12817469420386513
+    column: FECHA_FIN_TIMBRADO
+    data-type: DATE
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P70_MONEDA ===============================
+  id: 12821087087386515
+  identification: 
+    name: P70_MONEDA
+    type: Text Field
+
+  label: 
+    label: Moneda
+    alignment: Left
+
+  settings: 
+    subtype: Text
+    trim-spaces: Leading and Trailing
+    text-case: NO CHANGE
+    submit-when-enter-pressed: false
+    disabled: false
+
+  layout: 
+    sequence: 90
+    region: Totalizador # 12856464709396824
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 32
+
+  validation: 
+    value-required: false
+    maximum-length: 10
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso de Compras # 12817469420386513
+    column: MONEDA
+    data-type: VARCHAR2
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+  configuration: 
+    build-option: Commented Out # 7705349298831252
+
+- # ====== Page Item: P70_TIPO_CAMBIO ==========================
+  id: 12821426314386515
+  identification: 
+    name: P70_TIPO_CAMBIO
+    type: Number Field
+
+  label: 
+    label: Tipo Cambio
+    alignment: Left
+
+  settings: 
+    number-alignment: Start
+    virtual-keyboard: Decimal
+
+  layout: 
+    sequence: 100
+    region: Totalizador # 12856464709396824
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: false
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 32
+
+  validation: 
+    value-required: false
+    maximum-length: 255
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso de Compras # 12817469420386513
+    column: TIPO_CAMBIO
+    data-type: NUMBER
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+  configuration: 
+    build-option: Commented Out # 7705349298831252
+
+- # ====== Page Item: P70_TOTAL_COMPROBANTE ====================
+  id: 12821886557386515
+  identification: 
+    name: P70_TOTAL_COMPROBANTE
+    type: Number Field
+
+  label: 
+    label: Total Comprobante
+    alignment: Left
+
+  settings: 
+    number-alignment: Start
+    virtual-keyboard: Decimal
+
+  layout: 
+    sequence: 110
+    region: Totalizador # 12856464709396824
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: 9
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    css-classes: 
+    - campo-grande-negrita
+    format-mask: 999G999G999G999G999G999G990
+    width: 32
+
+  validation: 
+    value-required: false
+    maximum-length: 255
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso de Compras # 12817469420386513
+    column: TOTAL_COMPROBANTE
+    data-type: NUMBER
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P70_ID_OFICINA ===========================
+  id: 12822287091386516
+  identification: 
+    name: P70_ID_OFICINA
+    type: Select List
+
+  label: 
+    label: Oficina
+    alignment: Left
+
+  settings: 
+    page-action-on-selection: None
+
+  multiple-values: 
+    type: No
+
+  layout: 
+    sequence: 120
+    region: Cabecera # 12856286435396822
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    height: 1
+
+  validation: 
+    value-required: false
+
+  list-of-values: 
+    type: Shared Component
+    list-of-values: OFICINAS.DESCRIPCION # 8245359747955872
+    display-extra-values: false
+    display-null-value: false
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso de Compras # 12817469420386513
+    column: ID_OFICINA
+    data-type: NUMBER
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P70_ID_ORDEN_COMPRA ======================
+  id: 12822604680386516
+  identification: 
+    name: P70_ID_ORDEN_COMPRA
+    type: Popup LOV
+
+  label: 
+    label: Orden Compra
+    alignment: Left
+
+  settings: 
+    display-as: Inline Popup
+    initial-fetch: Automatic
+    manual-entry: false
+    fetch-on-search: false
+
+  search: 
+    match-type: Contains
+    case-sensitive: false
+    minimum-characters: 0
+
+  multiple-values: 
+    type: No
+
+  layout: 
+    sequence: 130
+    region: Cabecera # 12856286435396822
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 30
+
+  validation: 
+    value-required: false
+
+  list-of-values: 
+    type: SQL Query
+    sql-query: select id_orden_compra, id_orden_compra as orden from ORDENES_COMPRA where estado = 'P'
+    display-extra-values: true
+    display-null-value: true
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso de Compras # 12817469420386513
+    column: ID_ORDEN_COMPRA
+    data-type: NUMBER
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P70_ID_FAC_ORIGEN ========================
+  id: 12823381781386516
+  identification: 
+    name: P70_ID_FAC_ORIGEN
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 130
+    region: Totalizador # 12856464709396824
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso de Compras # 12817469420386513
+    column: ID_FAC_ORIGEN
+    data-type: NUMBER
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Request (Memory Only)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P70_OBSERVACION ==========================
+  id: 12823779520386516
+  identification: 
+    name: P70_OBSERVACION
+    type: Text Field
+
+  label: 
+    label: Observacion
+    alignment: Left
+
+  settings: 
+    subtype: Text
+    trim-spaces: Leading and Trailing
+    text-case: NO CHANGE
+    submit-when-enter-pressed: false
+    disabled: false
+
+  layout: 
+    sequence: 150
+    region: Cabecera # 12856286435396822
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 32
+
+  validation: 
+    value-required: false
+    maximum-length: 255
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Proceso de Compras # 12817469420386513
+    column: OBSERVACION
+    data-type: VARCHAR2
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+buttons: 
+- # ====== Button: CANCEL ======================================
+  id: 12829002053386519
+  identification: 
+    button-name: CANCEL
+    label: Cancel
+
+  layout: 
+    sequence: 10
+    region: Buttons # 12828626186386518
+    slot: CLOSE
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text
+    hot: false
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Defined by Dynamic Action
+    execute-validations: true
+
+- # ====== Button: DELETE ======================================
+  id: 12830447368386519
+  identification: 
+    button-name: DELETE
+    label: Delete
+
+  layout: 
+    sequence: 20
+    region: Buttons # 12828626186386518
+    slot: DELETE
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text
+    hot: false
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Submit Page
+    execute-validations: false
+    show-processing: false
+    warn-on-unsaved-changes: Do Not Check
+    database-action: SQL DELETE action
+
+  confirmation: 
+    message: '&APP_TEXT$DELETE_MSG!RAW.'
+    style: Danger
+
+  server-side-condition: 
+    type: Item is NOT NULL
+    item: P70_ID_COMPROBANTE
+
+- # ====== Button: SAVE ========================================
+  id: 12830832716386519
+  identification: 
+    button-name: SAVE
+    label: Apply Changes
+
+  layout: 
+    sequence: 30
+    region: Buttons # 12828626186386518
+    slot: NEXT
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text
+    hot: true
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Submit Page
+    execute-validations: true
+    show-processing: false
+    warn-on-unsaved-changes: Do Not Check
+    database-action: SQL UPDATE action
+
+  server-side-condition: 
+    type: Item is NOT NULL
+    item: P70_ID_COMPROBANTE
+
+- # ====== Button: CREATE ======================================
+  id: 12831283289386520
+  identification: 
+    button-name: CREATE
+    label: Create
+
+  layout: 
+    sequence: 40
+    region: Buttons # 12828626186386518
+    slot: NEXT
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text
+    hot: true
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Submit Page
+    execute-validations: true
+    show-processing: false
+    warn-on-unsaved-changes: Do Not Check
+    database-action: SQL INSERT action
+
+  server-side-condition: 
+    type: Item is NULL
+    item: P70_ID_COMPROBANTE
+
+dynamic-actions: 
+- # ====== Dynamic Action: Cancel Dialog =======================
+  id: 12829153714386519
+  identification: 
+    name: Cancel Dialog
+
+  execution: 
+    sequence: 10
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Click
+    selection-type: Button
+    button: CANCEL # 12829002053386519
+
+  actions: 
+  - # ====== Action: Cancel Dialog ===============================
+    id: 12829951557386519
+    identification: 
+      action: Cancel Dialog
+
+    execution: 
+      sequence: 10
+      event: Cancel Dialog # 12829153714386519
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+- # ====== Dynamic Action: Carga de Detalle por Orden ==========
+  id: 12943606605107148
+  identification: 
+    name: Carga de Detalle por Orden
+
+  execution: 
+    sequence: 30
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Change
+    selection-type: Item(s)
+    item(s): 
+    - P70_ID_ORDEN_COMPRA
+
+  actions: 
+  - # ====== Action: Refresh =====================================
+    id: 12943723368107149
+    identification: 
+      action: Refresh
+
+    settings: 
+      maintain-pagination: false
+
+    affected-elements: 
+      selection-type: Region
+      region: Detalle_Compra # 13113560524342804
+
+    execution: 
+      sequence: 10
+      event: Carga de Detalle por Orden # 12943606605107148
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+- # ====== Dynamic Action: TOTAL_IG ============================
+  id: 13114568324342814
+  identification: 
+    name: TOTAL_IG
+
+  execution: 
+    sequence: 50
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: NATIVE_IG|REGION TYPE|interactivegridselectionchange
+    selection-type: Region
+    region: Detalle_Compra # 13113560524342804
+
+  actions: 
+  - # ====== Action: Execute JavaScript Code =====================
+    id: 13114604343342815
+    identification: 
+      action: Execute JavaScript Code
+
+    settings: 
+      code: recalculaImporte();
+
+    execution: 
+      sequence: 10
+      event: TOTAL_IG # 13114568324342814
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+- # ====== Dynamic Action: New_2 ===============================
+  id: 13114700466342816
+  identification: 
+    name: New_2
+
+  execution: 
+    sequence: 60
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Change
+    selection-type: Column(s)
+    interactive-grid: Detalle_Compra # 13113560524342804
+    column(s): 
+    - CANTIDAD
+    - PRECIO_UNITARIO
+
+  actions: 
+  - # ====== Action: Execute JavaScript Code =====================
+    id: 13114848316342817
+    identification: 
+      action: Execute JavaScript Code
+
+    settings: 
+      code: recalculaImporte();
+
+    execution: 
+      sequence: 10
+      event: New_2 # 13114700466342816
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+- # ====== Dynamic Action: Carga de ID proveedor ===============
+  id: 16598047857211748
+  identification: 
+    name: Carga de ID proveedor
+
+  execution: 
+    sequence: 40
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Change
+    selection-type: Item(s)
+    item(s): 
+    - P70_ID_ORDEN_COMPRA
+
+  actions: 
+  - # ====== Action: SET PROVEEDOR ===============================
+    id: 16598115173211749
+    identification: 
+      name: SET PROVEEDOR
+      action: Execute Server-side Code
+
+    settings: 
+      language: PE.PROPERTY.SOURCE_SNIPPET_LANG.LOV.PLSQL.D
+      pl/sql-code: |
+        SELECT OC.ID_PROVEEDOR --p.primer_nombre || ' ' || p.primer_apellido
+        INTO :P70_ID_PROVEEDOR
+        FROM ordenes_compra oc
+        JOIN personas p
+          ON p.ID_PERSONA = oc.ID_PROVEEDOR
+        WHERE oc.ID_ORDEN_COMPRA = :P70_ID_ORDEN_COMPRA;
+      items-to-submit: 
+      - P70_ID_ORDEN_COMPRA
+      items-to-return: 
+      - P70_ID_PROVEEDOR
+      suppress-change-event: false
+
+    execution: 
+      sequence: 10
+      event: Carga de ID proveedor # 16598047857211748
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+      stop-execution-on-error: true
+      wait-for-result: true
+
+processes: 
+- # ====== Process: Initialize form Orden de Compras ===========
+  id: 12831697437386520
+  identification: 
+    name: Initialize form Orden de Compras
+    type: Form - Initialization
+    execution-chain: None
+    form-region: Proceso de Compras # 12817469420386513
+
+  execution: 
+    sequence: 10
+    point: Before Header
+    run-process: Once Per Page Visit (default)
+
+- # ====== Process: Process form Orden de Compras ==============
+  id: 12832039351386520
+  identification: 
+    name: Process form Orden de Compras
+    type: Form - Automatic Row Processing (DML)
+    execution-chain: None
+    form-region: Proceso de Compras # 12817469420386513
+
+  settings: 
+    target-type: Region Source
+    prevent-lost-updates: true
+    lock-row: Yes
+    return-primary-key(s)-after-insert: true
+
+  execution: 
+    sequence: 10
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+
+- # ====== Process: Close Dialog ===============================
+  id: 12832485573386520
+  identification: 
+    name: Close Dialog
+    type: Close Dialog
+    execution-chain: None
+
+  settings: 
+    show-success-messages: true
+
+  execution: 
+    sequence: 50
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+
+  server-side-condition: 
+    type: Request is contained in Value
+    value: CREATE,SAVE,DELETE
+
+- # ====== Process: Carga de Comprobante =======================
+  id: 12943058829107142
+  identification: 
+    name: Carga de Comprobante
+    type: Execute Code
+    execution-chain: None
+
+  source: 
+    location: Local Database
+    language: PL/SQL
+    pl/sql-code: |
+      SELECT FN_OBTENER_COMPROBANTE(:P70_ID_OFICINA, :P70_TIPO_COMPROBANTE) 
+      INTO :P70_NRO_COMPROBANTE FROM DUAL;
+
+  execution: 
+    sequence: 20
+    point: Before Header
+    run-process: Once Per Page Visit (default)
+
+  configuration: 
+    build-option: Commented Out # 7705349298831252
+
+- # ====== Process: Detalle_Compra - Save Interactive Grid Data 
+  id: 13113340764342802
+  identification: 
+    name: Detalle_Compra - Save Interactive Grid Data
+    type: Interactive Grid - Automatic Row Processing (DML)
+    execution-chain: None
+    editable-region: Detalle_Compra # 13113560524342804
+
+  settings: 
+    target-type: PL/SQL Code
+    pl/sql-code-to-insert/update/delete: |
+      begin
+          case:APEX$ROW_STATUS
+              WHEN 'C' THEN
+                  INSERT INTO DETALLE_COMPROBANTE_PROV(ID_COMPROBANTE,ID_PRODUCTO,CANTIDAD,PRECIO_UNITARIO,TOTAL)
+                  VALUES (:P70_ID_COMPROBANTE,:ID_PRODUCTO,:CANTIDAD,:PRECIO_UNITARIO,:TOTAL_DETALLE);
+              WHEN 'U' THEN
+                  UPDATE DETALLE_COMPROBANTE_PROV
+                  SET ID_PRODUCTO = :ID_PRODUCTO,
+                      CANTIDAD = :CANTIDAD,
+                      PRECIO_UNITARIO = :PRECIO_UNITARIO,
+                      TOTAL = :TOTAL_DETALLE
+                  WHERE ID_COMPROBANTE = :P70_ID_COMPROBANTE;
+              WHEN 'D' THEN
+                  DELETE DETALLE_COMPROBANTE_PROV WHERE ID_COMPROBANTE = :P70_ID_COMPROBANTE;
+          END CASE;
+      END;
+    prevent-lost-updates: true
+    lock-row: Yes
+
+  execution: 
+    sequence: 30
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+
+  server-side-condition: 
+    when-button-pressed: CREATE # 12831283289386520
+    execution-scope: For Created and Modified Rows
+
+- # ====== Process: Detalle Factura Cursor =====================
+  id: 13115355328342822
+  identification: 
+    name: Detalle Factura Cursor
+    type: Execute Code
+    execution-chain: None
+
+  source: 
+    location: Local Database
+    language: PL/SQL
+    pl/sql-code: |
+      DECLARE
+          CURSOR CUR_DETALLE IS
+              SELECT DET.ID_ORDEN_COMPRA,
+                     DET.ID_PRODUCTO,
+                     DET.CANTIDAD,
+                     DET.PRECIO_UNITARIO,
+                     DET.TOTAL_DETALLE
+              FROM ORDENES_COMPRA CAB,
+                   DETALLE_ORDEN_COMPRA DET,
+                   PRODUCTOS PR
+              WHERE CAB.ID_ORDEN_COMPRA = DET.ID_ORDEN_COMPRA
+                AND PR.ID_PRODUCTO = DET.ID_PRODUCTO
+                AND DET.ID_ORDEN_COMPRA = :P70_ID_ORDEN_COMPRA;
+      
+          REG_DET CUR_DETALLE%ROWTYPE;
+      BEGIN
+          OPEN CUR_DETALLE;
+          LOOP
+              FETCH CUR_DETALLE INTO REG_DET;
+              EXIT WHEN CUR_DETALLE%NOTFOUND;
+      
+              INSERT INTO DETALLE_COMPROBANTE_PROV (
+                  ID_COMPROBANTE,
+                  ID_PRODUCTO,
+                  CANTIDAD,
+                  PRECIO_UNITARIO,
+                  TOTAL
+              ) VALUES (
+                  :P70_ID_COMPROBANTE, -- este debe estar definido en la página
+                  REG_DET.ID_PRODUCTO,
+                  REG_DET.CANTIDAD,
+                  REG_DET.PRECIO_UNITARIO,
+                  REG_DET.TOTAL_DETALLE
+              );
+      
+          END LOOP;
+          CLOSE CUR_DETALLE;
+      
+          apex_application.g_print_success_message := 
+              'Se generó el comprobante correctamente a partir de la orden N° ' || :P70_ID_ORDEN_COMPRA;
+      END;
+      
+
+  execution: 
+    sequence: 20
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+
+  server-side-condition: 
+    when-button-pressed: CREATE # 12831283289386520
+
+- # ====== Process: Actualiza Factura ==========================
+  id: 13115418544342823
+  identification: 
+    name: Actualiza Factura
+    type: Execute Code
+    execution-chain: None
+
+  source: 
+    location: Local Database
+    language: PL/SQL
+    pl/sql-code: |
+      BEGIN
+       UPDATE TALONARIOS
+          SET NRO_ACTUAL = NRO_ACTUAL +1
+          WHERE TIPO_COMPROBANTE = :P70_TIPO_COMPROBANTE;
+          COMMIT;
+      END;
+
+  execution: 
+    sequence: 40
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+

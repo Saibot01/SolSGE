@@ -1,0 +1,359 @@
+---
+# ====== Page: Orden de Compra Documento =====================
+id: 92
+identification: 
+  name: Orden de Compra Documento
+  alias: ORDEN-DE-COMPRA-DOCUMENTO
+  title: Orden de Compra Documento
+
+appearance: 
+  page-mode: Modal Dialog
+  dialog-template: Theme Default
+  template-options: 
+  - '#DEFAULT#'
+  - ui-dialog--stretch
+
+dialog: 
+  chained: true
+  resizable: true
+
+navigation-menu: 
+  override-user-interface-level: false
+
+navigation: 
+  cursor-focus: Do not focus cursor
+  warn-on-unsaved-changes: true
+
+css: 
+  inline: |
+    /* heading */
+    
+    h1 { font: bold 100% sans-serif; letter-spacing: 0.5em; text-align: center; text-transform: uppercase; }
+    
+    /* table */
+    
+    table { font-size: 75%; table-layout: auto; width: 100%; }
+    table { border-collapse: separate; border-spacing: 2px; }
+    th, td { border-width: 1px; padding: 0.5em; position: relative; text-align: left; }
+    th, td { border-radius: 0.25em; border-style: solid; }
+    th { background: #EEE; border-color: #BBB; }
+    td { border-color: #DDD; }
+    
+    /* page */
+    
+    html { font: 16px/1 'Open Sans', sans-serif; overflow: auto; }
+    html { background: #999; cursor: default; }
+    
+    body { box-sizing: border-box; margin: 0 auto; overflow: hidden; width: 8.5in; }
+    body { background: #FFF; border-radius: 1px; box-shadow: 0 0 0in -0.25in rgba(0, 0, 0, 0.5); }
+    
+    
+    /* header */
+    
+    header { margin: 0 0 0; }
+    header:after { clear: both; content: ""; display: table; }
+    
+    header h1 { background: #000; border-radius: 0.25em; color: #FFF; margin: 0 0 1em; padding: 0.5em 0; }
+    
+    /* article */
+    
+    article, article address, table.meta, table.inventory { margin: 0 0 3em; }
+    article:after { clear: both; content: ""; display: table; }
+    article h1 { clip: rect(0 0 0 0); position: absolute; }
+    
+    article address { float: left; font-size: 125%; font-weight: bold; }
+    
+    /* table meta & balance */
+    
+    table.meta, table.balance { float: right; width: 36%; }
+    table.meta:after, table.balance:after { clear: both; content: ""; display: table; }
+    
+    /* table meta */
+    
+    table.meta th { width: 40%; }
+    table.meta td { width: 60%; }
+    
+    /* table items */
+    
+    table.inventory { clear: both; width: 100%; }
+    table.inventory th { font-weight: bold; text-align: center; }
+    
+    table.inventory td:nth-child(1) { max-width: 10%; }
+    table.inventory td:nth-child(2) { min-width: 50%; }
+    table.inventory td:nth-child(3) { text-align: right; max-width: 10%; }
+    table.inventory td:nth-child(4) { text-align: right; max-width: 10%; }
+    table.inventory td:nth-child(5) { text-align: right; max-width: 10%; }
+    table.inventory td:nth-child(6) { text-align: right; max-width: 10%; }
+    
+    /* table balance */
+    
+    table.balance th, table.balance td { width: 50%; }
+    table.balance td { text-align: right; }
+    
+    /* aside */
+    
+    aside h1 { border: none; border-width: 0 0 1px; margin: 0 0 1em; }
+    aside h1 { border-color: #999; border-bottom-style: solid; }
+    
+    /* javascript */
+    
+    .add, .cut
+    {
+    	border-width: 1px;
+    	display: block;
+    	font-size: .8rem;
+    	padding: 0.25em 0.5em;	
+    	float: left;
+    	text-align: center;
+    	width: 0.6em;
+    }
+    
+    .add, .cut
+    {
+    	background: #9AF;
+    	box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    	background-image: -moz-linear-gradient(#00ADEE 5%, #0078A5 100%);
+    	background-image: -webkit-linear-gradient(#00ADEE 5%, #0078A5 100%);
+    	border-radius: 0.5em;
+    	border-color: #0076A3;
+    	color: #FFF;
+    	cursor: pointer;
+    	font-weight: bold;
+    	text-shadow: 0 -1px 2px rgba(0,0,0,0.333);
+    }
+    
+    .add { margin: 0 0 0; }
+    
+    .add:hover { background: #00ADEE; }
+    
+    .cut { opacity: 0; position: absolute; top: 0; left: -1.5em; }
+    .cut { -webkit-transition: opacity 100ms ease-in; }
+    
+    tr:hover .cut { opacity: 1; }
+    
+    @media print {
+    	* { -webkit-print-color-adjust: exact; }
+    	html { background: none; padding: 0; }
+    	body { box-shadow: none; margin: 0; }
+    	span:empty { display: none; }
+    	.add, .cut { display: none; }
+    }
+    
+    @page { margin: 0; }
+
+security: 
+  authentication: Page Requires Authentication
+  deep-linking: Application Default
+  page-access-protection: Arguments Must Have Checksum
+  form-auto-complete: Off
+  browser-cache: Application Default
+
+session-management: 
+  rejoin-sessions: Application Default
+
+advanced: 
+  enable-duplicate-page-submissions: Yes - Enable page to be re-posted
+  reload-on-submit: Only for Success
+
+server-cache: 
+  caching: Disabled
+
+regions: 
+- # ====== Region: New =========================================
+  id: 15983742160097113
+  identification: 
+    name: New
+    type: Dynamic Content
+
+  source: 
+    language: PL/SQL
+    pl/sql-function-body-returning-a-clob: |
+      DECLARE
+        -- Cursor principal: datos generales de la orden
+        CURSOR cr_orden IS
+          SELECT 
+            PE.PRIMER_NOMBRE || ' ' || PE.SEGUNDO_NOMBRE || ' ' ||
+            PE.PRIMER_APELLIDO || ' ' || PE.SEGUNDO_APELLIDO AS PROVEEDOR,
+            PE.NRO_DOCUMENTO AS RUC_PROVEEDOR,
+            OC.ID_ORDEN_COMPRA,
+            OC.FECHA_ORDEN,
+            OC.TOTAL_ORDEN,
+            OC.OBSERVACION,
+            OC.ESTADO
+          FROM ORDENES_COMPRA OC
+          JOIN PROVEEDORES PR ON PR.ID_PERSONA = OC.ID_PROVEEDOR
+          JOIN PERSONAS PE ON PE.ID_PERSONA = PR.ID_PERSONA
+         WHERE OC.ID_ORDEN_COMPRA = :P92_ID_ORDEN_COMPRA;
+      
+        -- Cursor detalle de productos
+        CURSOR cr_detalles (p_id_orden NUMBER) IS
+          SELECT 
+            P.NOMBRE AS PRODUCTO,
+            D.CANTIDAD,
+            D.PRECIO_UNITARIO,
+            D.TOTAL_DETALLE
+          FROM DETALLE_ORDEN_COMPRA D
+          JOIN PRODUCTOS P ON P.ID_PRODUCTO = D.ID_PRODUCTO
+         WHERE D.ID_ORDEN_COMPRA = p_id_orden
+         ORDER BY D.ID_DETALLE_OC;
+      
+        v_html CLOB;
+      BEGIN
+        FOR v_ord IN cr_orden LOOP
+          v_html :=
+          '
+          <header>
+            <h1>ORDEN DE COMPRA</h1>
+            <address>
+              <h5>RUC: 80004571-1<br>
+              Denominación: SOLSGE<br>
+              Dirección: Itauguá Km 25 Mboiy<br>
+              Inicio Actividad: 31/10/2023</h5>
+            </address>
+      
+            <h1>PROVEEDOR</h1>
+            <address>
+              <h5>
+                RUC: ' || v_ord.RUC_PROVEEDOR || '<br>
+                Razón Social: ' || v_ord.PROVEEDOR || '
+              </h5>
+            </address>
+          </header>
+      
+          <table class="meta">
+            <tr>
+              <th><span>ID Orden</span></th>
+              <td><span>' || v_ord.ID_ORDEN_COMPRA || '</span></td>
+            </tr>
+            <tr>
+              <th><span>Fecha Orden</span></th>
+              <td><span>' || TO_CHAR(v_ord.FECHA_ORDEN, 'dd/mm/yyyy') || '</span></td>
+            </tr>
+            <tr>
+              <th><span>Estado</span></th>
+              <td><span>' || v_ord.ESTADO || '</span></td>
+            </tr>
+            <tr>
+              <th><span>Total</span></th>
+              <td>
+                 <span id="prefix">Gs.</span>
+                 <span>' || TO_CHAR(v_ord.TOTAL_ORDEN, '999G999G999G990') || '</span>
+              </td>
+            </tr>
+          </table>
+      
+          <article>
+            <table class="inventory">
+              <thead>
+                <tr>
+                  <th><span>Cantidad</span></th>
+                  <th><span>Producto</span></th>
+                  <th><span>Precio Unitario</span></th>
+                  <th><span>Total Línea</span></th>
+                </tr>
+              </thead>
+              <tbody>';
+      
+          -- Detalle de productos
+          FOR v_det IN cr_detalles(v_ord.ID_ORDEN_COMPRA) LOOP
+            v_html := v_html || '
+            <tr>
+              <td><span>' || TO_CHAR(v_det.CANTIDAD) || '</span></td>
+              <td><span>' || v_det.PRODUCTO || '</span></td>
+              <td><span>Gs.</span><span>' || TO_CHAR(v_det.PRECIO_UNITARIO, '999G999G990D00') || '</span></td>
+              <td><span>Gs.</span><span>' || TO_CHAR(v_det.TOTAL_DETALLE, '999G999G990D00') || '</span></td>
+            </tr>';
+          END LOOP;
+      
+          v_html := v_html ||
+          '
+              </tbody>
+            </table>
+      
+            <table class="balance">
+              <tr>
+                <th><span>Total Orden</span></th>
+                <td><span>Gs.</span><span>' || TO_CHAR(v_ord.TOTAL_ORDEN, '999G999G999G990') || '</span></td>
+              </tr>
+            </table>
+          </article>
+      
+          <aside>
+            <h1><span>Observaciones</span></h1>
+            <div>
+              <p>' || NVL(v_ord.OBSERVACION, 'Sin observaciones') || '</p>
+            </div>
+          </aside>';
+        END LOOP;
+      
+        RETURN v_html;
+      END;
+      
+
+  layout: 
+    sequence: 10
+    parent-region: No Parent
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Standard
+    template-options: 
+    - '#DEFAULT#'
+    - t-Region--removeHeader js-removeLandmark
+    - t-Region--scrollBody
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  server-cache: 
+    caching: Disabled
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    performance: 
+      lazy-loading: false
+
+page-items: 
+- # ====== Page Item: P92_ID_ORDEN_COMPRA ======================
+  id: 15983997313097115
+  identification: 
+    name: P92_ID_ORDEN_COMPRA
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 20
+    region: No Parent
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Session (Persistent)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+

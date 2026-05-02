@@ -1,0 +1,351 @@
+---
+# ====== Page: Restablecer Contraseña ========================
+id: 102
+identification: 
+  name: Restablecer Contraseña
+  alias: RESET-PASSWORD
+  title: Restablecer Contraseña
+
+appearance: 
+  page-mode: Normal
+  page-template: Theme Default
+  template-options: 
+  - '#DEFAULT#'
+
+navigation-menu: 
+  override-user-interface-level: false
+
+navigation: 
+  cursor-focus: Do not focus cursor
+  warn-on-unsaved-changes: true
+
+security: 
+  authentication: Page Is Public
+  deep-linking: Enabled
+  page-access-protection: Unrestricted
+  form-auto-complete: Off
+  browser-cache: Application Default
+
+session-management: 
+  rejoin-sessions: Application Default
+
+advanced: 
+  enable-meta-tags: false
+  enable-duplicate-page-submissions: Yes - Enable page to be re-posted
+  reload-on-submit: Only for Success
+
+server-cache: 
+  caching: Disabled
+
+regions: 
+- # ====== Region: Breadcrumb ==================================
+  id: 19214223771556517
+  identification: 
+    name: Breadcrumb
+    type: Breadcrumb
+
+  source: 
+    breadcrumb: Breadcrumb # 7705913887831249
+
+  layout: 
+    sequence: 10
+    parent-region: No Parent
+    slot: REGION_POSITION_01
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Title Bar
+    template-options: 
+    - '#DEFAULT#'
+    - t-BreadcrumbRegion--useBreadcrumbTitle
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    appearance: 
+      breadcrumb-template: Breadcrumb
+      template-options: 
+      - '#DEFAULT#'
+
+page-items: 
+- # ====== Page Item: P102_TOKEN ===============================
+  id: 16597451747211742
+  identification: 
+    name: P102_TOKEN
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 10
+    region: No Parent
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Session (Persistent)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P102_NUEVA_CONTRASENA ====================
+  id: 16597591950211743
+  identification: 
+    name: P102_NUEVA_CONTRASENA
+    type: Text Field
+
+  label: 
+    label: Nueva contraseña
+    alignment: Left
+
+  settings: 
+    subtype: Text
+    trim-spaces: Leading and Trailing
+    text-case: NO CHANGE
+    submit-when-enter-pressed: false
+    disabled: false
+
+  layout: 
+    sequence: 20
+    region: No Parent
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 30
+
+  validation: 
+    value-required: false
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  session-state: 
+    storage: Per Session (Persistent)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P102_CONFIRMAR ===========================
+  id: 16597636847211744
+  identification: 
+    name: P102_CONFIRMAR
+    type: Text Field
+
+  label: 
+    label: Confirmar contraseña
+    alignment: Left
+
+  settings: 
+    subtype: Text
+    trim-spaces: Leading and Trailing
+    text-case: NO CHANGE
+    submit-when-enter-pressed: false
+    disabled: false
+
+  layout: 
+    sequence: 30
+    region: No Parent
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 30
+
+  validation: 
+    value-required: false
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  session-state: 
+    storage: Per Session (Persistent)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+buttons: 
+- # ====== Button: BTN_GUARDAR =================================
+  id: 16597997545211747
+  identification: 
+    button-name: BTN_GUARDAR
+    label: Establecer contraseña
+
+  layout: 
+    sequence: 40
+    region: No Parent
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    alignment: Left center
+
+  appearance: 
+    button-template: Text
+    hot: false
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Submit Page
+    execute-validations: true
+    show-processing: false
+    warn-on-unsaved-changes: Do Not Check
+
+processes: 
+- # ====== Process: Validar Token ==============================
+  id: 16597762312211745
+  identification: 
+    name: Validar Token
+    type: Execute Code
+    execution-chain: None
+
+  source: 
+    location: Local Database
+    language: PL/SQL
+    pl/sql-code: |
+      DECLARE
+        v_emp EMPLEADOS%ROWTYPE;
+      BEGIN
+        IF :P102_TOKEN IS NULL THEN
+          APEX_UTIL.REDIRECT_URL(
+            APEX_PAGE.GET_URL(p_page => 9999)
+          );
+          RETURN;
+        END IF;
+      
+        v_emp := PKG_EMPLEADOS.validar_token(:P102_TOKEN);
+      
+      EXCEPTION
+        WHEN OTHERS THEN
+          APEX_UTIL.REDIRECT_URL(
+            APEX_PAGE.GET_URL(p_page => 9999)
+          );
+      END;
+
+  execution: 
+    sequence: 10
+    point: Before Header
+    run-process: Once Per Page Visit (default)
+
+- # ====== Process: Cambiar Contraseña =========================
+  id: 16597839200211746
+  identification: 
+    name: Cambiar Contraseña
+    type: Execute Code
+    execution-chain: None
+
+  source: 
+    location: Local Database
+    language: PL/SQL
+    pl/sql-code: |
+      BEGIN
+        -- Validar que las contraseñas coincidan
+        IF :P102_NUEVA_CONTRASENA IS NULL THEN
+          APEX_ERROR.ADD_ERROR(
+            p_message          => 'Debes ingresar una contraseña.',
+            p_display_location => APEX_ERROR.C_INLINE_IN_NOTIFICATION
+          );
+          RETURN;
+        END IF;
+      
+        IF :P102_NUEVA_CONTRASENA != :P102_CONFIRMAR THEN
+          APEX_ERROR.ADD_ERROR(
+            p_message          => 'Las contraseñas no coinciden.',
+            p_display_location => APEX_ERROR.C_INLINE_IN_NOTIFICATION
+          );
+          RETURN;
+        END IF;
+      
+        -- Cambiar contraseña (invalida el token automáticamente)
+        PKG_EMPLEADOS.cambiar_contrasena(
+          p_token            => :P102_TOKEN,
+          p_nueva_contrasena => :P102_NUEVA_CONTRASENA
+        );
+      
+        -- Redirigir al login con mensaje de éxito
+        APEX_APPLICATION.G_PRINT_SUCCESS_MESSAGE :=
+          'Contraseña establecida correctamente. Ya puedes iniciar sesión.';
+      
+        APEX_UTIL.REDIRECT_URL(
+          APEX_PAGE.GET_URL(p_page => 9999)  -- número de tu página de login
+        );
+      
+      EXCEPTION
+        WHEN OTHERS THEN
+          APEX_ERROR.ADD_ERROR(
+            p_message          => SQLERRM,
+            p_display_location => APEX_ERROR.C_INLINE_IN_NOTIFICATION
+          );
+      END;
+
+  execution: 
+    sequence: 10
+    point: After Submit
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+
