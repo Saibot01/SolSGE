@@ -870,3 +870,17 @@
         url: 'f?p=&APP_ID.:102:&APP_SESSION.::&DEBUG.:::'
         page: 102 # Restablecer Contraseña
 
+  - # ====== Entry: Carga Masiva Producto-Proveedor ==============
+    id: 20377679293516320
+    identification: 
+      name: Carga Masiva Producto-Proveedor
+      page-number: 104
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:104:&APP_SESSION.::&DEBUG.:::'
+        page: 104 # Carga Masiva Producto-Proveedor
+

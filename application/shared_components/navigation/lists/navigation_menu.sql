@@ -1,0 +1,962 @@
+prompt --application/shared_components/navigation/lists/navigation_menu
+begin
+--   Manifest
+--     LIST: Navigation Menu
+--   Manifest End
+wwv_flow_imp.component_begin (
+ p_version_yyyy_mm_dd=>'2024.11.30'
+,p_release=>'24.2.15'
+,p_default_workspace_id=>7697821598969118
+,p_default_application_id=>100
+,p_default_id_offset=>0
+,p_default_owner=>'WKSP_WORKPLACE'
+);
+wwv_flow_imp_shared.create_list(
+ p_id=>wwv_flow_imp.id(7706470273831245)
+,p_name=>'Navigation Menu'
+,p_list_status=>'PUBLIC'
+,p_version_scn=>39028437742515
+,p_created_on=>wwv_flow_imp.dz('20240606062349Z')
+,p_updated_on=>wwv_flow_imp.dz('20260512095940Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(8007399120830870)
+,p_list_item_display_sequence=>10
+,p_list_item_link_text=>'Home'
+,p_list_item_link_target=>'f?p=&APP_ID.:1:&APP_SESSION.::&DEBUG.:::'
+,p_list_item_icon=>'fa-home'
+,p_list_item_current_type=>'TARGET_PAGE'
+,p_created_on=>wwv_flow_imp.dz('20240606062353Z')
+,p_updated_on=>wwv_flow_imp.dz('20240606062353Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(8171737903383999)
+,p_list_item_display_sequence=>20
+,p_list_item_link_text=>'Personas'
+,p_list_item_icon=>'fa-address-book-o'
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'9,10,16,20'
+,p_created_on=>wwv_flow_imp.dz('20240613115142Z')
+,p_updated_on=>wwv_flow_imp.dz('20260430004519Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(9476411794028238)
+,p_list_item_display_sequence=>90
+,p_list_item_link_text=>'Empleados'
+,p_list_item_link_target=>'f?p=&APP_ID.:2:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-table-pointer'
+,p_list_item_disp_cond_type=>'NEVER'
+,p_parent_list_item_id=>wwv_flow_imp.id(8171737903383999)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'2'
+,p_created_on=>wwv_flow_imp.dz('20241003081055Z')
+,p_updated_on=>wwv_flow_imp.dz('20260430005044Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(8617323186071067)
+,p_list_item_display_sequence=>140
+,p_list_item_link_text=>'Empleados Roles'
+,p_list_item_link_target=>'f?p=&APP_ID.:11:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-layout-header-sidebar-left'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'security_pkg.can_access(:APP_ID, :APP_USER, 11, NULL)',
+''))
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(8171737903383999)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'11'
+,p_created_on=>wwv_flow_imp.dz('20250328010732Z')
+,p_updated_on=>wwv_flow_imp.dz('20250911100721Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(11527866378699159)
+,p_list_item_display_sequence=>10010
+,p_list_item_link_text=>'Empleados IG'
+,p_list_item_link_target=>'f?p=&APP_ID.:16:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-table'
+,p_parent_list_item_id=>wwv_flow_imp.id(8171737903383999)
+,p_list_item_current_type=>'TARGET_PAGE'
+,p_created_on=>wwv_flow_imp.dz('20250430051853Z')
+,p_updated_on=>wwv_flow_imp.dz('20250430051934Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(20268823123275842)
+,p_list_item_display_sequence=>10030
+,p_list_item_link_text=>'Personas'
+,p_list_item_link_target=>'f?p=&APP_ID.:9:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-address-book'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 9, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(8171737903383999)
+,p_list_item_current_type=>'TARGET_PAGE'
+,p_created_on=>wwv_flow_imp.dz('20260430004412Z')
+,p_updated_on=>wwv_flow_imp.dz('20260430004412Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(8255106441955864)
+,p_list_item_display_sequence=>40
+,p_list_item_link_text=>'Clientes'
+,p_list_item_icon=>'fa-file-user'
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'19,20'
+,p_created_on=>wwv_flow_imp.dz('20240613212303Z')
+,p_updated_on=>wwv_flow_imp.dz('20250911083708Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(8278125456904540)
+,p_list_item_display_sequence=>50
+,p_list_item_link_text=>'Oficinas'
+,p_list_item_link_target=>'f?p=&APP_ID.:21:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-coffee'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'security_pkg.can_access(:APP_ID, :APP_USER, 21, NULL)',
+''))
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(8255106441955864)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'21,22'
+,p_created_on=>wwv_flow_imp.dz('20240613213136Z')
+,p_updated_on=>wwv_flow_imp.dz('20250911095028Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(8295001743887393)
+,p_list_item_display_sequence=>60
+,p_list_item_link_text=>'Departamentos'
+,p_list_item_link_target=>'f?p=&APP_ID.:23:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-line-map'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'security_pkg.can_access(:APP_ID, :APP_USER, 23, NULL)',
+''))
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(8255106441955864)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'23,24'
+,p_created_on=>wwv_flow_imp.dz('20240613213428Z')
+,p_updated_on=>wwv_flow_imp.dz('20250911095109Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(8310818540859518)
+,p_list_item_display_sequence=>70
+,p_list_item_link_text=>'Ciudades'
+,p_list_item_link_target=>'f?p=&APP_ID.:26:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-location'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'security_pkg.can_access(:APP_ID, :APP_USER, 26, NULL)',
+''))
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(8255106441955864)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'26,27'
+,p_created_on=>wwv_flow_imp.dz('20240613213907Z')
+,p_updated_on=>wwv_flow_imp.dz('20250911095143Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(9641252169881528)
+,p_list_item_display_sequence=>190
+,p_list_item_link_text=>'PRUEBA C IG'
+,p_list_item_link_target=>'f?p=&APP_ID.:28:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-table-pointer'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'security_pkg.can_access(:APP_ID, :APP_USER, 28, NULL)',
+''))
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(8255106441955864)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'28,29'
+,p_created_on=>wwv_flow_imp.dz('20250411172237Z')
+,p_updated_on=>wwv_flow_imp.dz('20250911100849Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(9751669625480181)
+,p_list_item_display_sequence=>200
+,p_list_item_link_text=>'Prueba Direccion IG'
+,p_list_item_link_target=>'f?p=&APP_ID.:34:&APP_SESSION.::&DEBUG.:::'
+,p_list_item_icon=>'fa-table-pointer'
+,p_parent_list_item_id=>wwv_flow_imp.id(9641252169881528)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'34,35'
+,p_created_on=>wwv_flow_imp.dz('20250411190224Z')
+,p_updated_on=>wwv_flow_imp.dz('20250411190224Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(11819013165293128)
+,p_list_item_display_sequence=>290
+,p_list_item_link_text=>'Clientes'
+,p_list_item_link_target=>'f?p=&APP_ID.:4:&APP_SESSION.::&DEBUG.:::'
+,p_list_item_icon=>'fa-head-ai-sparkle'
+,p_parent_list_item_id=>wwv_flow_imp.id(8255106441955864)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'4'
+,p_created_on=>wwv_flow_imp.dz('20250507111113Z')
+,p_updated_on=>wwv_flow_imp.dz('20250507111113Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(8339507211145106)
+,p_list_item_display_sequence=>80
+,p_list_item_link_text=>'Ventas'
+,p_list_item_icon=>'fa-badge-dollar'
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'30,31'
+,p_created_on=>wwv_flow_imp.dz('20240613233811Z')
+,p_updated_on=>wwv_flow_imp.dz('20250911083156Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(12793291056370641)
+,p_list_item_display_sequence=>310
+,p_list_item_link_text=>'Proceso Ventas'
+,p_list_item_link_target=>'f?p=&APP_ID.:66:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-cash-register'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 66, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(8339507211145106)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'66,67'
+,p_created_on=>wwv_flow_imp.dz('20250529123313Z')
+,p_updated_on=>wwv_flow_imp.dz('20260430010039Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(11874938547937402)
+,p_list_item_display_sequence=>370
+,p_list_item_link_text=>'Orden de Venta'
+,p_list_item_link_target=>'f?p=&APP_ID.:52:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-ai-sparkle-zoom-in'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 52, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(8339507211145106)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'52'
+,p_created_on=>wwv_flow_imp.dz('20250508000516Z')
+,p_updated_on=>wwv_flow_imp.dz('20260430010156Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(12148205276723968)
+,p_list_item_display_sequence=>460
+,p_list_item_link_text=>'Reporte Orden'
+,p_list_item_link_target=>'f?p=&APP_ID.:58:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-print'
+,p_parent_list_item_id=>wwv_flow_imp.id(8339507211145106)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'58'
+,p_created_on=>wwv_flow_imp.dz('20250513124941Z')
+,p_updated_on=>wwv_flow_imp.dz('20250620111910Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(12149799653730083)
+,p_list_item_display_sequence=>380
+,p_list_item_link_text=>'Reservas de Productos'
+,p_list_item_link_target=>'f?p=&APP_ID.:59:&APP_SESSION.::&DEBUG.:::'
+,p_list_item_icon=>'fa-cart-magnifying-glass'
+,p_parent_list_item_id=>wwv_flow_imp.id(12148205276723968)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'59'
+,p_created_on=>wwv_flow_imp.dz('20250513125043Z')
+,p_updated_on=>wwv_flow_imp.dz('20250513125043Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(9808235671312828)
+,p_list_item_display_sequence=>210
+,p_list_item_link_text=>'Proveedores'
+,p_list_item_link_target=>'f?p=&APP_ID.:41:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-table'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 41, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'41,42'
+,p_created_on=>wwv_flow_imp.dz('20250412000750Z')
+,p_updated_on=>wwv_flow_imp.dz('20260430011349Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(9828298994464714)
+,p_list_item_display_sequence=>220
+,p_list_item_link_text=>'Contactos'
+,p_list_item_link_target=>'f?p=&APP_ID.:43:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-table-pointer'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'security_pkg.can_access(:APP_ID, :APP_USER, 43, NULL)',
+''))
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(9808235671312828)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'43,44'
+,p_created_on=>wwv_flow_imp.dz('20250412003309Z')
+,p_updated_on=>wwv_flow_imp.dz('20250911100906Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(16001999386644355)
+,p_list_item_display_sequence=>590
+,p_list_item_link_text=>'Nota de Credito Proveedor'
+,p_list_item_link_target=>'f?p=&APP_ID.:94:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-ai-sparkle-eraser'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 94, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(9808235671312828)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'94'
+,p_created_on=>wwv_flow_imp.dz('20251102202743Z')
+,p_updated_on=>wwv_flow_imp.dz('20260430003504Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(11719915312104968)
+,p_list_item_display_sequence=>230
+,p_list_item_link_text=>'Productos'
+,p_list_item_icon=>'fa-cash-register'
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'3'
+,p_created_on=>wwv_flow_imp.dz('20250507103951Z')
+,p_updated_on=>wwv_flow_imp.dz('20250911083246Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(11721586981122390)
+,p_list_item_display_sequence=>240
+,p_list_item_link_text=>'Productos'
+,p_list_item_link_target=>'f?p=&APP_ID.:5:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-ai-sparkle-generate-audio'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'security_pkg.can_access(:APP_ID, :APP_USER, 5, NULL)',
+''))
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(11719915312104968)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'5'
+,p_created_on=>wwv_flow_imp.dz('20250507104246Z')
+,p_updated_on=>wwv_flow_imp.dz('20250911100926Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(11756066830189434)
+,p_list_item_display_sequence=>250
+,p_list_item_link_text=>'Precio por Categoria'
+,p_list_item_link_target=>'f?p=&APP_ID.:8:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-badge-dollar'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'security_pkg.can_access(:APP_ID, :APP_USER, 8, NULL)',
+''))
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(11719915312104968)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'8'
+,p_created_on=>wwv_flow_imp.dz('20250507105356Z')
+,p_updated_on=>wwv_flow_imp.dz('20250911100954Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(11777800015215866)
+,p_list_item_display_sequence=>260
+,p_list_item_link_text=>'Producto Proveedor'
+,p_list_item_link_target=>'f?p=&APP_ID.:25:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-file-archive-o'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'security_pkg.can_access(:APP_ID, :APP_USER, 25, NULL)',
+''))
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(11719915312104968)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'25'
+,p_created_on=>wwv_flow_imp.dz('20250507105820Z')
+,p_updated_on=>wwv_flow_imp.dz('20250911101014Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(11790548476241621)
+,p_list_item_display_sequence=>270
+,p_list_item_link_text=>'Marcas'
+,p_list_item_link_target=>'f?p=&APP_ID.:37:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-gift'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'security_pkg.can_access(:APP_ID, :APP_USER, 37, NULL)',
+''))
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(11719915312104968)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'37'
+,p_created_on=>wwv_flow_imp.dz('20250507110238Z')
+,p_updated_on=>wwv_flow_imp.dz('20250911101938Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(11802612667263059)
+,p_list_item_display_sequence=>280
+,p_list_item_link_text=>'Categoria'
+,p_list_item_link_target=>'f?p=&APP_ID.:40:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-ai-innovation-lightbulb'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'security_pkg.can_access(:APP_ID, :APP_USER, 40, NULL)',
+''))
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(11719915312104968)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'40'
+,p_created_on=>wwv_flow_imp.dz('20250507110612Z')
+,p_updated_on=>wwv_flow_imp.dz('20250911102849Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(12108709573618278)
+,p_list_item_display_sequence=>320
+,p_list_item_link_text=>'Inventarios'
+,p_list_item_icon=>'fa-stock-chart'
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'12'
+,p_created_on=>wwv_flow_imp.dz('20250513123205Z')
+,p_updated_on=>wwv_flow_imp.dz('20250911083413Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(12111748507630559)
+,p_list_item_display_sequence=>330
+,p_list_item_link_text=>'Ajuste Manual de Stock'
+,p_list_item_link_target=>'f?p=&APP_ID.:32:&APP_SESSION.::&DEBUG.:::'
+,p_list_item_icon=>'fa-box-arrow-in-east'
+,p_parent_list_item_id=>wwv_flow_imp.id(12108709573618278)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'32'
+,p_created_on=>wwv_flow_imp.dz('20250513123407Z')
+,p_updated_on=>wwv_flow_imp.dz('20250513123407Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(12127454199676472)
+,p_list_item_display_sequence=>340
+,p_list_item_link_text=>'Stock de Productos'
+,p_list_item_link_target=>'f?p=&APP_ID.:47:&APP_SESSION.::&DEBUG.:::'
+,p_list_item_icon=>'fa-money-withdrawal'
+,p_parent_list_item_id=>wwv_flow_imp.id(12108709573618278)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'47'
+,p_created_on=>wwv_flow_imp.dz('20250513124146Z')
+,p_updated_on=>wwv_flow_imp.dz('20250513124146Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(12138835757706400)
+,p_list_item_display_sequence=>350
+,p_list_item_link_text=>'Reporte Inventario'
+,p_list_item_link_target=>'f?p=&APP_ID.:55:&APP_SESSION.::&DEBUG.:::'
+,p_list_item_icon=>'fa-print'
+,p_parent_list_item_id=>wwv_flow_imp.id(12108709573618278)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'55'
+,p_created_on=>wwv_flow_imp.dz('20250513124646Z')
+,p_updated_on=>wwv_flow_imp.dz('20250513124646Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(12141689573711543)
+,p_list_item_display_sequence=>360
+,p_list_item_link_text=>'Movimiento de Stock'
+,p_list_item_link_target=>'f?p=&APP_ID.:56:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-cart-times'
+,p_parent_list_item_id=>wwv_flow_imp.id(12138835757706400)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'56'
+,p_created_on=>wwv_flow_imp.dz('20250513124737Z')
+,p_updated_on=>wwv_flow_imp.dz('20250513124830Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(15472943404391227)
+,p_list_item_display_sequence=>570
+,p_list_item_link_text=>'Existencias'
+,p_list_item_link_target=>'f?p=&APP_ID.:88:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-abacus'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 88, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(12138835757706400)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'88'
+,p_created_on=>wwv_flow_imp.dz('20251016110532Z')
+,p_updated_on=>wwv_flow_imp.dz('20260430003646Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(14746849516426949)
+,p_list_item_display_sequence=>540
+,p_list_item_link_text=>'Proceso de Inventario'
+,p_list_item_link_target=>'f?p=&APP_ID.:79:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-book'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 79, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(12108709573618278)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'79'
+,p_created_on=>wwv_flow_imp.dz('20250930094041Z')
+,p_updated_on=>wwv_flow_imp.dz('20260430003907Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(15248561116464006)
+,p_list_item_display_sequence=>550
+,p_list_item_link_text=>'Conteo Fisico'
+,p_list_item_link_target=>'f?p=&APP_ID.:73:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-abacus'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 73, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(12108709573618278)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'73,74'
+,p_created_on=>wwv_flow_imp.dz('20251009234420Z')
+,p_updated_on=>wwv_flow_imp.dz('20260430003837Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(15360295200775388)
+,p_list_item_display_sequence=>560
+,p_list_item_link_text=>'Revision'
+,p_list_item_link_target=>'f?p=&APP_ID.:80:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-ai'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 80, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(12108709573618278)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'80,85'
+,p_created_on=>wwv_flow_imp.dz('20251010142933Z')
+,p_updated_on=>wwv_flow_imp.dz('20260430003714Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(12725308437975347)
+,p_list_item_display_sequence=>430
+,p_list_item_link_text=>'Caja'
+,p_list_item_icon=>'fa-file-o'
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'62'
+,p_created_on=>wwv_flow_imp.dz('20250529112721Z')
+,p_updated_on=>wwv_flow_imp.dz('20250911083126Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(12733619303987508)
+,p_list_item_display_sequence=>440
+,p_list_item_link_text=>'Configuracion de Cajas'
+,p_list_item_link_target=>'f?p=&APP_ID.:63:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-abacus'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 63, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(12725308437975347)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'63,64'
+,p_created_on=>wwv_flow_imp.dz('20250529112922Z')
+,p_updated_on=>wwv_flow_imp.dz('20260430011223Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(12745977496199273)
+,p_list_item_display_sequence=>450
+,p_list_item_link_text=>'Apertura de Caja'
+,p_list_item_link_target=>'f?p=&APP_ID.:65:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-ai-sparkle-enlarge'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 65, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(12725308437975347)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'65'
+,p_created_on=>wwv_flow_imp.dz('20250529120440Z')
+,p_updated_on=>wwv_flow_imp.dz('20260430011158Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(13320903194673444)
+,p_list_item_display_sequence=>500
+,p_list_item_link_text=>'Cierre de Caja'
+,p_list_item_link_target=>'f?p=&APP_ID.:61:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-money-bag'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 61, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(12725308437975347)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'61'
+,p_created_on=>wwv_flow_imp.dz('20250619195841Z')
+,p_updated_on=>wwv_flow_imp.dz('20260430010850Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(12815939864378893)
+,p_list_item_display_sequence=>470
+,p_list_item_link_text=>'Compras'
+,p_list_item_icon=>'fa-file-o'
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_created_on=>wwv_flow_imp.dz('20250529123436Z')
+,p_updated_on=>wwv_flow_imp.dz('20250911083056Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(12833043839386520)
+,p_list_item_display_sequence=>480
+,p_list_item_link_text=>'Proceso de Compras'
+,p_list_item_link_target=>'f?p=&APP_ID.:69:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-cash-register'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 69, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(12815939864378893)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'69,70'
+,p_created_on=>wwv_flow_imp.dz('20250529123552Z')
+,p_updated_on=>wwv_flow_imp.dz('20260430011136Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(12903212820928786)
+,p_list_item_display_sequence=>490
+,p_list_item_link_text=>'Orden de Compra'
+,p_list_item_link_target=>'f?p=&APP_ID.:71:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-vault'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 71, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(12815939864378893)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'71,72'
+,p_created_on=>wwv_flow_imp.dz('20250529140615Z')
+,p_updated_on=>wwv_flow_imp.dz('20260430011118Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(16589424898057873)
+,p_list_item_display_sequence=>630
+,p_list_item_link_text=>unistr('Recepci\00F3n de Orden de Compra')
+,p_list_item_link_target=>'f?p=&APP_ID.:107:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-box-arrow-in-south'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 107, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(12815939864378893)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'106'
+,p_created_on=>wwv_flow_imp.dz('20251127042401Z')
+,p_updated_on=>wwv_flow_imp.dz('20260430002846Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(16135373289245386)
+,p_list_item_display_sequence=>600
+,p_list_item_link_text=>'Cobros'
+,p_list_item_icon=>'fa-money-bag'
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'93'
+,p_created_on=>wwv_flow_imp.dz('20251104183433Z')
+,p_updated_on=>wwv_flow_imp.dz('20260430003322Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(16148657170363760)
+,p_list_item_display_sequence=>610
+,p_list_item_link_text=>'Cobros'
+,p_list_item_link_target=>'f?p=&APP_ID.:95:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-money-bag'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 95, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(16135373289245386)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'95,98'
+,p_created_on=>wwv_flow_imp.dz('20251104185417Z')
+,p_updated_on=>wwv_flow_imp.dz('20260430003202Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(19213877930556526)
+,p_list_item_display_sequence=>640
+,p_list_item_link_text=>'reset-password'
+,p_list_item_link_target=>'f?p=&APP_ID.:102:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-file-o'
+,p_list_item_disp_cond_type=>'NEVER'
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'102'
+,p_created_on=>wwv_flow_imp.dz('20260328105119Z')
+,p_updated_on=>wwv_flow_imp.dz('20260430005328Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(8044595892830593)
+,p_list_item_display_sequence=>10000
+,p_list_item_link_text=>'Administration'
+,p_list_item_link_target=>'f?p=&APP_ID.:10000:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-user-wrench'
+,p_list_item_current_type=>'TARGET_PAGE'
+,p_created_on=>wwv_flow_imp.dz('20240606062356Z')
+,p_updated_on=>wwv_flow_imp.dz('20250911084519Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(8649557169896206)
+,p_list_item_display_sequence=>150
+,p_list_item_link_text=>'Roles'
+,p_list_item_link_target=>'f?p=&APP_ID.:13:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-table'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'security_pkg.can_access(:APP_ID, :APP_USER, 13, NULL)',
+''))
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(8044595892830593)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'13,14'
+,p_created_on=>wwv_flow_imp.dz('20250328225144Z')
+,p_updated_on=>wwv_flow_imp.dz('20250911100754Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(12637951790948672)
+,p_list_item_display_sequence=>390
+,p_list_item_link_text=>'Monedas'
+,p_list_item_link_target=>'f?p=&APP_ID.:17:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-money'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 17, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(8044595892830593)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'17,18'
+,p_created_on=>wwv_flow_imp.dz('20250529001614Z')
+,p_updated_on=>wwv_flow_imp.dz('20260430011332Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(12668223827939210)
+,p_list_item_display_sequence=>400
+,p_list_item_link_text=>'Planes Cuota'
+,p_list_item_link_target=>'f?p=&APP_ID.:38:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-abacus'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 38, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(8044595892830593)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'38,49'
+,p_created_on=>wwv_flow_imp.dz('20250529112119Z')
+,p_updated_on=>wwv_flow_imp.dz('20260430011316Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(12690735946943745)
+,p_list_item_display_sequence=>410
+,p_list_item_link_text=>'Talonarios'
+,p_list_item_link_target=>'f?p=&APP_ID.:51:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-ai-sparkle-generate-document'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 51, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(8044595892830593)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'51,53'
+,p_created_on=>wwv_flow_imp.dz('20250529112205Z')
+,p_updated_on=>wwv_flow_imp.dz('20260430011255Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(12715912646950195)
+,p_list_item_display_sequence=>420
+,p_list_item_link_text=>'Metodos de Pago'
+,p_list_item_link_target=>'f?p=&APP_ID.:57:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-money-check-pen'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 57, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(8044595892830593)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'57,60'
+,p_created_on=>wwv_flow_imp.dz('20250529112309Z')
+,p_updated_on=>wwv_flow_imp.dz('20260430003616Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(15928566803184577)
+,p_list_item_display_sequence=>580
+,p_list_item_link_text=>'Formas de Pago'
+,p_list_item_link_target=>'f?p=&APP_ID.:89:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-dollar'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 89, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(8044595892830593)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'89,90'
+,p_created_on=>wwv_flow_imp.dz('20251101205745Z')
+,p_updated_on=>wwv_flow_imp.dz('20260430003550Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(16531242107171066)
+,p_list_item_display_sequence=>620
+,p_list_item_link_text=>'Cotizacion'
+,p_list_item_link_target=>'f?p=&APP_ID.:101:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-exchange'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 101, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(8044595892830593)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'101'
+,p_created_on=>wwv_flow_imp.dz('20251122104933Z')
+,p_updated_on=>wwv_flow_imp.dz('20260430003126Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(14175335484895525)
+,p_list_item_display_sequence=>10020
+,p_list_item_link_text=>'Seguridad'
+,p_list_item_current_type=>'TARGET_PAGE'
+,p_created_on=>wwv_flow_imp.dz('20250911104935Z')
+,p_updated_on=>wwv_flow_imp.dz('20250911104935Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(14184202958932464)
+,p_list_item_display_sequence=>510
+,p_list_item_link_text=>'Privilegios'
+,p_list_item_link_target=>'f?p=&APP_ID.:75:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-ai-sparkle-generate-list'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'security_pkg.can_access(:APP_ID, :APP_USER, 75, NULL)',
+''))
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(14175335484895525)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'75,76'
+,p_created_on=>wwv_flow_imp.dz('20250911105544Z')
+,p_updated_on=>wwv_flow_imp.dz('20250912233326Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(14245746968094633)
+,p_list_item_display_sequence=>520
+,p_list_item_link_text=>'Roles - Privilegios'
+,p_list_item_link_target=>'f?p=&APP_ID.:81:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-accordion'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 81, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(14175335484895525)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'81'
+,p_created_on=>wwv_flow_imp.dz('20250911112246Z')
+,p_updated_on=>wwv_flow_imp.dz('20260430005923Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(14296153979158716)
+,p_list_item_display_sequence=>530
+,p_list_item_link_text=>'Recursos'
+,p_list_item_link_target=>'f?p=&APP_ID.:77:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-clipboard'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 77, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(14175335484895525)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'77,78'
+,p_created_on=>wwv_flow_imp.dz('20250912205327Z')
+,p_updated_on=>wwv_flow_imp.dz('20260430005817Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp.component_end;
+end;
+/

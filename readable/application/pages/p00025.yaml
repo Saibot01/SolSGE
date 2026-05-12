@@ -184,6 +184,7 @@ regions:
       type: Popup LOV
 
     heading: 
+      heading: Producto
       alignment: start
 
     settings: 
@@ -201,7 +202,7 @@ regions:
       type: No
 
     layout: 
-      sequence: 10
+      sequence: 30
       column-alignment: start
       stretch: Use Report Setting
 
@@ -209,7 +210,7 @@ regions:
       value-identifies-row: false
 
     validation: 
-      value-required: false
+      value-required: true
 
     list-of-values: 
       type: Shared Component
@@ -253,6 +254,7 @@ regions:
       type: Popup LOV
 
     heading: 
+      heading: Proveedor
       alignment: start
 
     settings: 
@@ -270,7 +272,7 @@ regions:
       type: No
 
     layout: 
-      sequence: 20
+      sequence: 40
       column-alignment: start
       stretch: Use Report Setting
 
@@ -278,7 +280,7 @@ regions:
       value-identifies-row: false
 
     validation: 
-      value-required: false
+      value-required: true
 
     list-of-values: 
       type: Shared Component
@@ -330,7 +332,7 @@ regions:
       based-on: Item Value
 
     layout: 
-      sequence: 30
+      sequence: 50
       column-alignment: start
       stretch: Use Report Setting
 
@@ -361,6 +363,491 @@ regions:
       sort: true
       control-break/aggregate: true
       hide: true
+
+  - # ====== Column: CODIGO_REFERENCIA ===========================
+    id: 20234622800558317
+    identification: 
+      column-name: CODIGO_REFERENCIA
+      type: Text Field
+
+    heading: 
+      heading: Codigo Referencia
+      alignment: start
+
+    settings: 
+      trim-spaces: Leading and Trailing
+      text-case: NO CHANGE
+
+    layout: 
+      sequence: 60
+      column-alignment: start
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: false
+      maximum-length: 100
+
+    source: 
+      type: Database Column
+      database-column: CODIGO_REFERENCIA
+      data-type: VARCHAR2
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      performance-impacting-operators: 
+      - Contains
+      - Starts With
+      - Case Insensitive
+      - Regular Expression
+      text-case: Mixed
+      lov-type: Distinct Column
+      exact-match: true
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: FECHA_INICIO ================================
+    id: 20234798366558318
+    identification: 
+      column-name: FECHA_INICIO
+      type: Date Picker
+
+    heading: 
+      heading: Fecha Inicio
+      alignment: start
+
+    settings: 
+      show-time: false
+      display-as: Popup
+      minimum-date: None
+      maximum-date: None
+      multiple-months: No
+      use-defaults: true
+
+    layout: 
+      sequence: 70
+      column-alignment: start
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: false
+
+    source: 
+      type: Database Column
+      database-column: FECHA_INICIO
+      data-type: DATE
+      query-only: false
+      primary-key: true
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      lov-type: Distinct Column
+      date-ranges: All
+
+    export-/-printing: 
+      include-in-export-/-print: false
+
+    enable-users-to: 
+      sort: false
+      hide: true
+
+  - # ====== Column: FECHA_FIN ===================================
+    id: 20234839408558319
+    identification: 
+      column-name: FECHA_FIN
+      type: Date Picker
+
+    heading: 
+      heading: Fecha Fin
+      alignment: start
+
+    settings: 
+      show-time: false
+      display-as: Popup
+      minimum-date: None
+      maximum-date: None
+      multiple-months: No
+      use-defaults: true
+
+    layout: 
+      sequence: 80
+      column-alignment: start
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: false
+
+    source: 
+      type: Database Column
+      database-column: FECHA_FIN
+      data-type: DATE
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      lov-type: Distinct Column
+      date-ranges: All
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: ESTADO ======================================
+    id: 20234981020558320
+    identification: 
+      column-name: ESTADO
+      type: Select List
+
+    heading: 
+      heading: Estado
+      alignment: start
+
+    layout: 
+      sequence: 90
+      column-alignment: start
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: true
+
+    list-of-values: 
+      type: Static Values
+      static-values: 'STATIC:ACTIVO;ACTIVO,INACTIVO;INACTIVO,SUSPENDIDO;SUSPENDIDO'
+      display-extra-values: true
+      display-null-value: false
+
+    source: 
+      type: Database Column
+      database-column: ESTADO
+      data-type: VARCHAR2
+      query-only: false
+      primary-key: false
+
+    default: 
+      type: Static
+      static-value: ACTIVO
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      performance-impacting-operators: 
+      - Contains
+      - Starts With
+      - Case Insensitive
+      - Regular Expression
+      text-case: Mixed
+      lov-type: Use List of Values
+      exact-match: true
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: FECHA_CREACION ==============================
+    id: 20235030403558321
+    identification: 
+      column-name: FECHA_CREACION
+      type: Date Picker
+
+    heading: 
+      heading: Fecha Creacion
+      alignment: start
+
+    settings: 
+      show-time: false
+      display-as: Popup
+      minimum-date: None
+      maximum-date: None
+      multiple-months: No
+      use-defaults: true
+
+    layout: 
+      sequence: 100
+      column-alignment: start
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: true
+
+    source: 
+      type: Database Column
+      database-column: FECHA_CREACION
+      data-type: DATE
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      lov-type: Distinct Column
+      date-ranges: All
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: USUARIO_CREACION ============================
+    id: 20235115730558322
+    identification: 
+      column-name: USUARIO_CREACION
+      type: Text Field
+
+    heading: 
+      heading: Usuario Creacion
+      alignment: start
+
+    settings: 
+      trim-spaces: Leading and Trailing
+      text-case: NO CHANGE
+
+    layout: 
+      sequence: 110
+      column-alignment: start
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: false
+      maximum-length: 100
+
+    source: 
+      type: Database Column
+      database-column: USUARIO_CREACION
+      data-type: VARCHAR2
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      performance-impacting-operators: 
+      - Contains
+      - Starts With
+      - Case Insensitive
+      - Regular Expression
+      text-case: Mixed
+      lov-type: Distinct Column
+      exact-match: true
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: FECHA_MODIFICACION ==========================
+    id: 20235246519558323
+    identification: 
+      column-name: FECHA_MODIFICACION
+      type: Date Picker
+
+    heading: 
+      heading: Fecha Modificacion
+      alignment: start
+
+    settings: 
+      show-time: false
+      display-as: Popup
+      minimum-date: None
+      maximum-date: None
+      multiple-months: No
+      use-defaults: true
+
+    layout: 
+      sequence: 120
+      column-alignment: start
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: false
+
+    source: 
+      type: Database Column
+      database-column: FECHA_MODIFICACION
+      data-type: DATE
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      lov-type: Distinct Column
+      date-ranges: All
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: USUARIO_MODIFICACION ========================
+    id: 20235368419558324
+    identification: 
+      column-name: USUARIO_MODIFICACION
+      type: Text Field
+
+    heading: 
+      heading: Usuario Modificacion
+      alignment: start
+
+    settings: 
+      trim-spaces: Leading and Trailing
+      text-case: NO CHANGE
+
+    layout: 
+      sequence: 130
+      column-alignment: start
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: false
+      maximum-length: 100
+
+    source: 
+      type: Database Column
+      database-column: USUARIO_MODIFICACION
+      data-type: VARCHAR2
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      performance-impacting-operators: 
+      - Contains
+      - Starts With
+      - Case Insensitive
+      - Regular Expression
+      text-case: Mixed
+      lov-type: Distinct Column
+      exact-match: true
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: EDITAR ======================================
+    id: 20237277633558343
+    identification: 
+      column-name: EDITAR
+      type: Link
+
+    heading: 
+      alignment: start
+
+    layout: 
+      sequence: 5
+      column-alignment: start
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:36:&SESSION.::&DEBUG.::P36_ID_PRODUCTO,P36_ID_PERSONA,P36_FECHA_INICIO:&ID_PRODUCTO.,&ID_PERSONA.,&FECHA_INICIO.'
+        page: 36 # Producto Proveedor
+        values: 
+          p36_id_producto: '&ID_PRODUCTO.'
+          p36_id_persona: '&ID_PERSONA.'
+          p36_fecha_inicio: '&FECHA_INICIO.'
+
+      link-text: <span aria-hidden="true" class="fa fa-edit"></span>
+
+    source: 
+      type: SQL Expression
+      sql-expression: "'Editar'"
+      data-type: VARCHAR2
+
+    column-filter: 
+      enabled: true
+      performance-impacting-operators: 
+      - Contains
+      - Starts With
+      - Case Insensitive
+      - Regular Expression
+      text-case: Mixed
+      lov-type: Distinct Column
+      exact-match: true
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+    security: 
+      escape-special-characters: true
 
   printing: 
     page: 
@@ -409,7 +896,7 @@ buttons:
     label: Crear
 
   layout: 
-    sequence: 10
+    sequence: 20
     region: Producto Proveedor # 11778999545215868
     slot: EDIT
     start-new-layout: false
@@ -430,6 +917,36 @@ buttons:
       url: 'f?p=&APP_ID.:36:&SESSION.::&DEBUG.:CR,36::'
       page: 36 # Producto Proveedor
       clear-cache: CR,36
+
+    warn-on-unsaved-changes: Do Not Check
+
+- # ====== Button: BTN_Carga_Masiva ============================
+  id: 20236781582558338
+  identification: 
+    button-name: BTN_Carga_Masiva
+    label: importar CSV
+
+  layout: 
+    sequence: 10
+    region: Producto Proveedor # 11778999545215868
+    slot: EDIT
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text
+    hot: false
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Redirect to Page in this Application
+    target: 
+      url: 'f?p=&APP_ID.:104:&SESSION.::&DEBUG.:::'
+      page: 104 # Carga Masiva Producto-Proveedor
 
     warn-on-unsaved-changes: Do Not Check
 

@@ -1,0 +1,621 @@
+prompt --application/shared_components/navigation/breadcrumbs/breadcrumb
+begin
+--   Manifest
+--     MENU: Breadcrumb
+--   Manifest End
+wwv_flow_imp.component_begin (
+ p_version_yyyy_mm_dd=>'2024.11.30'
+,p_release=>'24.2.15'
+,p_default_workspace_id=>7697821598969118
+,p_default_application_id=>100
+,p_default_id_offset=>0
+,p_default_owner=>'WKSP_WORKPLACE'
+);
+wwv_flow_imp_shared.create_menu(
+ p_id=>wwv_flow_imp.id(7705913887831249)
+,p_name=>'Breadcrumb'
+,p_created_on=>wwv_flow_imp.dz('20240606062349Z')
+,p_updated_on=>wwv_flow_imp.dz('20260511065057Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(8045478405830590)
+,p_short_name=>'Administration'
+,p_link=>'f?p=&APP_ID.:10000:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>10000
+,p_created_on=>wwv_flow_imp.dz('20240606062356Z')
+,p_updated_on=>wwv_flow_imp.dz('20240606062356Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(8189951448383988)
+,p_short_name=>'Personas'
+,p_link=>'f?p=&APP_ID.:9:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>9
+,p_created_on=>wwv_flow_imp.dz('20240613115142Z')
+,p_updated_on=>wwv_flow_imp.dz('20250513130627Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(8268171500955855)
+,p_short_name=>'Clientes'
+,p_link=>'f?p=&APP_ID.:19:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>19
+,p_created_on=>wwv_flow_imp.dz('20240613212303Z')
+,p_updated_on=>wwv_flow_imp.dz('20250513130627Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(8287163970904534)
+,p_short_name=>'Oficinas'
+,p_link=>'f?p=&APP_ID.:21:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>21
+,p_created_on=>wwv_flow_imp.dz('20240613213136Z')
+,p_updated_on=>wwv_flow_imp.dz('20240613213136Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(8301224953887389)
+,p_short_name=>'Departamentos'
+,p_link=>'f?p=&APP_ID.:23:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>23
+,p_created_on=>wwv_flow_imp.dz('20240613213428Z')
+,p_updated_on=>wwv_flow_imp.dz('20240613213428Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(8317094800859514)
+,p_short_name=>'Ciudades'
+,p_link=>'f?p=&APP_ID.:26:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>26
+,p_created_on=>wwv_flow_imp.dz('20240613213907Z')
+,p_updated_on=>wwv_flow_imp.dz('20240613213907Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(8353117399145095)
+,p_short_name=>'Ventas'
+,p_link=>'f?p=&APP_ID.:30:&SESSION.::&DEBUG.:::'
+,p_page_id=>30
+,p_created_on=>wwv_flow_imp.dz('20240613233811Z')
+,p_updated_on=>wwv_flow_imp.dz('20250620111508Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(8618294148071068)
+,p_parent_id=>wwv_flow_imp.id(8189951448383988)
+,p_short_name=>'Empleados Roles'
+,p_link=>'f?p=&APP_ID.:11:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>11
+,p_created_on=>wwv_flow_imp.dz('20250328010732Z')
+,p_updated_on=>wwv_flow_imp.dz('20250328010732Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(8653533060896213)
+,p_short_name=>'Roles'
+,p_link=>'f?p=&APP_ID.:13:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>13
+,p_created_on=>wwv_flow_imp.dz('20250328225144Z')
+,p_updated_on=>wwv_flow_imp.dz('20250328225144Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(9477310147028232)
+,p_parent_id=>wwv_flow_imp.id(8189951448383988)
+,p_short_name=>'Empleados'
+,p_link=>'f?p=&APP_ID.:2:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>2
+,p_created_on=>wwv_flow_imp.dz('20241003081055Z')
+,p_updated_on=>wwv_flow_imp.dz('20241003081055Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(9652447111881537)
+,p_short_name=>'PRUEBA C IG'
+,p_link=>'f?p=&APP_ID.:28:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>28
+,p_created_on=>wwv_flow_imp.dz('20250411172237Z')
+,p_updated_on=>wwv_flow_imp.dz('20250411172237Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(9768494231480194)
+,p_short_name=>'Prueba Direccion IG'
+,p_link=>'f?p=&APP_ID.:34:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>34
+,p_created_on=>wwv_flow_imp.dz('20250411190224Z')
+,p_updated_on=>wwv_flow_imp.dz('20250411190224Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(9813031577312834)
+,p_short_name=>'Proveedores IG'
+,p_link=>'f?p=&APP_ID.:41:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>41
+,p_created_on=>wwv_flow_imp.dz('20250412000750Z')
+,p_updated_on=>wwv_flow_imp.dz('20250412000750Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(9838815802464723)
+,p_short_name=>'Contactos IG'
+,p_link=>'f?p=&APP_ID.:43:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>43
+,p_created_on=>wwv_flow_imp.dz('20250412003309Z')
+,p_updated_on=>wwv_flow_imp.dz('20250412003309Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(11522340445464590)
+,p_parent_id=>wwv_flow_imp.id(8189951448383988)
+,p_short_name=>'Empleados IG'
+,p_link=>'f?p=&APP_ID.:16:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>16
+,p_created_on=>wwv_flow_imp.dz('20250430043948Z')
+,p_updated_on=>wwv_flow_imp.dz('20250430043948Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(11720741318104978)
+,p_short_name=>'Productos'
+,p_link=>'f?p=&APP_ID.:3:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>3
+,p_created_on=>wwv_flow_imp.dz('20250507103952Z')
+,p_updated_on=>wwv_flow_imp.dz('20250513130627Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(11722476967122391)
+,p_parent_id=>wwv_flow_imp.id(11720741318104978)
+,p_short_name=>'Productos'
+,p_link=>'f?p=&APP_ID.:5:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>5
+,p_created_on=>wwv_flow_imp.dz('20250507104246Z')
+,p_updated_on=>wwv_flow_imp.dz('20250507104246Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(11756972421189435)
+,p_parent_id=>wwv_flow_imp.id(11720741318104978)
+,p_short_name=>'Precio por Categoria'
+,p_link=>'f?p=&APP_ID.:8:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>8
+,p_created_on=>wwv_flow_imp.dz('20250507105356Z')
+,p_updated_on=>wwv_flow_imp.dz('20250507105356Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(11778790388215867)
+,p_parent_id=>wwv_flow_imp.id(11720741318104978)
+,p_short_name=>'Producto Proveedor'
+,p_link=>'f?p=&APP_ID.:25:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>25
+,p_created_on=>wwv_flow_imp.dz('20250507105820Z')
+,p_updated_on=>wwv_flow_imp.dz('20250507105820Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(11791461938241622)
+,p_parent_id=>wwv_flow_imp.id(11720741318104978)
+,p_short_name=>'Marcas'
+,p_link=>'f?p=&APP_ID.:37:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>37
+,p_created_on=>wwv_flow_imp.dz('20250507110238Z')
+,p_updated_on=>wwv_flow_imp.dz('20250507110238Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(11803509483263060)
+,p_parent_id=>wwv_flow_imp.id(11720741318104978)
+,p_short_name=>'Categoria'
+,p_link=>'f?p=&APP_ID.:40:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>40
+,p_created_on=>wwv_flow_imp.dz('20250507110612Z')
+,p_updated_on=>wwv_flow_imp.dz('20250507110612Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(11819917191293129)
+,p_parent_id=>wwv_flow_imp.id(8268171500955855)
+,p_short_name=>'Clientes'
+,p_link=>'f?p=&APP_ID.:4:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>4
+,p_created_on=>wwv_flow_imp.dz('20250507111113Z')
+,p_updated_on=>wwv_flow_imp.dz('20250507111113Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(11875834982937408)
+,p_parent_id=>wwv_flow_imp.id(8353117399145095)
+,p_short_name=>'Orden de Venta'
+,p_link=>'f?p=&APP_ID.:52:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>52
+,p_created_on=>wwv_flow_imp.dz('20250508000516Z')
+,p_updated_on=>wwv_flow_imp.dz('20250508000516Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(12109684248618292)
+,p_short_name=>'Inventarios'
+,p_link=>'f?p=&APP_ID.:12:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>12
+,p_created_on=>wwv_flow_imp.dz('20250513123205Z')
+,p_updated_on=>wwv_flow_imp.dz('20250513123205Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(12112623986630560)
+,p_parent_id=>wwv_flow_imp.id(12109684248618292)
+,p_short_name=>'Ajuste Manual de Stock'
+,p_link=>'f?p=&APP_ID.:32:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>32
+,p_created_on=>wwv_flow_imp.dz('20250513123407Z')
+,p_updated_on=>wwv_flow_imp.dz('20250513123407Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(12128394239676472)
+,p_parent_id=>wwv_flow_imp.id(12109684248618292)
+,p_short_name=>'Stock de Productos'
+,p_link=>'f?p=&APP_ID.:47:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>47
+,p_created_on=>wwv_flow_imp.dz('20250513124146Z')
+,p_updated_on=>wwv_flow_imp.dz('20250513124146Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(12139785487706401)
+,p_parent_id=>wwv_flow_imp.id(12109684248618292)
+,p_short_name=>'Reporte Inventario'
+,p_link=>'f?p=&APP_ID.:55:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>55
+,p_created_on=>wwv_flow_imp.dz('20250513124646Z')
+,p_updated_on=>wwv_flow_imp.dz('20250513124646Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(12142579617711544)
+,p_parent_id=>wwv_flow_imp.id(12139785487706401)
+,p_short_name=>'Movimiento de Stock'
+,p_link=>'f?p=&APP_ID.:56:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>56
+,p_created_on=>wwv_flow_imp.dz('20250513124737Z')
+,p_updated_on=>wwv_flow_imp.dz('20250513124737Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(12149182229723969)
+,p_parent_id=>wwv_flow_imp.id(8353117399145095)
+,p_short_name=>'Reporte Orden'
+,p_link=>'f?p=&APP_ID.:58:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>58
+,p_created_on=>wwv_flow_imp.dz('20250513124941Z')
+,p_updated_on=>wwv_flow_imp.dz('20250513124941Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(12150645786730084)
+,p_parent_id=>wwv_flow_imp.id(12149182229723969)
+,p_short_name=>'Reservas de Productos'
+,p_link=>'f?p=&APP_ID.:59:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>59
+,p_created_on=>wwv_flow_imp.dz('20250513125043Z')
+,p_updated_on=>wwv_flow_imp.dz('20250513125043Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(12645161378948694)
+,p_parent_id=>wwv_flow_imp.id(8045478405830590)
+,p_short_name=>'Monedas'
+,p_link=>'f?p=&APP_ID.:17:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>17
+,p_created_on=>wwv_flow_imp.dz('20250529001614Z')
+,p_updated_on=>wwv_flow_imp.dz('20250529001614Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(12676453495939213)
+,p_parent_id=>wwv_flow_imp.id(8045478405830590)
+,p_short_name=>'Planes Cuota'
+,p_link=>'f?p=&APP_ID.:38:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>38
+,p_created_on=>wwv_flow_imp.dz('20250529112119Z')
+,p_updated_on=>wwv_flow_imp.dz('20250529112119Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(12707381144943752)
+,p_parent_id=>wwv_flow_imp.id(8045478405830590)
+,p_short_name=>'Talonarios'
+,p_link=>'f?p=&APP_ID.:51:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>51
+,p_created_on=>wwv_flow_imp.dz('20250529112205Z')
+,p_updated_on=>wwv_flow_imp.dz('20250529112205Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(12724103542950199)
+,p_parent_id=>wwv_flow_imp.id(8045478405830590)
+,p_short_name=>'Metodos de Pago'
+,p_link=>'f?p=&APP_ID.:57:&SESSION.::&DEBUG.:::'
+,p_page_id=>57
+,p_created_on=>wwv_flow_imp.dz('20250529112309Z')
+,p_updated_on=>wwv_flow_imp.dz('20251101211420Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(12742248829987512)
+,p_short_name=>'Configuracion de Cajas'
+,p_link=>'f?p=&APP_ID.:63:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>63
+,p_created_on=>wwv_flow_imp.dz('20250529112922Z')
+,p_updated_on=>wwv_flow_imp.dz('20250529112922Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(12746890552199274)
+,p_short_name=>'Apertura de Caja'
+,p_link=>'f?p=&APP_ID.:65:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>65
+,p_created_on=>wwv_flow_imp.dz('20250529120440Z')
+,p_updated_on=>wwv_flow_imp.dz('20250529120440Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(12814992323370651)
+,p_parent_id=>wwv_flow_imp.id(8353117399145095)
+,p_short_name=>'Proceso Ventas'
+,p_link=>'f?p=&APP_ID.:66:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>66
+,p_created_on=>wwv_flow_imp.dz('20250529123314Z')
+,p_updated_on=>wwv_flow_imp.dz('20250529123314Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(12816872412378893)
+,p_short_name=>'Compras'
+,p_link=>'f?p=&APP_ID.:68:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>68
+,p_created_on=>wwv_flow_imp.dz('20250529123436Z')
+,p_updated_on=>wwv_flow_imp.dz('20250529123436Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(12853497179386528)
+,p_short_name=>'Proceso de Compras'
+,p_link=>'f?p=&APP_ID.:69:&SESSION.::&DEBUG.:::'
+,p_page_id=>69
+,p_created_on=>wwv_flow_imp.dz('20250529123552Z')
+,p_updated_on=>wwv_flow_imp.dz('20250529140515Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(12916236694928792)
+,p_parent_id=>wwv_flow_imp.id(12816872412378893)
+,p_short_name=>'Orden de Compra'
+,p_link=>'f?p=&APP_ID.:71:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>71
+,p_created_on=>wwv_flow_imp.dz('20250529140615Z')
+,p_updated_on=>wwv_flow_imp.dz('20250529140615Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(13321888981673452)
+,p_short_name=>'Cierre de Caja'
+,p_link=>'f?p=&APP_ID.:61:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>61
+,p_created_on=>wwv_flow_imp.dz('20250619195841Z')
+,p_updated_on=>wwv_flow_imp.dz('20250619195841Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(14193449510932481)
+,p_short_name=>'Privilegios'
+,p_link=>'f?p=&APP_ID.:75:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>75
+,p_created_on=>wwv_flow_imp.dz('20250911105544Z')
+,p_updated_on=>wwv_flow_imp.dz('20250911105544Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(14246656017094634)
+,p_short_name=>'Roles - Privilegios'
+,p_link=>'f?p=&APP_ID.:81:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>81
+,p_created_on=>wwv_flow_imp.dz('20250911112246Z')
+,p_updated_on=>wwv_flow_imp.dz('20250911112246Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(14306756628158725)
+,p_short_name=>'Recursos'
+,p_link=>'f?p=&APP_ID.:77:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>77
+,p_created_on=>wwv_flow_imp.dz('20250912205327Z')
+,p_updated_on=>wwv_flow_imp.dz('20250912205327Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(14747778088426962)
+,p_short_name=>'Proceso de Inventario'
+,p_link=>'f?p=&APP_ID.:79:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>79
+,p_created_on=>wwv_flow_imp.dz('20250930094041Z')
+,p_updated_on=>wwv_flow_imp.dz('20250930094041Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(15269145792464028)
+,p_parent_id=>wwv_flow_imp.id(12109684248618292)
+,p_short_name=>'Conteo Fisico'
+,p_link=>'f?p=&APP_ID.:73:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>73
+,p_created_on=>wwv_flow_imp.dz('20251009234420Z')
+,p_updated_on=>wwv_flow_imp.dz('20251009234420Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(15380859695775396)
+,p_parent_id=>wwv_flow_imp.id(12109684248618292)
+,p_short_name=>'Revision'
+,p_link=>'f?p=&APP_ID.:80:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>80
+,p_created_on=>wwv_flow_imp.dz('20251010142933Z')
+,p_updated_on=>wwv_flow_imp.dz('20251010142933Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(15473857232391233)
+,p_parent_id=>wwv_flow_imp.id(12139785487706401)
+,p_short_name=>'Existencias'
+,p_link=>'f?p=&APP_ID.:88:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>88
+,p_created_on=>wwv_flow_imp.dz('20251016110532Z')
+,p_updated_on=>wwv_flow_imp.dz('20251016110532Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(15935740162184595)
+,p_short_name=>'Formas de Pago'
+,p_link=>'f?p=&APP_ID.:89:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>89
+,p_created_on=>wwv_flow_imp.dz('20251101205746Z')
+,p_updated_on=>wwv_flow_imp.dz('20251101205746Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(16002821881644360)
+,p_parent_id=>wwv_flow_imp.id(9813031577312834)
+,p_short_name=>'Nota de Credito Proveedor'
+,p_link=>'f?p=&APP_ID.:94:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>94
+,p_created_on=>wwv_flow_imp.dz('20251102202743Z')
+,p_updated_on=>wwv_flow_imp.dz('20251102202743Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(16136245567245394)
+,p_short_name=>'Cobros'
+,p_link=>'f?p=&APP_ID.:93:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>93
+,p_created_on=>wwv_flow_imp.dz('20251104183433Z')
+,p_updated_on=>wwv_flow_imp.dz('20251104183433Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(16160235734363772)
+,p_parent_id=>wwv_flow_imp.id(16136245567245394)
+,p_short_name=>'Cobros'
+,p_link=>'f?p=&APP_ID.:95:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>95
+,p_created_on=>wwv_flow_imp.dz('20251104185417Z')
+,p_updated_on=>wwv_flow_imp.dz('20251104185417Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(16532152428171081)
+,p_short_name=>'Cotizacion'
+,p_link=>'f?p=&APP_ID.:101:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>101
+,p_created_on=>wwv_flow_imp.dz('20251122104933Z')
+,p_updated_on=>wwv_flow_imp.dz('20251122104933Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(16590317432057884)
+,p_short_name=>unistr('Recepci\00F3n de Orden de Compra')
+,p_link=>'f?p=&APP_ID.:106:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>106
+,p_created_on=>wwv_flow_imp.dz('20251127042401Z')
+,p_updated_on=>wwv_flow_imp.dz('20251127042401Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(16617411826670860)
+,p_short_name=>unistr('Recepci\00F3n de productos')
+,p_link=>'f?p=&APP_ID.:107:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>107
+,p_created_on=>wwv_flow_imp.dz('20251127085251Z')
+,p_updated_on=>wwv_flow_imp.dz('20251127085251Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(19214720891556511)
+,p_short_name=>'reset-password'
+,p_link=>'f?p=&APP_ID.:102:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>102
+,p_created_on=>wwv_flow_imp.dz('20260328105119Z')
+,p_updated_on=>wwv_flow_imp.dz('20260328105119Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(20377679293516320)
+,p_short_name=>'Carga Masiva Producto-Proveedor'
+,p_link=>'f?p=&APP_ID.:104:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>104
+,p_created_on=>wwv_flow_imp.dz('20260511065057Z')
+,p_updated_on=>wwv_flow_imp.dz('20260511065057Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp.component_end;
+end;
+/

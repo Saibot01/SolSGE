@@ -1,0 +1,249 @@
+prompt --application/pages/page_00032
+begin
+--   Manifest
+--     PAGE: 00032
+--   Manifest End
+wwv_flow_imp.component_begin (
+ p_version_yyyy_mm_dd=>'2024.11.30'
+,p_release=>'24.2.15'
+,p_default_workspace_id=>7697821598969118
+,p_default_application_id=>100
+,p_default_id_offset=>0
+,p_default_owner=>'WKSP_WORKPLACE'
+);
+wwv_flow_imp_page.create_page(
+ p_id=>32
+,p_name=>'Ajuste Manual de Stock'
+,p_alias=>'AJUSTE-MANUAL-DE-STOCK'
+,p_step_title=>'Ajuste Manual de Stock'
+,p_autocomplete_on_off=>'OFF'
+,p_page_template_options=>'#DEFAULT#'
+,p_protection_level=>'C'
+,p_page_component_map=>'18'
+,p_created_on=>wwv_flow_imp.dz('20250513123407Z')
+,p_last_updated_on=>wwv_flow_imp.dz('20250513130333Z')
+,p_created_by=>'WILLIAN'
+,p_last_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_page.create_page_plug(
+ p_id=>wwv_flow_imp.id(12112116409630560)
+,p_plug_name=>'Breadcrumb'
+,p_region_template_options=>'#DEFAULT#:t-BreadcrumbRegion--useBreadcrumbTitle'
+,p_component_template_options=>'#DEFAULT#'
+,p_plug_template=>2531463326621247859
+,p_plug_display_sequence=>10
+,p_plug_display_point=>'REGION_POSITION_01'
+,p_menu_id=>wwv_flow_imp.id(7705913887831249)
+,p_plug_source_type=>'NATIVE_BREADCRUMB'
+,p_menu_template_id=>4072363345357175094
+,p_created_on=>wwv_flow_imp.dz('20250513123407Z')
+,p_updated_on=>wwv_flow_imp.dz('20250513123407Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_page.create_page_plug(
+ p_id=>wwv_flow_imp.id(12112898749630560)
+,p_plug_name=>'Ajuste Manual de Stock'
+,p_region_template_options=>'#DEFAULT#:t-IRR-region--hideHeader js-addHiddenHeadingRoleDesc'
+,p_plug_template=>2100526641005906379
+,p_plug_display_sequence=>10
+,p_query_type=>'TABLE'
+,p_query_table=>'AJUSTES_STOCK'
+,p_include_rowid_column=>false
+,p_plug_source_type=>'NATIVE_IR'
+,p_prn_page_header=>'Ajuste Manual de Stock'
+,p_created_on=>wwv_flow_imp.dz('20250513123408Z')
+,p_updated_on=>wwv_flow_imp.dz('20250513130333Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_page.create_worksheet(
+ p_id=>wwv_flow_imp.id(12112951105630560)
+,p_name=>'Ajuste Manual de Stock'
+,p_max_row_count_message=>'The maximum row count for this report is #MAX_ROW_COUNT# rows.  Please apply a filter to reduce the number of records in your query.'
+,p_no_data_found_message=>'No data found.'
+,p_pagination_type=>'ROWS_X_TO_Y'
+,p_pagination_display_pos=>'BOTTOM_RIGHT'
+,p_report_list_mode=>'TABS'
+,p_lazy_loading=>false
+,p_show_detail_link=>'C'
+,p_show_notify=>'Y'
+,p_download_formats=>'CSV:HTML:XLSX:PDF'
+,p_enable_mail_download=>'Y'
+,p_detail_link=>'f?p=&APP_ID.:45:&SESSION.::&DEBUG.:RP,:P45_ID_AJUSTE:#ID_AJUSTE#'
+,p_detail_link_text=>'<span role="img" aria-label="Editar" class="fa fa-edit" title="Editar"></span>'
+,p_owner=>'WILLIAN'
+,p_internal_uid=>12112951105630560
+,p_created_on=>wwv_flow_imp.dz('20250513123408Z')
+,p_updated_on=>wwv_flow_imp.dz('20250513130333Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(12113534886630652)
+,p_db_column_name=>'ID_AJUSTE'
+,p_display_order=>0
+,p_is_primary_key=>'Y'
+,p_column_identifier=>'A'
+,p_column_label=>'Id Ajuste'
+,p_column_type=>'NUMBER'
+,p_display_text_as=>'HIDDEN_ESCAPE_SC'
+,p_heading_alignment=>'LEFT'
+,p_tz_dependent=>'N'
+,p_use_as_row_header=>'N'
+,p_created_on=>wwv_flow_imp.dz('20250513123408Z')
+,p_updated_on=>wwv_flow_imp.dz('20250513123408Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(12113927116630654)
+,p_db_column_name=>'ID_PRODUCTO'
+,p_display_order=>2
+,p_column_identifier=>'B'
+,p_column_label=>'Producto'
+,p_column_type=>'STRING'
+,p_display_text_as=>'LOV_ESCAPE_SC'
+,p_column_alignment=>'CENTER'
+,p_rpt_named_lov=>wwv_flow_imp.id(11765368439189441)
+,p_use_as_row_header=>'N'
+,p_created_on=>wwv_flow_imp.dz('20250513123408Z')
+,p_updated_on=>wwv_flow_imp.dz('20250513130218Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(12114389361630654)
+,p_db_column_name=>'ID_OFICINA'
+,p_display_order=>3
+,p_column_identifier=>'C'
+,p_column_label=>'Oficina'
+,p_column_type=>'STRING'
+,p_display_text_as=>'LOV_ESCAPE_SC'
+,p_column_alignment=>'CENTER'
+,p_rpt_named_lov=>wwv_flow_imp.id(8245359747955872)
+,p_use_as_row_header=>'N'
+,p_created_on=>wwv_flow_imp.dz('20250513123408Z')
+,p_updated_on=>wwv_flow_imp.dz('20250513130218Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(12114752278630654)
+,p_db_column_name=>'TIPO_AJUSTE'
+,p_display_order=>4
+,p_column_identifier=>'D'
+,p_column_label=>'Tipo Ajuste'
+,p_column_type=>'STRING'
+,p_column_alignment=>'CENTER'
+,p_use_as_row_header=>'N'
+,p_created_on=>wwv_flow_imp.dz('20250513123408Z')
+,p_updated_on=>wwv_flow_imp.dz('20250513130218Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(12115131260630654)
+,p_db_column_name=>'CANTIDAD'
+,p_display_order=>5
+,p_column_identifier=>'E'
+,p_column_label=>'Cantidad'
+,p_column_type=>'NUMBER'
+,p_column_alignment=>'CENTER'
+,p_use_as_row_header=>'N'
+,p_created_on=>wwv_flow_imp.dz('20250513123408Z')
+,p_updated_on=>wwv_flow_imp.dz('20250513130218Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(12115573671630654)
+,p_db_column_name=>'FECHA'
+,p_display_order=>6
+,p_column_identifier=>'F'
+,p_column_label=>'Fecha'
+,p_column_type=>'DATE'
+,p_column_alignment=>'CENTER'
+,p_tz_dependent=>'N'
+,p_use_as_row_header=>'N'
+,p_created_on=>wwv_flow_imp.dz('20250513123408Z')
+,p_updated_on=>wwv_flow_imp.dz('20250513130218Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(12115935460630655)
+,p_db_column_name=>'OBSERVACION'
+,p_display_order=>7
+,p_column_identifier=>'G'
+,p_column_label=>'Observacion'
+,p_column_type=>'STRING'
+,p_column_alignment=>'CENTER'
+,p_use_as_row_header=>'N'
+,p_created_on=>wwv_flow_imp.dz('20250513123408Z')
+,p_updated_on=>wwv_flow_imp.dz('20250513130218Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_page.create_worksheet_rpt(
+ p_id=>wwv_flow_imp.id(12116312363631341)
+,p_application_user=>'APXWS_DEFAULT'
+,p_report_seq=>10
+,p_report_alias=>'121164'
+,p_status=>'PUBLIC'
+,p_is_default=>'Y'
+,p_report_columns=>'ID_AJUSTE:ID_PRODUCTO:ID_OFICINA:TIPO_AJUSTE:CANTIDAD:FECHA:OBSERVACION'
+,p_created_on=>wwv_flow_imp.dz('20250513123415Z')
+,p_updated_on=>wwv_flow_imp.dz('20250513123415Z')
+,p_created_by=>'TCASCO'
+,p_updated_by=>'TCASCO'
+);
+wwv_flow_imp_page.create_page_button(
+ p_id=>wwv_flow_imp.id(12004805099524717)
+,p_button_sequence=>10
+,p_button_plug_id=>wwv_flow_imp.id(12112898749630560)
+,p_button_name=>'Crear'
+,p_button_action=>'REDIRECT_PAGE'
+,p_button_template_options=>'#DEFAULT#'
+,p_button_template_id=>4072362960822175091
+,p_button_is_hot=>'Y'
+,p_button_image_alt=>'Crear'
+,p_button_position=>'ORDER_BY_ITEM'
+,p_button_redirect_url=>'f?p=&APP_ID.:45:&SESSION.::&DEBUG.:RP,45::'
+,p_created_on=>wwv_flow_imp.dz('20250513123437Z')
+,p_updated_on=>wwv_flow_imp.dz('20250513123739Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_page.create_page_da_event(
+ p_id=>wwv_flow_imp.id(12005291027524721)
+,p_name=>'Actualiz Reporte'
+,p_event_sequence=>10
+,p_triggering_element_type=>'REGION'
+,p_triggering_region_id=>wwv_flow_imp.id(12112898749630560)
+,p_bind_type=>'bind'
+,p_execution_type=>'IMMEDIATE'
+,p_bind_event_type=>'apexafterclosedialog'
+,p_created_on=>wwv_flow_imp.dz('20250513130149Z')
+,p_updated_on=>wwv_flow_imp.dz('20250513130149Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp_page.create_page_da_action(
+ p_id=>wwv_flow_imp.id(12005393759524722)
+,p_event_id=>wwv_flow_imp.id(12005291027524721)
+,p_event_result=>'TRUE'
+,p_action_sequence=>10
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_REFRESH'
+,p_affected_elements_type=>'REGION'
+,p_affected_region_id=>wwv_flow_imp.id(12112898749630560)
+,p_attribute_01=>'N'
+,p_created_on=>wwv_flow_imp.dz('20250513130149Z')
+,p_updated_on=>wwv_flow_imp.dz('20250513130149Z')
+,p_created_by=>'WILLIAN'
+,p_updated_by=>'WILLIAN'
+);
+wwv_flow_imp.component_end;
+end;
+/

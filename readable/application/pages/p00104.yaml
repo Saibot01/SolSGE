@@ -1,0 +1,357 @@
+---
+# ====== Page: Carga Masiva Producto-Proveedor ===============
+id: 104
+identification: 
+  name: Carga Masiva Producto-Proveedor
+  alias: CARGA-MASIVA-PRODUCTO-PROVEEDOR
+  title: Carga Masiva Producto-Proveedor
+
+appearance: 
+  page-mode: Modal Dialog
+  dialog-template: Theme Default
+  template-options: 
+  - '#DEFAULT#'
+
+dialog: 
+  chained: true
+  resizable: true
+
+navigation-menu: 
+  override-user-interface-level: false
+
+navigation: 
+  cursor-focus: Do not focus cursor
+  warn-on-unsaved-changes: true
+
+security: 
+  authorization-scheme: Must Not Be Public User
+  authentication: Page Requires Authentication
+  deep-linking: Application Default
+  page-access-protection: Arguments Must Have Checksum
+  form-auto-complete: Off
+  browser-cache: Application Default
+
+session-management: 
+  rejoin-sessions: Application Default
+
+advanced: 
+  enable-duplicate-page-submissions: Yes - Enable page to be re-posted
+  reload-on-submit: Only for Success
+
+server-cache: 
+  caching: Disabled
+
+regions: 
+- # ====== Region: Instrucciones ===============================
+  id: 20236276813558333
+  identification: 
+    name: Instrucciones
+    title: Instrucciones
+    type: Static Content
+
+  source: 
+    html-code: '<div class="t-Alert t-Alert--info"><h3>Cómo realizar una carga masiva</h3><ol><li>Prepare un archivo CSV con las columnas (en orden): ID_PRODUCTO, ID_PERSONA, CODIGO_REFERENCIA, PRECIO, FECHA_INICIO, FECHA_FIN, ESTADO</li><li>Seleccione el archivo en el campo de abajo</li><li>Presione "Procesar Carga"</li><li>Revise el resultado: registros exitosos y con errores</li></ol><p><strong>Formato de fechas:</strong> DD/MM/YYYY</p><p><strong>Estados válidos:</strong> ACTIVO, INACTIVO, SUSPENDIDO</p><p><strong>Encabezado:</strong> la primera fila debe contener los nombres de las columnas (se saltea).</p></div>'
+
+  layout: 
+    sequence: 10
+    parent-region: No Parent
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Standard
+    template-options: 
+    - '#DEFAULT#'
+    - t-Region--scrollBody
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    settings: 
+      output-as: HTML
+      expand-shortcuts: false
+
+- # ====== Region: Procesar Archivo ============================
+  id: 20236341923558334
+  identification: 
+    name: Procesar Archivo
+    title: Procesar Archivo CSV
+    type: Static Content
+
+  layout: 
+    sequence: 20
+    parent-region: No Parent
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Standard
+    template-options: 
+    - '#DEFAULT#'
+    - t-Region--scrollBody
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    settings: 
+      output-as: HTML
+      expand-shortcuts: false
+
+- # ====== Region: Breadcrumb ==================================
+  id: 20377121833516317
+  identification: 
+    name: Breadcrumb
+    type: Breadcrumb
+
+  source: 
+    breadcrumb: Breadcrumb # 7705913887831249
+
+  layout: 
+    sequence: 10
+    parent-region: No Parent
+    slot: REGION_POSITION_01
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Title Bar
+    template-options: 
+    - '#DEFAULT#'
+    - t-BreadcrumbRegion--useBreadcrumbTitle
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    appearance: 
+      breadcrumb-template: Breadcrumb
+      template-options: 
+      - '#DEFAULT#'
+
+page-items: 
+- # ====== Page Item: P104_ARCHIVO =============================
+  id: 20236405388558335
+  identification: 
+    name: P104_ARCHIVO
+    type: File Upload
+
+  label: 
+    label: Archivo CSV
+    alignment: Left
+
+  display: 
+    display-as: Inline File Browse
+    capture-using: NONE
+
+  storage:: 
+    type: Table APEX_APPLICATION_TEMP_FILES
+    purge-file-at: End of Session
+    allow-multiple-files: false
+
+  layout: 
+    sequence: 10
+    region: Procesar Archivo # 20236341923558334
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 30
+
+  validation: 
+    value-required: false
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  session-state: 
+    storage: Per Session (Persistent)
+
+  security: 
+    session-state-protection: Unrestricted
+    restricted-characters: All characters can be saved.
+
+buttons: 
+- # ====== Button: PROCESAR ====================================
+  id: 20236566353558336
+  identification: 
+    button-name: PROCESAR
+    label: Procesar Carga
+
+  layout: 
+    sequence: 20
+    region: Procesar Archivo # 20236341923558334
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    alignment: Left center
+
+  appearance: 
+    button-template: Text
+    hot: false
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Submit Page
+    execute-validations: true
+    show-processing: false
+    warn-on-unsaved-changes: Do Not Check
+
+processes: 
+- # ====== Process: Procesar CSV ===============================
+  id: 20236688371558337
+  identification: 
+    name: Procesar CSV
+    type: Execute Code
+    execution-chain: None
+
+  source: 
+    location: Local Database
+    language: PL/SQL
+    pl/sql-code: |
+      DECLARE
+          v_id_carga      NUMBER := SEQ_CARGA_MASIVA_PP.NEXTVAL;
+          v_exitosos      NUMBER := 0;
+          v_errores       NUMBER := 0;
+          v_blob          BLOB;
+          v_nombre        VARCHAR2(255);
+          v_error_msg     VARCHAR2(500);
+      BEGIN
+          SELECT BLOB_CONTENT, FILENAME INTO v_blob, v_nombre
+            FROM APEX_APPLICATION_TEMP_FILES
+           WHERE NAME = :P104_ARCHIVO
+           FETCH FIRST 1 ROW ONLY;
+      
+          INSERT INTO CARGA_MASIVA_PP (ID_CARGA, USUARIO_CARGA, NOMBRE_ARCHIVO, ESTADO_CARGA)
+          VALUES (v_id_carga, NVL(V('APP_USER'), USER), v_nombre, 'PROCESANDO');
+      
+          FOR rec IN (
+              SELECT LINE_NUMBER,
+                     COL001 AS ID_PRODUCTO, COL002 AS ID_PERSONA,
+                     COL003 AS CODIGO_REFERENCIA, COL004 AS PRECIO,
+                     COL005 AS FECHA_INICIO, COL006 AS FECHA_FIN, COL007 AS ESTADO
+                FROM TABLE(APEX_DATA_PARSER.PARSE(
+                       p_content => v_blob,
+                       p_file_type => APEX_DATA_PARSER.c_file_type_csv,
+                       p_skip_rows => 1))
+          )
+          LOOP
+              BEGIN
+                  INSERT INTO PRODUCTO_PROVEEDORES
+                      (ID_PRODUCTO, ID_PERSONA, CODIGO_REFERENCIA, PRECIO,
+                       FECHA_INICIO, FECHA_FIN, ESTADO, FECHA_CREACION, USUARIO_CREACION)
+                  VALUES
+                      (TO_NUMBER(rec.ID_PRODUCTO),
+                       TO_NUMBER(rec.ID_PERSONA),
+                       rec.CODIGO_REFERENCIA,
+                       TO_NUMBER(rec.PRECIO),
+                       NVL(TO_DATE(rec.FECHA_INICIO, 'DD/MM/YYYY'), TRUNC(SYSDATE)),
+                       CASE WHEN rec.FECHA_FIN IS NOT NULL THEN TO_DATE(rec.FECHA_FIN, 'DD/MM/YYYY') ELSE NULL END,
+                       NVL(rec.ESTADO, 'ACTIVO'),
+                       SYSDATE,
+                       NVL(V('APP_USER'), USER));
+      
+                  v_exitosos := v_exitosos + 1;
+      
+                  INSERT INTO DETALLE_CARGA_MASIVA_PP
+                      (ID_DETALLE, ID_CARGA, FILA_NUMERO, ID_PRODUCTO, ID_PERSONA,
+                       PRECIO, ESTADO_PROCESAMIENTO)
+                  VALUES
+                      (SEQ_DETALLE_CARGA_PP.NEXTVAL, v_id_carga, rec.LINE_NUMBER,
+                       TO_NUMBER(rec.ID_PRODUCTO), TO_NUMBER(rec.ID_PERSONA),
+                       TO_NUMBER(rec.PRECIO), 'EXITOSO');
+      
+              EXCEPTION WHEN OTHERS THEN
+                  v_error_msg := SUBSTR(SQLERRM, 1, 500);
+                  v_errores := v_errores + 1;
+                  INSERT INTO DETALLE_CARGA_MASIVA_PP
+                      (ID_DETALLE, ID_CARGA, FILA_NUMERO,
+                       ESTADO_PROCESAMIENTO, MENSAJE_ERROR)
+                  VALUES
+                      (SEQ_DETALLE_CARGA_PP.NEXTVAL, v_id_carga, rec.LINE_NUMBER,
+                       'ERROR', v_error_msg);
+              END;
+          END LOOP;
+      
+          UPDATE CARGA_MASIVA_PP
+             SET REGISTROS_TOTALES = v_exitosos + v_errores,
+                 REGISTROS_EXITOSOS = v_exitosos,
+                 REGISTROS_ERROR = v_errores,
+                 ESTADO_CARGA = 'COMPLETADO',
+                 FECHA_FINALIZACION = SYSDATE
+           WHERE ID_CARGA = v_id_carga;
+      
+          DELETE FROM APEX_APPLICATION_TEMP_FILES WHERE NAME = :P104_ARCHIVO;
+          COMMIT;
+      
+          apex_application.g_print_success_message :=
+              'Carga completada. Exitosos: ' || v_exitosos || ' | Errores: ' || v_errores;
+      END;
+
+  execution: 
+    sequence: 10
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+
+  server-side-condition: 
+    when-button-pressed: PROCESAR # 20236566353558336
+
