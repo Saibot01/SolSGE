@@ -457,9 +457,9 @@ wwv_flow_imp_page.create_page_button(
 ,p_button_plug_id=>wwv_flow_imp.id(33467373168174089)
 ,p_button_name=>'RECHAZAR'
 ,p_button_action=>'SUBMIT'
-,p_button_template_options=>'#DEFAULT#'
+,p_button_template_options=>'#DEFAULT#:t-Button--danger:t-Button--large'
 ,p_button_template_id=>4072362960822175091
-,p_button_image_alt=>unistr('\2716 Rechazar')
+,p_button_image_alt=>'Rechazar'
 ,p_button_position=>'NEXT'
 ,p_button_condition=>'P112_ESTADO'
 ,p_button_condition2=>'B'
@@ -471,9 +471,10 @@ wwv_flow_imp_page.create_page_button(
 ,p_button_plug_id=>wwv_flow_imp.id(33467373168174089)
 ,p_button_name=>'APROBAR'
 ,p_button_action=>'SUBMIT'
-,p_button_template_options=>'#DEFAULT#'
+,p_button_template_options=>'#DEFAULT#:t-Button--success:t-Button--large'
 ,p_button_template_id=>4072362960822175091
-,p_button_image_alt=>unistr('\2714 Aprobar')
+,p_button_is_hot=>'Y'
+,p_button_image_alt=>'Aprobar'
 ,p_button_position=>'NEXT'
 ,p_button_condition=>'P112_ESTADO'
 ,p_button_condition2=>'B'
