@@ -809,7 +809,7 @@ wwv_flow_imp_page.create_page_item(
 ,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
   'based_on', 'VALUE',
   'format', 'PLAIN',
-  'send_on_page_submit', 'Y',
+  'send_on_page_submit', 'N',
   'show_line_breaks', 'Y')).to_clob
 ,p_ai_enabled=>false
 );
