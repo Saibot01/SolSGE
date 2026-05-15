@@ -1,10 +1,10 @@
 ---
-# ====== Page: Orden de Compra ===============================
-id: 71
+# ====== Page: Aprobación de Órdenes de Compra ===============
+id: 110
 identification: 
-  name: Orden de Compra
-  alias: ORDEN-DE-COMPRA1
-  title: Orden de Compra
+  name: Aprobación de Órdenes de Compra
+  alias: APROBACIÓN-DE-ÓRDENES-DE-COMPRA
+  title: Aprobación de Órdenes de Compra
 
 appearance: 
   page-mode: Normal
@@ -37,23 +37,19 @@ server-cache:
   caching: Disabled
 
 regions: 
-- # ====== Region: Orden de Compra =============================
-  id: 12903654974928786
+- # ====== Region: Breadcrumb ==================================
+  id: 20551153334145582
   identification: 
-    name: Orden de Compra
-    type: Interactive Grid
+    name: Breadcrumb
+    type: Breadcrumb
 
   source: 
-    location: Local Database
-    type: Table / View
-    table-owner: Parsing Schema
-    table-name: ORDENES_COMPRA
-    include-rowid-column: false
+    breadcrumb: Breadcrumb # 7705913887831249
 
   layout: 
-    sequence: 20
+    sequence: 10
     parent-region: No Parent
-    slot: BODY
+    slot: REGION_POSITION_01
     start-new-layout: false
     start-new-row: true
     column: Automatic
@@ -61,10 +57,10 @@ regions:
     column-span: Automatic
 
   appearance: 
-    template: Standard
+    template: Title Bar
     template-options: 
     - '#DEFAULT#'
-    - t-Region--scrollBody
+    - t-BreadcrumbRegion--useBreadcrumbTitle
     render-components: Above Content
 
   accessibility: 
@@ -79,7 +75,55 @@ regions:
     customizable: Not Customizable By End Users
 
   attributes: 
-    id: 12904115688928786
+    appearance: 
+      breadcrumb-template: Breadcrumb
+      template-options: 
+      - '#DEFAULT#'
+
+- # ====== Region: Aprobación de Órdenes de Compra =============
+  id: 20551819592145583
+  identification: 
+    name: Aprobación de Órdenes de Compra
+    type: Interactive Grid
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: ORDENES_COMPRA
+    include-rowid-column: false
+    where-clause: estado in ('X', 'P', 'B')
+
+  layout: 
+    sequence: 20
+    parent-region: No Parent
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Interactive Report
+    template-options: 
+    - '#DEFAULT#'
+    - t-IRR-region--hideHeader js-addHiddenHeadingRoleDesc
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    id: 20552331559145584
     edit: 
       enabled: false
 
@@ -128,62 +172,46 @@ regions:
 
     saved-reports: 
     - # ====== Saved Report: Primary Report ========================
-      id: 12904501863928787
+      id: 20552726290145585
       identification: 
         name: Primary Report
-        alias: 129046
+        alias: 205528
 
   columns: 
-  - # ====== Column: APEX$LINK ===================================
-    id: 12904995829928787
+  - # ====== Column: ID_ORDEN_COMPRA =============================
+    id: 20553109486145585
     identification: 
-      column-name: APEX$LINK
-      type: Link
+      column-name: ID_ORDEN_COMPRA
+      type: Text Field
 
     heading: 
-      alignment: center
+      heading: Orden de Compra
+      alignment: start
+
+    settings: 
+      trim-spaces: Leading and Trailing
+      text-case: NO CHANGE
 
     layout: 
       sequence: 10
-      column-alignment: center
+      column-alignment: start
       stretch: Use Report Setting
 
     accessibility: 
       value-identifies-row: false
 
+    validation: 
+      value-required: false
+
     link: 
       target: 
-        url: 'f?p=&APP_ID.:92:&SESSION.::&DEBUG.:RP,92:P92_ID_ORDEN_COMPRA:\&ID_ORDEN_COMPRA.\'
-        page: 92 # Orden de Compra Documento
-        clear-cache: RP,92
+        url: 'f?p=&APP_ID.:112:&SESSION.::&DEBUG.:50:P112_ID_ORDEN_COMPRA:&ID_ORDEN_COMPRA.'
+        page: 112 # Detalle Orden de Compra
+        clear-cache: 50
         values: 
-          p92_id_orden_compra: '&ID_ORDEN_COMPRA.'
+          p112_id_orden_compra: '&ID_ORDEN_COMPRA.'
 
-      link-text: <span role="img" aria-label="Imprimir" class="fa fa-print" title="Imprimir"></span>
-
-    source: 
-      type: None
-
-    enable-users-to: 
-      hide: true
-
-    security: 
-      escape-special-characters: true
-
-  - # ====== Column: ID_ORDEN_COMPRA =============================
-    id: 12905969431928788
-    identification: 
-      column-name: ID_ORDEN_COMPRA
-      type: Hidden
-
-    settings: 
-      value-protected: true
-
-    layout: 
-      sequence: 20
-
-    accessibility: 
-      value-identifies-row: false
+      link-text: '&ID_ORDEN_COMPRA.'
 
     source: 
       type: Database Column
@@ -192,8 +220,9 @@ regions:
       query-only: true
       primary-key: true
 
-    session-state: 
-      data-type: VARCHAR2
+    column-filter: 
+      enabled: true
+      lov-type: Distinct Column
 
     export-/-printing: 
       include-in-export-/-print: false
@@ -201,19 +230,20 @@ regions:
     enable-users-to: 
       sort: true
       control-break/aggregate: true
+      hide: true
 
   - # ====== Column: ID_PROVEEDOR ================================
-    id: 12906924412928788
+    id: 20554194871145586
     identification: 
       column-name: ID_PROVEEDOR
       type: Select List
 
     heading: 
-      heading: Proveedor
+      heading: Id Proveedor
       alignment: start
 
     layout: 
-      sequence: 30
+      sequence: 20
       column-alignment: start
       stretch: Use Report Setting
 
@@ -225,7 +255,7 @@ regions:
 
     list-of-values: 
       type: Shared Component
-      list-of-values: PERSONA.NOMBRE # 16219980276116331
+      list-of-values: PROVEEDORES.NOMBRE # 16407555954331446
       display-extra-values: true
       display-null-value: true
 
@@ -258,7 +288,7 @@ regions:
       hide: true
 
   - # ====== Column: FECHA_ORDEN =================================
-    id: 12907938506928789
+    id: 20555155369145586
     identification: 
       column-name: FECHA_ORDEN
       type: Date Picker
@@ -276,7 +306,7 @@ regions:
       use-defaults: true
 
     layout: 
-      sequence: 40
+      sequence: 30
       column-alignment: start
       stretch: Use Report Setting
 
@@ -310,7 +340,7 @@ regions:
       hide: true
 
   - # ====== Column: ESTADO ======================================
-    id: 12908970725928789
+    id: 20556168301145587
     identification: 
       column-name: ESTADO
       type: Select List
@@ -320,7 +350,7 @@ regions:
       alignment: start
 
     layout: 
-      sequence: 50
+      sequence: 40
       column-alignment: start
       stretch: Use Report Setting
 
@@ -328,7 +358,7 @@ regions:
       value-identifies-row: false
 
     validation: 
-      value-required: false
+      value-required: true
 
     list-of-values: 
       type: Shared Component
@@ -366,7 +396,7 @@ regions:
       hide: true
 
   - # ====== Column: OBSERVACION =================================
-    id: 12909996647928789
+    id: 20557136424145587
     identification: 
       column-name: OBSERVACION
       type: Text Field
@@ -380,7 +410,7 @@ regions:
       text-case: NO CHANGE
 
     layout: 
-      sequence: 60
+      sequence: 50
       column-alignment: start
       stretch: Use Report Setting
 
@@ -420,18 +450,73 @@ regions:
       control-break/aggregate: true
       hide: true
 
+  - # ====== Column: ID_EMPLEADO =================================
+    id: 20558169261145588
+    identification: 
+      column-name: ID_EMPLEADO
+      type: Select List
+
+    heading: 
+      heading: Id Empleado
+      alignment: start
+
+    layout: 
+      sequence: 60
+      column-alignment: start
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: false
+
+    list-of-values: 
+      type: Shared Component
+      list-of-values: EMPLEADOS.NOMBRE # 12747961019199341
+      display-extra-values: true
+      display-null-value: true
+
+    source: 
+      type: Database Column
+      database-column: ID_EMPLEADO
+      data-type: NUMBER
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      performance-impacting-operators: 
+      - Contains
+      - Starts With
+      - Case Insensitive
+      - Regular Expression
+      text-case: Mixed
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
   - # ====== Column: ID_OFICINA ==================================
-    id: 12911912497928790
+    id: 20559184567145588
     identification: 
       column-name: ID_OFICINA
       type: Select List
 
     heading: 
-      heading: Oficina
+      heading: Id Oficina
       alignment: start
 
     layout: 
-      sequence: 80
+      sequence: 70
       column-alignment: start
       stretch: Use Report Setting
 
@@ -476,7 +561,7 @@ regions:
       hide: true
 
   - # ====== Column: TOTAL_ORDEN =================================
-    id: 12912927043928790
+    id: 20560155235145589
     identification: 
       column-name: TOTAL_ORDEN
       type: Number Field
@@ -490,7 +575,7 @@ regions:
       virtual-keyboard: Decimal
 
     layout: 
-      sequence: 90
+      sequence: 80
       column-alignment: end
       stretch: Use Report Setting
 
@@ -522,32 +607,18 @@ regions:
       control-break/aggregate: true
       hide: true
 
-  - # ====== Column: ID_EMPLEADO =================================
-    id: 12939407447107106
+  - # ====== Column: ID_APROBADOR ================================
+    id: 20561115710145589
     identification: 
-      column-name: ID_EMPLEADO
-      type: Popup LOV
+      column-name: ID_APROBADOR
+      type: Select List
 
     heading: 
-      heading: Usuario
+      heading: ' Aprobador'
       alignment: start
 
-    settings: 
-      display-as: Inline Popup
-      initial-fetch: Automatic
-      manual-entry: false
-      fetch-on-search: false
-
-    search: 
-      match-type: Contains
-      case-sensitive: false
-      minimum-characters: 0
-
-    multiple-values: 
-      type: No
-
     layout: 
-      sequence: 100
+      sequence: 90
       column-alignment: start
       stretch: Use Report Setting
 
@@ -565,7 +636,7 @@ regions:
 
     source: 
       type: Database Column
-      database-column: ID_EMPLEADO
+      database-column: ID_APROBADOR
       data-type: NUMBER
       query-only: false
       primary-key: false
@@ -581,8 +652,7 @@ regions:
       - Case Insensitive
       - Regular Expression
       text-case: Mixed
-      lov-type: Use List of Values
-      exact-match: true
+      lov-type: None
 
     export-/-printing: 
       include-in-export-/-print: true
@@ -590,6 +660,116 @@ regions:
     enable-users-to: 
       sort: true
       control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: FECHA_APROBACION ============================
+    id: 20562190587145589
+    identification: 
+      column-name: FECHA_APROBACION
+      type: Date Picker
+
+    heading: 
+      heading: Fecha Aprobacion
+      alignment: start
+
+    settings: 
+      show-time: false
+      display-as: Popup
+      minimum-date: None
+      maximum-date: None
+      multiple-months: No
+      use-defaults: true
+
+    layout: 
+      sequence: 100
+      column-alignment: start
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: false
+
+    source: 
+      type: Database Column
+      database-column: FECHA_APROBACION
+      data-type: DATE
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      lov-type: Distinct Column
+      date-ranges: All
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: MOTIVO_RECHAZO ==============================
+    id: 20563128939145590
+    identification: 
+      column-name: MOTIVO_RECHAZO
+      type: Textarea
+
+    heading: 
+      heading: Observación
+      alignment: start
+
+    settings: 
+      resizable: true
+      auto-height: false
+      character-counter: false
+      trim-spaces: Leading and Trailing
+
+    layout: 
+      sequence: 110
+      column-alignment: start
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: false
+      maximum-length: 500
+
+    source: 
+      type: Database Column
+      database-column: MOTIVO_RECHAZO
+      data-type: VARCHAR2
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    session-state: 
+      data-type: VARCHAR2
+
+    column-filter: 
+      enabled: true
+      performance-impacting-operators: 
+      - Contains
+      - Starts With
+      - Case Insensitive
+      - Regular Expression
+      text-case: Mixed
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: false
       hide: true
 
   printing: 
@@ -608,7 +788,7 @@ regions:
       font-size: 12
       font-color: '#000000'
       alignment: center
-      page-header-text: Orden de Compra
+      page-header-text: Aprobación de Órdenes de Compra
 
     column-headings: 
       font: Helvetica
@@ -630,114 +810,4 @@ regions:
       font-size: 12
       font-color: '#000000'
       alignment: center
-
-- # ====== Region: Breadcrumb ==================================
-  id: 12916315507928792
-  identification: 
-    name: Breadcrumb
-    type: Breadcrumb
-
-  source: 
-    breadcrumb: Breadcrumb # 7705913887831249
-
-  layout: 
-    sequence: 10
-    parent-region: No Parent
-    slot: REGION_POSITION_01
-    start-new-layout: false
-    start-new-row: true
-    column: Automatic
-    new-column: true
-    column-span: Automatic
-
-  appearance: 
-    template: Title Bar
-    template-options: 
-    - '#DEFAULT#'
-    - t-BreadcrumbRegion--useBreadcrumbTitle
-    render-components: Above Content
-
-  accessibility: 
-    use-landmark: true
-    landmark-type: Template Default
-
-  advanced: 
-    region-display-selector: false
-    exclude-title-from-translation: false
-
-  customization: 
-    customizable: Not Customizable By End Users
-
-  attributes: 
-    appearance: 
-      breadcrumb-template: Breadcrumb
-      template-options: 
-      - '#DEFAULT#'
-
-buttons: 
-- # ====== Button: CREATE ======================================
-  id: 12914745035928791
-  identification: 
-    button-name: CREATE
-    label: Crear
-
-  layout: 
-    sequence: 10
-    region: Orden de Compra # 12903654974928786
-    slot: EDIT
-    start-new-layout: false
-    start-new-row: true
-    column: Automatic
-    new-column: true
-    column-span: Automatic
-
-  appearance: 
-    button-template: Text
-    hot: true
-    template-options: 
-    - '#DEFAULT#'
-
-  behavior: 
-    action: Redirect to Page in this Application
-    target: 
-      url: 'f?p=&APP_ID.:72:&APP_SESSION.::&DEBUG.:72::'
-      page: 72 # Orden de Compra
-      clear-cache: 72
-
-    warn-on-unsaved-changes: Do Not Check
-
-dynamic-actions: 
-- # ====== Dynamic Action: Edit Report - Dialog Closed =========
-  id: 12915032447928792
-  identification: 
-    name: Edit Report - Dialog Closed
-
-  execution: 
-    sequence: 10
-    event-scope: Static
-    type: Immediate
-
-  when: 
-    event: Dialog Closed
-    selection-type: Region
-    region: Orden de Compra # 12903654974928786
-
-  actions: 
-  - # ====== Action: Refresh =====================================
-    id: 12915516480928792
-    identification: 
-      action: Refresh
-
-    settings: 
-      maintain-pagination: false
-
-    affected-elements: 
-      selection-type: Region
-      region: Orden de Compra # 12903654974928786
-
-    execution: 
-      sequence: 10
-      event: Edit Report - Dialog Closed # 12915032447928792
-      fire-when-event-result-is: True
-      fire-on-initialization: false
 

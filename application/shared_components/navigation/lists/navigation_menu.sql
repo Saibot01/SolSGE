@@ -15,9 +15,9 @@ wwv_flow_imp_shared.create_list(
  p_id=>wwv_flow_imp.id(7706470273831245)
 ,p_name=>'Navigation Menu'
 ,p_list_status=>'PUBLIC'
-,p_version_scn=>39028437742515
+,p_version_scn=>39028487655654
 ,p_created_on=>wwv_flow_imp.dz('20240606062349Z')
-,p_updated_on=>wwv_flow_imp.dz('20260512095940Z')
+,p_updated_on=>wwv_flow_imp.dz('20260513185549Z')
 ,p_created_by=>'SIS_APEX'
 ,p_updated_by=>'SIS_APEX'
 );
@@ -719,6 +719,20 @@ wwv_flow_imp_shared.create_list_item(
 ,p_updated_by=>'SIS_APEX'
 );
 wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(20550788537145581)
+,p_list_item_display_sequence=>660
+,p_list_item_link_text=>unistr('Aprobaci\00F3n de \00D3rdenes de Compra')
+,p_list_item_link_target=>'f?p=&APP_ID.:110:&APP_SESSION.::&DEBUG.:::'
+,p_list_item_icon=>'fa-thumbs-o-up'
+,p_parent_list_item_id=>wwv_flow_imp.id(12815939864378893)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'110'
+,p_created_on=>wwv_flow_imp.dz('20260513185549Z')
+,p_updated_on=>wwv_flow_imp.dz('20260513185549Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(16135373289245386)
 ,p_list_item_display_sequence=>600
 ,p_list_item_link_text=>'Cobros'
@@ -891,6 +905,20 @@ wwv_flow_imp_shared.create_list_item(
 ,p_list_item_current_for_pages=>'101'
 ,p_created_on=>wwv_flow_imp.dz('20251122104933Z')
 ,p_updated_on=>wwv_flow_imp.dz('20260430003126Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(20434934623365925)
+,p_list_item_display_sequence=>650
+,p_list_item_link_text=>unistr('Par\00E1metros')
+,p_list_item_link_target=>'f?p=&APP_ID.:103:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-design'
+,p_parent_list_item_id=>wwv_flow_imp.id(8044595892830593)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'103,105'
+,p_created_on=>wwv_flow_imp.dz('20260513025233Z')
+,p_updated_on=>wwv_flow_imp.dz('20260513025333Z')
 ,p_created_by=>'SIS_APEX'
 ,p_updated_by=>'SIS_APEX'
 );

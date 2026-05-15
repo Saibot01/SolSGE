@@ -1,10 +1,10 @@
 ---
-# ====== Page: Orden de Compra ===============================
-id: 72
+# ====== Page: Detalle Orden de Compra =======================
+id: 112
 identification: 
-  name: Orden de Compra
-  alias: ORDEN-DE-COMPRA
-  title: Orden de Compra
+  name: Detalle Orden de Compra
+  alias: DETALLE-ORDEN-DE-COMPRA
+  title: Detalle Orden de Compra
 
 appearance: 
   page-mode: Modal Dialog
@@ -76,16 +76,16 @@ server-cache:
   caching: Disabled
 
 regions: 
-- # ====== Region: Cabecera ====================================
-  id: 12857379693396833
+- # ====== Region: Recepcion ===================================
+  id: 20606135621469410
   identification: 
-    name: Cabecera
+    name: Recepcion
     type: Static Content
 
   layout: 
-    sequence: 90
-    parent-region: Orden de Compra # 12892991332928779
-    slot: BODY
+    sequence: 10
+    parent-region: Orden de Compra # 33461481782174084
+    slot: SUB_REGIONS
     start-new-layout: false
     start-new-row: true
     column: Automatic
@@ -115,15 +115,57 @@ regions:
       output-as: HTML
       expand-shortcuts: false
 
+- # ====== Region: Cabecera ====================================
+  id: 33425870142642138
+  identification: 
+    name: Cabecera
+    type: Static Content
+
+  layout: 
+    sequence: 90
+    parent-region: Orden de Compra # 33461481782174084
+    slot: BODY
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    template: Standard
+    template-options: 
+    - '#DEFAULT#'
+    - t-Region--scrollBody
+    render-components: Above Content
+
+  accessibility: 
+    use-landmark: true
+    landmark-type: Template Default
+
+  advanced: 
+    region-display-selector: false
+    exclude-title-from-translation: false
+
+  read-only: 
+    type: Always
+
+  customization: 
+    customizable: Not Customizable By End Users
+
+  attributes: 
+    settings: 
+      output-as: HTML
+      expand-shortcuts: false
+
 - # ====== Region: Detalle =====================================
-  id: 12857408016396834
+  id: 33425898465642139
   identification: 
     name: Detalle
     type: Static Content
 
   layout: 
     sequence: 100
-    parent-region: Orden de Compra # 12892991332928779
+    parent-region: Orden de Compra # 33461481782174084
     slot: BODY
     start-new-layout: false
     start-new-row: true
@@ -157,14 +199,14 @@ regions:
       expand-shortcuts: false
 
 - # ====== Region: Totalizador =================================
-  id: 12857570897396835
+  id: 33426061346642140
   identification: 
     name: Totalizador
     type: Static Content
 
   layout: 
     sequence: 110
-    parent-region: Orden de Compra # 12892991332928779
+    parent-region: Orden de Compra # 33461481782174084
     slot: BODY
     start-new-layout: false
     start-new-row: true
@@ -196,7 +238,7 @@ regions:
       expand-shortcuts: false
 
 - # ====== Region: Detalle_Orden_Compra ========================
-  id: 12857668087396836
+  id: 33426158536642141
   identification: 
     name: Detalle_Orden_Compra
     type: Interactive Grid
@@ -212,11 +254,11 @@ regions:
              PRECIO_UNITARIO,
              TOTAL_DETALLE
         from DETALLE_ORDEN_COMPRA
-        WHERE ID_ORDEN_COMPRA = :P72_ID_ORDEN_COMPRA;
+        WHERE ID_ORDEN_COMPRA = :P112_ID_ORDEN_COMPRA;
 
   layout: 
     sequence: 10
-    parent-region: Detalle # 12857408016396834
+    parent-region: Detalle # 33425898465642139
     slot: SUB_REGIONS
     start-new-layout: false
     start-new-row: true
@@ -244,15 +286,9 @@ regions:
     customizable: Not Customizable By End Users
 
   attributes: 
-    id: 12857778307396837
+    id: 20605292104469401
     edit: 
-      enabled: true
-      allowed-operations: 
-      - Add Row
-      - Update Row
-      - Delete Row
-      lost-update-type: Row Values
-      add-row-if-empty: true
+      enabled: false
 
     performance: 
       lazy-loading: false
@@ -299,14 +335,14 @@ regions:
 
     saved-reports: 
     - # ====== Saved Report: Primary Report ========================
-      id: 12925206653948399
+      id: 20611161273470301
       identification: 
         name: Primary Report
-        alias: 129253
+        alias: 206112
 
   columns: 
   - # ====== Column: ID_DETALLE_OC ===============================
-    id: 12857820966396838
+    id: 20605336679469402
     identification: 
       column-name: ID_DETALLE_OC
       type: Hidden
@@ -315,7 +351,7 @@ regions:
       value-protected: true
 
     layout: 
-      sequence: 30
+      sequence: 10
 
     accessibility: 
       value-identifies-row: false
@@ -324,8 +360,11 @@ regions:
       type: Database Column
       database-column: ID_DETALLE_OC
       data-type: NUMBER
-      query-only: true
-      primary-key: true
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
 
     session-state: 
       data-type: VARCHAR2
@@ -337,7 +376,7 @@ regions:
       sort: false
 
   - # ====== Column: ID_ORDEN_COMPRA =============================
-    id: 12857998459396839
+    id: 20605496419469403
     identification: 
       column-name: ID_ORDEN_COMPRA
       type: Hidden
@@ -346,7 +385,7 @@ regions:
       value-protected: true
 
     layout: 
-      sequence: 40
+      sequence: 20
 
     accessibility: 
       value-identifies-row: false
@@ -371,31 +410,17 @@ regions:
       sort: false
 
   - # ====== Column: ID_PRODUCTO =================================
-    id: 12858024446396840
+    id: 20605581588469404
     identification: 
       column-name: ID_PRODUCTO
-      type: Popup LOV
+      type: Select List
 
     heading: 
       heading: Producto
       alignment: start
 
-    settings: 
-      display-as: Inline Popup
-      initial-fetch: Automatic
-      manual-entry: false
-      fetch-on-search: false
-
-    search: 
-      match-type: Contains
-      case-sensitive: false
-      minimum-characters: 0
-
-    multiple-values: 
-      type: No
-
     layout: 
-      sequence: 50
+      sequence: 30
       column-alignment: start
       stretch: Use Report Setting
 
@@ -407,7 +432,7 @@ regions:
 
     list-of-values: 
       type: Shared Component
-      list-of-values: PRODUCTOS.PROVEEDOR.PRECIO # 16414606219603120
+      list-of-values: PRODUCTOS.NOMBRE # 11765368439189441
       display-extra-values: true
       display-null-value: true
 
@@ -441,7 +466,7 @@ regions:
       hide: true
 
   - # ====== Column: CANTIDAD ====================================
-    id: 12858149487396841
+    id: 20605634840469405
     identification: 
       column-name: CANTIDAD
       type: Number Field
@@ -455,7 +480,7 @@ regions:
       virtual-keyboard: Decimal
 
     layout: 
-      sequence: 60
+      sequence: 40
       column-alignment: end
       stretch: Use Report Setting
 
@@ -488,7 +513,7 @@ regions:
       hide: true
 
   - # ====== Column: PRECIO_UNITARIO =============================
-    id: 12858206654396842
+    id: 20605793350469406
     identification: 
       column-name: PRECIO_UNITARIO
       type: Number Field
@@ -502,7 +527,7 @@ regions:
       virtual-keyboard: Decimal
 
     layout: 
-      sequence: 70
+      sequence: 50
       column-alignment: end
       stretch: Use Report Setting
 
@@ -535,7 +560,7 @@ regions:
       hide: true
 
   - # ====== Column: TOTAL_DETALLE ===============================
-    id: 12858399083396843
+    id: 20605869698469407
     identification: 
       column-name: TOTAL_DETALLE
       type: Number Field
@@ -549,7 +574,7 @@ regions:
       virtual-keyboard: Decimal
 
     layout: 
-      sequence: 80
+      sequence: 60
       column-alignment: end
       stretch: Use Report Setting
 
@@ -580,29 +605,6 @@ regions:
       sort: true
       control-break/aggregate: true
       hide: true
-
-  - # ====== Column: APEX$ROW_ACTION =============================
-    id: 12858498692396844
-    identification: 
-      column-name: APEX$ROW_ACTION
-      type: Actions Menu
-
-    layout: 
-      sequence: 20
-
-  - # ====== Column: APEX$ROW_SELECTOR ===========================
-    id: 12858515429396845
-    identification: 
-      column-name: APEX$ROW_SELECTOR
-      type: Row Selector
-
-    settings: 
-      enable-multi-select: true
-      show-select-all: true
-      hide-control: false
-
-    layout: 
-      sequence: 10
 
   printing: 
     page: 
@@ -643,7 +645,7 @@ regions:
       alignment: center
 
 - # ====== Region: Orden de Compra =============================
-  id: 12892991332928779
+  id: 33461481782174084
   identification: 
     name: Orden de Compra
     type: Form
@@ -692,7 +694,7 @@ regions:
       lost-update-type: Row Values
 
 - # ====== Region: Buttons =====================================
-  id: 12898882718928784
+  id: 33467373168174089
   identification: 
     name: Buttons
     type: Static Content
@@ -730,10 +732,10 @@ regions:
       show-line-breaks: true
 
 page-items: 
-- # ====== Page Item: P72_ID_ORDEN_COMPRA ======================
-  id: 12893222001928779
+- # ====== Page Item: P112_ID_APROBADOR ========================
+  id: 20485024559037141
   identification: 
-    name: P72_ID_ORDEN_COMPRA
+    name: P112_ID_APROBADOR
     type: Hidden
 
   settings: 
@@ -741,14 +743,244 @@ page-items:
 
   layout: 
     sequence: 10
-    region: Orden de Compra # 12892991332928779
+    region: Recepcion # 20606135621469410
     slot: BODY
 
   advanced: 
     warn-on-unsaved-changes: Page Default
 
   source: 
-    form-region: Orden de Compra # 12892991332928779
+    form-region: Orden de Compra # 33461481782174084
+    column: ID_APROBADOR
+    data-type: NUMBER
+    query-only: true
+    primary-key: false
+
+  default: 
+    type: SQL Query (return single value)
+    sql-query-(return-single-value): |
+      SELECT ID_EMPLEADO 
+      FROM EMPLEADOS
+      WHERE CODIGO_USUARIO = :APP_USER
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Request (Memory Only)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P112_FECHA_APROBACION ====================
+  id: 20485134289037142
+  identification: 
+    name: P112_FECHA_APROBACION
+    type: Date Picker
+
+  label: 
+    label: Fecha Aprobación
+    alignment: Left
+
+  settings: 
+    show-time: false
+    display-as: Popup
+    minimum-date: None
+    maximum-date: None
+    multiple-months: No
+    use-defaults: true
+
+  layout: 
+    sequence: 30
+    region: Recepcion # 20606135621469410
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 30
+
+  validation: 
+    value-required: false
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Orden de Compra # 33461481782174084
+    column: FECHA_APROBACION
+    data-type: DATE
+    query-only: false
+    primary-key: false
+
+  default: 
+    type: Expression
+    language: PL/SQL
+    pl/sql-expression: SYSDATE
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P112_MOTIVO_RECHAZO ======================
+  id: 20485241888037143
+  identification: 
+    name: P112_MOTIVO_RECHAZO
+    type: Textarea
+
+  label: 
+    label: Motivo
+    alignment: Left
+
+  settings: 
+    resizable: true
+    auto-height: false
+    character-counter: false
+    trim-spaces: Leading and Trailing
+
+  layout: 
+    sequence: 40
+    region: Recepcion # 20606135621469410
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 30
+    height: 5
+
+  validation: 
+    value-required: false
+    maximum-length: 500
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Orden de Compra # 33461481782174084
+    column: MOTIVO_RECHAZO
+    data-type: VARCHAR2
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P112_CODIGO_USUARIO ======================
+  id: 20606002127469409
+  identification: 
+    name: P112_CODIGO_USUARIO
+    type: Text Field
+
+  label: 
+    label: Codigo Usuario
+    alignment: Left
+
+  settings: 
+    subtype: Text
+    trim-spaces: Leading and Trailing
+    text-case: NO CHANGE
+    submit-when-enter-pressed: false
+    disabled: false
+
+  layout: 
+    sequence: 20
+    region: Recepcion # 20606135621469410
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 30
+
+  validation: 
+    value-required: false
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    type: Null
+    used: Only when current value in session state is null
+
+  default: 
+    type: Expression
+    language: PL/SQL
+    pl/sql-expression: ':APP_USER'
+
+  session-state: 
+    storage: Per Session (Persistent)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  read-only: 
+    type: Always
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P112_ID_ORDEN_COMPRA =====================
+  id: 33462257213174089
+  identification: 
+    name: P112_ID_ORDEN_COMPRA
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 10
+    region: Orden de Compra # 33461481782174084
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Orden de Compra # 33461481782174084
     column: ID_ORDEN_COMPRA
     data-type: NUMBER
     query-only: true
@@ -763,10 +995,10 @@ page-items:
     store-value-encrypted-in-session-state: true
     restricted-characters: All characters can be saved.
 
-- # ====== Page Item: P72_ID_PROVEEDOR =========================
-  id: 12893653577928780
+- # ====== Page Item: P112_ID_PROVEEDOR ========================
+  id: 33464496377174095
   identification: 
-    name: P72_ID_PROVEEDOR
+    name: P112_ID_PROVEEDOR
     type: Select List
 
   label: 
@@ -781,7 +1013,7 @@ page-items:
 
   layout: 
     sequence: 20
-    region: Cabecera # 12857379693396833
+    region: Cabecera # 33425870142642138
     slot: BODY
     alignment: Left
     start-new-layout: false
@@ -810,7 +1042,7 @@ page-items:
     warn-on-unsaved-changes: Page Default
 
   source: 
-    form-region: Orden de Compra # 12892991332928779
+    form-region: Orden de Compra # 33461481782174084
     column: ID_PROVEEDOR
     data-type: NUMBER
     query-only: false
@@ -827,10 +1059,10 @@ page-items:
     store-value-encrypted-in-session-state: true
     restricted-characters: All characters can be saved.
 
-- # ====== Page Item: P72_FECHA_ORDEN ==========================
-  id: 12894094876928781
+- # ====== Page Item: P112_FECHA_ORDEN =========================
+  id: 33464937676174096
   identification: 
-    name: P72_FECHA_ORDEN
+    name: P112_FECHA_ORDEN
     type: Date Picker
 
   label: 
@@ -847,7 +1079,7 @@ page-items:
 
   layout: 
     sequence: 30
-    region: Cabecera # 12857379693396833
+    region: Cabecera # 33425870142642138
     slot: BODY
     alignment: Left
     start-new-layout: false
@@ -871,7 +1103,7 @@ page-items:
     warn-on-unsaved-changes: Page Default
 
   source: 
-    form-region: Orden de Compra # 12892991332928779
+    form-region: Orden de Compra # 33461481782174084
     column: FECHA_ORDEN
     data-type: DATE
     query-only: false
@@ -894,47 +1126,77 @@ page-items:
     store-value-encrypted-in-session-state: true
     restricted-characters: All characters can be saved.
 
-- # ====== Page Item: P72_ESTADO ===============================
-  id: 12894407915928782
+- # ====== Page Item: P112_ESTADO ==============================
+  id: 33465250715174097
   identification: 
-    name: P72_ESTADO
-    type: Hidden
+    name: P112_ESTADO
+    type: Select List
+
+  label: 
+    label: Estado
+    alignment: Left
 
   settings: 
-    value-protected: true
+    page-action-on-selection: None
+
+  multiple-values: 
+    type: No
 
   layout: 
     sequence: 40
-    region: Cabecera # 12857379693396833
+    region: Cabecera # 33425870142642138
     slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    height: 1
+
+  validation: 
+    value-required: false
+
+  list-of-values: 
+    type: Shared Component
+    list-of-values: ORDEN.COMPRA.ESTADO # 20547606844078370
+    display-extra-values: true
+    display-null-value: true
 
   advanced: 
     warn-on-unsaved-changes: Page Default
 
   source: 
-    form-region: Orden de Compra # 12892991332928779
+    form-region: Orden de Compra # 33461481782174084
     column: ESTADO
     data-type: VARCHAR2
-    query-only: false
+    query-only: true
     primary-key: false
 
-  default: 
-    type: Static
-    static-value: B
-
   session-state: 
-    data-type: VARCHAR2
     storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  read-only: 
+    type: Always
 
   security: 
     session-state-protection: Unrestricted
     store-value-encrypted-in-session-state: true
     restricted-characters: All characters can be saved.
 
-- # ====== Page Item: P72_OBSERVACION ==========================
-  id: 12894828508928782
+- # ====== Page Item: P112_OBSERVACION =========================
+  id: 33465671308174097
   identification: 
-    name: P72_OBSERVACION
+    name: P112_OBSERVACION
     type: Text Field
 
   label: 
@@ -950,7 +1212,7 @@ page-items:
 
   layout: 
     sequence: 90
-    region: Cabecera # 12857379693396833
+    region: Cabecera # 33425870142642138
     slot: BODY
     alignment: Left
     start-new-layout: false
@@ -974,7 +1236,7 @@ page-items:
     warn-on-unsaved-changes: Page Default
 
   source: 
-    form-region: Orden de Compra # 12892991332928779
+    form-region: Orden de Compra # 33461481782174084
     column: OBSERVACION
     data-type: VARCHAR2
     query-only: false
@@ -991,10 +1253,10 @@ page-items:
     store-value-encrypted-in-session-state: true
     restricted-characters: All characters can be saved.
 
-- # ====== Page Item: P72_ID_OFICINA ===========================
-  id: 12895638671928782
+- # ====== Page Item: P112_ID_OFICINA ==========================
+  id: 33466481471174097
   identification: 
-    name: P72_ID_OFICINA
+    name: P112_ID_OFICINA
     type: Select List
 
   label: 
@@ -1009,7 +1271,7 @@ page-items:
 
   layout: 
     sequence: 60
-    region: Cabecera # 12857379693396833
+    region: Cabecera # 33425870142642138
     slot: BODY
     alignment: Left
     start-new-layout: false
@@ -1038,7 +1300,7 @@ page-items:
     warn-on-unsaved-changes: Page Default
 
   source: 
-    form-region: Orden de Compra # 12892991332928779
+    form-region: Orden de Compra # 33461481782174084
     column: ID_OFICINA
     data-type: NUMBER
     query-only: false
@@ -1055,10 +1317,10 @@ page-items:
     store-value-encrypted-in-session-state: true
     restricted-characters: All characters can be saved.
 
-- # ====== Page Item: P72_TOTAL_ORDEN ==========================
-  id: 12896012610928783
+- # ====== Page Item: P112_TOTAL_ORDEN =========================
+  id: 33476277548174109
   identification: 
-    name: P72_TOTAL_ORDEN
+    name: P112_TOTAL_ORDEN
     type: Number Field
 
   label: 
@@ -1071,7 +1333,7 @@ page-items:
 
   layout: 
     sequence: 80
-    region: Totalizador # 12857570897396835
+    region: Totalizador # 33426061346642140
     slot: BODY
     alignment: Left
     start-new-layout: false
@@ -1095,7 +1357,7 @@ page-items:
     warn-on-unsaved-changes: Page Default
 
   source: 
-    form-region: Orden de Compra # 12892991332928779
+    form-region: Orden de Compra # 33461481782174084
     column: TOTAL_ORDEN
     data-type: NUMBER
     query-only: false
@@ -1112,10 +1374,10 @@ page-items:
     store-value-encrypted-in-session-state: true
     restricted-characters: All characters can be saved.
 
-- # ====== Page Item: P72_ID_EMPLEADO ==========================
-  id: 12939546869107107
+- # ====== Page Item: P112_ID_EMPLEADO =========================
+  id: 33510389668352422
   identification: 
-    name: P72_ID_EMPLEADO
+    name: P112_ID_EMPLEADO
     type: Hidden
 
   settings: 
@@ -1123,14 +1385,14 @@ page-items:
 
   layout: 
     sequence: 70
-    region: Cabecera # 12857379693396833
+    region: Cabecera # 33425870142642138
     slot: BODY
 
   advanced: 
     warn-on-unsaved-changes: Page Default
 
   source: 
-    form-region: Orden de Compra # 12892991332928779
+    form-region: Orden de Compra # 33461481782174084
     column: ID_EMPLEADO
     data-type: NUMBER
     query-only: false
@@ -1152,10 +1414,10 @@ page-items:
     store-value-encrypted-in-session-state: true
     restricted-characters: All characters can be saved.
 
-- # ====== Page Item: P72_COD_USUARIO ==========================
-  id: 14819631506450421
+- # ====== Page Item: P112_COD_USUARIO =========================
+  id: 35390474305695736
   identification: 
-    name: P72_COD_USUARIO
+    name: P112_COD_USUARIO
     type: Display Only
 
   label: 
@@ -1170,7 +1432,7 @@ page-items:
 
   layout: 
     sequence: 80
-    region: Cabecera # 12857379693396833
+    region: Cabecera # 33425870142642138
     slot: BODY
     alignment: Left
     start-new-layout: false
@@ -1208,14 +1470,14 @@ page-items:
 
 buttons: 
 - # ====== Button: CANCEL ======================================
-  id: 12899200967928784
+  id: 20581234037245327
   identification: 
     button-name: CANCEL
     label: Cancelar
 
   layout: 
     sequence: 10
-    region: Buttons # 12898882718928784
+    region: Buttons # 33467373168174089
     slot: CLOSE
     start-new-layout: false
     start-new-row: true
@@ -1234,14 +1496,14 @@ buttons:
     execute-validations: true
 
 - # ====== Button: DELETE ======================================
-  id: 12900632900928785
+  id: 20581615034245327
   identification: 
     button-name: DELETE
     label: Eliminar
 
   layout: 
     sequence: 20
-    region: Buttons # 12898882718928784
+    region: Buttons # 33467373168174089
     slot: DELETE
     start-new-layout: false
     start-new-row: true
@@ -1260,25 +1522,23 @@ buttons:
     execute-validations: false
     show-processing: false
     warn-on-unsaved-changes: Do Not Check
-    database-action: SQL DELETE action
 
   confirmation: 
     message: '&APP_TEXT$DELETE_MSG!RAW.'
     style: Danger
 
   server-side-condition: 
-    type: Item is NOT NULL
-    item: P72_ID_ORDEN_COMPRA
+    type: Never
 
 - # ====== Button: SAVE ========================================
-  id: 12901022592928785
+  id: 20582085503245327
   identification: 
     button-name: SAVE
     label: Guardar
 
   layout: 
-    sequence: 30
-    region: Buttons # 12898882718928784
+    sequence: 40
+    region: Buttons # 33467373168174089
     slot: NEXT
     start-new-layout: false
     start-new-row: true
@@ -1300,18 +1560,17 @@ buttons:
     database-action: SQL UPDATE action
 
   server-side-condition: 
-    type: Item is NOT NULL
-    item: P72_ID_ORDEN_COMPRA
+    type: Never
 
 - # ====== Button: CREATE ======================================
-  id: 12901430655928785
+  id: 20582498439245328
   identification: 
     button-name: CREATE
     label: Crear
 
   layout: 
-    sequence: 40
-    region: Buttons # 12898882718928784
+    sequence: 50
+    region: Buttons # 33467373168174089
     slot: NEXT
     start-new-layout: false
     start-new-row: true
@@ -1333,12 +1592,151 @@ buttons:
     database-action: SQL INSERT action
 
   server-side-condition: 
-    type: Item is NULL
-    item: P72_ID_ORDEN_COMPRA
+    type: Never
+
+- # ====== Button: RECHAZAR ====================================
+  id: 20606293797469411
+  identification: 
+    button-name: RECHAZAR
+    label: ✖ Rechazar
+
+  layout: 
+    sequence: 10
+    region: Buttons # 33467373168174089
+    slot: NEXT
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text
+    hot: false
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Submit Page
+    execute-validations: true
+    show-processing: false
+    warn-on-unsaved-changes: Do Not Check
+
+  server-side-condition: 
+    type: Item = Value
+    item: P112_ESTADO
+    value: B
+
+- # ====== Button: APROBAR =====================================
+  id: 20606349507469412
+  identification: 
+    button-name: APROBAR
+    label: ✔ Aprobar
+
+  layout: 
+    sequence: 20
+    region: Buttons # 33467373168174089
+    slot: NEXT
+    start-new-layout: false
+    start-new-row: true
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+
+  appearance: 
+    button-template: Text
+    hot: false
+    template-options: 
+    - '#DEFAULT#'
+
+  behavior: 
+    action: Submit Page
+    execute-validations: true
+    show-processing: false
+    warn-on-unsaved-changes: Do Not Check
+
+  server-side-condition: 
+    type: Item = Value
+    item: P112_ESTADO
+    value: B
 
 dynamic-actions: 
+- # ====== Dynamic Action: New =================================
+  id: 20583839281245337
+  identification: 
+    name: New
+
+  execution: 
+    sequence: 50
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Change
+    selection-type: Item(s)
+    item(s): 
+    - P112_ID_EMPLEADO
+
+  actions: 
+  - # ====== Action: COD_USUARIO =================================
+    id: 20584336243245338
+    identification: 
+      name: COD_USUARIO
+      action: Set Value
+
+    settings: 
+      set-type: SQL Statement
+      sql-statement: |
+        select CODIGO_USUARIO
+        from EMPLEADOS
+        where ID_EMPLEADO = :P112_ID_EMPLEADO
+      items-to-submit: 
+      - P112_ID_EMPLEADO
+      escape-special-characters: true
+      suppress-change-event: false
+
+    affected-elements: 
+      selection-type: Item(s)
+      item(s): 
+      - P112_COD_USUARIO
+
+    execution: 
+      sequence: 10
+      event: New # 20583839281245337
+      fire-when-event-result-is: True
+      fire-on-initialization: true
+      stop-execution-on-error: true
+      wait-for-result: true
+
+- # ====== Dynamic Action: Cancel Dialog =======================
+  id: 20584720494245338
+  identification: 
+    name: Cancel Dialog
+
+  execution: 
+    sequence: 10
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: Click
+    selection-type: Button
+    button: CANCEL # 20581234037245327
+
+  actions: 
+  - # ====== Action: Cancel Dialog ===============================
+    id: 20585248984245338
+    identification: 
+      action: Cancel Dialog
+
+    execution: 
+      sequence: 10
+      event: Cancel Dialog # 20584720494245338
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
 - # ====== Dynamic Action: Carga de Productos ==================
-  id: 12858721176396847
+  id: 20585643614245338
   identification: 
     name: Carga de Productos
 
@@ -1350,13 +1748,13 @@ dynamic-actions:
   when: 
     event: Change
     selection-type: Column(s)
-    interactive-grid: Detalle_Orden_Compra # 12857668087396836
+    interactive-grid: Detalle_Orden_Compra # 33426158536642141
     column(s): 
     - ID_PRODUCTO
 
   actions: 
   - # ====== Action: Execute Server-side Code ====================
-    id: 12858817522396848
+    id: 20586164527245339
     identification: 
       action: Execute Server-side Code
 
@@ -1367,18 +1765,18 @@ dynamic-actions:
         into :CANTIDAD,:PRECIO_UNITARIO, :TOTAL_DETALLE
         from productos pro, PRODUCTO_PROVEEDORES  cat
             where pro.id_producto = cat.id_producto
-            and cat.ID_PERSONA = :P72_ID_PROVEEDOR
+            and cat.ID_PERSONA = :P112_ID_PROVEEDOR
             and pro.id_producto = :ID_PRODUCTO;*/
         
         SELECT 1, vv.PRECIO, vv.PRECIO
         INTO   :CANTIDAD, :PRECIO_UNITARIO, :TOTAL_DETALLE
         FROM   V_PRODUCTO_PROVEEDOR_VIGENTE vv
-        WHERE  vv.ID_PERSONA  = :P72_ID_PROVEEDOR
+        WHERE  vv.ID_PERSONA  = :P112_ID_PROVEEDOR
           AND  vv.ID_PRODUCTO = :ID_PRODUCTO
           AND  vv.VIGENCIA    = 'VIGENTE';
       items-to-submit: 
       - ID_PRODUCTO
-      - ' P72_ID_PROVEEDOR'
+      - ' P112_ID_PROVEEDOR'
       items-to-return: 
       - CANTIDAD
       - PRECIO_UNITARIO
@@ -1387,14 +1785,14 @@ dynamic-actions:
 
     execution: 
       sequence: 20
-      event: Carga de Productos # 12858721176396847
+      event: Carga de Productos # 20585643614245338
       fire-when-event-result-is: True
       fire-on-initialization: false
       stop-execution-on-error: true
       wait-for-result: true
 
   - # ====== Action: Execute JavaScript Code =====================
-    id: 12939124868107103
+    id: 20586699485245339
     identification: 
       action: Execute JavaScript Code
 
@@ -1403,12 +1801,42 @@ dynamic-actions:
 
     execution: 
       sequence: 30
-      event: Carga de Productos # 12858721176396847
+      event: Carga de Productos # 20585643614245338
+      fire-when-event-result-is: True
+      fire-on-initialization: false
+
+- # ====== Dynamic Action: Recalcular Total IG =================
+  id: 20587023348245339
+  identification: 
+    name: Recalcular Total IG
+
+  execution: 
+    sequence: 40
+    event-scope: Static
+    type: Immediate
+
+  when: 
+    event: NATIVE_IG|REGION TYPE|interactivegridselectionchange
+    selection-type: Region
+    region: Detalle_Orden_Compra # 33426158536642141
+
+  actions: 
+  - # ====== Action: Execute JavaScript Code =====================
+    id: 20587524436245339
+    identification: 
+      action: Execute JavaScript Code
+
+    settings: 
+      code: recalculaImporte();
+
+    execution: 
+      sequence: 10
+      event: Recalcular Total IG # 20587023348245339
       fire-when-event-result-is: True
       fire-on-initialization: false
 
 - # ====== Dynamic Action: Totalizador =========================
-  id: 12858910910396849
+  id: 20587996160245339
   identification: 
     name: Totalizador
 
@@ -1422,11 +1850,11 @@ dynamic-actions:
   when: 
     event: Change
     selection-type: Region
-    region: Detalle_Orden_Compra # 12857668087396836
+    region: Detalle_Orden_Compra # 33426158536642141
 
   actions: 
   - # ====== Action: Execute Server-side Code ====================
-    id: 12859004555396850
+    id: 20588409926245340
     identification: 
       action: Execute Server-side Code
 
@@ -1442,14 +1870,14 @@ dynamic-actions:
 
     execution: 
       sequence: 30
-      event: Totalizador # 12858910910396849
+      event: Totalizador # 20587996160245339
       fire-when-event-result-is: True
       fire-on-initialization: false
       stop-execution-on-error: true
       wait-for-result: true
 
   - # ====== Action: Execute JavaScript Code =====================
-    id: 12939249793107104
+    id: 20588933646245340
     identification: 
       action: Execute JavaScript Code
 
@@ -1458,116 +1886,12 @@ dynamic-actions:
 
     execution: 
       sequence: 20
-      event: Totalizador # 12858910910396849
+      event: Totalizador # 20587996160245339
       fire-when-event-result-is: True
       fire-on-initialization: false
-
-- # ====== Dynamic Action: Cancel Dialog =======================
-  id: 12899313531928784
-  identification: 
-    name: Cancel Dialog
-
-  execution: 
-    sequence: 10
-    event-scope: Static
-    type: Immediate
-
-  when: 
-    event: Click
-    selection-type: Button
-    button: CANCEL # 12899200967928784
-
-  actions: 
-  - # ====== Action: Cancel Dialog ===============================
-    id: 12900124184928785
-    identification: 
-      action: Cancel Dialog
-
-    execution: 
-      sequence: 10
-      event: Cancel Dialog # 12899313531928784
-      fire-when-event-result-is: True
-      fire-on-initialization: false
-
-- # ====== Dynamic Action: Recalcular Total IG =================
-  id: 12938964380107101
-  identification: 
-    name: Recalcular Total IG
-
-  execution: 
-    sequence: 40
-    event-scope: Static
-    type: Immediate
-
-  when: 
-    event: NATIVE_IG|REGION TYPE|interactivegridselectionchange
-    selection-type: Region
-    region: Detalle_Orden_Compra # 12857668087396836
-
-  actions: 
-  - # ====== Action: Execute JavaScript Code =====================
-    id: 12939063483107102
-    identification: 
-      action: Execute JavaScript Code
-
-    settings: 
-      code: recalculaImporte();
-
-    execution: 
-      sequence: 10
-      event: Recalcular Total IG # 12938964380107101
-      fire-when-event-result-is: True
-      fire-on-initialization: false
-
-- # ====== Dynamic Action: New =================================
-  id: 14819706490450422
-  identification: 
-    name: New
-
-  execution: 
-    sequence: 50
-    event-scope: Static
-    type: Immediate
-
-  when: 
-    event: Change
-    selection-type: Item(s)
-    item(s): 
-    - P72_ID_EMPLEADO
-
-  actions: 
-  - # ====== Action: COD_USUARIO =================================
-    id: 14819827642450423
-    identification: 
-      name: COD_USUARIO
-      action: Set Value
-
-    settings: 
-      set-type: SQL Statement
-      sql-statement: |
-        select CODIGO_USUARIO
-        from EMPLEADOS
-        where ID_EMPLEADO = :P72_ID_EMPLEADO
-      items-to-submit: 
-      - P72_ID_EMPLEADO
-      escape-special-characters: true
-      suppress-change-event: false
-
-    affected-elements: 
-      selection-type: Item(s)
-      item(s): 
-      - P72_COD_USUARIO
-
-    execution: 
-      sequence: 10
-      event: New # 14819706490450422
-      fire-when-event-result-is: True
-      fire-on-initialization: true
-      stop-execution-on-error: true
-      wait-for-result: true
 
 - # ====== Dynamic Action: REFRESCAR ===========================
-  id: 14820123896450426
+  id: 20589331238245340
   identification: 
     name: REFRESCAR
 
@@ -1580,11 +1904,11 @@ dynamic-actions:
     event: Change
     selection-type: Item(s)
     item(s): 
-    - P72_ID_PROVEEDOR
+    - P112_ID_PROVEEDOR
 
   actions: 
   - # ====== Action: REFRESH =====================================
-    id: 14820254359450427
+    id: 20589899482245340
     identification: 
       name: REFRESH
       action: Refresh
@@ -1594,93 +1918,30 @@ dynamic-actions:
 
     affected-elements: 
       selection-type: Region
-      region: Detalle_Orden_Compra # 12857668087396836
+      region: Detalle_Orden_Compra # 33426158536642141
 
     execution: 
       sequence: 10
-      event: REFRESCAR # 14820123896450426
+      event: REFRESCAR # 20589331238245340
       fire-when-event-result-is: True
       fire-on-initialization: false
 
 processes: 
-- # ====== Process: Detalle_Orden_Compra - Save Interactive Grid
-  id: 12858658201396846
-  identification: 
-    name: Detalle_Orden_Compra - Save Interactive Grid Data
-    type: Interactive Grid - Automatic Row Processing (DML)
-    execution-chain: None
-    editable-region: Detalle_Orden_Compra # 12857668087396836
-
-  settings: 
-    target-type: PL/SQL Code
-    pl/sql-code-to-insert/update/delete: |
-      begin
-          case:APEX$ROW_STATUS
-              WHEN 'C' THEN
-                  INSERT INTO DETALLE_ORDEN_COMPRA(ID_ORDEN_COMPRA,ID_PRODUCTO,CANTIDAD,PRECIO_UNITARIO,TOTAL_DETALLE)
-                  VALUES (:P72_ID_ORDEN_COMPRA,:ID_PRODUCTO,:CANTIDAD,:PRECIO_UNITARIO,:TOTAL_DETALLE);
-              WHEN 'U' THEN
-                  UPDATE DETALLE_ORDEN_COMPRA
-                  SET ID_PRODUCTO = :ID_PRODUCTO,
-                      CANTIDAD = :CANTIDAD,
-                      PRECIO_UNITARIO = :PRECIO_UNITARIO,
-                      TOTAL_DETALLE = :TOTAL_DETALLE
-                  WHERE ID_ORDEN_COMPRA = :P72_ID_ORDEN_COMPRA;
-              WHEN 'D' THEN
-                  DELETE DETALLE_ORDEN_COMPRA WHERE ID_DETALLE_OC = :ID_DETALLE_OC;
-          END CASE;
-      END;
-    prevent-lost-updates: true
-    lock-row: Yes
-
-  execution: 
-    sequence: 20
-    point: Processing
-    run-process: Once Per Page Visit (default)
-
-  error: 
-    display-location: Inline in Notification
-
-  server-side-condition: 
-    execution-scope: For Created and Modified Rows
-
 - # ====== Process: Initialize form Orden de Compra ============
-  id: 12901868074928785
+  id: 20569702438245314
   identification: 
     name: Initialize form Orden de Compra
     type: Form - Initialization
     execution-chain: None
-    form-region: Orden de Compra # 12892991332928779
+    form-region: Orden de Compra # 33461481782174084
 
   execution: 
     sequence: 10
     point: Before Header
     run-process: Once Per Page Visit (default)
 
-- # ====== Process: Process form Orden de Compra ===============
-  id: 12902279129928785
-  identification: 
-    name: Process form Orden de Compra
-    type: Form - Automatic Row Processing (DML)
-    execution-chain: None
-    form-region: Orden de Compra # 12892991332928779
-
-  settings: 
-    target-type: Region Source
-    prevent-lost-updates: true
-    lock-row: Yes
-    return-primary-key(s)-after-insert: true
-
-  execution: 
-    sequence: 10
-    point: Processing
-    run-process: Once Per Page Visit (default)
-
-  error: 
-    display-location: Inline in Notification
-
 - # ====== Process: Close Dialog ===============================
-  id: 12902660782928785
+  id: 20583019727245336
   identification: 
     name: Close Dialog
     type: Close Dialog
@@ -1701,10 +1962,10 @@ processes:
     type: Request is contained in Value
     value: CREATE,SAVE,DELETE
 
-- # ====== Process: CHK_LIMITE_MONTO_MENSUAL ===================
-  id: 20237728863558348
+- # ====== Process: PRC_VAL_NO_PROPIA_OC =======================
+  id: 20606517262469414
   identification: 
-    name: CHK_LIMITE_MONTO_MENSUAL
+    name: PRC_VAL_NO_PROPIA_OC
     type: Execute Code
     execution-chain: None
 
@@ -1713,41 +1974,20 @@ processes:
     language: PL/SQL
     pl/sql-code: |
       DECLARE
-        l_limite     NUMBER;
-        l_acumulado  NUMBER;
-        l_disponible NUMBER;
-        l_total_oc   NUMBER := NVL(:P72_TOTAL_ORDEN, 0);
+        l_aprobador NUMBER;
       BEGIN
-        l_limite := FN_GET_LIMITE_OC_MENSUAL(
-          TO_CHAR(SYSDATE, 'MM'),
-          TO_CHAR(SYSDATE, 'YYYY')
-        );
+        SELECT ID_EMPLEADO INTO l_aprobador
+        FROM   EMPLEADOS
+        WHERE  CODIGO_USUARIO = :APP_USER;
       
-        -- Sin límite configurado → no validar
-        IF l_limite IS NULL THEN
-          RETURN;
-        END IF;
-      
-        -- Acumulado del mes, excluye anuladas y la OC actual
-        SELECT NVL(SUM(TOTAL_ORDEN), 0)
-        INTO   l_acumulado
-        FROM   ORDENES_COMPRA
-        WHERE  TRUNC(FECHA_ORDEN, 'MM') = TRUNC(SYSDATE, 'MM')
-          AND  ESTADO != 'A'
-          AND  ID_ORDEN_COMPRA != NVL(:P72_ID_ORDEN_COMPRA, -1);
-      
-        l_disponible := l_limite - l_acumulado;
-      
-        IF (l_acumulado + l_total_oc) > l_limite THEN
+        IF l_aprobador = :P112_ID_EMPLEADO THEN
           APEX_ERROR.ADD_ERROR(
-            P_MESSAGE          => 'Límite mensual de OC superado.'          ||
-                                  ' Límite: $'      || TO_CHAR(l_limite,    'FM999G999G990') ||
-                                  ' | Acumulado: $' || TO_CHAR(l_acumulado, 'FM999G999G990') ||
-                                  ' | Esta OC: $'   || TO_CHAR(l_total_oc,  'FM999G999G990') ||
-                                  ' | Disponible: $'|| TO_CHAR(l_disponible,'FM999G999G990'),
+            P_MESSAGE          => 'No puede aprobar o rechazar una orden de compra propia.',
             P_DISPLAY_LOCATION => APEX_ERROR.C_INLINE_IN_NOTIFICATION
           );
         END IF;
+      EXCEPTION
+        WHEN NO_DATA_FOUND THEN NULL;
       END;
 
   execution: 
@@ -1759,5 +1999,161 @@ processes:
     display-location: Inline in Notification
 
   server-side-condition: 
-    when-button-pressed: CREATE # 12901430655928785
+    when-button-pressed: APROBAR # 20606349507469412
+
+- # ====== Process: PRC_VAL_NO_PROPIA_OC_1 =====================
+  id: 20606640874469415
+  identification: 
+    name: PRC_VAL_NO_PROPIA_OC_1
+    type: Execute Code
+    execution-chain: None
+
+  source: 
+    location: Local Database
+    language: PL/SQL
+    pl/sql-code: |
+      DECLARE
+        l_aprobador NUMBER;
+      BEGIN
+        SELECT ID_EMPLEADO INTO l_aprobador
+        FROM   EMPLEADOS
+        WHERE  CODIGO_USUARIO = :APP_USER;
+      
+        IF l_aprobador = :P112_ID_EMPLEADO THEN
+          APEX_ERROR.ADD_ERROR(
+            P_MESSAGE          => 'No puede aprobar o rechazar una orden de compra propia.',
+            P_DISPLAY_LOCATION => APEX_ERROR.C_INLINE_IN_NOTIFICATION
+          );
+        END IF;
+      EXCEPTION
+        WHEN NO_DATA_FOUND THEN NULL;
+      END;
+
+  execution: 
+    sequence: 2
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+
+  server-side-condition: 
+    when-button-pressed: RECHAZAR # 20606293797469411
+
+- # ====== Process: PRC_VAL_MOTIVO_RECHAZO =====================
+  id: 20606788406469416
+  identification: 
+    name: PRC_VAL_MOTIVO_RECHAZO
+    type: Execute Code
+    execution-chain: None
+
+  source: 
+    location: Local Database
+    language: PL/SQL
+    pl/sql-code: |
+      BEGIN
+        IF :P112_MOTIVO_RECHAZO IS NULL THEN
+          APEX_ERROR.ADD_ERROR(
+            P_MESSAGE          => 'El motivo de rechazo es obligatorio.',
+            P_DISPLAY_LOCATION => APEX_ERROR.C_INLINE_WITH_FIELD_AND_NOTIF,
+            P_PAGE_ITEM_NAME   => 'P112_MOTIVO_RECHAZO'
+          );
+        END IF;
+      END;
+
+  execution: 
+    sequence: 3
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+
+  server-side-condition: 
+    when-button-pressed: RECHAZAR # 20606293797469411
+
+- # ====== Process: PRC_APROBAR_OC =============================
+  id: 20606858657469417
+  identification: 
+    name: PRC_APROBAR_OC
+    type: Execute Code
+    execution-chain: None
+
+  source: 
+    location: Local Database
+    language: PL/SQL
+    pl/sql-code: |
+      DECLARE
+        l_id_aprobador NUMBER;
+      BEGIN
+        SELECT ID_EMPLEADO INTO l_id_aprobador
+        FROM   EMPLEADOS
+        WHERE  CODIGO_USUARIO = :APP_USER;
+      
+        UPDATE ORDENES_COMPRA SET
+          ESTADO           = 'P',
+          ID_APROBADOR     = l_id_aprobador,
+          FECHA_APROBACION = SYSDATE
+        WHERE ID_ORDEN_COMPRA = :P112_ID_ORDEN_COMPRA
+          AND ESTADO          = 'B';
+      
+        IF SQL%ROWCOUNT = 0 THEN
+          RAISE_APPLICATION_ERROR(-20001, 
+            'La orden ya fue procesada o no está disponible.');
+        END IF;
+      END;
+
+  execution: 
+    sequence: 10
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+
+  server-side-condition: 
+    when-button-pressed: APROBAR # 20606349507469412
+
+- # ====== Process: PRC_RECHAZAR_OC ============================
+  id: 20606991300469418
+  identification: 
+    name: PRC_RECHAZAR_OC
+    type: Execute Code
+    execution-chain: None
+
+  source: 
+    location: Local Database
+    language: PL/SQL
+    pl/sql-code: |
+      DECLARE
+        l_id_aprobador NUMBER;
+      BEGIN
+        SELECT ID_EMPLEADO INTO l_id_aprobador
+        FROM   EMPLEADOS
+        WHERE  CODIGO_USUARIO = :APP_USER;
+      
+        UPDATE ORDENES_COMPRA SET
+          ESTADO           = 'X',
+          ID_APROBADOR     = l_id_aprobador,
+          FECHA_APROBACION = SYSDATE,
+          MOTIVO_RECHAZO   = :P112_MOTIVO_RECHAZO
+        WHERE ID_ORDEN_COMPRA = :P112_ID_ORDEN_COMPRA
+          AND ESTADO          = 'B';
+      
+        IF SQL%ROWCOUNT = 0 THEN
+          RAISE_APPLICATION_ERROR(-20001, 
+            'La orden ya fue procesada o no está disponible.');
+        END IF;
+      END;
+
+  execution: 
+    sequence: 10
+    point: Processing
+    run-process: Once Per Page Visit (default)
+
+  error: 
+    display-location: Inline in Notification
+
+  server-side-condition: 
+    when-button-pressed: RECHAZAR # 20606293797469411
 

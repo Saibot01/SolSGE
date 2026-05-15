@@ -21,7 +21,7 @@ wwv_flow_imp_page.create_page(
 ,p_protection_level=>'C'
 ,p_page_component_map=>'21'
 ,p_created_on=>wwv_flow_imp.dz('20250529140615Z')
-,p_last_updated_on=>wwv_flow_imp.dz('20260427093833Z')
+,p_last_updated_on=>wwv_flow_imp.dz('20260513184518Z')
 ,p_created_by=>'WILLIAN'
 ,p_last_updated_by=>'SIS_APEX'
 );
@@ -37,7 +37,7 @@ wwv_flow_imp_page.create_page_plug(
 ,p_plug_source_type=>'NATIVE_IG'
 ,p_prn_page_header=>'Orden de Compra'
 ,p_created_on=>wwv_flow_imp.dz('20250529140615Z')
-,p_updated_on=>wwv_flow_imp.dz('20260427093833Z')
+,p_updated_on=>wwv_flow_imp.dz('20260513184518Z')
 ,p_created_by=>'WILLIAN'
 ,p_updated_by=>'SIS_APEX'
 );
@@ -162,12 +162,8 @@ wwv_flow_imp_page.create_region_column(
 ,p_display_sequence=>50
 ,p_value_alignment=>'LEFT'
 ,p_is_required=>false
-,p_lov_type=>'SQL_QUERY'
-,p_lov_source=>wwv_flow_string.join(wwv_flow_t_varchar2(
-'SELECT ''Pendiente''        AS DISPLAY_VALUE, ''P''  AS RETURN_VALUE FROM DUAL UNION ALL',
-unistr('SELECT ''Recepci\00F3n parcial'' AS DISPLAY_VALUE, ''R'' AS RETURN_VALUE FROM DUAL UNION ALL'),
-'SELECT ''Completada''        AS DISPLAY_VALUE, ''C''  AS RETURN_VALUE FROM DUAL UNION ALL',
-'SELECT ''Anulada''           AS DISPLAY_VALUE, ''A''  AS RETURN_VALUE FROM DUAL'))
+,p_lov_type=>'SHARED'
+,p_lov_id=>wwv_flow_imp.id(20547606844078370)
 ,p_lov_display_extra=>true
 ,p_lov_display_null=>true
 ,p_enable_filter=>true
@@ -184,7 +180,7 @@ unistr('SELECT ''Recepci\00F3n parcial'' AS DISPLAY_VALUE, ''R'' AS RETURN_VALUE
 ,p_is_primary_key=>false
 ,p_duplicate_value=>true
 ,p_include_in_export=>true
-,p_updated_on=>wwv_flow_imp.dz('20260427093833Z')
+,p_updated_on=>wwv_flow_imp.dz('20260513184518Z')
 ,p_updated_by=>'SIS_APEX'
 );
 wwv_flow_imp_page.create_region_column(

@@ -5,7 +5,7 @@
     name: Navigation Menu
 
   subscription: 
-    version-number: 39028437742515
+    version-number: 39028487655654
 
   source: 
     type: Static Values
@@ -1806,6 +1806,63 @@
       type: Expression
       language: PL/SQL
       pl/sql-expression: 'security_pkg.can_access(:APP_ID, :APP_USER, 9, NULL)'
+
+  - # ====== Entry: Parámetros ===================================
+    id: 20434934623365925
+    label: 
+      label: Parámetros
+
+    icon: 
+      image/icon-css-classes: fa-design
+
+    layout: 
+      sequence: 650
+      parent-entry: Administration # 8044595892830593
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 103
+      - 105
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:103:&SESSION.::&DEBUG.::::'
+        page: 103 # Parámetros
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
+
+  - # ====== Entry: Aprobación de Órdenes de Compra ==============
+    id: 20550788537145581
+    label: 
+      label: Aprobación de Órdenes de Compra
+
+    icon: 
+      image/icon-css-classes: fa-thumbs-o-up
+
+    layout: 
+      sequence: 660
+      parent-entry: Compras # 12815939864378893
+
+    is-current: 
+      type: Pages
+      pages: 
+      - 110
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:110:&APP_SESSION.::&DEBUG.:::'
+        page: 110 # Aprobación de Órdenes de Compra
+
+    click-counting: 
+      count-clicks: false
+
+    user-defined-attributes: 
+      translatable: false
 
 - # ====== List: Navigation Bar ================================
   id: 7995151038830923

@@ -1,10 +1,10 @@
 ---
-# ====== Page: Orden de Compra ===============================
-id: 71
+# ====== Page: Parámetros ====================================
+id: 103
 identification: 
-  name: Orden de Compra
-  alias: ORDEN-DE-COMPRA1
-  title: Orden de Compra
+  name: Parámetros
+  alias: PARÁMETROS
+  title: Parámetros
 
 appearance: 
   page-mode: Normal
@@ -37,17 +37,17 @@ server-cache:
   caching: Disabled
 
 regions: 
-- # ====== Region: Orden de Compra =============================
-  id: 12903654974928786
+- # ====== Region: Parámetros ==================================
+  id: 20435311073365928
   identification: 
-    name: Orden de Compra
+    name: Parámetros
     type: Interactive Grid
 
   source: 
     location: Local Database
     type: Table / View
     table-owner: Parsing Schema
-    table-name: ORDENES_COMPRA
+    table-name: PARAMETROS
     include-rowid-column: false
 
   layout: 
@@ -79,7 +79,7 @@ regions:
     customizable: Not Customizable By End Users
 
   attributes: 
-    id: 12904115688928786
+    id: 20435880299365929
     edit: 
       enabled: false
 
@@ -128,14 +128,14 @@ regions:
 
     saved-reports: 
     - # ====== Saved Report: Primary Report ========================
-      id: 12904501863928787
+      id: 20436297447365930
       identification: 
         name: Primary Report
-        alias: 129046
+        alias: 204363
 
   columns: 
   - # ====== Column: APEX$LINK ===================================
-    id: 12904995829928787
+    id: 20436682259365931
     identification: 
       column-name: APEX$LINK
       type: Link
@@ -153,13 +153,13 @@ regions:
 
     link: 
       target: 
-        url: 'f?p=&APP_ID.:92:&SESSION.::&DEBUG.:RP,92:P92_ID_ORDEN_COMPRA:\&ID_ORDEN_COMPRA.\'
-        page: 92 # Orden de Compra Documento
-        clear-cache: RP,92
+        url: 'f?p=&APP_ID.:105:&APP_SESSION.::&DEBUG.:RP,105:P105_ID_PARAMETRO:\&ID_PARAMETRO.\'
+        page: 105 # Formulario Parámetros
+        clear-cache: RP,105
         values: 
-          p92_id_orden_compra: '&ID_ORDEN_COMPRA.'
+          p105_id_parametro: '&ID_PARAMETRO.'
 
-      link-text: <span role="img" aria-label="Imprimir" class="fa fa-print" title="Imprimir"></span>
+      link-text: <span role="img" aria-label="Edit" class="fa fa-edit" title="Edit"></span>
 
     source: 
       type: None
@@ -170,10 +170,10 @@ regions:
     security: 
       escape-special-characters: true
 
-  - # ====== Column: ID_ORDEN_COMPRA =============================
-    id: 12905969431928788
+  - # ====== Column: ID_PARAMETRO ================================
+    id: 20437622827365932
     identification: 
-      column-name: ID_ORDEN_COMPRA
+      column-name: ID_PARAMETRO
       type: Hidden
 
     settings: 
@@ -187,10 +187,13 @@ regions:
 
     source: 
       type: Database Column
-      database-column: ID_ORDEN_COMPRA
+      database-column: ID_PARAMETRO
       data-type: NUMBER
-      query-only: true
+      query-only: false
       primary-key: true
+
+    default: 
+      duplicate-copies-existing-value: true
 
     session-state: 
       data-type: VARCHAR2
@@ -202,14 +205,14 @@ regions:
       sort: true
       control-break/aggregate: true
 
-  - # ====== Column: ID_PROVEEDOR ================================
-    id: 12906924412928788
+  - # ====== Column: TIPO_PARAMETRO ==============================
+    id: 20438642664365935
     identification: 
-      column-name: ID_PROVEEDOR
+      column-name: TIPO_PARAMETRO
       type: Select List
 
     heading: 
-      heading: Proveedor
+      heading: Tipo Parametro
       alignment: start
 
     layout: 
@@ -224,20 +227,182 @@ regions:
       value-required: true
 
     list-of-values: 
-      type: Shared Component
-      list-of-values: PERSONA.NOMBRE # 16219980276116331
+      type: Static Values
+      static-values: 'STATIC:LIMITE_OC;LIMITE_OC ,CONFIGURACION;CONFIGURACION'
       display-extra-values: true
       display-null-value: true
 
     source: 
       type: Database Column
-      database-column: ID_PROVEEDOR
+      database-column: TIPO_PARAMETRO
+      data-type: VARCHAR2
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      performance-impacting-operators: 
+      - Contains
+      - Starts With
+      - Case Insensitive
+      - Regular Expression
+      text-case: Mixed
+      lov-type: Use List of Values
+      exact-match: true
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: CLAVE =======================================
+    id: 20439608179365935
+    identification: 
+      column-name: CLAVE
+      type: Text Field
+
+    heading: 
+      heading: Clave
+      alignment: start
+
+    settings: 
+      trim-spaces: Leading and Trailing
+      text-case: Upper
+
+    layout: 
+      sequence: 40
+      column-alignment: start
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: true
+      maximum-length: 100
+
+    source: 
+      type: Database Column
+      database-column: CLAVE
+      data-type: VARCHAR2
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      performance-impacting-operators: 
+      - Contains
+      - Starts With
+      - Case Insensitive
+      - Regular Expression
+      text-case: Mixed
+      lov-type: Distinct Column
+      exact-match: true
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: VALOR_NUMERICO ==============================
+    id: 20440653338365935
+    identification: 
+      column-name: VALOR_NUMERICO
+      type: Number Field
+
+    heading: 
+      heading: Valor Numerico
+      alignment: end
+
+    settings: 
+      number-alignment: Start
+      virtual-keyboard: Decimal
+
+    layout: 
+      sequence: 50
+      column-alignment: end
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: false
+
+    source: 
+      type: Database Column
+      database-column: VALOR_NUMERICO
       data-type: NUMBER
       query-only: false
       primary-key: false
 
     default: 
       duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: VALOR_TEXTO =================================
+    id: 20441698000365936
+    identification: 
+      column-name: VALOR_TEXTO
+      type: Textarea
+
+    heading: 
+      heading: Valor Texto
+      alignment: start
+
+    settings: 
+      resizable: true
+      auto-height: false
+      character-counter: false
+      trim-spaces: Leading and Trailing
+
+    layout: 
+      sequence: 60
+      column-alignment: start
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: false
+      maximum-length: 500
+
+    source: 
+      type: Database Column
+      database-column: VALOR_TEXTO
+      data-type: VARCHAR2
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    session-state: 
+      data-type: VARCHAR2
 
     column-filter: 
       enabled: true
@@ -253,18 +418,242 @@ regions:
       include-in-export-/-print: true
 
     enable-users-to: 
+      sort: false
+      hide: true
+
+  - # ====== Column: DESCRIPCION =================================
+    id: 20442675107365936
+    identification: 
+      column-name: DESCRIPCION
+      type: Textarea
+
+    heading: 
+      heading: Descripcion
+      alignment: start
+
+    settings: 
+      resizable: true
+      auto-height: false
+      character-counter: false
+      trim-spaces: Leading and Trailing
+
+    layout: 
+      sequence: 70
+      column-alignment: start
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: false
+      maximum-length: 500
+
+    source: 
+      type: Database Column
+      database-column: DESCRIPCION
+      data-type: VARCHAR2
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    session-state: 
+      data-type: VARCHAR2
+
+    column-filter: 
+      enabled: true
+      performance-impacting-operators: 
+      - Contains
+      - Starts With
+      - Case Insensitive
+      - Regular Expression
+      text-case: Mixed
+      lov-type: None
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: false
+      hide: true
+
+  - # ====== Column: MES_APLICABLE ===============================
+    id: 20443629429365937
+    identification: 
+      column-name: MES_APLICABLE
+      type: Select List
+
+    heading: 
+      heading: Mes Aplicable
+      alignment: start
+
+    layout: 
+      sequence: 80
+      column-alignment: start
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: false
+
+    list-of-values: 
+      type: Static Values
+      static-values: 'STATIC:(Ninguno),Enero;01,Febrero;02,Marzo;03,Abril;04,Mayo;05,Junio;06,Julio;07,Agosto;08,Septiembre;09,Octubre;10,Noviembre;11,Diciembre;12'
+      display-extra-values: true
+      display-null-value: true
+
+    source: 
+      type: Database Column
+      database-column: MES_APLICABLE
+      data-type: VARCHAR2
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      performance-impacting-operators: 
+      - Contains
+      - Starts With
+      - Case Insensitive
+      - Regular Expression
+      text-case: Mixed
+      lov-type: Use List of Values
+      exact-match: true
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
       sort: true
       control-break/aggregate: true
       hide: true
 
-  - # ====== Column: FECHA_ORDEN =================================
-    id: 12907938506928789
+  - # ====== Column: ANO_APLICABLE ===============================
+    id: 20444641569365937
     identification: 
-      column-name: FECHA_ORDEN
+      column-name: ANO_APLICABLE
+      type: Text Field
+
+    heading: 
+      heading: Año Aplicable
+      alignment: start
+
+    settings: 
+      trim-spaces: Leading and Trailing
+      text-case: NO CHANGE
+
+    layout: 
+      sequence: 90
+      column-alignment: start
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: false
+      maximum-length: 4
+
+    source: 
+      type: Database Column
+      database-column: ANO_APLICABLE
+      data-type: VARCHAR2
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      performance-impacting-operators: 
+      - Contains
+      - Starts With
+      - Case Insensitive
+      - Regular Expression
+      text-case: Mixed
+      lov-type: Distinct Column
+      exact-match: true
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: ACTIVO ======================================
+    id: 20445638354365937
+    identification: 
+      column-name: ACTIVO
+      type: Select List
+
+    heading: 
+      heading: Activo
+      alignment: start
+
+    layout: 
+      sequence: 100
+      column-alignment: start
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: true
+
+    list-of-values: 
+      type: Static Values
+      static-values: 'STATIC:Activo;S,Inactivo;N'
+      display-extra-values: true
+      display-null-value: true
+
+    source: 
+      type: Database Column
+      database-column: ACTIVO
+      data-type: VARCHAR2
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      performance-impacting-operators: 
+      - Contains
+      - Starts With
+      - Case Insensitive
+      - Regular Expression
+      text-case: Mixed
+      lov-type: Use List of Values
+      exact-match: true
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: FECHA_CREACION ==============================
+    id: 20446618298365938
+    identification: 
+      column-name: FECHA_CREACION
       type: Date Picker
 
     heading: 
-      heading: Fecha Orden
+      heading: Fecha Creacion
       alignment: start
 
     settings: 
@@ -276,7 +665,7 @@ regions:
       use-defaults: true
 
     layout: 
-      sequence: 40
+      sequence: 110
       column-alignment: start
       stretch: Use Report Setting
 
@@ -284,11 +673,11 @@ regions:
       value-identifies-row: false
 
     validation: 
-      value-required: false
+      value-required: true
 
     source: 
       type: Database Column
-      database-column: FECHA_ORDEN
+      database-column: FECHA_CREACION
       data-type: DATE
       query-only: false
       primary-key: false
@@ -309,70 +698,14 @@ regions:
       control-break/aggregate: true
       hide: true
 
-  - # ====== Column: ESTADO ======================================
-    id: 12908970725928789
+  - # ====== Column: USUARIO_CREACION ============================
+    id: 20447644433365938
     identification: 
-      column-name: ESTADO
-      type: Select List
-
-    heading: 
-      heading: Estado
-      alignment: start
-
-    layout: 
-      sequence: 50
-      column-alignment: start
-      stretch: Use Report Setting
-
-    accessibility: 
-      value-identifies-row: false
-
-    validation: 
-      value-required: false
-
-    list-of-values: 
-      type: Shared Component
-      list-of-values: ORDEN.COMPRA.ESTADO # 20547606844078370
-      display-extra-values: true
-      display-null-value: true
-
-    source: 
-      type: Database Column
-      database-column: ESTADO
-      data-type: VARCHAR2
-      query-only: false
-      primary-key: false
-
-    default: 
-      duplicate-copies-existing-value: true
-
-    column-filter: 
-      enabled: true
-      performance-impacting-operators: 
-      - Contains
-      - Starts With
-      - Case Insensitive
-      - Regular Expression
-      text-case: Mixed
-      lov-type: Use List of Values
-      exact-match: true
-
-    export-/-printing: 
-      include-in-export-/-print: true
-
-    enable-users-to: 
-      sort: true
-      control-break/aggregate: true
-      hide: true
-
-  - # ====== Column: OBSERVACION =================================
-    id: 12909996647928789
-    identification: 
-      column-name: OBSERVACION
+      column-name: USUARIO_CREACION
       type: Text Field
 
     heading: 
-      heading: Observacion
+      heading: Usuario Creacion
       alignment: start
 
     settings: 
@@ -380,7 +713,7 @@ regions:
       text-case: NO CHANGE
 
     layout: 
-      sequence: 60
+      sequence: 120
       column-alignment: start
       stretch: Use Report Setting
 
@@ -389,11 +722,11 @@ regions:
 
     validation: 
       value-required: false
-      maximum-length: 255
+      maximum-length: 100
 
     source: 
       type: Database Column
-      database-column: OBSERVACION
+      database-column: USUARIO_CREACION
       data-type: VARCHAR2
       query-only: false
       primary-key: false
@@ -420,18 +753,26 @@ regions:
       control-break/aggregate: true
       hide: true
 
-  - # ====== Column: ID_OFICINA ==================================
-    id: 12911912497928790
+  - # ====== Column: FECHA_MODIFICACION ==========================
+    id: 20448697897365939
     identification: 
-      column-name: ID_OFICINA
-      type: Select List
+      column-name: FECHA_MODIFICACION
+      type: Date Picker
 
     heading: 
-      heading: Oficina
+      heading: Fecha Modificacion
       alignment: start
 
+    settings: 
+      show-time: false
+      display-as: Popup
+      minimum-date: None
+      maximum-date: None
+      multiple-months: No
+      use-defaults: true
+
     layout: 
-      sequence: 80
+      sequence: 130
       column-alignment: start
       stretch: Use Report Setting
 
@@ -441,16 +782,59 @@ regions:
     validation: 
       value-required: false
 
-    list-of-values: 
-      type: Shared Component
-      list-of-values: OFICINAS.DESCRIPCION # 8245359747955872
-      display-extra-values: true
-      display-null-value: true
+    source: 
+      type: Database Column
+      database-column: FECHA_MODIFICACION
+      data-type: DATE
+      query-only: false
+      primary-key: false
+
+    default: 
+      duplicate-copies-existing-value: true
+
+    column-filter: 
+      enabled: true
+      lov-type: Distinct Column
+      date-ranges: All
+
+    export-/-printing: 
+      include-in-export-/-print: true
+
+    enable-users-to: 
+      sort: true
+      control-break/aggregate: true
+      hide: true
+
+  - # ====== Column: USUARIO_MODIFICACION ========================
+    id: 20449682311365939
+    identification: 
+      column-name: USUARIO_MODIFICACION
+      type: Text Field
+
+    heading: 
+      heading: Usuario Modificacion
+      alignment: start
+
+    settings: 
+      trim-spaces: Leading and Trailing
+      text-case: NO CHANGE
+
+    layout: 
+      sequence: 140
+      column-alignment: start
+      stretch: Use Report Setting
+
+    accessibility: 
+      value-identifies-row: false
+
+    validation: 
+      value-required: false
+      maximum-length: 100
 
     source: 
       type: Database Column
-      database-column: ID_OFICINA
-      data-type: NUMBER
+      database-column: USUARIO_MODIFICACION
+      data-type: VARCHAR2
       query-only: false
       primary-key: false
 
@@ -465,123 +849,7 @@ regions:
       - Case Insensitive
       - Regular Expression
       text-case: Mixed
-      lov-type: None
-
-    export-/-printing: 
-      include-in-export-/-print: true
-
-    enable-users-to: 
-      sort: true
-      control-break/aggregate: true
-      hide: true
-
-  - # ====== Column: TOTAL_ORDEN =================================
-    id: 12912927043928790
-    identification: 
-      column-name: TOTAL_ORDEN
-      type: Number Field
-
-    heading: 
-      heading: Total Orden
-      alignment: end
-
-    settings: 
-      number-alignment: Start
-      virtual-keyboard: Decimal
-
-    layout: 
-      sequence: 90
-      column-alignment: end
-      stretch: Use Report Setting
-
-    accessibility: 
-      value-identifies-row: false
-
-    validation: 
-      value-required: false
-
-    source: 
-      type: Database Column
-      database-column: TOTAL_ORDEN
-      data-type: NUMBER
-      query-only: false
-      primary-key: false
-
-    default: 
-      duplicate-copies-existing-value: true
-
-    column-filter: 
-      enabled: true
-      lov-type: None
-
-    export-/-printing: 
-      include-in-export-/-print: true
-
-    enable-users-to: 
-      sort: true
-      control-break/aggregate: true
-      hide: true
-
-  - # ====== Column: ID_EMPLEADO =================================
-    id: 12939407447107106
-    identification: 
-      column-name: ID_EMPLEADO
-      type: Popup LOV
-
-    heading: 
-      heading: Usuario
-      alignment: start
-
-    settings: 
-      display-as: Inline Popup
-      initial-fetch: Automatic
-      manual-entry: false
-      fetch-on-search: false
-
-    search: 
-      match-type: Contains
-      case-sensitive: false
-      minimum-characters: 0
-
-    multiple-values: 
-      type: No
-
-    layout: 
-      sequence: 100
-      column-alignment: start
-      stretch: Use Report Setting
-
-    accessibility: 
-      value-identifies-row: false
-
-    validation: 
-      value-required: false
-
-    list-of-values: 
-      type: Shared Component
-      list-of-values: EMPLEADOS.NOMBRE # 12747961019199341
-      display-extra-values: true
-      display-null-value: true
-
-    source: 
-      type: Database Column
-      database-column: ID_EMPLEADO
-      data-type: NUMBER
-      query-only: false
-      primary-key: false
-
-    default: 
-      duplicate-copies-existing-value: true
-
-    column-filter: 
-      enabled: true
-      performance-impacting-operators: 
-      - Contains
-      - Starts With
-      - Case Insensitive
-      - Regular Expression
-      text-case: Mixed
-      lov-type: Use List of Values
+      lov-type: Distinct Column
       exact-match: true
 
     export-/-printing: 
@@ -608,7 +876,7 @@ regions:
       font-size: 12
       font-color: '#000000'
       alignment: center
-      page-header-text: Orden de Compra
+      page-header-text: Parámetros
 
     column-headings: 
       font: Helvetica
@@ -632,7 +900,7 @@ regions:
       alignment: center
 
 - # ====== Region: Breadcrumb ==================================
-  id: 12916315507928792
+  id: 20452248148365942
   identification: 
     name: Breadcrumb
     type: Breadcrumb
@@ -676,14 +944,14 @@ regions:
 
 buttons: 
 - # ====== Button: CREATE ======================================
-  id: 12914745035928791
+  id: 20450695010365939
   identification: 
     button-name: CREATE
     label: Crear
 
   layout: 
     sequence: 10
-    region: Orden de Compra # 12903654974928786
+    region: Parámetros # 20435311073365928
     slot: EDIT
     start-new-layout: false
     start-new-row: true
@@ -700,15 +968,15 @@ buttons:
   behavior: 
     action: Redirect to Page in this Application
     target: 
-      url: 'f?p=&APP_ID.:72:&APP_SESSION.::&DEBUG.:72::'
-      page: 72 # Orden de Compra
-      clear-cache: 72
+      url: 'f?p=&APP_ID.:105:&APP_SESSION.::&DEBUG.:105::'
+      page: 105 # Formulario Parámetros
+      clear-cache: 105
 
     warn-on-unsaved-changes: Do Not Check
 
 dynamic-actions: 
 - # ====== Dynamic Action: Edit Report - Dialog Closed =========
-  id: 12915032447928792
+  id: 20450936733365940
   identification: 
     name: Edit Report - Dialog Closed
 
@@ -720,11 +988,11 @@ dynamic-actions:
   when: 
     event: Dialog Closed
     selection-type: Region
-    region: Orden de Compra # 12903654974928786
+    region: Parámetros # 20435311073365928
 
   actions: 
   - # ====== Action: Refresh =====================================
-    id: 12915516480928792
+    id: 20451495652365940
     identification: 
       action: Refresh
 
@@ -733,11 +1001,11 @@ dynamic-actions:
 
     affected-elements: 
       selection-type: Region
-      region: Orden de Compra # 12903654974928786
+      region: Parámetros # 20435311073365928
 
     execution: 
       sequence: 10
-      event: Edit Report - Dialog Closed # 12915032447928792
+      event: Edit Report - Dialog Closed # 20450936733365940
       fire-when-event-result-is: True
       fire-on-initialization: false
 

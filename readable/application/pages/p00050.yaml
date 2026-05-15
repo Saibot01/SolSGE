@@ -133,28 +133,324 @@ page-items:
   id: 12131231001681063
   identification: 
     name: P50_ID_PRODUCTO
-    type: Popup LOV
-
-  label: 
-    label: Producto
-    alignment: Left
+    type: Hidden
 
   settings: 
-    display-as: Inline Popup
-    initial-fetch: Automatic
-    manual-entry: false
-    fetch-on-search: false
-
-  search: 
-    match-type: Contains
-    case-sensitive: false
-    minimum-characters: 0
-
-  multiple-values: 
-    type: No
+    value-protected: false
 
   layout: 
     sequence: 10
+    region: Stock de Productos # 12130809351681063
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Stock de Productos # 12130809351681063
+    column: ID_PRODUCTO
+    data-type: NUMBER
+    query-only: false
+    primary-key: true
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Request (Memory Only)
+
+  security: 
+    session-state-protection: Checksum Required - Session Level
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P50_ID_OFICINA ===========================
+  id: 12131672382681063
+  identification: 
+    name: P50_ID_OFICINA
+    type: Hidden
+
+  settings: 
+    value-protected: false
+
+  layout: 
+    sequence: 20
+    region: Stock de Productos # 12130809351681063
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Stock de Productos # 12130809351681063
+    column: ID_OFICINA
+    data-type: NUMBER
+    query-only: false
+    primary-key: true
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Request (Memory Only)
+
+  security: 
+    session-state-protection: Checksum Required - Session Level
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P50_CANTIDAD =============================
+  id: 12132069816681064
+  identification: 
+    name: P50_CANTIDAD
+    type: Display Only
+
+  label: 
+    label: Cantidad
+    alignment: Left
+
+  settings: 
+    format: Plain Text
+    based-on: Item Value
+    show-line-breaks: true
+    send-on-page-submit: true
+
+  layout: 
+    sequence: 40
+    region: Stock de Productos # 12130809351681063
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Stock de Productos # 12130809351681063
+    column: CANTIDAD
+    data-type: NUMBER
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Request (Memory Only)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P50_STOCK_MAXIMO =========================
+  id: 20482286435037113
+  identification: 
+    name: P50_STOCK_MAXIMO
+    type: Number Field
+
+  label: 
+    label: Stock Maximo
+    alignment: Left
+
+  settings: 
+    number-alignment: Start
+    virtual-keyboard: Decimal
+
+  layout: 
+    sequence: 50
+    region: Stock de Productos # 12130809351681063
+    slot: BODY
+    alignment: Left
+    start-new-layout: false
+    start-new-row: false
+    column: Automatic
+    new-column: true
+    column-span: Automatic
+    label-column-span: Page Template Default
+
+  appearance: 
+    template: Optional - Floating
+    template-options: 
+    - '#DEFAULT#'
+    width: 30
+
+  validation: 
+    value-required: false
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Stock de Productos # 12130809351681063
+    column: STOCK_MAXIMO
+    data-type: NUMBER
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    storage: Per Request (Memory Only)
+
+  quick-picks: 
+    show-quick-picks: false
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P50_FECHA_CREACION =======================
+  id: 20482397633037114
+  identification: 
+    name: P50_FECHA_CREACION
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 70
+    region: Stock de Productos # 12130809351681063
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Stock de Productos # 12130809351681063
+    column: FECHA_CREACION
+    data-type: DATE
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Request (Memory Only)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P50_USUARIO_CREACION =====================
+  id: 20482482259037115
+  identification: 
+    name: P50_USUARIO_CREACION
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 80
+    region: Stock de Productos # 12130809351681063
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Stock de Productos # 12130809351681063
+    column: USUARIO_CREACION
+    data-type: VARCHAR2
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Request (Memory Only)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P50_FECHA_MODIFICACION ===================
+  id: 20482584946037116
+  identification: 
+    name: P50_FECHA_MODIFICACION
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 90
+    region: Stock de Productos # 12130809351681063
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Stock de Productos # 12130809351681063
+    column: FECHA_MODIFICACION
+    data-type: DATE
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Request (Memory Only)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P50_USUARIO_MODIFICACION =================
+  id: 20482653111037117
+  identification: 
+    name: P50_USUARIO_MODIFICACION
+    type: Hidden
+
+  settings: 
+    value-protected: true
+
+  layout: 
+    sequence: 100
+    region: Stock de Productos # 12130809351681063
+    slot: BODY
+
+  advanced: 
+    warn-on-unsaved-changes: Page Default
+
+  source: 
+    form-region: Stock de Productos # 12130809351681063
+    column: USUARIO_MODIFICACION
+    data-type: VARCHAR2
+    query-only: false
+    primary-key: false
+
+  session-state: 
+    data-type: VARCHAR2
+    storage: Per Request (Memory Only)
+
+  security: 
+    session-state-protection: Unrestricted
+    store-value-encrypted-in-session-state: true
+    restricted-characters: All characters can be saved.
+
+- # ====== Page Item: P50_STOCK_MINIMO =========================
+  id: 20484614252037137
+  identification: 
+    name: P50_STOCK_MINIMO
+    type: Number Field
+
+  label: 
+    label: Stock Minimo
+    alignment: Left
+
+  settings: 
+    number-alignment: Start
+    virtual-keyboard: Decimal
+
+  layout: 
+    sequence: 30
     region: Stock de Productos # 12130809351681063
     slot: BODY
     alignment: Left
@@ -174,139 +470,12 @@ page-items:
   validation: 
     value-required: false
 
-  list-of-values: 
-    type: Shared Component
-    list-of-values: PRODUCTOS.NOMBRE # 11765368439189441
-    display-extra-values: true
-    display-null-value: true
-
   advanced: 
     warn-on-unsaved-changes: Page Default
 
   source: 
     form-region: Stock de Productos # 12130809351681063
-    column: ID_PRODUCTO
-    data-type: NUMBER
-    query-only: false
-    primary-key: true
-
-  session-state: 
-    storage: Per Request (Memory Only)
-
-  quick-picks: 
-    show-quick-picks: false
-
-  security: 
-    session-state-protection: Checksum Required - Session Level
-    store-value-encrypted-in-session-state: true
-    restricted-characters: All characters can be saved.
-
-- # ====== Page Item: P50_ID_OFICINA ===========================
-  id: 12131672382681063
-  identification: 
-    name: P50_ID_OFICINA
-    type: Select List
-
-  label: 
-    label: Oficina
-    alignment: Left
-
-  settings: 
-    page-action-on-selection: None
-
-  multiple-values: 
-    type: No
-
-  layout: 
-    sequence: 20
-    region: Stock de Productos # 12130809351681063
-    slot: BODY
-    alignment: Left
-    start-new-layout: false
-    start-new-row: false
-    column: Automatic
-    new-column: true
-    column-span: Automatic
-    label-column-span: Page Template Default
-
-  appearance: 
-    template: Optional - Floating
-    template-options: 
-    - '#DEFAULT#'
-    height: 1
-
-  validation: 
-    value-required: false
-
-  list-of-values: 
-    type: Shared Component
-    list-of-values: OFICINAS.DESCRIPCION # 8245359747955872
-    display-extra-values: true
-    display-null-value: true
-
-  advanced: 
-    warn-on-unsaved-changes: Page Default
-
-  source: 
-    form-region: Stock de Productos # 12130809351681063
-    column: ID_OFICINA
-    data-type: NUMBER
-    query-only: false
-    primary-key: true
-
-  session-state: 
-    storage: Per Request (Memory Only)
-
-  quick-picks: 
-    show-quick-picks: false
-
-  security: 
-    session-state-protection: Checksum Required - Session Level
-    store-value-encrypted-in-session-state: true
-    restricted-characters: All characters can be saved.
-
-- # ====== Page Item: P50_CANTIDAD =============================
-  id: 12132069816681064
-  identification: 
-    name: P50_CANTIDAD
-    type: Number Field
-
-  label: 
-    label: Cantidad
-    alignment: Left
-
-  settings: 
-    number-alignment: Start
-    virtual-keyboard: Decimal
-
-  layout: 
-    sequence: 30
-    region: Stock de Productos # 12130809351681063
-    slot: BODY
-    alignment: Left
-    start-new-layout: false
-    start-new-row: true
-    column: Automatic
-    new-column: true
-    column-span: 3
-    label-column-span: Page Template Default
-
-  appearance: 
-    template: Optional - Floating
-    template-options: 
-    - '#DEFAULT#'
-    width: 32
-
-  validation: 
-    value-required: false
-    maximum-length: 255
-
-  advanced: 
-    warn-on-unsaved-changes: Page Default
-
-  source: 
-    form-region: Stock de Productos # 12130809351681063
-    column: CANTIDAD
+    column: STOCK_MINIMO
     data-type: NUMBER
     query-only: false
     primary-key: false
@@ -327,7 +496,7 @@ buttons:
   id: 12133705486681065
   identification: 
     button-name: CANCEL
-    label: Cancel
+    label: Cancelar
 
   layout: 
     sequence: 10
@@ -349,49 +518,11 @@ buttons:
     action: Defined by Dynamic Action
     execute-validations: true
 
-- # ====== Button: DELETE ======================================
-  id: 12135165547681066
-  identification: 
-    button-name: DELETE
-    label: Delete
-
-  layout: 
-    sequence: 20
-    region: Buttons # 12133325842681065
-    slot: DELETE
-    start-new-layout: false
-    start-new-row: true
-    column: Automatic
-    new-column: true
-    column-span: Automatic
-
-  appearance: 
-    button-template: Text
-    hot: false
-    template-options: 
-    - '#DEFAULT#'
-
-  behavior: 
-    action: Submit Page
-    execute-validations: false
-    show-processing: false
-    warn-on-unsaved-changes: Do Not Check
-    database-action: SQL DELETE action
-
-  confirmation: 
-    message: '&APP_TEXT$DELETE_MSG!RAW.'
-    style: Danger
-
-  server-side-condition: 
-    type: Expression
-    language: SQL
-    sql-expression: ':P50_ID_PRODUCTO is not null and :P50_ID_OFICINA is not null'
-
 - # ====== Button: SAVE ========================================
   id: 12135500938681066
   identification: 
     button-name: SAVE
-    label: Apply Changes
+    label: Guardar
 
   layout: 
     sequence: 30
@@ -425,7 +556,7 @@ buttons:
   id: 12135917563681067
   identification: 
     button-name: CREATE
-    label: Create
+    label: Guardar
 
   layout: 
     sequence: 40
@@ -482,6 +613,37 @@ dynamic-actions:
       event: Cancel Dialog # 12133851443681065
       fire-when-event-result-is: True
       fire-on-initialization: false
+
+validations: 
+- # ====== Validation: VAL_STOCK_MIN_MAX =======================
+  id: 20484872295037139
+  identification: 
+    name: VAL_STOCK_MIN_MAX
+
+  execution: 
+    sequence: 10
+
+  validation: 
+    type: Function Body (returning Error Text)
+    language: PL/SQL
+    pl/sql-function-body-returning-error-text: |
+      BEGIN
+        IF :P50_STOCK_MINIMO IS NOT NULL AND :P50_STOCK_MAXIMO IS NOT NULL THEN
+          IF :P50_STOCK_MINIMO >= :P50_STOCK_MAXIMO THEN
+            RETURN 'El stock mínimo (' || :P50_STOCK_MINIMO || 
+                   ') debe ser menor al stock máximo (' || :P50_STOCK_MAXIMO || ').';
+          END IF;
+        END IF;
+        RETURN NULL;
+      END;
+    always-execute: false
+
+  error: 
+    display-location: Inline with Field and in Notification
+    associated-item: P50_STOCK_MAXIMO # 20482286435037113
+
+  server-side-condition: 
+    when-button-pressed: SAVE # 12135500938681066
 
 processes: 
 - # ====== Process: Initialize form Stock de Productos =========

@@ -884,3 +884,34 @@
         url: 'f?p=&APP_ID.:104:&APP_SESSION.::&DEBUG.:::'
         page: 104 # Carga Masiva Producto-Proveedor
 
+  - # ====== Entry: Parámetros ===================================
+    id: 20452167127365941
+    identification: 
+      name: Parámetros
+      page-number: 103
+
+    execution: 
+      sequence: 10
+
+    appearance: 
+      parent-entry: Administration # 8045478405830590
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:103:&APP_SESSION.::&DEBUG.:::'
+        page: 103 # Parámetros
+
+  - # ====== Entry: Aprobación de Órdenes de Compra ==============
+    id: 20551643695145583
+    identification: 
+      name: Aprobación de Órdenes de Compra
+      page-number: 110
+
+    execution: 
+      sequence: 10
+
+    link: 
+      target: 
+        url: 'f?p=&APP_ID.:110:&APP_SESSION.::&DEBUG.:::'
+        page: 110 # Aprobación de Órdenes de Compra
+

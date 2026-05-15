@@ -15,7 +15,7 @@ wwv_flow_imp_shared.create_menu(
  p_id=>wwv_flow_imp.id(7705913887831249)
 ,p_name=>'Breadcrumb'
 ,p_created_on=>wwv_flow_imp.dz('20240606062349Z')
-,p_updated_on=>wwv_flow_imp.dz('20260511065057Z')
+,p_updated_on=>wwv_flow_imp.dz('20260513185549Z')
 ,p_created_by=>'SIS_APEX'
 ,p_updated_by=>'SIS_APEX'
 );
@@ -613,6 +613,27 @@ wwv_flow_imp_shared.create_menu_option(
 ,p_page_id=>104
 ,p_created_on=>wwv_flow_imp.dz('20260511065057Z')
 ,p_updated_on=>wwv_flow_imp.dz('20260511065057Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(20452167127365941)
+,p_parent_id=>wwv_flow_imp.id(8045478405830590)
+,p_short_name=>unistr('Par\00E1metros')
+,p_link=>'f?p=&APP_ID.:103:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>103
+,p_created_on=>wwv_flow_imp.dz('20260513025233Z')
+,p_updated_on=>wwv_flow_imp.dz('20260513025233Z')
+,p_created_by=>'SIS_APEX'
+,p_updated_by=>'SIS_APEX'
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(20551643695145583)
+,p_short_name=>unistr('Aprobaci\00F3n de \00D3rdenes de Compra')
+,p_link=>'f?p=&APP_ID.:110:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>110
+,p_created_on=>wwv_flow_imp.dz('20260513185549Z')
+,p_updated_on=>wwv_flow_imp.dz('20260513185549Z')
 ,p_created_by=>'SIS_APEX'
 ,p_updated_by=>'SIS_APEX'
 );

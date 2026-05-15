@@ -52,12 +52,12 @@ wwv_imp_workspace.create_flow(
 ,p_substitution_string_01=>'APP_NAME'
 ,p_substitution_value_01=>'SOLSGE'
 ,p_created_on=>wwv_flow_imp.dz('20240606062349Z')
-,p_last_updated_on=>wwv_flow_imp.dz('20260512105700Z')
+,p_last_updated_on=>wwv_flow_imp.dz('20260514000235Z')
 ,p_created_by=>'SIS_APEX'
 ,p_last_updated_by=>'SIS_APEX'
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
 ,p_files_version=>13
-,p_version_scn=>39028439113008
+,p_version_scn=>39028495331281
 ,p_print_server_type=>'NATIVE'
 ,p_file_storage=>'DB'
 ,p_is_pwa=>'Y'

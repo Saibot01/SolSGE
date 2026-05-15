@@ -39,6 +39,7 @@ prompt --install
 @@application/shared_components/user_interface/lovs/departamentos_descripcion_002.sql
 @@application/shared_components/user_interface/lovs/documentos_descripcion.sql
 @@application/shared_components/user_interface/lovs/email_username_format.sql
+@@application/shared_components/user_interface/lovs/empleados_codigo_usuario.sql
 @@application/shared_components/user_interface/lovs/empleados_nombre.sql
 @@application/shared_components/user_interface/lovs/genero_personas.sql
 @@application/shared_components/user_interface/lovs/lov_personas_clientes.sql
@@ -47,6 +48,7 @@ prompt --install
 @@application/shared_components/user_interface/lovs/nro_documento_no_cliente.sql
 @@application/shared_components/user_interface/lovs/nro_documento_no_empleado.sql
 @@application/shared_components/user_interface/lovs/oficinas_descripcion.sql
+@@application/shared_components/user_interface/lovs/orden_compra_estado.sql
 @@application/shared_components/user_interface/lovs/ordenes_compra_observacion.sql
 @@application/shared_components/user_interface/lovs/ordenes_venta_estado.sql
 @@application/shared_components/user_interface/lovs/paginas.sql
@@ -192,9 +194,13 @@ prompt --install
 @@application/pages/page_00100.sql
 @@application/pages/page_00101.sql
 @@application/pages/page_00102.sql
+@@application/pages/page_00103.sql
 @@application/pages/page_00104.sql
+@@application/pages/page_00105.sql
 @@application/pages/page_00106.sql
 @@application/pages/page_00107.sql
+@@application/pages/page_00110.sql
+@@application/pages/page_00112.sql
 @@application/pages/page_09999.sql
 @@application/pages/page_10000.sql
 @@application/pages/page_10010.sql

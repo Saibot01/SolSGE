@@ -1060,51 +1060,54 @@
     name: PRODUCTOS.PROVEEDOR.PRECIO
 
   subscription: 
-    version-number: 39022939245471
+    version-number: 39028467507936
 
   source: 
     location: Local Database
     type: SQL Query
     sql-query: |
-      select pro.nombre, pro.id_producto, per.primer_nombre||' '||per.primer_apellido as Proveedor, CAT.PRECIO
+      /*select pro.nombre, pro.id_producto, per.primer_nombre||' '||per.primer_apellido as Proveedor, CAT.PRECIO
       from productos pro, PRODUCTO_PROVEEDORES  cat, personas per
           where pro.id_producto = cat.id_producto
           and per.id_persona = cat.ID_PERSONA
-          and cat.ID_PERSONA = NVL(:P72_ID_PROVEEDOR,cat.ID_PERSONA);
+          and cat.ID_PERSONA = NVL(:P72_ID_PROVEEDOR,cat.ID_PERSONA);*/
+      SELECT 
+        vv.PRODUCTO_NOMBRE                       AS PRODUCTO,
+        vv.ID_PRODUCTO                           AS RETURN_VALUE,
+        vv.PROVEEDOR_NOMBRE                      AS PROVEEDOR,
+        vv.PRECIO                                AS PRECIO_PROVEEDOR,
+        vmin.PRECIO                              AS PRECIO_MINIMO,
+        /*CASE 
+          WHEN vmin.PROVEEDOR_NOMBRE = vv.PROVEEDOR_NOMBRE 
+          THEN '✓ '||vmin.PROVEEDOR_NOMBRE
+          ELSE vmin.PROVEEDOR_NOMBRE
+        END                                      AS PROV_MAS_BARATO,*/
+        ROUND(vv.PRECIO - vmin.PRECIO, 2)       AS DIFERENCIA
+      FROM V_PRODUCTO_PROVEEDOR_VIGENTE vv
+      JOIN V_COMPARATIVA_PRECIO_PROVEEDORES vmin 
+        ON  vmin.ID_PRODUCTO    = vv.ID_PRODUCTO
+        AND vmin.RANKING_PRECIO = 1
+      WHERE vv.ID_PERSONA = NVL(:P72_ID_PROVEEDOR, vv.ID_PERSONA)
+        AND vv.VIGENCIA   = 'VIGENTE'
+      ORDER BY vv.PRODUCTO_NOMBRE
 
   column-mapping: 
-    return: ID_PRODUCTO
-    display: NOMBRE
-    default-sort: NOMBRE
-    sort-direction: Ascending (Nulls Last)
+    return: RETURN_VALUE
+    display: PRODUCTO
+    default-sort: Use Order By from Query
 
   columns: 
-  - # ====== Column: ID_PRODUCTO =================================
-    id: 16415151760609025
+  - # ====== Column: PRODUCTO ====================================
+    id: 20464523001931060
     identification: 
-      column-name: ID_PRODUCTO
-      show: false
-
-    layout: 
-      sequence: 10
-
-    source: 
-      data-type: NUMBER
-
-    advanced: 
-      searchable: false
-
-  - # ====== Column: NOMBRE ======================================
-    id: 16415540406609025
-    identification: 
-      column-name: NOMBRE
+      column-name: PRODUCTO
       show: true
 
     heading: 
-      heading: Nombre
+      heading: Producto
 
     layout: 
-      sequence: 20
+      sequence: 10
 
     source: 
       data-type: VARCHAR2
@@ -1112,8 +1115,77 @@
     advanced: 
       searchable: true
 
+  - # ====== Column: PRECIO_PROVEEDOR ============================
+    id: 20464925812931060
+    identification: 
+      column-name: PRECIO_PROVEEDOR
+      show: true
+
+    heading: 
+      heading: Precio
+
+    layout: 
+      sequence: 20
+
+    source: 
+      data-type: NUMBER
+
+    advanced: 
+      searchable: true
+
+  - # ====== Column: PRECIO_MINIMO ===============================
+    id: 20465330984931061
+    identification: 
+      column-name: PRECIO_MINIMO
+      show: true
+
+    heading: 
+      heading: Precio/Minimo
+
+    layout: 
+      sequence: 30
+
+    source: 
+      data-type: NUMBER
+
+    advanced: 
+      searchable: true
+
+  - # ====== Column: DIFERENCIA ==================================
+    id: 20466178952931061
+    identification: 
+      column-name: DIFERENCIA
+      show: true
+
+    heading: 
+      heading: Diferencia
+
+    layout: 
+      sequence: 50
+
+    source: 
+      data-type: NUMBER
+
+    advanced: 
+      searchable: true
+
+  - # ====== Column: RETURN_VALUE ================================
+    id: 20466513387931061
+    identification: 
+      column-name: RETURN_VALUE
+      show: false
+
+    layout: 
+      sequence: 60
+
+    source: 
+      data-type: NUMBER
+
+    advanced: 
+      searchable: true
+
   - # ====== Column: PROVEEDOR ===================================
-    id: 16415981507609026
+    id: 20476028939117068
     identification: 
       column-name: PROVEEDOR
       show: true
@@ -1122,7 +1194,7 @@
       heading: Proveedor
 
     layout: 
-      sequence: 30
+      sequence: 10
 
     source: 
       data-type: VARCHAR2
@@ -1130,21 +1202,48 @@
     advanced: 
       searchable: true
 
-  - # ====== Column: PRECIO ======================================
-    id: 16416346364609026
-    identification: 
-      column-name: PRECIO
-      show: true
+- # ====== List of Values: ORDEN.COMPRA.ESTADO =================
+  id: 20547606844078370
+  identification: 
+    name: ORDEN.COMPRA.ESTADO
 
-    heading: 
-      heading: Precio
+  subscription: 
+    version-number: 39028487389336
 
-    layout: 
-      sequence: 40
+  source: 
+    location: Local Database
+    type: SQL Query
+    sql-query: |
+      SELECT 'Borrador (pendiente aprobación)' AS DISPLAY_VALUE, 'B' AS RETURN_VALUE FROM DUAL UNION ALL
+      SELECT 'Rechazada'                       AS DISPLAY_VALUE, 'X' AS RETURN_VALUE FROM DUAL UNION ALL
+      SELECT 'Pendiente recepción'             AS DISPLAY_VALUE, 'P' AS RETURN_VALUE FROM DUAL UNION ALL
+      SELECT 'Recepción parcial'               AS DISPLAY_VALUE, 'R' AS RETURN_VALUE FROM DUAL UNION ALL
+      SELECT 'Completada'                      AS DISPLAY_VALUE, 'C' AS RETURN_VALUE FROM DUAL UNION ALL
+      SELECT 'Anulada'                         AS DISPLAY_VALUE, 'A' AS RETURN_VALUE FROM DUAL
 
-    source: 
-      data-type: NUMBER
+  column-mapping: 
+    return: RETURN_VALUE
+    display: DISPLAY_VALUE
+    default-sort: DISPLAY_VALUE
+    sort-direction: Ascending (Nulls Last)
 
-    advanced: 
-      searchable: true
+- # ====== List of Values: EMPLEADOS.CODIGO_USUARIO ============
+  id: 20621974182530291
+  identification: 
+    name: EMPLEADOS.CODIGO_USUARIO
+
+  subscription: 
+    version-number: 39028489273075
+
+  source: 
+    location: Local Database
+    type: Table / View
+    table-owner: Parsing Schema
+    table-name: EMPLEADOS
+
+  column-mapping: 
+    return: ID_EMPLEADO
+    display: CODIGO_USUARIO
+    default-sort: CODIGO_USUARIO
+    sort-direction: Ascending (Nulls Last)
 
