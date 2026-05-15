@@ -1,0 +1,7 @@
+{
+  "env": {
+    "SQLCL_CONNECTION": "tesis_db",
+    "APEX_APP_ID": "100",
+    "APEX_WORKSPACE": "WKSP_WORKPLACE"
+  }
+}
