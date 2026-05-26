@@ -47,7 +47,8 @@ wwv_flow_imp_page.create_page_plug(
 '       ESTADO,',
 '       TOTAL,',
 '       OBSERVACION,',
-'       CAST(NULL AS VARCHAR2(200)) AS Impresion',
+'       CAST(NULL AS VARCHAR2(200)) AS Impresion,',
+'       CAST(NULL AS VARCHAR2(200)) AS CambiarEstado',
 '  from ORDENES_VENTA'))
 ,p_plug_source_type=>'NATIVE_IR'
 ,p_prn_content_disposition=>'ATTACHMENT'
@@ -121,6 +122,19 @@ wwv_flow_imp_page.create_worksheet_column(
 ,p_use_as_row_header=>'N'
 );
 wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(36000000000003100)
+,p_db_column_name=>'CAMBIARESTADO'
+,p_display_order=>25
+,p_column_identifier=>'H'
+,p_column_label=>'Cambiar Estado'
+,p_column_link=>'f?p=&APP_ID.:115:&SESSION.::&DEBUG.:115:P115_ID_ORDEN:#ID_ORDEN#'
+,p_column_linktext=>unistr('<span class="fa fa-exchange" title="Cambiar estado" aria-label="Cambiar estado"></span>')
+,p_column_type=>'STRING'
+,p_heading_alignment=>'CENTER'
+,p_column_alignment=>'CENTER'
+,p_use_as_row_header=>'N'
+);
+wwv_flow_imp_page.create_worksheet_column(
  p_id=>wwv_flow_imp.id(11939952492860037)
 ,p_db_column_name=>'ID_PERSONA'
 ,p_display_order=>30
@@ -180,7 +194,7 @@ wwv_flow_imp_page.create_worksheet_rpt(
 ,p_report_alias=>'119914'
 ,p_status=>'PUBLIC'
 ,p_is_default=>'Y'
-,p_report_columns=>'ID_ORDEN:ID_PERSONA:FECHA_ORDEN:ESTADO:TOTAL:OBSERVACION'
+,p_report_columns=>'ID_ORDEN:CAMBIARESTADO:ID_PERSONA:FECHA_ORDEN:ESTADO:TOTAL:OBSERVACION'
 );
 wwv_flow_imp_page.create_page_plug(
  p_id=>wwv_flow_imp.id(12003886624524707)
@@ -197,7 +211,8 @@ wwv_flow_imp_page.create_page_plug(
 '       ESTADO,',
 '       TOTAL,',
 '       OBSERVACION,',
-'       CAST(NULL AS VARCHAR2(200)) AS Impresion',
+'       CAST(NULL AS VARCHAR2(200)) AS Impresion,',
+'       CAST(NULL AS VARCHAR2(200)) AS CambiarEstado',
 '  from ORDENES_VENTA'))
 ,p_plug_source_type=>'NATIVE_IR'
 ,p_prn_content_disposition=>'ATTACHMENT'
@@ -270,6 +285,19 @@ wwv_flow_imp_page.create_worksheet_column(
 ,p_use_as_row_header=>'N'
 );
 wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(36000000000003200)
+,p_db_column_name=>'CAMBIARESTADO'
+,p_display_order=>25
+,p_column_identifier=>'H'
+,p_column_label=>'Cambiar Estado'
+,p_column_link=>'f?p=&APP_ID.:115:&SESSION.::&DEBUG.:115:P115_ID_ORDEN:#ID_ORDEN#'
+,p_column_linktext=>unistr('<span class="fa fa-exchange" title="Cambiar estado" aria-label="Cambiar estado"></span>')
+,p_column_type=>'STRING'
+,p_heading_alignment=>'CENTER'
+,p_column_alignment=>'CENTER'
+,p_use_as_row_header=>'N'
+);
+wwv_flow_imp_page.create_worksheet_column(
  p_id=>wwv_flow_imp.id(12004294811524711)
 ,p_db_column_name=>'ID_PERSONA'
 ,p_display_order=>30
@@ -329,7 +357,7 @@ wwv_flow_imp_page.create_worksheet_rpt(
 ,p_report_alias=>'120184'
 ,p_status=>'PUBLIC'
 ,p_is_default=>'Y'
-,p_report_columns=>'ID_ORDEN:IMPRESION:ID_PERSONA:FECHA_ORDEN:ESTADO:TOTAL:OBSERVACION'
+,p_report_columns=>'ID_ORDEN:IMPRESION:CAMBIARESTADO:ID_PERSONA:FECHA_ORDEN:ESTADO:TOTAL:OBSERVACION'
 );
 wwv_flow_imp_page.create_page_button(
  p_id=>wwv_flow_imp.id(11735279138125020)

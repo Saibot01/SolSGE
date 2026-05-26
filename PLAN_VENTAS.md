@@ -416,7 +416,11 @@ END;
 
 ### Feature 5 — Pantalla de cambio de estado
 
-**Estado:** ❌ no implementado.
+**Estado:** ✅ completado (2026-05-26 — `apex-work/f100/application/pages/page_00115.sql` + ajuste de P52). Pequeñas desviaciones vs. el spec original:
+- **Sin item `P115_NUEVO_ESTADO` select.** El destino se infiere de `:REQUEST` (botón APROBAR → APROBADO, ANULAR → ANULADO). UX más limpia: el usuario no elige de un dropdown un destino al que el botón ya apunta.
+- **Detalle como HTML generado por PL/SQL** (`NATIVE_DYNAMIC_CONTENT`), no IG. La app no usa Classic Reports y un IG read-only era overkill; el HTML con `htp.p` da una tabla simple con totales al pie.
+- **Link en P52 como columna IR**, no como acción de fila. Aparece en ambos IRs (default y alternativo) con ícono `fa-exchange`.
+- VENCIDO sigue siendo solo automático vía job F2 (no botón manual).
 
 **Nueva página propuesta: P115 — “Cambio de Estado de Presupuesto”** (Modal Dialog).
 
@@ -556,10 +560,12 @@ END;
 - [ ] DA Change sobre `ID_PRODUCTO` con AJAX callback
 - [ ] Validación server-side de submit
 
-### F5 — Pantalla de cambio de estado
-- [ ] Crear page 115 modal
-- [ ] Botón/link en P52 IR
-- [ ] Proceso `ProcesarCambioEstado`
+### F5 — Pantalla de cambio de estado ✅
+- [x] Crear page 115 modal (`page_00115.sql`, 4 regiones, 8 items, 3 botones, 1 validación, 2 procesos AFTER_SUBMIT)
+- [x] Link en P52 IR (columna `CAMBIARESTADO` con ícono `fa-exchange` en ambos IRs)
+- [x] Proceso `ProcesarCambioEstado` (usa `FN_PUEDE_TRANSICION_OV` + `SELECT FOR UPDATE` + `UPDATE` con CASE para columnas auditoría)
+- [x] DA close-dialog en botón CERRAR
+- [x] Validación motivo requerido cuando se aprieta ANULAR (atada al botón vía `when_button_pressed`)
 
 ### F6 — Reporte anulados/vencidos
 - [ ] Modificar IR de P52 (filtro default)
