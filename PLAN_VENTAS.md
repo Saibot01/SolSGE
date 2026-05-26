@@ -325,8 +325,9 @@ END;
 
 ### Feature 4 — Estados completos
 
-**Estado:** ⚠️ parcial. Hoy: `PENDIENTE`, `FACTURADO`. Se agregan: `APROBADO`,
-`ANULADO`, `VENCIDO`.
+**Estado:** ✅ completado (versionado en `db/F4_estados.sql` el 2026-05-26 — la
+implementación ya estaba aplicada en la BD live antes de capturarse). Estados
+soportados: `PENDIENTE`, `APROBADO`, `FACTURADO`, `ANULADO`, `VENCIDO`.
 
 **Migración previa (imprescindible):**
 
@@ -529,13 +530,15 @@ END;
 
 ## 7. Checklist de entregables por feature
 
-### F4 — Estados
-- [ ] Script `migrate_estados_ov.sql`
-- [ ] `ALTER TABLE ORDENES_VENTA ADD CONSTRAINT CK_OV_ESTADO`
-- [ ] Función `FN_PUEDE_TRANSICION_OV`
-- [ ] Reemplazo de `TRG_FACTURA_ORDEN`
-- [ ] Reemplazo de `TRG_GENERAR_RESERVA_ORDEN`
-- [ ] Trigger `TRG_OV_LIBERA_RESERVA`
+### F4 — Estados ✅
+- [x] Migración de datos heredados (NULL/camelCase → `PENDIENTE`)
+- [x] `ALTER TABLE ORDENES_VENTA ADD CONSTRAINT CK_OV_ESTADO`
+- [x] Columnas auditoría: `FECHA_APROBACION`, `USUARIO_APROBACION`, `FECHA_ANULACION`, `USUARIO_ANULACION`, `MOTIVO_ANULACION`
+- [x] Función `FN_PUEDE_TRANSICION_OV`
+- [x] `TRG_FACTURA_ORDEN` endurecido (usa `FN_PUEDE_TRANSICION_OV`, hace `SELECT FOR UPDATE`, tolera `ID_ORDEN_VENTA IS NULL`)
+- [x] `TRG_GENERAR_RESERVA_ORDEN` filtrado (sale early si estado ∉ `PENDIENTE`/`APROBADO`)
+- [x] Trigger `TRG_OV_LIBERA_RESERVA`
+- [x] Script versionado idempotente: `db/F4_estados.sql`
 
 ### F1 — Renombrado
 - [ ] Edit `page_00052.sql`

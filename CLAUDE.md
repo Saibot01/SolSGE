@@ -29,6 +29,7 @@ The repo intentionally keeps two separate exports of the same app side-by-side. 
 When adding a page or component to the work tree, you must also add the matching `@@…` line(s) to the relevant install script — exports placed in `apex-work/` are dead weight until referenced there.
 
 Other directories:
+- `db/` — versioned SQL migrations (DDL/DML/PLSQL outside APEX). One file per feature: `db/F4_estados.sql`, etc. Each script must be idempotent and end with a verification block. See `db/README.md`. Apply via `sql -S -name $SQLCL_CONNECTION @db/<file>.sql`.
 - `export-prev/` — older full exports kept as historical backups (includes a large `f100.sql`, zips, and `readable/`). Ignore unless explicitly asked.
 - `apexlang/` — empty placeholder.
 
