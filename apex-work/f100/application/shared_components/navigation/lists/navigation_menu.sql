@@ -5,7 +5,7 @@ begin
 --   Manifest End
 wwv_flow_imp.component_begin (
  p_version_yyyy_mm_dd=>'2024.11.30'
-,p_release=>'24.2.15'
+,p_release=>'24.2.16'
 ,p_default_workspace_id=>7697821598969118
 ,p_default_application_id=>100
 ,p_default_id_offset=>0
@@ -15,7 +15,7 @@ wwv_flow_imp_shared.create_list(
  p_id=>wwv_flow_imp.id(7706470273831245)
 ,p_name=>'Navigation Menu'
 ,p_list_status=>'PUBLIC'
-,p_version_scn=>39028487655654
+,p_version_scn=>39028863070610
 );
 wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(8007399120830870)
@@ -192,7 +192,7 @@ wwv_flow_imp_shared.create_list_item(
 wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(11874938547937402)
 ,p_list_item_display_sequence=>370
-,p_list_item_link_text=>'Orden de Venta'
+,p_list_item_link_text=>'Presupuesto'
 ,p_list_item_link_target=>'f?p=&APP_ID.:52:&SESSION.::&DEBUG.::::'
 ,p_list_item_icon=>'fa-ai-sparkle-zoom-in'
 ,p_list_item_disp_cond_type=>'EXPRESSION'
@@ -286,21 +286,6 @@ wwv_flow_imp_shared.create_list_item(
 ,p_list_item_current_for_pages=>'5'
 );
 wwv_flow_imp_shared.create_list_item(
- p_id=>wwv_flow_imp.id(11756066830189434)
-,p_list_item_display_sequence=>250
-,p_list_item_link_text=>'Precio por Categoria'
-,p_list_item_link_target=>'f?p=&APP_ID.:8:&SESSION.::&DEBUG.::::'
-,p_list_item_icon=>'fa-badge-dollar'
-,p_list_item_disp_cond_type=>'EXPRESSION'
-,p_list_item_disp_condition=>wwv_flow_string.join(wwv_flow_t_varchar2(
-'security_pkg.can_access(:APP_ID, :APP_USER, 8, NULL)',
-''))
-,p_list_item_disp_condition2=>'PLSQL'
-,p_parent_list_item_id=>wwv_flow_imp.id(11719915312104968)
-,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
-,p_list_item_current_for_pages=>'8'
-);
-wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(11777800015215866)
 ,p_list_item_display_sequence=>260
 ,p_list_item_link_text=>'Producto Proveedor'
@@ -344,6 +329,16 @@ wwv_flow_imp_shared.create_list_item(
 ,p_parent_list_item_id=>wwv_flow_imp.id(11719915312104968)
 ,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
 ,p_list_item_current_for_pages=>'40'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(21281870845983977)
+,p_list_item_display_sequence=>670
+,p_list_item_link_text=>unistr('M\00E1rgenes por Categor\00EDa')
+,p_list_item_link_target=>'f?p=&APP_ID.:108:&APP_SESSION.::&DEBUG.:::'
+,p_list_item_icon=>'fa-coins'
+,p_parent_list_item_id=>wwv_flow_imp.id(11719915312104968)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'108'
 );
 wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(12108709573618278)
