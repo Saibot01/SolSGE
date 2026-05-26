@@ -1,11 +1,11 @@
 # Plan: Gestión de Costos y Precios por Proveedor
 
-**Estado:** COMPLETADO (Fases 1-5 ✅, Fase 6 soft deprecation hecha, DROP físico para futuro)  
-**Feature:** Actualización automática de costo al confirmar factura de proveedor + cálculo de precio de venta por margen  
+**Estado:** COMPLETADO (Fases 1-5, 7 ✅, Fase 6 soft deprecation hecha)  
+**Feature:** Actualización automática de costo al confirmar factura de proveedor + cálculo de precio de venta por margen (con costo ponderado por ventana de tiempo)  
 **Módulo:** Compras / Productos  
 **Fecha inicio:** 2026-05-25  
-**Última actualización:** 2026-05-25  
-**Decisión registrada:** Margen → tabla `MARGEN_CATEGORIA` con vigencias (Opción B), pantalla de configuración independiente
+**Última actualización:** 2026-05-26  
+**Decisión registrada:** Margen → tabla `MARGEN_CATEGORIA` con vigencias (Opción B), pantalla de configuración independiente. Costo de venta → ponderado por ventana de tiempo (default 90 días) con fallback al costo vigente de PRODUCTO_PROVEEDORES.
 
 ---
 
@@ -625,6 +625,60 @@ La función `FN_PRECIO_VENTA` reemplaza a esta tabla como fuente de precios de v
 
 ---
 
+### FASE 7 — Costo ponderado por ventana de tiempo
+**Estado:** ✅ Completado — 2026-05-26  
+**Prerrequisito:** Fase 5 completada
+
+#### Motivación
+El modelo original tomaba "último costo registrado" — la última fila activa en `PRODUCTO_PROVEEDORES`. Problema: el precio de venta saltaba arbitrariamente con cada nueva factura, incluso si era una factura puntualmente cara/barata o de un proveedor distinto. Esto distorsionaba el margen real del inventario.
+
+#### Solución
+Reemplazar "último costo" por **promedio ponderado de las facturas confirmadas en los últimos N días** (default 90, configurable).
+
+Fórmula: `costo = SUM(cantidad × precio_unitario × tipo_cambio) / SUM(cantidad)` sobre `DETALLE_COMPROBANTE_PROV` joineado a `COMPROBANTES_PROVEEDOR ESTADO='C'`, filtrando por `fecha_emision >= TRUNC(SYSDATE) - ventana`.
+
+**Fallback:** si no hay facturas en la ventana, usar el costo vigente de `PRODUCTO_PROVEEDORES` (preserva el comportamiento anterior para productos nuevos o con poca historia de compra).
+
+#### Cambios aplicados
+
+**1. Parámetro en `PARAMETROS`:**
+```sql
+INSERT INTO PARAMETROS (TIPO_PARAMETRO, CLAVE, VALOR_NUMERICO, DESCRIPCION, ACTIVO, USUARIO_CREACION)
+VALUES ('COSTO', 'COSTO_VENTANA_DIAS', 90,
+        'Ventana en días para calcular el costo ponderado promedio. Se promedian las facturas confirmadas (ESTADO=C) en este rango.',
+        'S', USER);
+```
+
+**2. Nueva función `FN_COSTO_PONDERADO`:**
+```sql
+CREATE OR REPLACE FUNCTION WKSP_WORKPLACE.FN_COSTO_PONDERADO(
+    p_id_producto    IN NUMBER,
+    p_ventana_dias   IN NUMBER DEFAULT NULL
+) RETURN NUMBER
+```
+- Si `p_ventana_dias` es NULL, lee `COSTO_VENTANA_DIAS` de PARAMETROS
+- Retorna NULL si no hay facturas en la ventana
+
+**3. Modificación a `FN_PRECIO_VENTA`:**
+- Cambia el SELECT directo del costo por: primero `FN_COSTO_PONDERADO(p_id_producto)`, si NULL → fallback al costo vigente de `PRODUCTO_PROVEEDORES`
+- Interfaz pública sin cambios: `FN_PRECIO_VENTA(id_producto, categoria_cliente)` sigue funcionando igual
+- APEX no requiere cambios
+
+#### Verificación
+| Producto | Costo ponderado 365d | Costo PP actual | Precio Mayorista | Precio Minorista |
+|---|---|---|---|---|
+| 3 — HyperX (Gaming) | 80.000 | 80.000 | 96.000 (20%) | 112.000 (40%) |
+| 2 — Silla Gamer | 2.980.000 | NULL | NULL (sin PP) | NULL |
+| 1, 4 | NULL (sin fact.) | NULL | NULL | NULL |
+
+El producto 3 demostró el fallback: la factura 42 (21/11/25) está fuera de los 90 días default, así que la función cae al costo de PRODUCTO_PROVEEDORES (que fue insertado por el trigger al confirmar la misma factura). El cálculo del precio sigue correcto.
+
+#### Notas
+- Cambiar la ventana se hace solo modificando `PARAMETROS` (no requiere redeploy)
+- Si en el futuro se quiere ventana diferente por categoría/producto, agregar lógica en `FN_COSTO_PONDERADO` o crear sobrecarga
+
+---
+
 ## Registro de progreso
 
 | Fase | Descripción | Estado | Fecha | Observaciones |
@@ -635,6 +689,7 @@ La función `FN_PRECIO_VENTA` reemplaza a esta tabla como fuente de precios de v
 | 4 | Trigger TRG_ACTUALIZAR_COSTO_COMPRA | ✅ Completado | 2026-05-25 | MERGE reemplazado por INSERT simple. Conversión a PYG via TIPO_CAMBIO incluida. Probado con comprobante 42 |
 | 5 | FN_PRECIO_VENTA + integración APEX | ✅ Completado | 2026-05-25 | Función + p54 fix query/DAs/LOVs + p108/p109 ABM Márgenes. Falta: alerta post-confirmación (D) y validación NULL (A.3) |
 | 6 | Limpieza de objetos obsoletos | 🔄 Parcial | 2026-05-25 | Soft deprecation completa (menú): p8/p15 sin acceso UI. DROP físico pendiente para futuro |
+| 7 | Costo ponderado por ventana de tiempo | ✅ Completado | 2026-05-26 | Nueva función FN_COSTO_PONDERADO (default 90 días, parametrizable). FN_PRECIO_VENTA usa ponderado con fallback a PP |
 
 ---
 
@@ -643,7 +698,7 @@ La función `FN_PRECIO_VENTA` reemplaza a esta tabla como fuente de precios de v
 1. **Moneda extranjera en costo:** ¿guardar precio en moneda de factura o convertir siempre a PYG?
 2. **Valores de margen por categoría:** confirmar porcentajes reales con el negocio para completar el INSERT de Fase 2 antes de ejecutar
 3. **Recálculo de precio de venta:** ¿manual asistido (recomendado) o automático puro al confirmar factura?
-4. **Precio de venta con múltiples proveedores:** si un producto tiene dos proveedores con distintos costos, ¿el precio de venta se basa en el costo del proveedor de la última factura confirmada o en el más bajo/alto?
+4. ~~**Precio de venta con múltiples proveedores:** si un producto tiene dos proveedores con distintos costos, ¿el precio de venta se basa en el costo del proveedor de la última factura confirmada o en el más bajo/alto?~~ → **Resuelto en Fase 7**: costo ponderado por ventana de tiempo (default 90 días), independiente del proveedor. Suma `cant × precio` de todas las facturas confirmadas en la ventana y divide por la cantidad total.
 
 ---
 
