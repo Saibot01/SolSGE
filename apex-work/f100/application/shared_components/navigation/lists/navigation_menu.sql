@@ -174,7 +174,6 @@ wwv_flow_imp_shared.create_list_item(
 ,p_list_item_link_text=>'Ventas'
 ,p_list_item_icon=>'fa-badge-dollar'
 ,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
-,p_list_item_current_for_pages=>'30,31'
 );
 wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(12793291056370641)

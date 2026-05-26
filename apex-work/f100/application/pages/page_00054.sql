@@ -13,9 +13,9 @@ wwv_flow_imp.component_begin (
 );
 wwv_flow_imp_page.create_page(
  p_id=>54
-,p_name=>'Orden de Venta'
+,p_name=>'Presupuesto'
 ,p_alias=>'ORDEN-DE-VENTA1'
-,p_step_title=>'Orden de Venta'
+,p_step_title=>'Presupuesto'
 ,p_autocomplete_on_off=>'OFF'
 ,p_javascript_code=>wwv_flow_string.join(wwv_flow_t_varchar2(
 'function recalculaImporte() {',
@@ -77,7 +77,7 @@ unistr('            // Elimina s\00EDmbolo de moneda y formato'),
 );
 wwv_flow_imp_page.create_page_plug(
  p_id=>wwv_flow_imp.id(11880079139947272)
-,p_plug_name=>'Orden de Venta'
+,p_plug_name=>'Presupuesto'
 ,p_region_template_options=>'#DEFAULT#'
 ,p_plug_template=>4501440665235496320
 ,p_plug_display_sequence=>10
@@ -1098,7 +1098,7 @@ wwv_flow_imp_page.create_page_process(
 ,p_process_point=>'AFTER_SUBMIT'
 ,p_region_id=>wwv_flow_imp.id(11880079139947272)
 ,p_process_type=>'NATIVE_FORM_DML'
-,p_process_name=>'Process form Orden de Venta'
+,p_process_name=>'Process form Presupuesto'
 ,p_attribute_01=>'REGION_SOURCE'
 ,p_attribute_05=>'Y'
 ,p_attribute_06=>'Y'
@@ -1154,7 +1154,7 @@ wwv_flow_imp_page.create_page_process(
 ,p_process_point=>'BEFORE_HEADER'
 ,p_region_id=>wwv_flow_imp.id(11880079139947272)
 ,p_process_type=>'NATIVE_FORM_INIT'
-,p_process_name=>'Initialize form Orden de Venta'
+,p_process_name=>'Initialize form Presupuesto'
 ,p_error_display_location=>'INLINE_IN_NOTIFICATION'
 ,p_internal_uid=>11887519818947280
 );
