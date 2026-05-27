@@ -130,7 +130,7 @@ Sin valores `APROBADO`, `ANULADO`, `VENCIDO`.
 
 ### Feature 2 — Caducidad parametrizable
 
-**Estado:** ❌ no implementado.
+**Estado:** ⚠️ parcial. Backend completo (`db/F2_caducidad.sql`, 2026-05-27). Pendiente la parte UI (P52 column+badge, P6 literal) que requiere edición manual de páginas APEX — ver checklist §7.
 
 **Cambios en BD:**
 
@@ -659,13 +659,14 @@ Después agregar `@@application/pages/delete_00117.sql + page_00117.sql` y los m
 - [ ] Crear page 116
 - [ ] Entrada de menú
 
-### F2 — Caducidad
-- [ ] Parámetro `DIAS_VIGENCIA_PRESUPUESTO`
-- [ ] Columnas nuevas en `ORDENES_VENTA`
-- [ ] Trigger `TRG_OV_FECHA_VENCIMIENTO`
-- [ ] Job `JOB_VENCER_PRESUPUESTOS`
-- [ ] Columna+badge en IR de P52
-- [ ] Reemplazo del literal “15 días” en P6
+### F2 — Caducidad ⚠️ (backend ✅, UI pendiente)
+- [x] Parámetro `DIAS_VIGENCIA_PRESUPUESTO=15` (TIPO_PARAMETRO=`VENTA`, `ACTIVO='S'`)
+- [x] Columna `FECHA_VENCIMIENTO` en `ORDENES_VENTA` + backfill de 20 órdenes existentes
+- [x] Trigger `TRG_OV_FECHA_VENCIMIENTO` (BEFORE INSERT, setea si NULL usando FN_GET_PARAMETRO)
+- [x] Job `JOB_VENCER_PRESUPUESTOS` (DAILY 02:00, simple UPDATE — `TRG_OV_LIBERA_RESERVA` de F4 se encarga de las reservas automáticamente)
+- [x] Script versionado idempotente: `db/F2_caducidad.sql`
+- [ ] **Pendiente manual:** Columna+badge `FECHA_VENCIMIENTO` en IR de P52 (rojo si vencido, amarillo si vence en ≤3 días). Recomendación: en APEX Builder, agregar la columna al IR + Column Formatting con condiciones. Misma política que F5: no se toca P52 vía SQL desde acá.
+- [ ] **Pendiente manual:** Reemplazo del literal `"La validez de esta orden de venta es de 15 días"` en P6 → reemplazar por valor dinámico de `FN_GET_PARAMETRO('DIAS_VIGENCIA_PRESUPUESTO')`. Decisión: hacer manual (editar P6 en APEX UI), o pedirme que edite `page_00006.sql` y re-importe (cambio chico, bajo riesgo).
 
 ---
 
