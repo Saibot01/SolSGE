@@ -626,13 +626,15 @@ Después agregar `@@application/pages/delete_00117.sql + page_00117.sql` y los m
 - [x] Trigger `TRG_OV_LIBERA_RESERVA`
 - [x] Script versionado idempotente: `db/F4_estados.sql`
 
-### F1 — Renombrado
-- [ ] Edit `page_00052.sql`
-- [ ] Edit `page_00054.sql` (ya en árbol)
-- [ ] Export + edit `page_00006.sql`
-- [ ] Edit `navigation_menu.sql` (limpiar `Ventas` → P30)
-- [ ] Actualizar `install_page.sql`
-- [ ] Actualizar `CLAUDE.md`
+### F1 — Renombrado ✅ (con deuda manual)
+- [x] Edit `page_00052.sql` → `Presupuestos` / `Presupuesto`
+- [x] Edit `page_00054.sql` → `Presupuesto` (page_name, step_title, plug_name, processes)
+- [x] Export + edit `page_00006.sql` → `Reporte Presupuesto` + `<h1>PRESUPUESTO</h1>`
+- [x] Edit `navigation_menu.sql` (limpiar `current_for_pages='30,31'` del header `Ventas`)
+- [x] Actualizar `install_page.sql`
+- [x] Actualizar `CLAUDE.md`
+- [x] Push P6/P52/P54 al live (commits `578462d` + `1f0e3be`)
+- [ ] **Pendiente manual:** aplicar el cambio del `navigation_menu` en APEX UI (Shared Components → Lists → Navigation Menu → item `Ventas` → vaciar `Current For Pages`). No se pudo hacer por SQL: `wwv_flow_imp_shared.create_list` no soporta upsert. Ver memoria `apex-shared-components-no-upsert`.
 
 ### F3 — Stock por oficina
 - [ ] Función `FN_OFICINA_USUARIO`
