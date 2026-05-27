@@ -231,8 +231,8 @@ wwv_flow_imp_page.create_page_item(
 ,p_prompt=>'Cliente'
 ,p_source=>wwv_flow_string.join(wwv_flow_t_varchar2(
 'select p.PRIMER_NOMBRE || '' '' || p.PRIMER_APELLIDO || '' ('' || p.NRO_DOCUMENTO || '')''',
-'  from WKSP_WORKPLACE.PERSONAS       p',
-'  join WKSP_WORKPLACE.ORDENES_VENTA  o on o.ID_PERSONA = p.ID_PERSONA',
+'  from WKSP_WORKPLACE.ORDENES_VENTA  o',
+'  left join WKSP_WORKPLACE.PERSONAS  p on p.ID_PERSONA = o.ID_PERSONA',
 ' where o.ID_ORDEN = :P115_ID_ORDEN'))
 ,p_source_type=>'QUERY'
 ,p_display_as=>'NATIVE_DISPLAY_ONLY'
@@ -240,7 +240,7 @@ wwv_flow_imp_page.create_page_item(
 ,p_field_template=>1609121967514267634
 ,p_item_template_options=>'#DEFAULT#'
 );
--- P115_OFICINA (display only, fetched via SQL JOIN)
+-- P115_OFICINA (display only, fetched via SQL LEFT JOIN para tolerar ID_OFICINA null)
 wwv_flow_imp_page.create_page_item(
  p_id=>wwv_flow_imp.id(36000000000001200)
 ,p_name=>'P115_OFICINA'
@@ -250,9 +250,9 @@ wwv_flow_imp_page.create_page_item(
 ,p_use_cache_before_default=>'NO'
 ,p_prompt=>'Oficina'
 ,p_source=>wwv_flow_string.join(wwv_flow_t_varchar2(
-'select f.DESCRIPCION',
-'  from WKSP_WORKPLACE.OFICINAS       f',
-'  join WKSP_WORKPLACE.ORDENES_VENTA  o on o.ID_OFICINA = f.CODIGO_OFICINA',
+'select coalesce(f.DESCRIPCION, ''(sin oficina)'')',
+'  from WKSP_WORKPLACE.ORDENES_VENTA  o',
+'  left join WKSP_WORKPLACE.OFICINAS  f on f.CODIGO_OFICINA = o.ID_OFICINA',
 ' where o.ID_ORDEN = :P115_ID_ORDEN'))
 ,p_source_type=>'QUERY'
 ,p_display_as=>'NATIVE_DISPLAY_ONLY'

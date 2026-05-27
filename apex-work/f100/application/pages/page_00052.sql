@@ -128,8 +128,9 @@ wwv_flow_imp_page.create_worksheet_column(
 ,p_column_identifier=>'H'
 ,p_column_label=>'Cambiar Estado'
 ,p_column_link=>'f?p=&APP_ID.:115:&SESSION.::&DEBUG.:115:P115_ID_ORDEN:#ID_ORDEN#'
-,p_column_linktext=>unistr('<span class="fa fa-exchange" title="Cambiar estado" aria-label="Cambiar estado"></span>')
+,p_column_linktext=>'<span class="fa fa-exchange" title="Cambiar estado" aria-label="Cambiar estado"></span>'
 ,p_column_type=>'STRING'
+,p_display_text_as=>'WITHOUT_MODIFICATION'
 ,p_heading_alignment=>'CENTER'
 ,p_column_alignment=>'CENTER'
 ,p_use_as_row_header=>'N'
@@ -291,8 +292,9 @@ wwv_flow_imp_page.create_worksheet_column(
 ,p_column_identifier=>'H'
 ,p_column_label=>'Cambiar Estado'
 ,p_column_link=>'f?p=&APP_ID.:115:&SESSION.::&DEBUG.:115:P115_ID_ORDEN:#ID_ORDEN#'
-,p_column_linktext=>unistr('<span class="fa fa-exchange" title="Cambiar estado" aria-label="Cambiar estado"></span>')
+,p_column_linktext=>'<span class="fa fa-exchange" title="Cambiar estado" aria-label="Cambiar estado"></span>'
 ,p_column_type=>'STRING'
+,p_display_text_as=>'WITHOUT_MODIFICATION'
 ,p_heading_alignment=>'CENTER'
 ,p_column_alignment=>'CENTER'
 ,p_use_as_row_header=>'N'
