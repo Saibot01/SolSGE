@@ -209,7 +209,7 @@ facturados y ya anulados no se tocan.
 
 ### Feature 3 — Disponibilidad de stock por oficina
 
-**Estado:** ❌ no implementado.
+**Estado:** ⚠️ parcial. Backend completo (`db/F3_stock_oficina.sql`, 2026-05-27). Pendiente la parte UI (item `P54_ID_OFICINA`, items ocultos de aviso, DA AJAX sobre `ID_PRODUCTO`, validación server-side) que requiere edición manual de P54 — ver checklist §7.
 
 **Reglas:**
 
@@ -636,13 +636,16 @@ Después agregar `@@application/pages/delete_00117.sql + page_00117.sql` y los m
 - [x] Push P6/P52/P54 al live (commits `578462d` + `1f0e3be`)
 - [ ] **Pendiente manual:** aplicar el cambio del `navigation_menu` en APEX UI (Shared Components → Lists → Navigation Menu → item `Ventas` → vaciar `Current For Pages`). No se pudo hacer por SQL: `wwv_flow_imp_shared.create_list` no soporta upsert. Ver memoria `apex-shared-components-no-upsert`.
 
-### F3 — Stock por oficina
-- [ ] Función `FN_OFICINA_USUARIO`
-- [ ] Función `FN_HAY_STOCK`
-- [ ] Función `FN_OFICINAS_CON_STOCK`
-- [ ] Items `P54_ID_OFICINA`, `P54_AVISO_STOCK_*`
-- [ ] DA Change sobre `ID_PRODUCTO` con AJAX callback
-- [ ] Validación server-side de submit
+### F3 — Stock por oficina ⚠️ (backend ✅, UI pendiente)
+- [x] Función `FN_OFICINA_USUARIO(p_usuario DEFAULT V('APP_USER'))` — devuelve `ID_OFICINA` via caja abierta del usuario, o `NULL` si no hay caja abierta
+- [x] Función `FN_HAY_STOCK(p_producto, p_oficina, p_orden DEFAULT NULL)` — `'S'`/`'N'` descontando reservas VIGENTE (excluye la propia orden para permitir edición)
+- [x] Función `FN_OFICINAS_CON_STOCK(p_producto, p_orden DEFAULT NULL)` — CSV de oficinas con disponibilidad, para el mensaje UX
+- [x] Script versionado idempotente: `db/F3_stock_oficina.sql`
+- [ ] **Pendiente manual:** Items `P54_ID_OFICINA` (display only, default `FN_OFICINA_USUARIO`) + `P54_AVISO_STOCK_TEXTO` (hidden) + `P54_AVISO_STOCK_NIVEL` (hidden, `'OK'`/`'KO'`).
+- [ ] **Pendiente manual:** DA en IG `Detalle Ventas`, evento `Change` sobre `ID_PRODUCTO`: callback PL/SQL que arma el mensaje usando `FN_HAY_STOCK` y `FN_OFICINAS_CON_STOCK`, setea `P54_AVISO_STOCK_*`, dispara notificación APEX.
+- [ ] **Pendiente manual:** Validación server-side en submit de P54: por cada línea, si `FN_HAY_STOCK(producto, P54_ID_OFICINA, P54_ID_ORDEN) = 'N'` → error bloqueante con texto `"Sin disponibilidad de <producto> en tu oficina. Hay stock en: <lista>"`.
+
+> Política: P54 no se toca por SQL desde acá (misma decisión que F5 y F2 UI). Vos hacés los cambios en APEX Builder; cuando termines podés re-exportar P54 y agregarlo al `install_page.sql`.
 
 ### F5 — Aprobación de Presupuestos (rediseñado)
 - [ ] Crear P117 vía APEX Builder (IG sobre `ORDENES_VENTA WHERE ESTADO IN ('PENDIENTE','APROBADO')` + link a P118)
