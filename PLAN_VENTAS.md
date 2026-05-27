@@ -414,42 +414,124 @@ END;
 
 ---
 
-### Feature 5 — Pantalla de cambio de estado
+### Feature 5 — Aprobación de Presupuestos (rediseñado 2026-05-26)
 
-**Estado:** ✅ completado (2026-05-26 — `apex-work/f100/application/pages/page_00115.sql` + ajuste de P52). Pequeñas desviaciones vs. el spec original:
-- **Sin item `P115_NUEVO_ESTADO` select.** El destino se infiere de `:REQUEST` (botón APROBAR → APROBADO, ANULAR → ANULADO). UX más limpia: el usuario no elige de un dropdown un destino al que el botón ya apunta.
-- **Detalle como HTML generado por PL/SQL** (`NATIVE_DYNAMIC_CONTENT`), no IG. La app no usa Classic Reports y un IG read-only era overkill; el HTML con `htp.p` da una tabla simple con totales al pie.
-- **Link en P52 como columna IR**, no como acción de fila. Aparece en ambos IRs (default y alternativo) con ícono `fa-exchange`.
-- VENCIDO sigue siendo solo automático vía job F2 (no botón manual).
+**Estado:** ❌ pendiente (rediseño). Implementación **manual** vía APEX Builder por el usuario.
 
-**Nueva página propuesta: P115 — “Cambio de Estado de Presupuesto”** (Modal Dialog).
+#### Por qué se rediseñó
 
-**Estructura:**
+La primera versión (commits `71e72c6`, `74ad06d`, `f4ff7a0` — revertidos en P52, P115 borrada del live el 2026-05-26) intentó:
+- Una modal P115 con form sobre `ORDENES_VENTA` + botones APROBAR/ANULAR
+- Una columna acción `CAMBIARESTADO` con ícono dentro del IR de P52 que abría la modal
 
-- Items:
-  - `P115_ID_ORDEN` (oculto, vía link desde P52)
-  - `P115_ESTADO_ACTUAL` (display only)
-  - `P115_NUEVO_ESTADO` (select, opciones dinámicas según estado actual usando
-    `FN_PUEDE_TRANSICION_OV`)
-  - `P115_MOTIVO` (textarea, required si `NUEVO_ESTADO='ANULADO'`)
-- Regions:
-  - **Cabecera**: read-only de `ORDENES_VENTA` + datos del cliente
-  - **Detalle**: IG read-only de `DETALLE_ORDEN` con totales
-- Botones:
-  - `APROBAR` — visible si estado actual = `PENDIENTE`
-  - `ANULAR` — visible si estado actual IN (`PENDIENTE`,`APROBADO`)
-  - `CERRAR` — siempre
-- Proceso PL/SQL `ProcesarCambioEstado`:
-  1. Validar transición con `FN_PUEDE_TRANSICION_OV`.
-  2. `UPDATE ORDENES_VENTA SET ESTADO=:P115_NUEVO_ESTADO,
-     FECHA_APROBACION = CASE WHEN :P115_NUEVO_ESTADO='APROBADO' THEN SYSDATE END,
-     USUARIO_APROBACION = CASE WHEN :P115_NUEVO_ESTADO='APROBADO' THEN :APP_USER END,
-     FECHA_ANULACION = CASE WHEN :P115_NUEVO_ESTADO='ANULADO' THEN SYSDATE END,
-     USUARIO_ANULACION = CASE WHEN :P115_NUEVO_ESTADO='ANULADO' THEN :APP_USER END,
-     MOTIVO_ANULACION = CASE WHEN :P115_NUEVO_ESTADO='ANULADO' THEN :P115_MOTIVO END
-     WHERE ID_ORDEN=:P115_ID_ORDEN;`
-  3. `TRG_OV_LIBERA_RESERVA` se encarga de las reservas.
-- Botón nuevo en P52 IR: columna “Acción” o ícono que abra la modal P115.
+**Problemas detectados al probarla en el browser:**
+- ORA-01403 al abrir P115 desde el link (inner joins en items QUERY no toleraban `ID_OFICINA` NULL en 8 órdenes)
+- El ícono no renderizaba por `display_text_as=ESCAPE_SC` default
+- El re-import de P52 borró el saved report PRIVATE de `TCASCO`
+- Patrón inconsistente con el resto del app: el módulo Compras usa **página dedicada** (`P110 Aprobación de Órdenes de Compra` + `P112 Detalle Orden de Compra` modal), no acción dentro del IR principal
+
+**Nueva decisión:** seguir el patrón del módulo Compras. P52 **no se toca más** para esto. Se crean páginas nuevas dedicadas, accesibles desde el menú.
+
+#### Diseño nuevo (a construir vía APEX Builder)
+
+| Página sugerida | Tipo | Rol | Equivalente en Compras |
+| --------------- | ---- | --- | ---------------------- |
+| **P117 — Aprobación de Presupuestos** | Normal | Lista de presupuestos a procesar (IG sobre `ORDENES_VENTA WHERE ESTADO IN ('PENDIENTE','APROBADO')`) con link de acción por fila al detalle modal | P110 Aprobación de OC |
+| **P118 — Detalle Presupuesto** | Modal Dialog | Detalle del presupuesto + botones APROBAR/ANULAR/CERRAR | P112 Detalle Orden de Compra |
+
+> **Por qué no se reutiliza P115:** se borró del live por estar huérfana. El archivo `apex-work/f100/application/pages/page_00115.sql` queda **en el repo como referencia** (proceso `ProcesarCambioEstado` y patrón de validaciones) — copiar el PL/SQL desde ahí cuando se arme P118.
+
+#### Guía manual paso a paso
+
+##### Paso 1 — Crear P117 (lista de presupuestos a aprobar)
+
+1. APEX Builder → App 100 → **Create Page** → **Blank Page**
+2. Name: `Aprobación de Presupuestos`. Page Number: `117`. Page Mode: `Normal`.
+3. En la nueva page → **Create Region** → Type **Interactive Grid**.
+   - Name: `Presupuestos a Aprobar`
+   - Source → Type: `SQL Query`
+   - SQL:
+     ```sql
+     select o.ID_ORDEN,
+            o.FECHA_ORDEN,
+            o.ESTADO,
+            o.TOTAL,
+            p.PRIMER_NOMBRE || ' ' || p.PRIMER_APELLIDO as cliente,
+            f.DESCRIPCION as oficina,
+            o.OBSERVACION
+       from ORDENES_VENTA o
+       left join PERSONAS p on p.ID_PERSONA      = o.ID_PERSONA
+       left join OFICINAS f on f.CODIGO_OFICINA  = o.ID_OFICINA
+      where o.ESTADO IN ('PENDIENTE','APROBADO')
+      order by o.FECHA_ORDEN desc, o.ID_ORDEN desc
+     ```
+   - En **Attributes** del IG → **Edit Enabled** = `No` (read-only)
+4. En el IG → propiedades del Grid → **Initial Sort** opcional (`FECHA_ORDEN` desc).
+5. En la columna `ID_ORDEN` (o agregando una columna nueva tipo "Link"):
+   - Type: `Link`
+   - Link Target → `Page in this application` → Page `118`. Set Items: `P118_ID_ORDEN = ID_ORDEN`. Clear Cache: `118`.
+   - Link Text: `<span class="fa fa-edit"></span>` (mostrar como ícono) — y en **Escape** elegir **No** para que el HTML renderice.
+6. Guardar.
+
+##### Paso 2 — Crear P118 (modal detalle + acciones)
+
+1. APEX Builder → **Create Page** → **Form** → **Form on a Table**.
+2. Tabla: `ORDENES_VENTA`. Page Mode: **Modal Dialog**. Name: `Detalle Presupuesto`. Page Number: `118`.
+3. Auto-genera form con todos los items de ORDENES_VENTA. Editar items:
+   - `P118_ID_ORDEN` → Display Only (Hidden alternativo si querés no mostrarlo)
+   - `P118_ESTADO` → Display Only, no editable
+   - `P118_FECHA_ORDEN`, `P118_TOTAL`, `P118_OBSERVACION` → Display Only
+   - Hacer Display Only también `P118_FECHA_APROBACION`, `P118_USUARIO_APROBACION`, `P118_FECHA_ANULACION`, `P118_USUARIO_ANULACION`, `P118_MOTIVO_ANULACION` (si aparecen).
+4. Agregar item nuevo: `P118_MOTIVO`, type Textarea, required cuando se aprieta ANULAR.
+5. Agregar región nueva con el **detalle** de productos. Opciones:
+   - **a)** IG read-only sobre `DETALLE_ORDEN d JOIN PRODUCTOS pr` con `WHERE d.ID_ORDEN = :P118_ID_ORDEN`. Set Edit Enabled = No.
+   - **b)** Region `PL/SQL Dynamic Content` con HTML generado (copiar el bloque `htp.p` del archivo `page_00115.sql` que dejé en repo — adaptar `:P115_ID_ORDEN` → `:P118_ID_ORDEN`).
+6. **Eliminar los botones autogenerados** SAVE / CREATE / DELETE. Mantener CANCEL (renombralo a `CERRAR`).
+7. **Crear botón** `APROBAR`:
+   - Position: in button region, alignment Right
+   - Button template: success (verde)
+   - Action: Submit Page
+   - Condition: `Value of Item / Column in Expression 1 = Expression 2`. Expression 1 = `P118_ESTADO`. Expression 2 = `PENDIENTE`.
+   - Database Action: `Update` (cosmético, no se usa porque hay proceso PL/SQL custom).
+8. **Crear botón** `ANULAR`:
+   - Button template: danger (rojo)
+   - Action: Submit Page
+   - Condition: `Type = Expression`. Expression 1 = `:P118_ESTADO IN ('PENDIENTE','APROBADO')`. Expression 2 = `SQL`.
+   - Confirm Message: `¿Confirma anular este presupuesto?` (style danger).
+9. **Crear validación**: Name `Motivo requerido al anular`. Type `PL/SQL Expression`. Expression = `:P118_MOTIVO IS NOT NULL AND length(trim(:P118_MOTIVO)) > 0`. Error Message: `Debe ingresar el motivo de anulación`. **When Button Pressed** = ANULAR. Associated Item = `P118_MOTIVO`.
+10. **Crear proceso PL/SQL** `ProcesarCambioEstado` (After Submit, sequence 20). Copiar el código desde `apex-work/f100/application/pages/page_00115.sql` (sección Region "BEFORE_HEADER" → process body), adaptando todos los `:P115_` por `:P118_`. Condición: `Request Is Contained within Expression 1` = `APROBAR,ANULAR`.
+11. **Crear proceso** `Close Dialog`. Type `Close Dialog`. Condición igual al anterior. Sequence 30.
+
+##### Paso 3 — Agregar entry al menú de navegación
+
+**Manualmente** en APEX Builder (recordar: shared components Lists no soportan re-import por SQL — ver memoria `apex-shared-components-no-upsert`):
+
+1. Shared Components → Navigation → Lists → `Navigation Menu` → Create List Entry.
+2. Parent List Entry: `Ventas` (el header del grupo).
+3. List Entry Label: `Aprobación de Presupuestos`.
+4. Target: Page `117` (de esta app).
+5. Icon: `fa-thumbs-o-up` (igual al de Aprobación de OC, ver line 551 del export del menu).
+6. Authorization: si querés restringir, agregar condition (ej. `security_pkg.can_access(:APP_ID, :APP_USER, 117, NULL)`).
+
+##### Paso 4 — Test funcional en browser (NO SALTAR)
+
+1. Login al app. Click "Ventas" → "Aprobación de Presupuestos". Debe abrir P117 con la lista filtrada.
+2. Click ícono editar en una fila PENDIENTE (ej. ID 1). Debe abrir P118 modal.
+3. P118 muestra cabecera (cliente, fecha, oficina o "(sin)" si null, total, observación, estado actual), detalle de líneas, textarea motivo, botón verde APROBAR.
+4. Apretar APROBAR → confirma. Modal cierra. La fila desaparece del IG si filtramos solo PENDIENTE (o cambia a APROBADO si filtramos ambos). Confirmar `ESTADO=APROBADO`, `FECHA_APROBACION`, `USUARIO_APROBACION` poblados via SQL.
+5. Para una fila APROBADA: solo debe aparecer ANULAR (no APROBAR). Apretar ANULAR sin motivo → error inline. Con motivo → confirma y persiste; trigger `TRG_OV_LIBERA_RESERVA` anula reservas vigentes.
+6. Para una fila FACTURADA: ningún botón de acción (solo CERRAR).
+
+##### Paso 5 — Capturar al repo (cuando funcione)
+
+Re-exportar P117, P118 y `navigation_menu` desde live:
+```bash
+sql -S -name $SQLCL_CONNECTION <<'EOF'
+apex export -applicationid 100 -split -dir apex-work -expComponents "PAGE:117,PAGE:118,LIST:Navigation Menu"
+exit;
+EOF
+```
+Después agregar `@@application/pages/delete_00117.sql + page_00117.sql` y los mismos de 118 a `install_page.sql`. El `navigation_menu.sql` queda solo como referencia (no se importa por la limitación de shared components).
 
 ---
 
@@ -560,12 +642,15 @@ END;
 - [ ] DA Change sobre `ID_PRODUCTO` con AJAX callback
 - [ ] Validación server-side de submit
 
-### F5 — Pantalla de cambio de estado ✅
-- [x] Crear page 115 modal (`page_00115.sql`, 4 regiones, 8 items, 3 botones, 1 validación, 2 procesos AFTER_SUBMIT)
-- [x] Link en P52 IR (columna `CAMBIARESTADO` con ícono `fa-exchange` en ambos IRs)
-- [x] Proceso `ProcesarCambioEstado` (usa `FN_PUEDE_TRANSICION_OV` + `SELECT FOR UPDATE` + `UPDATE` con CASE para columnas auditoría)
-- [x] DA close-dialog en botón CERRAR
-- [x] Validación motivo requerido cuando se aprieta ANULAR (atada al botón vía `when_button_pressed`)
+### F5 — Aprobación de Presupuestos (rediseñado)
+- [ ] Crear P117 vía APEX Builder (IG sobre `ORDENES_VENTA WHERE ESTADO IN ('PENDIENTE','APROBADO')` + link a P118)
+- [ ] Crear P118 vía APEX Builder (modal Form sobre `ORDENES_VENTA` + región detalle + botones APROBAR/ANULAR/CERRAR + validación motivo + proceso PL/SQL)
+- [ ] Copiar el código del proceso `ProcesarCambioEstado` desde `apex-work/f100/application/pages/page_00115.sql` (referencia en repo, NO está en live), adaptando `:P115_` → `:P118_`
+- [ ] Agregar entry "Aprobación de Presupuestos" al grupo `Ventas` del menú (manual via Shared Components)
+- [ ] Test funcional completo en browser (paso 4 de la guía)
+- [ ] Re-exportar P117, P118 al repo y agregarlas al `install_page.sql`
+
+> Rollback de la versión anterior aplicado el 2026-05-26: revertí P52 al estado post-F1 (commit `578462d`), borré P115 del workspace WKSP_WORKPLACE, removí `@@page_00115` de `install_page.sql`. El archivo `page_00115.sql` queda en el repo solo como referencia del proceso PL/SQL para reutilizar al armar P118.
 
 ### F6 — Reporte anulados/vencidos
 - [ ] Modificar IR de P52 (filtro default)
