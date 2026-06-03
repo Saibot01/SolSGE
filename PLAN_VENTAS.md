@@ -416,7 +416,7 @@ END;
 
 ### Feature 5 — Aprobación de Presupuestos (rediseñado 2026-05-26)
 
-**Estado:** ❌ pendiente (rediseño). Implementación **manual** vía APEX Builder por el usuario.
+**Estado:** ✅ completado (2026-06-03). P117 (lista IG) + P118 (modal detalle) construidas manualmente vía APEX Builder por el usuario, capturadas en repo. Test end-to-end OK: backend persiste cambios de estado con auditoría, refresh visual de P117 anda tras cerrar modal.
 
 #### Por qué se rediseñó
 
@@ -647,15 +647,15 @@ Después agregar `@@application/pages/delete_00117.sql + page_00117.sql` y los m
 - [x] Validación per-row `stock validation` en IG con `FN_HAY_STOCK(:ID_PRODUCTO, :P54_ID_OFICINA, :P54_ID_ORDEN) = 'S'` — bloquea submit si alguna línea sin stock
 - [x] P54 capturada en `apex-work/f100/application/pages/page_00054.sql` (2026-06-02)
 
-### F5 — Aprobación de Presupuestos (rediseñado)
-- [ ] Crear P117 vía APEX Builder (IG sobre `ORDENES_VENTA WHERE ESTADO IN ('PENDIENTE','APROBADO')` + link a P118)
-- [ ] Crear P118 vía APEX Builder (modal Form sobre `ORDENES_VENTA` + región detalle + botones APROBAR/ANULAR/CERRAR + validación motivo + proceso PL/SQL)
-- [ ] Copiar el código del proceso `ProcesarCambioEstado` desde `apex-work/f100/application/pages/page_00115.sql` (referencia en repo, NO está en live), adaptando `:P115_` → `:P118_`
-- [ ] Agregar entry "Aprobación de Presupuestos" al grupo `Ventas` del menú (manual via Shared Components)
-- [ ] Test funcional completo en browser (paso 4 de la guía)
-- [ ] Re-exportar P117, P118 al repo y agregarlas al `install_page.sql`
+### F5 — Aprobación de Presupuestos ✅
+- [x] P117 "Aprobación de Presupuestos" creada manualmente: Normal page con IG sobre `ORDENES_VENTA WHERE ESTADO IN ('PENDIENTE','APROBADO')` + Link Column a P118 (ícono `fa-edit`) + DA "Refrescar tras cerrar modal" sobre Dialog Closed que refresca el IG.
+- [x] P118 "Detalle Presupuesto" creada manualmente: Modal Dialog con Form sobre `ORDENES_VENTA` (items Read Only Always) + región Dynamic Content para detalle de líneas + item Textarea `P118_MOTIVO` + 3 botones (APROBAR si PENDIENTE, ANULAR si IN PENDIENTE/APROBADO, CERRAR via DA) + validación motivo requerido + proceso `ProcesarCambioEstado` + Close Dialog.
+- [x] Código del proceso adaptado desde `page_00115.sql` (referencia) con `:P115_` → `:P118_`.
+- [x] Entry "Aprobación de Presupuestos" en grupo `Ventas` del menú (manual via Shared Components).
+- [x] Test funcional completo: APROBAR persiste con FECHA/USUARIO auditoría ✓, ANULAR persiste con motivo ✓, validación de motivo bloquea si vacío ✓, refresh IG tras cerrar modal ✓.
+- [x] P117 + P118 capturadas en repo y agregadas a `install_page.sql` (2026-06-03).
 
-> Rollback de la versión anterior aplicado el 2026-05-26: revertí P52 al estado post-F1 (commit `578462d`), borré P115 del workspace WKSP_WORKPLACE, removí `@@page_00115` de `install_page.sql`. El archivo `page_00115.sql` queda en el repo solo como referencia del proceso PL/SQL para reutilizar al armar P118.
+> Rollback de la versión anterior aplicado el 2026-05-26: revertí P52 al estado post-F1 (commit `578462d`), borré P115 del workspace WKSP_WORKPLACE, removí `@@page_00115` de `install_page.sql`. El archivo `page_00115.sql` queda en el repo solo como referencia del proceso PL/SQL que se reutilizó en P118.
 
 ### F6 — Reporte anulados/vencidos ✅
 - [x] Modificar IR de P52: agregado `WHERE ESTADO NOT IN ('ANULADO','VENCIDO')` al SELECT de ambas IRs (regions 11876074893937409 y 12003886624524707). Capturado en `apex-work/f100/application/pages/page_00052.sql` (2026-06-02).
