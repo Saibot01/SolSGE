@@ -130,7 +130,7 @@ Sin valores `APROBADO`, `ANULADO`, `VENCIDO`.
 
 ### Feature 2 — Caducidad parametrizable
 
-**Estado:** ⚠️ parcial. Backend completo (`db/F2_caducidad.sql`, 2026-05-27). Columna+badge en P52 hecho (2026-06-02). Solo queda pendiente reemplazar el literal "15 días" en P6.
+**Estado:** ✅ completado. Backend en `db/F2_caducidad.sql` (2026-05-27). UI completa: columna+badge en P52 y literal dinámico en P6 (2026-06-02).
 
 **Cambios en BD:**
 
@@ -662,14 +662,14 @@ Después agregar `@@application/pages/delete_00117.sql + page_00117.sql` y los m
 - [ ] Crear page 116
 - [ ] Entrada de menú
 
-### F2 — Caducidad ⚠️ (backend ✅, UI parcial)
+### F2 — Caducidad ✅
 - [x] Parámetro `DIAS_VIGENCIA_PRESUPUESTO=15` (TIPO_PARAMETRO=`VENTA`, `ACTIVO='S'`)
 - [x] Columna `FECHA_VENCIMIENTO` en `ORDENES_VENTA` + backfill de 20 órdenes existentes
 - [x] Trigger `TRG_OV_FECHA_VENCIMIENTO` (BEFORE INSERT, setea si NULL usando FN_GET_PARAMETRO)
 - [x] Job `JOB_VENCER_PRESUPUESTOS` (DAILY 02:00, simple UPDATE — `TRG_OV_LIBERA_RESERVA` de F4 se encarga de las reservas automáticamente)
 - [x] Script versionado idempotente: `db/F2_caducidad.sql`
 - [x] Columna+badge `FECHA_VENCIMIENTO` en IR de P52 (segundo IR, region 12003886624524707) con badges via HTML Expression y CASE WHEN sobre fechas — capturado en `apex-work/f100/application/pages/page_00052.sql` (2026-06-02)
-- [ ] **Pendiente manual:** Reemplazo del literal `"La validez de esta orden de venta es de 15 días"` en P6 → reemplazar por valor dinámico de `FN_GET_PARAMETRO('DIAS_VIGENCIA_PRESUPUESTO')`. Decisión: hacer manual (editar P6 en APEX UI), o pedirme que edite `page_00006.sql` y re-importe (cambio chico, bajo riesgo).
+- [x] Literal "15 días" en P6 reemplazado por valor dinámico de `FN_GET_PARAMETRO('DIAS_VIGENCIA_PRESUPUESTO')` via variable `v_dias` declarada en el PL/SQL del Dynamic Content (2026-06-02)
 
 ---
 
