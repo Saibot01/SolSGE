@@ -695,6 +695,23 @@ Después agregar `@@application/pages/delete_00117.sql + page_00117.sql` y los m
    ```
 5. Save.
 
+**Paso 2b — Configurar Link a P6 (print modal)**
+
+Reusa P6 (la misma pantalla print que P52 usa para presupuestos activos). El texto "validez 15 días" al pie se ve fuera de contexto en ANULADO/VENCIDO pero es una decisión aceptada para mantener una sola plantilla print.
+
+En el Property Editor del IR (no del worksheet):
+1. Buscar la sección **Attributes** → **Link**.
+2. **Link Column** → Type: `Link to Custom Target`.
+3. **Target**:
+   - Page: `6`
+   - Set Items: `P6_ID_ORDEN` = `#ID_ORDEN#` (substitución de la columna)
+   - Clear Cache: `6`
+4. **Link Text**: `<span class="fa fa-print" title="Imprimir"></span>`
+5. **Link Attributes**: dejar en blanco
+6. Save.
+
+Eso hace que cada fila tenga un ícono de impresora a la izquierda que abre P6 con el `ID_ORDEN` correspondiente — igual UX que P52.
+
 **Paso 3 — Configurar columnas (opcional pero útil)**
 
 Para cada columna en el IR, ajustar:
@@ -732,6 +749,7 @@ En el browser, después de guardar el IR:
 2. Debe abrir P116 con la lista de las 6 VENCIDO actuales (y los ANULADO si hay).
 3. Probar filtros vía Actions.
 4. Confirmar columnas legibles + badges aplicados.
+5. Click sobre el ícono de impresora al inicio de una fila → debe abrir P6 modal con el reporte print de ese presupuesto. (El texto "validez 15 días" al pie aparecerá inapropiado para anulados/vencidos — decisión aceptada).
 
 **Paso 7 — Capturar al repo**
 
