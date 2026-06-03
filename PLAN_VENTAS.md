@@ -626,7 +626,7 @@ Después agregar `@@application/pages/delete_00117.sql + page_00117.sql` y los m
 - [x] Trigger `TRG_OV_LIBERA_RESERVA`
 - [x] Script versionado idempotente: `db/F4_estados.sql`
 
-### F1 — Renombrado ✅ (con deuda manual)
+### F1 — Renombrado ✅
 - [x] Edit `page_00052.sql` → `Presupuestos` / `Presupuesto`
 - [x] Edit `page_00054.sql` → `Presupuesto` (page_name, step_title, plug_name, processes)
 - [x] Export + edit `page_00006.sql` → `Reporte Presupuesto` + `<h1>PRESUPUESTO</h1>`
@@ -634,7 +634,7 @@ Después agregar `@@application/pages/delete_00117.sql + page_00117.sql` y los m
 - [x] Actualizar `install_page.sql`
 - [x] Actualizar `CLAUDE.md`
 - [x] Push P6/P52/P54 al live (commits `578462d` + `1f0e3be`)
-- [ ] **Pendiente manual:** aplicar el cambio del `navigation_menu` en APEX UI (Shared Components → Lists → Navigation Menu → item `Ventas` → vaciar `Current For Pages`). No se pudo hacer por SQL: `wwv_flow_imp_shared.create_list` no soporta upsert. Ver memoria `apex-shared-components-no-upsert`.
+- [x] Cambio manual aplicado en APEX UI el 2026-06-03: `current_for_pages_expression` del item `Ventas` ahora vacío (antes era `'30,31'`). Confirmado en BD.
 
 ### F3 — Stock por oficina ✅
 - [x] Función `FN_OFICINA_USUARIO(p_usuario DEFAULT V('APP_USER'))` — queda como utilitaria para módulos con cajero (no se usa en F3 tras decisión §3 #1 revisada)
