@@ -192,13 +192,20 @@ wwv_flow_imp_page.create_page_plug(
 ,p_query_type=>'SQL'
 ,p_plug_source=>wwv_flow_string.join(wwv_flow_t_varchar2(
 'select ID_ORDEN,',
-'       ID_PERSONA,',
-'       FECHA_ORDEN,',
-'       ESTADO,',
-'       TOTAL,',
-'       OBSERVACION,',
-'       CAST(NULL AS VARCHAR2(200)) AS Impresion',
-'  from ORDENES_VENTA'))
+'         ID_PERSONA,',
+'         FECHA_ORDEN,',
+'         ESTADO,',
+'         TOTAL,',
+'         OBSERVACION,',
+'         FECHA_VENCIMIENTO,',
+'         case',
+'           when ESTADO not in (''PENDIENTE'',''APROBADO'')                                then ''t-Badge--muted''',
+'           when FECHA_VENCIMIENTO < trunc(sysdate)                                    then ''t-Badge--danger''',
+'           when FECHA_VENCIMIENTO between trunc(sysdate) and trunc(sysdate)+3         then ''t-Badge--warning''',
+'           else                                                                           ''t-Badge--success''',
+'         end as VENC_CLASS,',
+'         CAST(NULL AS VARCHAR2(200)) AS Impresion',
+'    from ORDENES_VENTA'))
 ,p_plug_source_type=>'NATIVE_IR'
 ,p_prn_content_disposition=>'ATTACHMENT'
 ,p_prn_units=>'MILLIMETERS'
@@ -246,21 +253,9 @@ wwv_flow_imp_page.create_worksheet(
 ,p_internal_uid=>12003965072524708
 );
 wwv_flow_imp_page.create_worksheet_column(
- p_id=>wwv_flow_imp.id(12004008194524709)
-,p_db_column_name=>'ID_ORDEN'
-,p_display_order=>10
-,p_is_primary_key=>'Y'
-,p_column_identifier=>'A'
-,p_column_label=>'Nro Orden'
-,p_column_type=>'NUMBER'
-,p_heading_alignment=>'RIGHT'
-,p_column_alignment=>'RIGHT'
-,p_use_as_row_header=>'N'
-);
-wwv_flow_imp_page.create_worksheet_column(
  p_id=>wwv_flow_imp.id(12004150201524710)
 ,p_db_column_name=>'IMPRESION'
-,p_display_order=>20
+,p_display_order=>10
 ,p_column_identifier=>'B'
 ,p_column_label=>'Impresion'
 ,p_column_link=>'f?p=&APP_ID.:6:&SESSION.::&DEBUG.:52:P6_ID_ORDEN:#ID_ORDEN#'
@@ -270,9 +265,21 @@ wwv_flow_imp_page.create_worksheet_column(
 ,p_use_as_row_header=>'N'
 );
 wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(12004008194524709)
+,p_db_column_name=>'ID_ORDEN'
+,p_display_order=>20
+,p_is_primary_key=>'Y'
+,p_column_identifier=>'A'
+,p_column_label=>'Nro Orden'
+,p_column_type=>'NUMBER'
+,p_heading_alignment=>'RIGHT'
+,p_column_alignment=>'RIGHT'
+,p_use_as_row_header=>'N'
+);
+wwv_flow_imp_page.create_worksheet_column(
  p_id=>wwv_flow_imp.id(12004294811524711)
 ,p_db_column_name=>'ID_PERSONA'
-,p_display_order=>30
+,p_display_order=>40
 ,p_column_identifier=>'C'
 ,p_column_label=>'Nro Documento'
 ,p_column_type=>'NUMBER'
@@ -283,7 +290,7 @@ wwv_flow_imp_page.create_worksheet_column(
 wwv_flow_imp_page.create_worksheet_column(
  p_id=>wwv_flow_imp.id(12004379985524712)
 ,p_db_column_name=>'FECHA_ORDEN'
-,p_display_order=>40
+,p_display_order=>50
 ,p_column_identifier=>'D'
 ,p_column_label=>'Fecha Orden'
 ,p_column_type=>'DATE'
@@ -294,7 +301,7 @@ wwv_flow_imp_page.create_worksheet_column(
 wwv_flow_imp_page.create_worksheet_column(
  p_id=>wwv_flow_imp.id(12004414066524713)
 ,p_db_column_name=>'ESTADO'
-,p_display_order=>50
+,p_display_order=>60
 ,p_column_identifier=>'E'
 ,p_column_label=>'Estado'
 ,p_column_type=>'STRING'
@@ -304,7 +311,7 @@ wwv_flow_imp_page.create_worksheet_column(
 wwv_flow_imp_page.create_worksheet_column(
  p_id=>wwv_flow_imp.id(12004539648524714)
 ,p_db_column_name=>'TOTAL'
-,p_display_order=>60
+,p_display_order=>70
 ,p_column_identifier=>'F'
 ,p_column_label=>'Total'
 ,p_column_type=>'NUMBER'
@@ -315,12 +322,34 @@ wwv_flow_imp_page.create_worksheet_column(
 wwv_flow_imp_page.create_worksheet_column(
  p_id=>wwv_flow_imp.id(12004689448524715)
 ,p_db_column_name=>'OBSERVACION'
-,p_display_order=>70
+,p_display_order=>80
 ,p_column_identifier=>'G'
 ,p_column_label=>'Observacion'
 ,p_column_type=>'STRING'
 ,p_heading_alignment=>'LEFT'
 ,p_use_as_row_header=>'N'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(20609318042469442)
+,p_db_column_name=>'FECHA_VENCIMIENTO'
+,p_display_order=>90
+,p_column_identifier=>'H'
+,p_column_label=>'Vencimiento'
+,p_column_html_expression=>'<span class="t-Badge #VENC_CLASS#">#FECHA_VENCIMIENTO#</span>'
+,p_column_type=>'DATE'
+,p_heading_alignment=>'LEFT'
+,p_format_mask=>'DD/MM/YYYY'
+,p_tz_dependent=>'N'
+,p_use_as_row_header=>'N'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(20609467893469443)
+,p_db_column_name=>'VENC_CLASS'
+,p_display_order=>100
+,p_column_identifier=>'I'
+,p_column_label=>'Venc Class'
+,p_column_type=>'STRING'
+,p_display_text_as=>'HIDDEN_ESCAPE_SC'
 );
 wwv_flow_imp_page.create_worksheet_rpt(
  p_id=>wwv_flow_imp.id(12018393350728465)

@@ -130,7 +130,7 @@ Sin valores `APROBADO`, `ANULADO`, `VENCIDO`.
 
 ### Feature 2 — Caducidad parametrizable
 
-**Estado:** ⚠️ parcial. Backend completo (`db/F2_caducidad.sql`, 2026-05-27). Pendiente la parte UI (P52 column+badge, P6 literal) que requiere edición manual de páginas APEX — ver checklist §7.
+**Estado:** ⚠️ parcial. Backend completo (`db/F2_caducidad.sql`, 2026-05-27). Columna+badge en P52 hecho (2026-06-02). Solo queda pendiente reemplazar el literal "15 días" en P6.
 
 **Cambios en BD:**
 
@@ -209,7 +209,7 @@ facturados y ya anulados no se tocan.
 
 ### Feature 3 — Disponibilidad de stock por oficina
 
-**Estado:** ⚠️ parcial. Backend completo (`db/F3_stock_oficina.sql`, 2026-05-27). Pendiente la parte UI (item `P54_ID_OFICINA`, items ocultos de aviso, DA AJAX sobre `ID_PRODUCTO`, validación server-side) que requiere edición manual de P54 — ver checklist §7.
+**Estado:** ✅ completado. Backend en `db/F3_stock_oficina.sql` (2026-05-27). UI aplicada manualmente en P54 por el usuario (2026-06-02) — select de oficina, items aviso, validación per-row al submit. Capturado en `apex-work/f100/application/pages/page_00054.sql`.
 
 **Reglas:**
 
@@ -636,16 +636,16 @@ Después agregar `@@application/pages/delete_00117.sql + page_00117.sql` y los m
 - [x] Push P6/P52/P54 al live (commits `578462d` + `1f0e3be`)
 - [ ] **Pendiente manual:** aplicar el cambio del `navigation_menu` en APEX UI (Shared Components → Lists → Navigation Menu → item `Ventas` → vaciar `Current For Pages`). No se pudo hacer por SQL: `wwv_flow_imp_shared.create_list` no soporta upsert. Ver memoria `apex-shared-components-no-upsert`.
 
-### F3 — Stock por oficina ⚠️ (backend ✅, UI pendiente)
-- [x] Función `FN_OFICINA_USUARIO(p_usuario DEFAULT V('APP_USER'))` — devuelve `ID_OFICINA` via caja abierta del usuario, o `NULL` si no hay caja abierta
-- [x] Función `FN_HAY_STOCK(p_producto, p_oficina, p_orden DEFAULT NULL)` — `'S'`/`'N'` descontando reservas VIGENTE (excluye la propia orden para permitir edición)
-- [x] Función `FN_OFICINAS_CON_STOCK(p_producto, p_orden DEFAULT NULL)` — CSV de oficinas con disponibilidad, para el mensaje UX
+### F3 — Stock por oficina ✅
+- [x] Función `FN_OFICINA_USUARIO(p_usuario DEFAULT V('APP_USER'))` — queda como utilitaria para módulos con cajero (no se usa en F3 tras decisión §3 #1 revisada)
+- [x] Función `FN_HAY_STOCK(p_producto, p_oficina, p_orden DEFAULT NULL)` — `'S'`/`'N'` descontando reservas VIGENTE
+- [x] Función `FN_OFICINAS_CON_STOCK(p_producto, p_orden DEFAULT NULL)` — CSV de oficinas con disponibilidad
 - [x] Script versionado idempotente: `db/F3_stock_oficina.sql`
-- [ ] **Pendiente manual:** Modificar item existente `P54_ID_OFICINA` de Display Only a **Select List** con LOV inline `SELECT DESCRIPCION d, CODIGO_OFICINA r FROM OFICINAS ORDER BY DESCRIPCION`, Required. Crear items hidden `P54_AVISO_STOCK_TEXTO` y `P54_AVISO_STOCK_NIVEL` (`'OK'`/`'KO'`).
-- [ ] **Pendiente manual:** DA en IG `Detalle Ventas`, evento `Change` sobre `ID_PRODUCTO`: callback PL/SQL que arma el mensaje usando `FN_HAY_STOCK` y `FN_OFICINAS_CON_STOCK`, setea `P54_AVISO_STOCK_*`, dispara notificación APEX.
-- [ ] **Pendiente manual:** Validación server-side en submit de P54: por cada línea, si `FN_HAY_STOCK(producto, P54_ID_OFICINA, P54_ID_ORDEN) = 'N'` → error bloqueante con texto `"Sin disponibilidad de <producto> en tu oficina. Hay stock en: <lista>"`.
-
-> Política: P54 no se toca por SQL desde acá (misma decisión que F5 y F2 UI). Vos hacés los cambios en APEX Builder; cuando termines podés re-exportar P54 y agregarlo al `install_page.sql`.
+- [x] Item `P54_ID_OFICINA` convertido a Select List con LOV sobre OFICINAS (vendedor elige)
+- [x] Items hidden `P54_AVISO_STOCK_TEXTO`, `P54_AVISO_STOCK_NIVEL` con `value_protected=N` y SSP Unrestricted
+- [x] DA "Verificar stock al cambiar producto" sobre Change de ID_PRODUCTO en IG (puede no estar 100% funcional para el toast pero la validación cubre el caso server-side)
+- [x] Validación per-row `stock validation` en IG con `FN_HAY_STOCK(:ID_PRODUCTO, :P54_ID_OFICINA, :P54_ID_ORDEN) = 'S'` — bloquea submit si alguna línea sin stock
+- [x] P54 capturada en `apex-work/f100/application/pages/page_00054.sql` (2026-06-02)
 
 ### F5 — Aprobación de Presupuestos (rediseñado)
 - [ ] Crear P117 vía APEX Builder (IG sobre `ORDENES_VENTA WHERE ESTADO IN ('PENDIENTE','APROBADO')` + link a P118)
@@ -662,13 +662,13 @@ Después agregar `@@application/pages/delete_00117.sql + page_00117.sql` y los m
 - [ ] Crear page 116
 - [ ] Entrada de menú
 
-### F2 — Caducidad ⚠️ (backend ✅, UI pendiente)
+### F2 — Caducidad ⚠️ (backend ✅, UI parcial)
 - [x] Parámetro `DIAS_VIGENCIA_PRESUPUESTO=15` (TIPO_PARAMETRO=`VENTA`, `ACTIVO='S'`)
 - [x] Columna `FECHA_VENCIMIENTO` en `ORDENES_VENTA` + backfill de 20 órdenes existentes
 - [x] Trigger `TRG_OV_FECHA_VENCIMIENTO` (BEFORE INSERT, setea si NULL usando FN_GET_PARAMETRO)
 - [x] Job `JOB_VENCER_PRESUPUESTOS` (DAILY 02:00, simple UPDATE — `TRG_OV_LIBERA_RESERVA` de F4 se encarga de las reservas automáticamente)
 - [x] Script versionado idempotente: `db/F2_caducidad.sql`
-- [ ] **Pendiente manual:** Columna+badge `FECHA_VENCIMIENTO` en IR de P52 (rojo si vencido, amarillo si vence en ≤3 días). Recomendación: en APEX Builder, agregar la columna al IR + Column Formatting con condiciones. Misma política que F5: no se toca P52 vía SQL desde acá.
+- [x] Columna+badge `FECHA_VENCIMIENTO` en IR de P52 (segundo IR, region 12003886624524707) con badges via HTML Expression y CASE WHEN sobre fechas — capturado en `apex-work/f100/application/pages/page_00052.sql` (2026-06-02)
 - [ ] **Pendiente manual:** Reemplazo del literal `"La validez de esta orden de venta es de 15 días"` en P6 → reemplazar por valor dinámico de `FN_GET_PARAMETRO('DIAS_VIGENCIA_PRESUPUESTO')`. Decisión: hacer manual (editar P6 en APEX UI), o pedirme que edite `page_00006.sql` y re-importe (cambio chico, bajo riesgo).
 
 ---

@@ -15,6 +15,7 @@ wwv_flow_imp_page.create_page(
  p_id=>54
 ,p_name=>'Presupuesto'
 ,p_alias=>'ORDEN-DE-VENTA1'
+,p_page_mode=>'MODAL'
 ,p_step_title=>'Presupuesto'
 ,p_autocomplete_on_off=>'OFF'
 ,p_javascript_code=>wwv_flow_string.join(wwv_flow_t_varchar2(
@@ -72,6 +73,7 @@ unistr('            // Elimina s\00EDmbolo de moneda y formato'),
 '',
 '}*/'))
 ,p_page_template_options=>'#DEFAULT#'
+,p_dialog_resizable=>'Y'
 ,p_protection_level=>'C'
 ,p_page_component_map=>'02'
 );
@@ -705,7 +707,7 @@ wwv_flow_imp_page.create_page_item(
 ,p_item_sequence=>60
 ,p_item_plug_id=>wwv_flow_imp.id(11735397033125021)
 ,p_item_source_plug_id=>wwv_flow_imp.id(11880079139947272)
-,p_item_default=>'Pendiente'
+,p_item_default=>'PENDIENTE'
 ,p_source=>'ESTADO'
 ,p_source_type=>'REGION_SOURCE_COLUMN'
 ,p_display_as=>'NATIVE_HIDDEN'
@@ -817,11 +819,16 @@ wwv_flow_imp_page.create_page_item(
 ,p_item_sequence=>50
 ,p_item_plug_id=>wwv_flow_imp.id(11735397033125021)
 ,p_item_source_plug_id=>wwv_flow_imp.id(11880079139947272)
+,p_item_default=>'1'
 ,p_prompt=>'Oficina'
 ,p_source=>'ID_OFICINA'
 ,p_source_type=>'REGION_SOURCE_COLUMN'
 ,p_display_as=>'NATIVE_SELECT_LIST'
-,p_lov=>'select descripcion, codigo_oficina from OFICINAS'
+,p_lov=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'SELECT DESCRIPCION AS d, CODIGO_OFICINA AS r',
+'    FROM WKSP_WORKPLACE.OFICINAS',
+'   ORDER BY DESCRIPCION'))
+,p_lov_display_null=>'YES'
 ,p_cHeight=>1
 ,p_begin_on_new_line=>'N'
 ,p_field_template=>1609121967514267634
@@ -830,6 +837,37 @@ wwv_flow_imp_page.create_page_item(
 ,p_lov_display_extra=>'NO'
 ,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
   'page_action_on_selection', 'NONE')).to_clob
+);
+wwv_flow_imp_page.create_page_item(
+ p_id=>wwv_flow_imp.id(20610087170469449)
+,p_name=>'P54_AVISO_STOCK_NIVEL'
+,p_item_sequence=>80
+,p_item_plug_id=>wwv_flow_imp.id(11880079139947272)
+,p_display_as=>'NATIVE_HIDDEN'
+,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
+  'value_protected', 'N')).to_clob
+);
+wwv_flow_imp_page.create_page_item(
+ p_id=>wwv_flow_imp.id(20610109262469450)
+,p_name=>'P54_AVISO_STOCK_TEXTO'
+,p_item_sequence=>90
+,p_item_plug_id=>wwv_flow_imp.id(11880079139947272)
+,p_display_as=>'NATIVE_HIDDEN'
+,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
+  'value_protected', 'N')).to_clob
+);
+wwv_flow_imp_page.create_page_validation(
+ p_id=>wwv_flow_imp.id(21975723282430702)
+,p_tabular_form_region_id=>wwv_flow_imp.id(11937687366860014)
+,p_validation_name=>'stock validation'
+,p_validation_sequence=>20
+,p_validation=>'  WKSP_WORKPLACE.FN_HAY_STOCK(:ID_PRODUCTO, :P54_ID_OFICINA, :P54_ID_ORDEN) = ''S'''
+,p_validation2=>'PLSQL'
+,p_validation_type=>'EXPRESSION'
+,p_error_message=>' Sin disponibilidad de este producto en tu oficina.'
+,p_always_execute=>'Y'
+,p_associated_column=>'ID_PRODUCTO'
+,p_error_display_location=>'INLINE_WITH_FIELD_AND_NOTIFICATION'
 );
 wwv_flow_imp_page.create_page_da_event(
  p_id=>wwv_flow_imp.id(11885015507947278)
@@ -1079,6 +1117,87 @@ wwv_flow_imp_page.create_page_da_action(
 ,p_execute_on_page_init=>'N'
 ,p_action=>'NATIVE_JAVASCRIPT_CODE'
 ,p_attribute_01=>'recalculaImporte();'
+);
+wwv_flow_imp_page.create_page_da_event(
+ p_id=>wwv_flow_imp.id(20609734395469446)
+,p_name=>'Verificar stock al cambiar producto'
+,p_event_sequence=>110
+,p_triggering_element_type=>'COLUMN'
+,p_triggering_region_id=>wwv_flow_imp.id(11937687366860014)
+,p_triggering_element=>'ID_PRODUCTO'
+,p_bind_type=>'bind'
+,p_execution_type=>'IMMEDIATE'
+,p_bind_event_type=>'change'
+);
+wwv_flow_imp_page.create_page_da_action(
+ p_id=>wwv_flow_imp.id(20609823514469447)
+,p_event_id=>wwv_flow_imp.id(20609734395469446)
+,p_event_result=>'TRUE'
+,p_action_sequence=>10
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_EXECUTE_PLSQL_CODE'
+,p_attribute_01=>wwv_flow_string.join(wwv_flow_t_varchar2(
+' DECLARE',
+'    v_hay   VARCHAR2(1);',
+'    v_lista VARCHAR2(4000);',
+'  BEGIN',
+'    -- Guard: si no eligio oficina, mensaje claro y salir',
+'    IF :P54_ID_OFICINA IS NULL THEN',
+'      :P54_AVISO_STOCK_NIVEL := ''KO'';',
+'      :P54_AVISO_STOCK_TEXTO := ''Seleccione primero la oficina en la cabecera.'';',
+'      RETURN;',
+'    END IF;',
+'',
+'    v_hay := WKSP_WORKPLACE.FN_HAY_STOCK(',
+'               p_id_producto => :ID_PRODUCTO,',
+'               p_id_oficina  => :P54_ID_OFICINA,',
+'               p_id_orden    => :P54_ID_ORDEN',
+'             );',
+'',
+'    IF v_hay = ''S'' THEN',
+'      :P54_AVISO_STOCK_NIVEL := ''OK'';',
+'      :P54_AVISO_STOCK_TEXTO := ''Stock disponible en tu oficina.'';',
+'    ELSE',
+'      v_lista := WKSP_WORKPLACE.FN_OFICINAS_CON_STOCK(',
+'                   p_id_producto => :ID_PRODUCTO,',
+'                   p_id_orden    => :P54_ID_ORDEN',
+'                 );',
+'      :P54_AVISO_STOCK_NIVEL := ''KO'';',
+'      IF v_lista IS NULL THEN',
+'        :P54_AVISO_STOCK_TEXTO := ''Sin stock disponible en ninguna oficina.'';',
+'      ELSE',
+'        :P54_AVISO_STOCK_TEXTO := ''Sin stock en tu oficina. Hay stock en: '' || v_lista || ''.'';',
+'      END IF;',
+'    END IF;',
+'  END;'))
+,p_attribute_02=>'ID_PRODUCTO,P54_ID_OFICINA,P54_ID_ORDEN'
+,p_attribute_03=>'P54_AVISO_STOCK_NIVEL,P54_AVISO_STOCK_TEXTO'
+,p_attribute_04=>'N'
+,p_attribute_05=>'PLSQL'
+,p_wait_for_result=>'Y'
+);
+wwv_flow_imp_page.create_page_da_action(
+ p_id=>wwv_flow_imp.id(20609922251469448)
+,p_event_id=>wwv_flow_imp.id(20609734395469446)
+,p_event_result=>'TRUE'
+,p_action_sequence=>20
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_JAVASCRIPT_CODE'
+,p_attribute_01=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'var nivel = $v(''P54_AVISO_STOCK_NIVEL'');',
+'  var texto = $v(''P54_AVISO_STOCK_TEXTO'');',
+'',
+'  apex.message.clearErrors();',
+'  if (nivel === ''KO'') {',
+'    apex.message.showErrors([{',
+'      type:     ''error'',',
+'      location: ''page'',',
+'      message:  texto,',
+'      unsafe:   false',
+'    }]);',
+'  } else if (nivel === ''OK'') {',
+'    apex.message.showPageSuccess(texto);',
+'  }'))
 );
 wwv_flow_imp_page.create_page_process(
  p_id=>wwv_flow_imp.id(11938736721860025)
