@@ -537,14 +537,14 @@ Después agregar `@@application/pages/delete_00117.sql + page_00117.sql` y los m
 
 ### Feature 6 — Reporte de presupuestos anulados (+ vencidos)
 
-**Estado:** ⚠️ parcial. Filtro default en P52 aplicado (2026-06-02). Pendiente manual: P116 + entry en menú — guía paso a paso al final de esta sección.
+**Estado:** ✅ completado. Filtro default en P52 (2026-06-02). P111 "Anulados y Vencidos" + entry en menú creadas manualmente y capturadas en `apex-work/f100/application/pages/page_00111.sql` (2026-06-03). Nota: la página final quedó con ID 111 (no 116 como sugería el plan original).
 
 **Cambios:**
 
 - IR principal de P52: filtro por defecto `WHERE ESTADO NOT IN ('ANULADO','VENCIDO')`.
   Implementación: modificar la consulta del IR o agregar filtro IR “Activos”
   como default.
-- **Nueva página P116 — “Presupuestos Anulados y Vencidos”** (Normal):
+- **Nueva página P111 — “Presupuestos Anulados y Vencidos”** (Normal):
   - IR sobre `ORDENES_VENTA` con `WHERE ESTADO IN ('ANULADO','VENCIDO')`.
   - Columnas: Nº, Fecha orden, Fecha vencimiento, Fecha anulación, Cliente
     (join `PERSONAS`), Oficina, Monto total, Estado, Usuario anulación,
@@ -657,12 +657,12 @@ Después agregar `@@application/pages/delete_00117.sql + page_00117.sql` y los m
 
 > Rollback de la versión anterior aplicado el 2026-05-26: revertí P52 al estado post-F1 (commit `578462d`), borré P115 del workspace WKSP_WORKPLACE, removí `@@page_00115` de `install_page.sql`. El archivo `page_00115.sql` queda en el repo solo como referencia del proceso PL/SQL para reutilizar al armar P118.
 
-### F6 — Reporte anulados/vencidos ⚠️ (filtro P52 ✅, P116 + menú pendientes)
+### F6 — Reporte anulados/vencidos ✅
 - [x] Modificar IR de P52: agregado `WHERE ESTADO NOT IN ('ANULADO','VENCIDO')` al SELECT de ambas IRs (regions 11876074893937409 y 12003886624524707). Capturado en `apex-work/f100/application/pages/page_00052.sql` (2026-06-02).
-- [ ] **Pendiente manual:** Crear P116 vía APEX Builder — guía abajo.
-- [ ] **Pendiente manual:** Entry "Anulados y Vencidos" en menú bajo grupo `Ventas`.
+- [x] P111 "Anulados y Vencidos" creada manualmente vía APEX Builder y capturada en `apex-work/f100/application/pages/page_00111.sql` (2026-06-03). Página Normal con IR sobre `ORDENES_VENTA WHERE ESTADO IN ('ANULADO','VENCIDO')`.
+- [x] Entry "Anulados y Vencidos" en menú bajo grupo `Ventas`, apunta a P111 (cambio manual en Shared Components, sin captura SQL por limitación documentada en memoria `apex-shared-components-no-upsert`).
 
-#### Guía manual: crear P116 vía APEX Builder
+#### Guía manual: crear P111 vía APEX Builder
 
 **Paso 1 — Crear la página**
 
@@ -672,7 +672,7 @@ Después agregar `@@application/pages/delete_00117.sql + page_00117.sql` y los m
 
 **Paso 2 — Crear la región IR**
 
-1. En la nueva P116 → Create Region → Type **Interactive Report**.
+1. En la nueva P111 → Create Region → Type **Interactive Report**.
 2. Name: `Presupuestos Anulados y Vencidos`.
 3. Source → Type: `SQL Query`.
 4. SQL:
@@ -728,7 +728,7 @@ Para cada columna en el IR, ajustar:
 **Paso 4 — Filtros default**
 
 En el browser, después de guardar el IR:
-1. Abrir P116, click en **Actions** → **Filter**.
+1. Abrir P111, click en **Actions** → **Filter**.
 2. Agregar filtro: `Fecha Orden` between today-30 and today. Apply.
 3. (Opcional) Actions → Filter → `Estado` in `ANULADO, VENCIDO`. (Ya filtrado en SQL pero hace explícito el switch).
 4. Actions → **Save Report** → tipo `Default Report Settings`. Eso fija el filtro como default para todos.
@@ -746,7 +746,7 @@ En el browser, después de guardar el IR:
 **Paso 6 — Test funcional**
 
 1. Login → Menú → Ventas → "Anulados y Vencidos".
-2. Debe abrir P116 con la lista de las 6 VENCIDO actuales (y los ANULADO si hay).
+2. Debe abrir P111 con la lista de las 6 VENCIDO actuales (y los ANULADO si hay).
 3. Probar filtros vía Actions.
 4. Confirmar columnas legibles + badges aplicados.
 5. Click sobre el ícono de impresora al inicio de una fila → debe abrir P6 modal con el reporte print de ese presupuesto. (El texto "validez 15 días" al pie aparecerá inapropiado para anulados/vencidos — decisión aceptada).
