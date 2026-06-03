@@ -48,7 +48,8 @@ wwv_flow_imp_page.create_page_plug(
 '       TOTAL,',
 '       OBSERVACION,',
 '       CAST(NULL AS VARCHAR2(200)) AS Impresion',
-'  from ORDENES_VENTA'))
+'  from ORDENES_VENTA',
+' where ESTADO NOT IN (''ANULADO'',''VENCIDO'')'))
 ,p_plug_source_type=>'NATIVE_IR'
 ,p_prn_content_disposition=>'ATTACHMENT'
 ,p_prn_units=>'MILLIMETERS'
@@ -205,7 +206,8 @@ wwv_flow_imp_page.create_page_plug(
 '           else                                                                           ''t-Badge--success''',
 '         end as VENC_CLASS,',
 '         CAST(NULL AS VARCHAR2(200)) AS Impresion',
-'    from ORDENES_VENTA'))
+'    from ORDENES_VENTA',
+'   where ESTADO NOT IN (''ANULADO'',''VENCIDO'')'))
 ,p_plug_source_type=>'NATIVE_IR'
 ,p_prn_content_disposition=>'ATTACHMENT'
 ,p_prn_units=>'MILLIMETERS'

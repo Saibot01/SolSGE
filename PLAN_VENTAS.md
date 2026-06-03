@@ -537,7 +537,7 @@ Después agregar `@@application/pages/delete_00117.sql + page_00117.sql` y los m
 
 ### Feature 6 — Reporte de presupuestos anulados (+ vencidos)
 
-**Estado:** ❌ no implementado.
+**Estado:** ⚠️ parcial. Filtro default en P52 aplicado (2026-06-02). Pendiente manual: P116 + entry en menú — guía paso a paso al final de esta sección.
 
 **Cambios:**
 
@@ -657,10 +657,92 @@ Después agregar `@@application/pages/delete_00117.sql + page_00117.sql` y los m
 
 > Rollback de la versión anterior aplicado el 2026-05-26: revertí P52 al estado post-F1 (commit `578462d`), borré P115 del workspace WKSP_WORKPLACE, removí `@@page_00115` de `install_page.sql`. El archivo `page_00115.sql` queda en el repo solo como referencia del proceso PL/SQL para reutilizar al armar P118.
 
-### F6 — Reporte anulados/vencidos
-- [ ] Modificar IR de P52 (filtro default)
-- [ ] Crear page 116
-- [ ] Entrada de menú
+### F6 — Reporte anulados/vencidos ⚠️ (filtro P52 ✅, P116 + menú pendientes)
+- [x] Modificar IR de P52: agregado `WHERE ESTADO NOT IN ('ANULADO','VENCIDO')` al SELECT de ambas IRs (regions 11876074893937409 y 12003886624524707). Capturado en `apex-work/f100/application/pages/page_00052.sql` (2026-06-02).
+- [ ] **Pendiente manual:** Crear P116 vía APEX Builder — guía abajo.
+- [ ] **Pendiente manual:** Entry "Anulados y Vencidos" en menú bajo grupo `Ventas`.
+
+#### Guía manual: crear P116 vía APEX Builder
+
+**Paso 1 — Crear la página**
+
+1. App Builder → App 100 → Create Page → **Blank Page**.
+2. Name: `Anulados y Vencidos`. Page Number: `116`. Page Mode: `Normal`.
+3. Breadcrumb: usar el existente del app.
+
+**Paso 2 — Crear la región IR**
+
+1. En la nueva P116 → Create Region → Type **Interactive Report**.
+2. Name: `Presupuestos Anulados y Vencidos`.
+3. Source → Type: `SQL Query`.
+4. SQL:
+   ```sql
+   select o.ID_ORDEN,
+          o.FECHA_ORDEN,
+          o.FECHA_VENCIMIENTO,
+          o.FECHA_ANULACION,
+          p.PRIMER_NOMBRE || ' ' || p.PRIMER_APELLIDO as CLIENTE,
+          f.DESCRIPCION as OFICINA,
+          o.TOTAL,
+          o.ESTADO,
+          o.USUARIO_ANULACION,
+          o.MOTIVO_ANULACION
+     from ORDENES_VENTA o
+     left join PERSONAS p on p.ID_PERSONA      = o.ID_PERSONA
+     left join OFICINAS f on f.CODIGO_OFICINA  = o.ID_OFICINA
+    where o.ESTADO IN ('ANULADO','VENCIDO')
+    order by coalesce(o.FECHA_ANULACION, o.FECHA_VENCIMIENTO) desc
+   ```
+5. Save.
+
+**Paso 3 — Configurar columnas (opcional pero útil)**
+
+Para cada columna en el IR, ajustar:
+- `FECHA_ORDEN`, `FECHA_VENCIMIENTO`, `FECHA_ANULACION`: Format Mask `DD/MM/YYYY`
+- `TOTAL`: Format Mask `FML999G999G999G999G990D00`, alignment Right
+- `ESTADO`: HTML Expression con badge condicional:
+  ```html
+  <span class="t-Badge #ESTADO_CLASS#">#ESTADO#</span>
+  ```
+  Y agregar al SQL: `case when ESTADO = 'ANULADO' then 't-Badge--danger' else 't-Badge--muted' end as ESTADO_CLASS,`
+  (Para que ANULADO se vea rojo y VENCIDO gris.)
+- `MOTIVO_ANULACION`: ancho mayor (tipo wrap) — útil porque suele ser texto largo.
+
+**Paso 4 — Filtros default**
+
+En el browser, después de guardar el IR:
+1. Abrir P116, click en **Actions** → **Filter**.
+2. Agregar filtro: `Fecha Orden` between today-30 and today. Apply.
+3. (Opcional) Actions → Filter → `Estado` in `ANULADO, VENCIDO`. (Ya filtrado en SQL pero hace explícito el switch).
+4. Actions → **Save Report** → tipo `Default Report Settings`. Eso fija el filtro como default para todos.
+
+**Paso 5 — Entry en el menú**
+
+1. Shared Components → Lists → **Navigation Menu** → Create List Entry.
+2. Parent List Entry: `Ventas` (el header del grupo).
+3. List Entry Label: `Anulados y Vencidos`.
+4. Target: Page `116` (de esta app).
+5. Icon: `fa-ban` o `fa-archive` (recomendados — connotan "cerrado/cancelado").
+6. Authorization opcional: `security_pkg.can_access(:APP_ID, :APP_USER, 116, NULL)`.
+7. Save.
+
+**Paso 6 — Test funcional**
+
+1. Login → Menú → Ventas → "Anulados y Vencidos".
+2. Debe abrir P116 con la lista de las 6 VENCIDO actuales (y los ANULADO si hay).
+3. Probar filtros vía Actions.
+4. Confirmar columnas legibles + badges aplicados.
+
+**Paso 7 — Capturar al repo**
+
+Cuando funcione, avisame y re-exportamos:
+```bash
+sql -S -name $SQLCL_CONNECTION <<'EOF'
+apex export -applicationid 100 -split -dir apex-work -expComponents PAGE:116
+exit;
+EOF
+```
+Después agregar `@@application/pages/delete_00116.sql + page_00116.sql` a `install_page.sql`.
 
 ### F2 — Caducidad ✅
 - [x] Parámetro `DIAS_VIGENCIA_PRESUPUESTO=15` (TIPO_PARAMETRO=`VENTA`, `ACTIVO='S'`)
