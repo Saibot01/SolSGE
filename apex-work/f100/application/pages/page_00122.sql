@@ -93,7 +93,7 @@ wwv_flow_imp_page.create_page_item(
 ,p_item_plug_id=>wwv_flow_imp.id(122100000000001)
 ,p_use_cache_before_default=>'NO'
 ,p_prompt=>'N&deg; Factura'
-,p_source=>'SELECT NRO_COMPROBANTE FROM COMPROBANTES WHERE ID_COMPROBANTE = :P122_ID_COMPROBANTE'
+,p_source=>'SELECT MAX(NRO_COMPROBANTE) FROM COMPROBANTES WHERE ID_COMPROBANTE = :P122_ID_COMPROBANTE'
 ,p_source_type=>'QUERY'
 ,p_display_as=>'NATIVE_DISPLAY_ONLY'
 ,p_label_alignment=>'RIGHT'
@@ -113,7 +113,7 @@ wwv_flow_imp_page.create_page_item(
 ,p_item_plug_id=>wwv_flow_imp.id(122100000000001)
 ,p_use_cache_before_default=>'NO'
 ,p_prompt=>'Fecha'
-,p_source=>q'[SELECT TO_CHAR(FECHA,'DD/MM/YYYY') FROM COMPROBANTES WHERE ID_COMPROBANTE = :P122_ID_COMPROBANTE]'
+,p_source=>q'[SELECT TO_CHAR(MAX(FECHA),'DD/MM/YYYY') FROM COMPROBANTES WHERE ID_COMPROBANTE = :P122_ID_COMPROBANTE]'
 ,p_source_type=>'QUERY'
 ,p_display_as=>'NATIVE_DISPLAY_ONLY'
 ,p_begin_on_new_line=>'N'
@@ -134,7 +134,7 @@ wwv_flow_imp_page.create_page_item(
 ,p_item_plug_id=>wwv_flow_imp.id(122100000000001)
 ,p_use_cache_before_default=>'NO'
 ,p_prompt=>'Cliente'
-,p_source=>q'[SELECT TRIM(p.PRIMER_NOMBRE||' '||p.PRIMER_APELLIDO) FROM COMPROBANTES c JOIN PERSONAS p ON p.ID_PERSONA = c.ID_CLIENTE WHERE c.ID_COMPROBANTE = :P122_ID_COMPROBANTE]'
+,p_source=>q'[SELECT MAX(TRIM(p.PRIMER_NOMBRE||' '||p.PRIMER_APELLIDO)) FROM COMPROBANTES c JOIN PERSONAS p ON p.ID_PERSONA = c.ID_CLIENTE WHERE c.ID_COMPROBANTE = :P122_ID_COMPROBANTE]'
 ,p_source_type=>'QUERY'
 ,p_display_as=>'NATIVE_DISPLAY_ONLY'
 ,p_label_alignment=>'RIGHT'
@@ -154,7 +154,7 @@ wwv_flow_imp_page.create_page_item(
 ,p_item_plug_id=>wwv_flow_imp.id(122100000000001)
 ,p_use_cache_before_default=>'NO'
 ,p_prompt=>'Total'
-,p_source=>q'[SELECT TO_CHAR(TOTAL_MONEDA_LOCAL,'FM999G999G999G990')||' '||MONEDA FROM COMPROBANTES WHERE ID_COMPROBANTE = :P122_ID_COMPROBANTE]'
+,p_source=>q'[SELECT MAX(TO_CHAR(TOTAL_MONEDA_LOCAL,'FM999G999G999G990')||' '||MONEDA) FROM COMPROBANTES WHERE ID_COMPROBANTE = :P122_ID_COMPROBANTE]'
 ,p_source_type=>'QUERY'
 ,p_display_as=>'NATIVE_DISPLAY_ONLY'
 ,p_begin_on_new_line=>'N'
@@ -175,7 +175,7 @@ wwv_flow_imp_page.create_page_item(
 ,p_item_plug_id=>wwv_flow_imp.id(122100000000001)
 ,p_use_cache_before_default=>'NO'
 ,p_prompt=>'Forma de Pago'
-,p_source=>q'[SELECT CASE FORMA_PAGO WHEN '1' THEN 'Credito' ELSE 'Contado' END FROM COMPROBANTES WHERE ID_COMPROBANTE = :P122_ID_COMPROBANTE]'
+,p_source=>q'[SELECT MAX(CASE FORMA_PAGO WHEN '1' THEN 'Credito' ELSE 'Contado' END) FROM COMPROBANTES WHERE ID_COMPROBANTE = :P122_ID_COMPROBANTE]'
 ,p_source_type=>'QUERY'
 ,p_display_as=>'NATIVE_DISPLAY_ONLY'
 ,p_label_alignment=>'RIGHT'
