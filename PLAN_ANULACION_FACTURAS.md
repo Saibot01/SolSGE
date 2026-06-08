@@ -187,6 +187,7 @@ Marcamos `[ ]` pendiente, `[x]` cerrado.
 - [x] Script idempotente (corre 2 veces sin error) + verificación final pasa OK.
 
 ### Hito 2 — P122 Modal Solicitar Anulación
+> Guía step-by-step en [F11_GUIA_APEX.md §Hito 2](F11_GUIA_APEX.md#hito-2--p122-modal-solicitar-anulación).
 - [ ] Página nueva modal con form sobre `COMPROBANTES`.
 - [ ] Items display only + textarea motivo.
 - [ ] Validaciones BEFORE_HEADER (ventana, cuotas).
