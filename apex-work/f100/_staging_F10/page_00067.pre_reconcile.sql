@@ -112,7 +112,6 @@ wwv_flow_imp_page.create_page_plug(
 ,p_plug_template=>4072358936313175081
 ,p_plug_display_sequence=>40
 ,p_location=>null
-,p_plug_read_only_when_type=>'ALWAYS'
 ,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
   'expand_shortcuts', 'N',
   'output_as', 'HTML')).to_clob
@@ -177,7 +176,6 @@ wwv_flow_imp_page.create_region_column(
 ,p_source_type=>'DB_COLUMN'
 ,p_source_expression=>'CANTIDAD'
 ,p_data_type=>'NUMBER'
-,p_session_state_data_type=>'VARCHAR2'
 ,p_is_query_only=>false
 ,p_item_type=>'NATIVE_NUMBER_FIELD'
 ,p_heading=>'Cantidad'
@@ -205,7 +203,6 @@ wwv_flow_imp_page.create_region_column(
 ,p_source_type=>'DB_COLUMN'
 ,p_source_expression=>'PRECIO_UNITARIO'
 ,p_data_type=>'NUMBER'
-,p_session_state_data_type=>'VARCHAR2'
 ,p_is_query_only=>false
 ,p_item_type=>'NATIVE_NUMBER_FIELD'
 ,p_heading=>'Precio Unitario'
@@ -233,7 +230,6 @@ wwv_flow_imp_page.create_region_column(
 ,p_source_type=>'DB_COLUMN'
 ,p_source_expression=>'TOTAL'
 ,p_data_type=>'NUMBER'
-,p_session_state_data_type=>'VARCHAR2'
 ,p_is_query_only=>false
 ,p_item_type=>'NATIVE_NUMBER_FIELD'
 ,p_heading=>'Total'
@@ -258,22 +254,18 @@ wwv_flow_imp_page.create_region_column(
 wwv_flow_imp_page.create_region_column(
  p_id=>wwv_flow_imp.id(12940926604107121)
 ,p_name=>'APEX$ROW_ACTION'
-,p_session_state_data_type=>'VARCHAR2'
 ,p_item_type=>'NATIVE_ROW_ACTION'
 ,p_display_sequence=>20
-,p_use_as_row_header=>false
 );
 wwv_flow_imp_page.create_region_column(
  p_id=>wwv_flow_imp.id(12941023211107122)
 ,p_name=>'APEX$ROW_SELECTOR'
-,p_session_state_data_type=>'VARCHAR2'
 ,p_item_type=>'NATIVE_ROW_SELECTOR'
 ,p_display_sequence=>10
 ,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
   'enable_multi_select', 'Y',
   'hide_control', 'N',
   'show_select_all', 'Y')).to_clob
-,p_use_as_row_header=>false
 );
 wwv_flow_imp_page.create_region_column(
  p_id=>wwv_flow_imp.id(12941203284107124)
@@ -281,7 +273,6 @@ wwv_flow_imp_page.create_region_column(
 ,p_source_type=>'DB_COLUMN'
 ,p_source_expression=>'NOMBRE'
 ,p_data_type=>'NUMBER'
-,p_session_state_data_type=>'VARCHAR2'
 ,p_is_query_only=>false
 ,p_item_type=>'NATIVE_POPUP_LOV'
 ,p_heading=>'Producto'
@@ -326,7 +317,6 @@ wwv_flow_imp_page.create_region_column(
 ,p_source_type=>'DB_COLUMN'
 ,p_source_expression=>'ID_ORDEN'
 ,p_data_type=>'NUMBER'
-,p_session_state_data_type=>'VARCHAR2'
 ,p_is_query_only=>false
 ,p_item_type=>'NATIVE_NUMBER_FIELD'
 ,p_heading_alignment=>'RIGHT'
@@ -500,7 +490,6 @@ wwv_flow_imp_page.create_region_column(
 ,p_source_type=>'DB_COLUMN'
 ,p_source_expression=>'ID_ORDEN'
 ,p_data_type=>'NUMBER'
-,p_session_state_data_type=>'VARCHAR2'
 ,p_is_query_only=>false
 ,p_item_type=>'NATIVE_NUMBER_FIELD'
 ,p_heading=>'Id Orden'
@@ -528,7 +517,6 @@ wwv_flow_imp_page.create_region_column(
 ,p_source_type=>'DB_COLUMN'
 ,p_source_expression=>'NOMBRE'
 ,p_data_type=>'VARCHAR2'
-,p_session_state_data_type=>'VARCHAR2'
 ,p_is_query_only=>false
 ,p_item_type=>'NATIVE_TEXT_FIELD'
 ,p_heading=>'Nombre'
@@ -559,7 +547,6 @@ wwv_flow_imp_page.create_region_column(
 ,p_source_type=>'DB_COLUMN'
 ,p_source_expression=>'CANTIDAD'
 ,p_data_type=>'NUMBER'
-,p_session_state_data_type=>'VARCHAR2'
 ,p_is_query_only=>false
 ,p_item_type=>'NATIVE_NUMBER_FIELD'
 ,p_heading=>'Cantidad'
@@ -587,7 +574,6 @@ wwv_flow_imp_page.create_region_column(
 ,p_source_type=>'DB_COLUMN'
 ,p_source_expression=>'PRECIO_UNITARIO'
 ,p_data_type=>'NUMBER'
-,p_session_state_data_type=>'VARCHAR2'
 ,p_is_query_only=>false
 ,p_item_type=>'NATIVE_NUMBER_FIELD'
 ,p_heading=>'Precio Unitario'
@@ -615,7 +601,6 @@ wwv_flow_imp_page.create_region_column(
 ,p_source_type=>'DB_COLUMN'
 ,p_source_expression=>'TOTAL'
 ,p_data_type=>'NUMBER'
-,p_session_state_data_type=>'VARCHAR2'
 ,p_is_query_only=>false
 ,p_item_type=>'NATIVE_NUMBER_FIELD'
 ,p_heading=>'Total'
@@ -643,7 +628,6 @@ wwv_flow_imp_page.create_region_column(
 ,p_source_type=>'DB_COLUMN'
 ,p_source_expression=>'ID_PRODUCTO'
 ,p_data_type=>'NUMBER'
-,p_session_state_data_type=>'VARCHAR2'
 ,p_is_query_only=>false
 ,p_item_type=>'NATIVE_POPUP_LOV'
 ,p_heading=>'Producto'
@@ -683,22 +667,18 @@ wwv_flow_imp_page.create_region_column(
 wwv_flow_imp_page.create_region_column(
  p_id=>wwv_flow_imp.id(13116693028342835)
 ,p_name=>'APEX$ROW_ACTION'
-,p_session_state_data_type=>'VARCHAR2'
 ,p_item_type=>'NATIVE_ROW_ACTION'
 ,p_display_sequence=>20
-,p_use_as_row_header=>false
 );
 wwv_flow_imp_page.create_region_column(
  p_id=>wwv_flow_imp.id(13116722980342836)
 ,p_name=>'APEX$ROW_SELECTOR'
-,p_session_state_data_type=>'VARCHAR2'
 ,p_item_type=>'NATIVE_ROW_SELECTOR'
 ,p_display_sequence=>10
 ,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
   'enable_multi_select', 'Y',
   'hide_control', 'N',
   'show_select_all', 'Y')).to_clob
-,p_use_as_row_header=>false
 );
 wwv_flow_imp_page.create_region_column(
  p_id=>wwv_flow_imp.id(13182516321363547)
@@ -706,7 +686,6 @@ wwv_flow_imp_page.create_region_column(
 ,p_source_type=>'DB_COLUMN'
 ,p_source_expression=>'IVA'
 ,p_data_type=>'VARCHAR2'
-,p_session_state_data_type=>'VARCHAR2'
 ,p_is_query_only=>false
 ,p_item_type=>'NATIVE_TEXT_FIELD'
 ,p_heading=>'Iva'
@@ -737,7 +716,6 @@ wwv_flow_imp_page.create_region_column(
 ,p_source_type=>'DB_COLUMN'
 ,p_source_expression=>'PORCENTAJE'
 ,p_data_type=>'NUMBER'
-,p_session_state_data_type=>'VARCHAR2'
 ,p_is_query_only=>false
 ,p_item_type=>'NATIVE_NUMBER_FIELD'
 ,p_heading=>'Porcentaje'
@@ -765,7 +743,6 @@ wwv_flow_imp_page.create_region_column(
 ,p_source_type=>'DB_COLUMN'
 ,p_source_expression=>'IVA_CALCULADO'
 ,p_data_type=>'NUMBER'
-,p_session_state_data_type=>'VARCHAR2'
 ,p_is_query_only=>false
 ,p_item_type=>'NATIVE_NUMBER_FIELD'
 ,p_heading=>'Iva Calculado'
@@ -1368,8 +1345,8 @@ wwv_flow_imp_page.create_page_item(
 'WHERE ID_CAJA_CONF = WKSP_WORKPLACE.FN_CAJA_CONF_USUARIO(V(''APP_USER''))',
 '  AND TIPO_COMPROBANTE = ''FA''',
 'ORDER BY ID_TALONARIO'))
-,p_lov_display_null=>'YES'
 ,p_ajax_optimize_refresh=>'Y'
+,p_lov_display_null=>'YES'
 ,p_cHeight=>1
 ,p_colspan=>2
 ,p_field_template=>1609121967514267634
@@ -1571,6 +1548,7 @@ wwv_flow_imp_page.create_page_item(
 ,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
   'value_protected', 'N')).to_clob
 );
+-- P67_NEW (debug item) eliminado en F8.D (default era 'Valor recibido: &P67_ID_ORDEN_VENTA.')
 wwv_flow_imp_page.create_page_item(
  p_id=>wwv_flow_imp.id(15464300169249336)
 ,p_name=>'P67_METODO_PAGO'
@@ -1675,6 +1653,10 @@ wwv_flow_imp_page.create_page_da_action(
 ,p_execute_on_page_init=>'N'
 ,p_action=>'NATIVE_DIALOG_CANCEL'
 );
+-- DA 'Rellena Campos' eliminada entera en F8.D:
+--   La oficina ya viene del default SQL de P67_ID_OFICINA (caja del usuario).
+--   El tipo de comprobante lo lee el proceso AFTER_SUBMIT 'Reservar nro comprobante'
+--   directamente desde TALONARIOS.
 wwv_flow_imp_page.create_page_da_event(
  p_id=>wwv_flow_imp.id(12941442504107126)
 ,p_name=>'Carga de Detalle'
@@ -1684,6 +1666,17 @@ wwv_flow_imp_page.create_page_da_event(
 ,p_bind_type=>'bind'
 ,p_execution_type=>'IMMEDIATE'
 ,p_bind_event_type=>'change'
+);
+wwv_flow_imp_page.create_page_da_action(
+ p_id=>wwv_flow_imp.id(12942919936107141)
+,p_event_id=>wwv_flow_imp.id(12941442504107126)
+,p_event_result=>'TRUE'
+,p_action_sequence=>10
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_REFRESH'
+,p_affected_elements_type=>'REGION'
+,p_affected_region_id=>wwv_flow_imp.id(13115576183342824)
+,p_attribute_01=>'N'
 );
 wwv_flow_imp_page.create_page_da_action(
  p_id=>wwv_flow_imp.id(12941585926100000)
@@ -1709,17 +1702,6 @@ wwv_flow_imp_page.create_page_da_action(
 ,p_wait_for_result=>'Y'
 ,p_client_condition_type=>'NOT_NULL'
 ,p_client_condition_element=>'P67_ID_ORDEN_VENTA'
-);
-wwv_flow_imp_page.create_page_da_action(
- p_id=>wwv_flow_imp.id(12942919936107141)
-,p_event_id=>wwv_flow_imp.id(12941442504107126)
-,p_event_result=>'TRUE'
-,p_action_sequence=>10
-,p_execute_on_page_init=>'N'
-,p_action=>'NATIVE_REFRESH'
-,p_affected_elements_type=>'REGION'
-,p_affected_region_id=>wwv_flow_imp.id(13115576183342824)
-,p_attribute_01=>'N'
 );
 wwv_flow_imp_page.create_page_da_event(
  p_id=>wwv_flow_imp.id(12941752126107129)
@@ -2359,6 +2341,11 @@ wwv_flow_imp_page.create_page_process(
 ,p_process_when_button_id=>wwv_flow_imp.id(12791467411370641)
 ,p_internal_uid=>13116846885342837
 );
+-- Proceso 'Detalle_Venta - Save Interactive Grid Data' eliminado en F8.D:
+--   hacía INSERT/UPDATE/DELETE sobre DETALLE_ORDEN al facturar (bug B7).
+-- Proceso 'Actualiza Factura' eliminado en F8.D:
+--   hacía UPDATE TALONARIOS sin filtrar por ID_TALONARIO (bug B4).
+--   La reserva atómica del nro se hace ahora en FN_OBTENER_COMPROBANTE.
 wwv_flow_imp_page.create_page_process(
  p_id=>wwv_flow_imp.id(12792603199100000)
 ,p_process_sequence=>40

@@ -255,7 +255,8 @@ wwv_flow_imp_page.create_page_item(
 ,p_prompt=>'Talonario Recibo'
 ,p_source=>wwv_flow_string.join(wwv_flow_t_varchar2(
 'SELECT MIN(ID_TALONARIO) FROM',
-'  V_TALONARIOS_DISPONIBLES WHERE TIPO_COMPROBANTE=''RC'' AND ID_OFICINA  = :P100_OFICINA'))
+'  V_TALONARIOS_DISPONIBLES WHERE TIPO_COMPROBANTE=''RC''',
+'    AND ID_CAJA_CONF = FN_CAJA_CONF_USUARIO(:APP_USER)'))
 ,p_source_type=>'QUERY'
 ,p_display_as=>'NATIVE_DISPLAY_ONLY'
 ,p_begin_on_new_line=>'N'
@@ -527,10 +528,10 @@ wwv_flow_imp_page.create_page_process(
 '  SELECT COUNT(*) INTO v_cnt',
 '    FROM V_TALONARIOS_DISPONIBLES',
 '   WHERE TIPO_COMPROBANTE = ''RC''',
-'     AND ID_OFICINA = FN_OFICINA_USUARIO_V2(:APP_USER);',
+'     AND ID_CAJA_CONF = FN_CAJA_CONF_USUARIO(:APP_USER);',
 '  IF v_cnt = 0 THEN',
 '    apex_error.add_error(',
-'      p_message          => ''No hay talonario de recibo (RC) vigente para tu oficina. Avisa al admin.'',',
+'      p_message          => ''No hay talonario de recibo (RC) vigente para tu caja. Avisa al admin.'',',
 '      p_display_location => apex_error.c_inline_in_notification);',
 '  END IF;',
 'END;'))

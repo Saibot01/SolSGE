@@ -1,5 +1,7 @@
 prompt --install_page
 @@application/set_environment.sql
+@@application/pages/delete_00067.sql
+@@application/pages/page_00067.sql
 @@application/pages/delete_00095.sql
 @@application/pages/page_00095.sql
 @@application/pages/delete_00099.sql
