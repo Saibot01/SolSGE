@@ -101,9 +101,9 @@ wwv_flow_imp_page.create_page_item(
 ,p_item_template_options=>'#DEFAULT#'
 ,p_is_persistent=>'N'
 ,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
-  'allow_html', 'Y',
-  'fetch_when', 'BEFORE_HEADER',
-  'show_html', 'Y')).to_clob
+  'based_on', 'VALUE',
+  'format', 'PLAIN',
+  'show_line_breaks', 'Y')).to_clob
 );
 wwv_flow_imp_page.create_page_item(
  p_id=>wwv_flow_imp.id(122300000000003)
@@ -122,9 +122,9 @@ wwv_flow_imp_page.create_page_item(
 ,p_item_template_options=>'#DEFAULT#'
 ,p_is_persistent=>'N'
 ,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
-  'allow_html', 'Y',
-  'fetch_when', 'BEFORE_HEADER',
-  'show_html', 'Y')).to_clob
+  'based_on', 'VALUE',
+  'format', 'PLAIN',
+  'show_line_breaks', 'Y')).to_clob
 );
 wwv_flow_imp_page.create_page_item(
  p_id=>wwv_flow_imp.id(122300000000004)
@@ -142,9 +142,9 @@ wwv_flow_imp_page.create_page_item(
 ,p_item_template_options=>'#DEFAULT#'
 ,p_is_persistent=>'N'
 ,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
-  'allow_html', 'Y',
-  'fetch_when', 'BEFORE_HEADER',
-  'show_html', 'Y')).to_clob
+  'based_on', 'VALUE',
+  'format', 'PLAIN',
+  'show_line_breaks', 'Y')).to_clob
 );
 wwv_flow_imp_page.create_page_item(
  p_id=>wwv_flow_imp.id(122300000000005)
@@ -163,9 +163,9 @@ wwv_flow_imp_page.create_page_item(
 ,p_item_template_options=>'#DEFAULT#'
 ,p_is_persistent=>'N'
 ,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
-  'allow_html', 'Y',
-  'fetch_when', 'BEFORE_HEADER',
-  'show_html', 'Y')).to_clob
+  'based_on', 'VALUE',
+  'format', 'PLAIN',
+  'show_line_breaks', 'Y')).to_clob
 );
 wwv_flow_imp_page.create_page_item(
  p_id=>wwv_flow_imp.id(122300000000006)
@@ -183,9 +183,9 @@ wwv_flow_imp_page.create_page_item(
 ,p_item_template_options=>'#DEFAULT#'
 ,p_is_persistent=>'N'
 ,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
-  'allow_html', 'Y',
-  'fetch_when', 'BEFORE_HEADER',
-  'show_html', 'Y')).to_clob
+  'based_on', 'VALUE',
+  'format', 'PLAIN',
+  'show_line_breaks', 'Y')).to_clob
 );
 wwv_flow_imp_page.create_page_item(
  p_id=>wwv_flow_imp.id(122300000000007)
