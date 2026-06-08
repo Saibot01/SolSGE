@@ -5,7 +5,7 @@ begin
 --   Manifest End
 wwv_flow_imp.component_begin (
  p_version_yyyy_mm_dd=>'2024.11.30'
-,p_release=>'24.2.16'
+,p_release=>'24.2.17'
 ,p_default_workspace_id=>7697821598969118
 ,p_default_application_id=>100
 ,p_default_id_offset=>0
@@ -15,7 +15,7 @@ wwv_flow_imp_shared.create_list(
  p_id=>wwv_flow_imp.id(7706470273831245)
 ,p_name=>'Navigation Menu'
 ,p_list_status=>'PUBLIC'
-,p_version_scn=>39028863070610
+,p_version_scn=>39029290249265
 );
 wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(8007399120830870)
@@ -220,6 +220,26 @@ wwv_flow_imp_shared.create_list_item(
 ,p_parent_list_item_id=>wwv_flow_imp.id(12148205276723968)
 ,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
 ,p_list_item_current_for_pages=>'59'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(22383933923345757)
+,p_list_item_display_sequence=>680
+,p_list_item_link_text=>'Anulados y Vencidos'
+,p_list_item_link_target=>'f?p=&APP_ID.:111:&APP_SESSION.::&DEBUG.:::'
+,p_list_item_icon=>'fa-ban'
+,p_parent_list_item_id=>wwv_flow_imp.id(12148205276723968)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'111'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(22392719337723612)
+,p_list_item_display_sequence=>690
+,p_list_item_link_text=>unistr('Aprobaci\00F3n de Presupuestos')
+,p_list_item_link_target=>'f?p=&APP_ID.:117:&APP_SESSION.::&DEBUG.:::'
+,p_list_item_icon=>'fa-thumbs-o-up'
+,p_parent_list_item_id=>wwv_flow_imp.id(8339507211145106)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'117'
 );
 wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(9808235671312828)
@@ -555,10 +575,9 @@ wwv_flow_imp_shared.create_list_item(
 wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(16135373289245386)
 ,p_list_item_display_sequence=>600
-,p_list_item_link_text=>'Cobros'
+,p_list_item_link_text=>'Cuentas a Cobrar'
 ,p_list_item_icon=>'fa-money-bag'
 ,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
-,p_list_item_current_for_pages=>'93'
 );
 wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(16148657170363760)

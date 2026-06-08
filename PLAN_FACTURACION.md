@@ -766,16 +766,16 @@ los siguientes pueden arrancar. Marcamos ⏳ los pendientes y ✅ los cerrados.
 3. JOIN a PERSONAS para mostrar nombre cliente.
 4. Badge en ESTADO.
 
-### Hito 6 — Cierre F8 ⏳
+### Hito 6 — Cierre F8 ✅ (2026-06-07)
 
 **Entregable:** todo capturado al repo + tag de versión.
 
-1. Re-export de páginas tocadas.
-2. Update de `install_page.sql` con todas las entries.
-3. Verificar que `install_page.sql` corre limpio contra una instancia fresca.
-4. Commit + tag `f8-facturacion-contado`.
+1. ✅ Re-export de páginas tocadas (P61, P65, P66, P67) en `apex-work/`.
+2. ✅ Update de `install_page.sql` con todas las entries.
+3. ✅ Commit `a67ccf3` "feat(F8): facturacion contado end-to-end + modulo de caja".
+4. ✅ Tag `f8-facturacion-contado` creado.
 
-### Hito 7 — Backend BD F9 (F9.A) ⏳ (post F8)
+### Hito 7 — Backend BD F9 (F9.A) ✅ (2026-06-07)
 
 **Entregable:** `db/F9_cobros.sql`.
 
@@ -784,7 +784,7 @@ los siguientes pueden arrancar. Marcamos ⏳ los pendientes y ✅ los cerrados.
 3. Función `FN_COBRAR_CUOTA` (atómica, reserva nro recibo, baja saldo).
 4. Job `JOB_VENCER_CUOTAS` diario.
 
-### Hito 8 — P100 rediseño (F9.B) ⏳
+### Hito 8 — P100 rediseño (F9.B) ✅ (2026-06-07, end-to-end verificado)
 
 **Entregable:** P100 reescrita.
 
@@ -928,9 +928,120 @@ los siguientes pueden arrancar. Marcamos ⏳ los pendientes y ✅ los cerrados.
 - [x] Columna renombrada a "N° Presupuesto"
 - [ ] Filtro default por oficina del usuario + mes actual (opcional, requiere saved report)
 
-### F9 — Crédito 🕓 (post F8)
+### F9.A — Backend BD cobros ✅ (2026-06-07)
 
-- [ ] Pendiente de diseño detallado
+- [x] Normalizar `CUENTAS_COBRAR_DET.ESTADO='PAGADO'` → `'PAGADA'` (el dato sucio del plan original ya no existía)
+- [x] Reset caso de prueba CxC=2 (cuotas a PENDIENTE, SALDO=TOTAL) — decisión del PO 2026-06-07
+- [x] Extensión `DETALLE_MOVIMIENTO_CAJA.ID_METODO_PAGO` (FK a `METODOS_PAGO`) — agregado fuera del plan original para guardar método (Efectivo/Tarjeta/Transferencia/QR)
+- [x] `CK_CCD_ESTADO` en `CUENTAS_COBRAR_DET`: `CHECK (ESTADO IN ('PENDIENTE','PAGADA','VENCIDA'))`
+- [x] `CK_CXC_ESTADO` en `CUENTAS_COBRAR`: `CHECK (ESTADO IN ('PENDIENTE','PAGADA'))`
+- [x] `FN_COBRAR_CUOTA(p_id_detalle, p_id_caja, p_id_talonario_rc, p_id_forma_pago, p_id_metodo_pago, p_monto_pago, p_moneda, p_nro_ref, p_usuario) RETURN VARCHAR2`:
+  - Validar cuota PENDIENTE/VENCIDA + caja abierta del cajero
+  - Reservar nro recibo vía `FN_OBTENER_COMPROBANTE(p_id_talonario_rc)`
+  - INSERT `MOVIMIENTOS_CAJA(TIPO='COBRO_CXC', NRO_RECIBO, ID_TALONARIO_RECIBO, FECHA_EMISION_RECIBO, ID_CUENTA_COBRAR_DET, ...)`
+  - INSERT `DETALLE_MOVIMIENTO_CAJA` (forma de pago)
+  - UPDATE cuota a `ESTADO='PAGADA'`
+  - UPDATE saldo `CUENTAS_COBRAR`; si SALDO=0 → `ESTADO='PAGADA'`
+  - RETURN `NRO_RECIBO` para que P100 lo muestre
+- [x] `JOB_VENCER_CUOTAS` (DAILY 02:00): marca cuotas vencidas `PENDIENTE → VENCIDA` cuando `FECHA_VENCIMIENTO < TRUNC(SYSDATE)`
+- [x] Parámetros de emisor en `PARAMETROS` con `TIPO_PARAMETRO='EMPRESA'` (claves `RUC`, `RAZON_SOCIAL`, `DIRECCION`) — agregado 2026-06-08 a pedido del PO para evitar hardcodear datos en documentos
+- [x] Script `db/F9_cobros.sql` idempotente + verificación final
+
+### F9.B — P100 Cobro de Cuotas ✅ (2026-06-07)
+
+- [x] Eliminar botones SAVE/DELETE/CREATE genéricos del CRUD
+- [x] Items de cuota como Display Only / Number Field readonly: `P100_ID_CXC`, `P100_NRO_CUOTA`, `P100_FECHA_VENCIMIENTO`, `P100_MONTO_CUOTA`, `P100_ESTADO`
+- [x] Items nuevos para registrar pago:
+  - `P100_ID_CAJA` Display Only desde `FN_CAJA_ABIERTA_USUARIO`
+  - `P100_OFICINA` Hidden desde `FN_OFICINA_USUARIO_V2`
+  - `P100_ID_TALONARIO_RC` Display Only desde `V_TALONARIOS_DISPONIBLES WHERE TIPO='RC'`
+  - `P100_ID_FORMA_PAGO` Hidden fijo en 21 (Contado)
+  - `P100_ID_METODO_PAGO` Select List desde `METODOS_PAGO`
+  - `P100_MONTO_PAGO` Text Field con default = monto cuota (deuda: convertir a Number Field — ver F9.G)
+  - `P100_VUELTO` Display Only, calculado vía DA con PL/SQL Expression
+  - `P100_NRO_REFERENCIA` Text Field, visible si método ≠ Efectivo (condición VAL_OF_ITEM_IN_COND_NOT_EQ_COND2)
+  - `P100_NRO_RECIBO_GENERADO` Display Only (se llena tras COBRAR)
+  - `P100_ID_MOVIMIENTO_GENERADO` Hidden (para link de Imprimir Recibo)
+- [x] Botón `COBRAR` invoca `FN_COBRAR_CUOTA` y rellena `NRO_RECIBO_GENERADO` + `ID_MOVIMIENTO_GENERADO`
+- [x] Botón `IMPRIMIR` redirect a P119 con `P119_ID_RECIBO=&P100_ID_MOVIMIENTO_GENERADO.` — visible solo post-cobro
+- [x] BEFORE_HEADER "Validar caja del dia": redirige a P65 con notification si no hay caja
+- [x] BEFORE_HEADER "Validar talonario RC vigente": error inline si no hay talonario
+- [x] DA "Calcular Vuelto": Change en MONTO_PAGO → Set Value PL/SQL Expression `GREATEST(NVL(:P100_MONTO_PAGO,0) - NVL(:P100_MONTO_CUOTA,0), 0)`
+- [x] DA "Visibilidad Nro Referencia": Change en METODO_PAGO + JS Condition `$v('P100_ID_METODO_PAGO') != '1'` → True Show, False Hide
+- [x] Test browser end-to-end: 2 cobros aplicados a CxC=2, recibos `001-001-0000001` y `0000002`, saldo bajado correctamente, JOB marcó cuotas vencidas, talonario RC incrementado
+- [x] P100 re-exportado a `apex-work/f100/application/pages/page_00100.sql` + `delete_00100.sql`
+
+### F9.C — P95/P99 retoques ✅ (2026-06-08)
+
+- [x] **P95**: SQL source con `SALDO_PCT = ROUND(SALDO/TOTAL_A_PAGAR*100,1)`. Botón CREATE eliminado.
+- [x] **P95**: badge HTML en ESTADO (no funciona el CSS — ver F9.G)
+- [x] **P99**: SQL source con LEFT JOIN a `MOVIMIENTOS_CAJA` para mostrar FECHA_PAGO y NRO_RECIBO por cuota
+- [x] **P99**: orden default por `NRO_CUOTA` ascendente
+- [x] **P99**: badge HTML en ESTADO (no funciona el CSS — ver F9.G)
+- [x] **P99**: botón CREATE eliminado (era el que abría P100 sin id)
+
+### F9.D — Limpieza menú/páginas huérfanas ✅ (2026-06-08)
+
+- [x] Eliminar P98 "Cobros de Cuotas"
+- [x] Eliminar P93 "Cobros/Pagos" placeholder
+- [x] Header de menú renombrado a "Cuentas a Cobrar" y `current_for_pages` cambiado de '93' a '95' — decisión PO 2026-06-08
+- [x] Estructura header+child del menú se mantiene (decisión PO)
+
+### F9.E — Estado de cuenta cliente (opcional, post-F9) 🕓
+
+- [ ] Página nueva con saldo por cliente, cuotas vencidas, próximas a vencer
+- [ ] Histórico de pagos
+
+### F9.G — Cosmética visual (deuda técnica) 🕓
+
+**Formato de números.** Durante F9.B se quitaron las format mask `999G999G999G990` de
+`P100_MONTO_CUOTA`, `P100_MONTO_PAGO` y `P100_VUELTO` porque rompían los binds PL/SQL
+(APEX serializa el valor formateado y la conversión implícita falla con separador de
+miles). Los montos se muestran en crudo. Cuando se aborde:
+
+- [ ] Opción A: agregar format mask sólo para presentación + parsear con
+      `apex_util.string_to_number` en server side. Verificar primero que la función
+      exista (no estaba en APEX 24.2.17 al armar F9).
+- [ ] Opción B (más simple): usar Static ID + JS post-render con `Intl.NumberFormat`
+      para formatear visualmente sin tocar el valor de sesión. El cálculo de vuelto
+      ya está hecho en JavaScript Expression así que no rompe.
+- [ ] Aplicar el mismo tratamiento a P67 (factura) y P95/P99 (cobros) para coherencia
+      visual.
+
+**P96 datos emisor hardcoded.** P96 (Documento Factura) sigue con `RUC: 80004571-1`,
+`Denominación: SOLSGE` y `Dirección: Itauguá Km 25 Mboiy` hardcoded en el HTML. P119
+ya migró a `FN_GET_PARAMETRO(...,'TEXTO')` leyendo de `PARAMETROS` TIPO=`EMPRESA`.
+Aplicar el mismo patrón a P96 (y eventuales P6 / nuevos prints) para coherencia.
+
+- [ ] Migrar P96 a `FN_GET_PARAMETRO('RUC','TEXTO')` / `'RAZON_SOCIAL'` / `'DIRECCION'`
+- [ ] Capturar P96 al repo después del cambio
+
+**Badges de estado.** En F9.C se intentó aplicar badge HTML con expresión condicional
+del tipo `<span class="t-Label u-color-{case '&ESTADO.' when ...}">&ESTADO.</span>` en
+P95 y P99. APEX HTML Expression no interpreta sintaxis SQL CASE — solo substitution
+de columnas. Quedó como CSS class fijo (no condicional). Para arreglarlo:
+
+- [ ] Opción A: agregar columna computed en el SQL del IG: `case ESTADO when 'PAGADA' then 'u-color-24' when 'PENDIENTE' then 'u-color-21' else 'u-color-14' end as ESTADO_CLASS`,
+      y usar `<span class="t-Label t-Label--badge &ESTADO_CLASS.">&ESTADO.</span>` como HTML Expression.
+- [ ] Opción B: usar atributo "CSS Classes" del column con expresión de IG (server-side processing).
+
+### F9.F — P119 Documento Recibo ✅ (2026-06-08)
+
+- [x] Crear P119 nueva, Modal Dialog, basada en patrón de P96 (factura print)
+- [x] Item `P119_ID_RECIBO` recibe `ID_MOVIMIENTO`
+- [x] Region Dynamic PL/SQL Content que lee de `V_RECIBOS_COBRO` + `DETALLE_MOVIMIENTO_CAJA`
+- [x] HTML del recibo:
+  - Cabecera con datos de emisor (RUC, denominación, dirección) + timbrado + vigencia
+  - Título: `RECIBO DE COBRO`
+  - Fecha emisión + datos cliente + cajero
+  - Línea "Cobro de cuota N° X de la cuenta corriente #YYY (factura origen #...)"
+  - Tabla detalle formas de pago + método + monto + nro referencia
+  - Tabla total cobrado
+- [x] Datos de emisor parametrizados en `PARAMETROS` con `TIPO_PARAMETRO='EMPRESA'` (claves `RUC`, `RAZON_SOCIAL`, `DIRECCION`). Se leen vía `FN_GET_PARAMETRO(p_clave, 'TEXTO')`.
+- [x] Botón "IMPRIMIR" en P100 (tras COBRAR exitoso) → abre P119 con `P119_ID_RECIBO`
+- [ ] Columna print en P95 sobre filas con cobros (reimprimir histórico) — deferido
+- [x] Test browser end-to-end: cobrar cuota → ver modal P119 → confirmado por PO 2026-06-08
+- [x] Capturado al repo: `apex-work/.../page_00119.sql` + `delete_00119.sql` + entry en `install_page.sql`
 
 ---
 
