@@ -10,4 +10,6 @@ prompt --install_page
 @@application/pages/page_00100.sql
 @@application/pages/delete_00119.sql
 @@application/pages/page_00119.sql
+@@application/pages/delete_00122.sql
+@@application/pages/page_00122.sql
 @@application/end_environment.sql
