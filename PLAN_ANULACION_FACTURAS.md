@@ -186,13 +186,12 @@ Marcamos `[ ]` pendiente, `[x]` cerrado.
 - [x] Vista `V_ANULACIONES_FACTURAS`.
 - [x] Script idempotente (corre 2 veces sin error) + verificación final pasa OK.
 
-### Hito 2 — P122 Modal Solicitar Anulación
-> Guía step-by-step en [F11_GUIA_APEX.md §Hito 2](F11_GUIA_APEX.md#hito-2--p122-modal-solicitar-anulación).
-- [ ] Página nueva modal con form sobre `COMPROBANTES`.
-- [ ] Items display only + textarea motivo.
-- [ ] Validaciones BEFORE_HEADER (ventana, cuotas).
-- [ ] Proceso AFTER_SUBMIT `PRC_SOLICITAR_ANULACION`.
-- [ ] Capturar en `apex-work/.../page_00122.sql` + entry en `install_page.sql`.
+### Hito 2 — P122 Modal Solicitar Anulación ✅ (2026-06-08)
+- [x] Página nueva modal con región Static Content "Solicitud" + región "Buttons".
+- [x] Items display only + textarea motivo (required, min 10 chars).
+- [ ] ~~Validaciones BEFORE_HEADER~~ (deuda — la BD valida en `PRC_SOLICITAR_ANULACION`, errores `-20932`/`-20933`/`-20934` llegan al submit).
+- [x] Proceso AFTER_SUBMIT `PRC_SOLICITAR_ANULACION` + Close Dialog.
+- [x] Capturado en `apex-work/.../page_00122.sql` + entry en `install_page.sql`.
 
 ### Hito 3 — P120 Lista de Anulaciones
 - [ ] Página IR sobre `V_ANULACIONES_FACTURAS`.
