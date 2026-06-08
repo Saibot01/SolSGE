@@ -189,26 +189,24 @@ wwv_flow_imp_page.create_page_item(
  p_id=>wwv_flow_imp.id(12679147983943740)
 ,p_name=>'P53_ESTABLECIMIENTO'
 ,p_source_data_type=>'VARCHAR2'
-,p_is_required=>true
+,p_is_required=>false
 ,p_item_sequence=>40
 ,p_item_plug_id=>wwv_flow_imp.id(12677598892943738)
 ,p_item_source_plug_id=>wwv_flow_imp.id(12677598892943738)
 ,p_use_cache_before_default=>'NO'
-,p_prompt=>'Establecimiento'
+,p_prompt=>'Establecimiento (derivado)'
 ,p_source=>'ESTABLECIMIENTO'
 ,p_source_type=>'REGION_SOURCE_COLUMN'
-,p_display_as=>'NATIVE_TEXT_FIELD'
-,p_cSize=>32
-,p_cMaxlength=>3
+,p_display_as=>'NATIVE_DISPLAY_ONLY'
 ,p_label_alignment=>'RIGHT'
 ,p_field_template=>1609122147107268652
 ,p_item_template_options=>'#DEFAULT#'
 ,p_is_persistent=>'N'
 ,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
-  'disabled', 'N',
-  'submit_when_enter_pressed', 'N',
-  'subtype', 'TEXT',
-  'trim_spaces', 'BOTH')).to_clob
+  'based_on', 'VALUE',
+  'format', 'PLAIN',
+  'send_on_page_submit', 'N',
+  'show_line_breaks', 'N')).to_clob
 );
 wwv_flow_imp_page.create_page_item(
  p_id=>wwv_flow_imp.id(12679577546943740)
