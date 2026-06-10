@@ -1,5 +1,7 @@
 prompt --install_page
 @@application/set_environment.sql
+@@application/pages/delete_00066.sql
+@@application/pages/page_00066.sql
 @@application/pages/delete_00067.sql
 @@application/pages/page_00067.sql
 @@application/pages/delete_00095.sql
@@ -10,4 +12,12 @@ prompt --install_page
 @@application/pages/page_00100.sql
 @@application/pages/delete_00119.sql
 @@application/pages/page_00119.sql
+@@application/pages/delete_00120.sql
+@@application/pages/page_00120.sql
+@@application/pages/delete_00121.sql
+@@application/pages/page_00121.sql
+@@application/pages/delete_00122.sql
+@@application/pages/page_00122.sql
+@@application/pages/delete_00123.sql
+@@application/pages/page_00123.sql
 @@application/end_environment.sql

@@ -186,56 +186,48 @@ Marcamos `[ ]` pendiente, `[x]` cerrado.
 - [x] Vista `V_ANULACIONES_FACTURAS`.
 - [x] Script idempotente (corre 2 veces sin error) + verificación final pasa OK.
 
-### Hito 2 — P122 Modal Solicitar Anulación ⏳ (revertido 2026-06-08, recrear en Builder)
-> Guía step-by-step en [F11_GUIA_APEX.md §Hito 2](F11_GUIA_APEX.md#hito-2--p122-modal-solicitar-anulación). Recordar: **primero crear la región Static Content, después arrastrar los items adentro** (sino quedan huérfanos → 404).
-- [ ] Página nueva modal con form sobre `COMPROBANTES`.
-- [ ] Items display only + textarea motivo.
-- [ ] Validaciones BEFORE_HEADER (ventana, cuotas).
-- [ ] Proceso AFTER_SUBMIT `PRC_SOLICITAR_ANULACION`.
-- [ ] Capturar en `apex-work/.../page_00122.sql` + entry en `install_page.sql`.
+### Hito 2 — P122 Modal Solicitar Anulación ✅ (2026-06-09, hecha en Builder)
+- [x] Página modal con form sobre `COMPROBANTES` (hidden ID + textarea motivo + Display Only de datos factura).
+- [x] Proceso AFTER_SUBMIT `PRC_SOLICITAR_ANULACION` + Close Dialog.
+- [ ] ~~Validaciones BEFORE_HEADER~~ — deuda (la BD valida igual desde la procedure, errores `-20932/-20933/-20934` llegan al submit). Ver §10.
+- [x] Capturado en `apex-work/.../page_00122.sql` + entry en `install_page.sql`.
 
-### Hito 3 — P120 Lista de Anulaciones
-- [ ] Página IR sobre `V_ANULACIONES_FACTURAS`.
-- [ ] Filtros default (Pendientes del mes).
-- [ ] Link columna a P121 (filas `P`) y a P96 (todas).
-- [ ] Badges en `ESTADO`.
-- [ ] Capturar al repo.
+### Hito 3 — P120 Lista de Anulaciones ✅ (2026-06-10, hecha en Builder)
+- [x] Página IR sobre `V_ANULACIONES_FACTURAS`.
+- [x] Link a P121 para resolver pendientes.
+- [x] Capturado al repo.
+- [ ] ~~Badges + filtros default + link a P96~~ — deuda cosmética (§10).
 
-### Hito 4 — P121 Modal Aprobación
-- [ ] Modal Dialog (referencia P112).
-- [ ] Items display only + `P121_MOTIVO_RECHAZO`.
-- [ ] Botones APROBAR / RECHAZAR + Cancelar.
-- [ ] Validación `PRC_VAL_MOTIVO_RECHAZO` análoga a P112.
-- [ ] Procesos `PRC_APROBAR_ANULACION` / `PRC_RECHAZAR_ANULACION` por request.
-- [ ] Capturar al repo.
+### Hito 4 — P121 Modal Aprobación ✅ (2026-06-10, hecha en Builder)
+- [x] Modal Dialog con datos de la solicitud + textarea motivo de rechazo.
+- [x] Botones APROBAR / RECHAZAR.
+- [x] Procesos invocan `PRC_APROBAR_ANULACION` / `PRC_RECHAZAR_ANULACION`.
+- [x] Capturado al repo.
 
 ### Hito 5 — Ajustes a P66 + P67
-- [ ] P66: badge en ESTADO + icono "Solicitar Anulación" condicional → P122.
-- [ ] P67: `P67_ESTADO` → Display Only de los 3 estados. Botón "Solicitar Anulación" condicional → P122. Región read-only "Información de Anulación".
-- [ ] Re-export ambas páginas y `install_page.sql`.
+- [x] P66: ícono "Solicitar Anulación" → P122 (con link target `\&ID_COMPROBANTE.\` corregido el 2026-06-09).
+- [ ] ~~P66 badge en ESTADO~~ — deuda (§10).
+- [ ] ~~P67: ESTADO Display Only + botón "Solicitar Anulación" + región info auditoría~~ — deuda (§10). La anulación se solicita desde P66, P67 sigue mostrando ESTADO como Select List legacy.
+- [x] Re-export P66 a `apex-work/.../page_00066.sql` (la nueva versión sobreescribe la previa).
 
 ### Hito 6 — P96 Watermark "ANULADA"
-- [ ] Modificar HTML/PLSQL de P96 para mostrar watermark + footer auditoría.
-- [ ] Re-export al repo.
+- [ ] **Deuda** — no implementado. Ver §10. Hoy la factura anulada se imprime igual que una activa.
 
-### Hito 7 — Menú
-- [ ] Agregar entry "Anulaciones de Facturas" bajo "Ventas".
-- [ ] Re-export `navigation_menu.sql` (componente compartido — usar APEX Builder; recordar nota CLAUDE.md "APEX shared components no-upsert").
+### Hito 7 — Menú entry "Anulaciones de Facturas"
+- [ ] **Deuda** — no implementado. Ver §10. Acceso a P120 hoy solo vía URL directa (`f?p=100:120`) o link desde P66.
 
-### Hito 8 — Test plan end-to-end
-- [ ] Solicitar anulación de factura contado → P122 → ver `ESTADO='P'`.
-- [ ] Aprobar desde P120/P121 → verificar reversión completa (stock+, OV=APROBADO, EGRESO en MOVIMIENTOS_CAJA, factura `'N'`).
-- [ ] Rechazar otra solicitud → verificar `ESTADO='A'` con `MOTIVO_RECHAZO` registrado.
-- [ ] Caso crédito sin cuotas cobradas → CxC y cuotas a `'ANULADA'`.
-- [ ] Caso crédito con cuota cobrada → bloqueo al solicitar (mensaje claro).
-- [ ] Caso fuera de mes → bloqueo al solicitar.
-- [ ] Re-imprimir factura `'N'` en P96 → ver watermark.
-- [ ] Re-facturar OV que volvió a APROBADO → debe funcionar end-to-end igual que F8.
+### Hito 8 — Test plan end-to-end ✅ parcial (2026-06-10)
+- [x] Caso A — anulación contado feliz: factura `001-001-0000027` (ID 86) solicitada y aprobada por TCASCO. Verificado: `COMPROBANTES.ESTADO='N'`, `USUARIO_APRUEBA=TCASCO`, `FECHA_RESOLUCION=2026-06-10`. Reversiones aplicadas por `PRC_APROBAR_ANULACION` (stock, OV, EGRESO de caja).
+- [ ] ~~Caso B (crédito sin cobros) / Caso C (crédito con cobro) / Caso D (fuera de mes) / Caso E (rechazo)~~ — no probados manualmente; la BD los valida igual con `-20934/-20933/-20952`.
 
-### Hito 9 — Cierre F11
-- [ ] Commit `feat(F11): anulación de facturas con workflow de aprobación`.
-- [ ] Tag `f11-anulacion-facturas`.
-- [ ] Actualizar `PLAN_FACTURACION.md` §9 (sacar "Pantalla de anulación de comprobante" de la lista de cosas-no-hechas) con link a este plan.
+### Hito 9 — Cierre F11 ✅ parcial (2026-06-10)
+- [x] Commit `feat(F11): pantallas APEX P120/P121/P122 + P66 link` + re-export.
+- [ ] ~~Tag `f11-anulacion-facturas`~~ — opcional; el módulo no está "cerrado" porque resta la deuda visual (§10). Crear al cierre real.
+- [ ] ~~Actualizar `PLAN_FACTURACION.md` §9~~ — pendiente al cierre real.
+
+## 5.1 P123 bonus
+
+P123 "Movimientos Caja" (creada por el PO el 2026-06-08, fuera del plan original) fue capturada al repo junto con las páginas F11 — vista de movimientos de caja útil para verificar los EGRESO de anulación. Documentada acá para no perderla.
 
 ## 6. Riesgos
 
@@ -290,4 +282,44 @@ Marcamos `[ ]` pendiente, `[x]` cerrado.
 
 ## 8. Aprobación
 
-> Plan aprobado por el PO el 2026-06-08. Implementación arrancada por Hito 1.
+> Plan aprobado por el PO el 2026-06-08. Implementación pausada el 2026-06-10
+> con el flujo end-to-end funcionando para venta contado. Deuda técnica
+> consolidada en §10 para retomar más adelante.
+
+## 9. Estado real al 2026-06-10
+
+**Funciona end-to-end**:
+- Cajero hace click en ícono de P66 → P122 modal solicita motivo → factura
+  pasa a `ESTADO='P'`.
+- Supervisor entra a P120 (lista) → P121 (detalle) → APROBAR → factura pasa
+  a `'N'`, stock vuelve, OV vuelve a `APROBADO`, EGRESO en caja.
+- Test caso A pasado con factura `001-001-0000027` el 2026-06-10.
+
+**Lo aprobado por PO con autoaprobación**: el aprobador puede ser el mismo
+usuario que solicitó (no se está enforzando "4 ojos" — el PO lo prefirió
+así para no bloquearse en el MVP).
+
+**Lo que NO está**:
+- UI no avisa "fuera de mes" / "hay cuotas cobradas" antes del submit —
+  el error llega como mensaje técnico de Oracle desde la procedure BD.
+  La factura igual no se anula (la BD bloquea), solo es UX rugosa.
+- P96 no marca visualmente las facturas anuladas.
+- P67 no muestra el estado correctamente cuando una factura está anulada.
+- Sin entry de menú: hay que entrar a P120 escribiendo `f?p=100:120` en
+  la URL.
+
+## 10. Deuda técnica F11 (para retomar)
+
+| # | Descripción | Página | Severidad |
+|---|-------------|--------|-----------|
+| D1 | Validaciones BEFORE_HEADER en P122 que avisen pre-submit: factura fuera de mes / con cuotas cobradas / no en estado `'A'`. Hoy el error llega como ORA-20933 etc. al apretar SOLICITAR. | P122 | Media (UX) |
+| D2 | Badge de ESTADO en columnas de P66 (Activa verde / Pendiente ámbar / Anulada rojo) y P120. Mejor lectura visual. | P66 + P120 | Baja |
+| D3 | Filtros default + saved report "Pendientes del mes" en P120. Link a P96 desde columna print. | P120 | Baja |
+| D4 | P67 ESTADO como Display Only de los 3 estados (`A`/`P`/`N`) en vez del legacy `Anular;N,Activo;A`. Botón "Solicitar Anulación" en P67 y región read-only "Información de Anulación". | P67 | Media |
+| D5 | P96 watermark "ANULADA" + footer con motivo + usuario aprueba + fecha. Hoy la factura anulada se imprime igual que una activa. | P96 | **Alta** (riesgo real de confusión contable) |
+| D6 | Entry de menú "Anulaciones de Facturas" → P120 bajo "Ventas" con `security_pkg.can_access`. | Menú | Media |
+| D7 | Aprobación de "4 ojos": validar en `PRC_APROBAR_ANULACION` que `p_usuario_aprueba <> USUARIO_SOLICITA`. Hoy el mismo usuario que solicita puede aprobar (decisión MVP del PO). | BD | Baja (decisión consciente) |
+| D8 | Probar casos B/C/D/E del test plan §7 manualmente en browser. La BD los valida pero no se probaron end-to-end por UI. | Manual | Baja |
+
+Cuando se retome F11 → priorizar **D5** (watermark) primero por riesgo
+contable, después D4/D6 (UX), después D1/D2/D3 (cosmético).

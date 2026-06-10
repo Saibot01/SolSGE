@@ -1,0 +1,278 @@
+prompt --application/pages/page_00123
+begin
+--   Manifest
+--     PAGE: 00123
+--   Manifest End
+wwv_flow_imp.component_begin (
+ p_version_yyyy_mm_dd=>'2024.11.30'
+,p_release=>'24.2.17'
+,p_default_workspace_id=>7697821598969118
+,p_default_application_id=>100
+,p_default_id_offset=>0
+,p_default_owner=>'WKSP_WORKPLACE'
+);
+wwv_flow_imp_page.create_page(
+ p_id=>123
+,p_name=>'Movimientos Caja'
+,p_alias=>'MOVIMIENTOS-CAJA'
+,p_step_title=>'Movimientos Caja'
+,p_autocomplete_on_off=>'OFF'
+,p_page_template_options=>'#DEFAULT#'
+,p_protection_level=>'C'
+,p_page_component_map=>'18'
+);
+wwv_flow_imp_page.create_page_plug(
+ p_id=>wwv_flow_imp.id(23101023917464826)
+,p_plug_name=>'Breadcrumb'
+,p_region_template_options=>'#DEFAULT#:t-BreadcrumbRegion--useBreadcrumbTitle'
+,p_component_template_options=>'#DEFAULT#'
+,p_plug_template=>2531463326621247859
+,p_plug_display_sequence=>10
+,p_plug_display_point=>'REGION_POSITION_01'
+,p_menu_id=>wwv_flow_imp.id(7705913887831249)
+,p_plug_source_type=>'NATIVE_BREADCRUMB'
+,p_menu_template_id=>4072363345357175094
+);
+wwv_flow_imp_page.create_page_plug(
+ p_id=>wwv_flow_imp.id(23101783099464828)
+,p_plug_name=>'Movimientos Caja'
+,p_region_template_options=>'#DEFAULT#:t-IRR-region--hideHeader js-addHiddenHeadingRoleDesc'
+,p_plug_template=>2100526641005906379
+,p_plug_display_sequence=>10
+,p_query_type=>'TABLE'
+,p_query_table=>'MOVIMIENTOS_CAJA'
+,p_include_rowid_column=>false
+,p_plug_source_type=>'NATIVE_IR'
+,p_prn_page_header=>'Movimientos Caja'
+);
+wwv_flow_imp_page.create_worksheet(
+ p_id=>wwv_flow_imp.id(23101811501464828)
+,p_name=>'Movimientos Caja'
+,p_max_row_count_message=>'The maximum row count for this report is #MAX_ROW_COUNT# rows.  Please apply a filter to reduce the number of records in your query.'
+,p_no_data_found_message=>'No data found.'
+,p_pagination_type=>'ROWS_X_TO_Y'
+,p_pagination_display_pos=>'BOTTOM_RIGHT'
+,p_report_list_mode=>'TABS'
+,p_lazy_loading=>false
+,p_show_detail_link=>'N'
+,p_show_notify=>'Y'
+,p_download_formats=>'CSV:HTML:XLSX:PDF'
+,p_enable_mail_download=>'Y'
+,p_owner=>'SIS_APEX'
+,p_internal_uid=>23101811501464828
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(23103168662464886)
+,p_db_column_name=>'ID_MOVIMIENTO'
+,p_display_order=>0
+,p_is_primary_key=>'Y'
+,p_column_identifier=>'A'
+,p_column_label=>'Id Movimiento'
+,p_column_type=>'NUMBER'
+,p_display_text_as=>'HIDDEN_ESCAPE_SC'
+,p_heading_alignment=>'LEFT'
+,p_tz_dependent=>'N'
+,p_use_as_row_header=>'N'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(23103580360464887)
+,p_db_column_name=>'ID_CLIENTE'
+,p_display_order=>2
+,p_column_identifier=>'B'
+,p_column_label=>'Id Cliente'
+,p_column_type=>'STRING'
+,p_display_text_as=>'LOV_ESCAPE_SC'
+,p_heading_alignment=>'LEFT'
+,p_rpt_named_lov=>wwv_flow_imp.id(16219980276116331)
+,p_use_as_row_header=>'N'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(23103900428464888)
+,p_db_column_name=>'ID_CAJA'
+,p_display_order=>3
+,p_column_identifier=>'C'
+,p_column_label=>'Id Caja'
+,p_column_type=>'STRING'
+,p_display_text_as=>'LOV_ESCAPE_SC'
+,p_heading_alignment=>'LEFT'
+,p_tz_dependent=>'N'
+,p_rpt_named_lov=>wwv_flow_imp.id(23101934379464882)
+,p_use_as_row_header=>'N'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(23104394521464889)
+,p_db_column_name=>'FECHA'
+,p_display_order=>4
+,p_column_identifier=>'D'
+,p_column_label=>'Fecha'
+,p_column_type=>'DATE'
+,p_heading_alignment=>'LEFT'
+,p_tz_dependent=>'N'
+,p_use_as_row_header=>'N'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(23104708538464890)
+,p_db_column_name=>'TOTAL_MONEDA_LOCAL'
+,p_display_order=>5
+,p_column_identifier=>'E'
+,p_column_label=>'Total Moneda Local'
+,p_column_type=>'NUMBER'
+,p_heading_alignment=>'RIGHT'
+,p_column_alignment=>'RIGHT'
+,p_tz_dependent=>'N'
+,p_use_as_row_header=>'N'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(23105103028464891)
+,p_db_column_name=>'MONEDA'
+,p_display_order=>6
+,p_column_identifier=>'F'
+,p_column_label=>'Moneda'
+,p_column_type=>'STRING'
+,p_display_text_as=>'LOV_ESCAPE_SC'
+,p_heading_alignment=>'LEFT'
+,p_rpt_named_lov=>wwv_flow_imp.id(16216046217015840)
+,p_rpt_show_filter_lov=>'1'
+,p_use_as_row_header=>'N'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(23105563608464892)
+,p_db_column_name=>'TIPO_CAMBIO'
+,p_display_order=>7
+,p_column_identifier=>'G'
+,p_column_label=>'Tipo Cambio'
+,p_column_type=>'NUMBER'
+,p_heading_alignment=>'RIGHT'
+,p_column_alignment=>'RIGHT'
+,p_tz_dependent=>'N'
+,p_use_as_row_header=>'N'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(23105981024464893)
+,p_db_column_name=>'TOTAL_MONEDA_ORIGEN'
+,p_display_order=>8
+,p_column_identifier=>'H'
+,p_column_label=>'Total Moneda Origen'
+,p_column_type=>'NUMBER'
+,p_heading_alignment=>'RIGHT'
+,p_column_alignment=>'RIGHT'
+,p_tz_dependent=>'N'
+,p_use_as_row_header=>'N'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(23106361501464893)
+,p_db_column_name=>'ESTADO'
+,p_display_order=>9
+,p_column_identifier=>'I'
+,p_column_label=>'Estado'
+,p_column_type=>'STRING'
+,p_heading_alignment=>'LEFT'
+,p_tz_dependent=>'N'
+,p_use_as_row_header=>'N'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(23106710656464894)
+,p_db_column_name=>'OBSERVACION'
+,p_display_order=>10
+,p_column_identifier=>'J'
+,p_column_label=>'Observacion'
+,p_column_type=>'STRING'
+,p_heading_alignment=>'LEFT'
+,p_tz_dependent=>'N'
+,p_use_as_row_header=>'N'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(23107132135464895)
+,p_db_column_name=>'TIPO'
+,p_display_order=>11
+,p_column_identifier=>'K'
+,p_column_label=>'Tipo'
+,p_column_type=>'STRING'
+,p_heading_alignment=>'LEFT'
+,p_tz_dependent=>'N'
+,p_use_as_row_header=>'N'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(23107510493464896)
+,p_db_column_name=>'ID_COMPROBANTE'
+,p_display_order=>12
+,p_column_identifier=>'L'
+,p_column_label=>'Id Comprobante'
+,p_column_type=>'STRING'
+,p_display_text_as=>'LOV_ESCAPE_SC'
+,p_heading_alignment=>'LEFT'
+,p_tz_dependent=>'N'
+,p_rpt_named_lov=>wwv_flow_imp.id(16208674419497747)
+,p_use_as_row_header=>'N'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(23107956319464897)
+,p_db_column_name=>'USUARIO'
+,p_display_order=>13
+,p_column_identifier=>'M'
+,p_column_label=>'Usuario'
+,p_column_type=>'STRING'
+,p_heading_alignment=>'LEFT'
+,p_tz_dependent=>'N'
+,p_use_as_row_header=>'N'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(23108331625464898)
+,p_db_column_name=>'NRO_RECIBO'
+,p_display_order=>14
+,p_column_identifier=>'N'
+,p_column_label=>'Nro Recibo'
+,p_column_type=>'STRING'
+,p_heading_alignment=>'LEFT'
+,p_tz_dependent=>'N'
+,p_use_as_row_header=>'N'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(23108645661464899)
+,p_db_column_name=>'ID_TALONARIO_RECIBO'
+,p_display_order=>15
+,p_column_identifier=>'O'
+,p_column_label=>'Id Talonario Recibo'
+,p_column_type=>'STRING'
+,p_display_text_as=>'LOV_ESCAPE_SC'
+,p_heading_alignment=>'LEFT'
+,p_tz_dependent=>'N'
+,p_rpt_named_lov=>wwv_flow_imp.id(12783043529370637)
+,p_use_as_row_header=>'N'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(23109000665464899)
+,p_db_column_name=>'FECHA_EMISION_RECIBO'
+,p_display_order=>16
+,p_column_identifier=>'P'
+,p_column_label=>'Fecha Emision Recibo'
+,p_column_type=>'DATE'
+,p_heading_alignment=>'LEFT'
+,p_tz_dependent=>'N'
+,p_use_as_row_header=>'N'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(23109435771464900)
+,p_db_column_name=>'ID_CUENTA_COBRAR_DET'
+,p_display_order=>17
+,p_column_identifier=>'Q'
+,p_column_label=>'Id Cuenta Cobrar Det'
+,p_column_type=>'STRING'
+,p_display_text_as=>'LOV_ESCAPE_SC'
+,p_heading_alignment=>'LEFT'
+,p_tz_dependent=>'N'
+,p_rpt_named_lov=>wwv_flow_imp.id(23102276787464884)
+,p_use_as_row_header=>'N'
+);
+wwv_flow_imp_page.create_worksheet_rpt(
+ p_id=>wwv_flow_imp.id(23109920570469498)
+,p_application_user=>'APXWS_DEFAULT'
+,p_report_seq=>10
+,p_report_alias=>'231100'
+,p_status=>'PUBLIC'
+,p_is_default=>'Y'
+,p_report_columns=>'ID_MOVIMIENTO:ID_CLIENTE:ID_CAJA:FECHA:TOTAL_MONEDA_LOCAL:MONEDA:TIPO_CAMBIO:TOTAL_MONEDA_ORIGEN:ESTADO:OBSERVACION:TIPO:ID_COMPROBANTE:USUARIO:NRO_RECIBO:ID_TALONARIO_RECIBO:FECHA_EMISION_RECIBO:ID_CUENTA_COBRAR_DET'
+);
+wwv_flow_imp.component_end;
+end;
+/
