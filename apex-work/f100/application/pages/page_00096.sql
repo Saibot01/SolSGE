@@ -1,7 +1,7 @@
-prompt --application/pages/page_00119
+prompt --application/pages/page_00096
 begin
 --   Manifest
---     PAGE: 00119
+--     PAGE: 00096
 --   Manifest End
 wwv_flow_imp.component_begin (
  p_version_yyyy_mm_dd=>'2024.11.30'
@@ -12,14 +12,14 @@ wwv_flow_imp.component_begin (
 ,p_default_owner=>'WKSP_WORKPLACE'
 );
 wwv_flow_imp_page.create_page(
- p_id=>119
-,p_name=>'Documento Recibo'
-,p_alias=>'DOCUMENTO-RECIBO'
+ p_id=>96
+,p_name=>'Documento Factura'
+,p_alias=>'DOCUMENTO-FACTURA'
 ,p_page_mode=>'MODAL'
-,p_step_title=>'Documento Recibo'
+,p_step_title=>'Documento Factura'
 ,p_autocomplete_on_off=>'OFF'
 ,p_inline_css=>wwv_flow_string.join(wwv_flow_t_varchar2(
-'/* ===== Recibo de Dinero - mismo estilo visual que el KuDE de factura ===== */',
+'/* ===== KuDE - Representacion Grafica de Factura Electronica ===== */',
 'html { background:#999; }',
 'body { box-sizing:border-box; margin:0 auto; width:8.5in; background:#FFF;',
 '       font:12px/1.35 ''Open Sans'', sans-serif; color:#222; }',
@@ -54,8 +54,8 @@ wwv_flow_imp_page.create_page(
 ,p_page_component_map=>'25'
 );
 wwv_flow_imp_page.create_page_plug(
- p_id=>wwv_flow_imp.id(23000100000000001)
-,p_plug_name=>'Recibo'
+ p_id=>wwv_flow_imp.id(15983253910097108)
+,p_plug_name=>'KuDE Factura'
 ,p_region_template_options=>'#DEFAULT#:t-Region--removeHeader js-removeLandmark:t-Region--scrollBody'
 ,p_plug_template=>4072358936313175081
 ,p_plug_display_sequence=>10
@@ -63,14 +63,14 @@ wwv_flow_imp_page.create_page_plug(
 ,p_function_body_language=>'PLSQL'
 ,p_plug_source=>wwv_flow_string.join(wwv_flow_t_varchar2(
 'BEGIN',
-'  RETURN WKSP_WORKPLACE.FN_KUDE_RECIBO_HTML(:P119_ID_RECIBO);',
+'  RETURN WKSP_WORKPLACE.FN_KUDE_FACTURA_HTML(:P96_ID_COMPROBANTE);',
 'END;'))
 ,p_lazy_loading=>false
 ,p_plug_source_type=>'NATIVE_DYNAMIC_CONTENT'
 );
 wwv_flow_imp_page.create_page_item(
- p_id=>wwv_flow_imp.id(23000100000000002)
-,p_name=>'P119_ID_RECIBO'
+ p_id=>wwv_flow_imp.id(15983368763097109)
+,p_name=>'P96_ID_COMPROBANTE'
 ,p_item_sequence=>20
 ,p_display_as=>'NATIVE_HIDDEN'
 ,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(

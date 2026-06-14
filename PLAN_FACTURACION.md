@@ -1008,13 +1008,20 @@ miles). Los montos se muestran en crudo. Cuando se aborde:
 - [ ] Aplicar el mismo tratamiento a P67 (factura) y P95/P99 (cobros) para coherencia
       visual.
 
-**P96 datos emisor hardcoded.** P96 (Documento Factura) sigue con `RUC: 80004571-1`,
-`Denominación: SOLSGE` y `Dirección: Itauguá Km 25 Mboiy` hardcoded en el HTML. P119
-ya migró a `FN_GET_PARAMETRO(...,'TEXTO')` leyendo de `PARAMETROS` TIPO=`EMPRESA`.
-Aplicar el mismo patrón a P96 (y eventuales P6 / nuevos prints) para coherencia.
+**P96 datos emisor hardcoded.** ✅ **Resuelto en F12 (2026-06-10)** — ver
+`PLAN_KUDE_FACTURA` / `db/F12_kude_factura.sql`. P96 se remaquetó al layout **KuDE**
+(Representación Gráfica de la SET) y su HTML lo genera ahora
+`WKSP_WORKPLACE.FN_KUDE_FACTURA_HTML(:P96_ID_COMPROBANTE)`, que lee el emisor de
+`PARAMETROS` TIPO=`EMPRESA` vía `FN_GET_PARAMETRO`. La región de P96 quedó como un
+`RETURN FN_KUDE_FACTURA_HTML(...)`.
 
-- [ ] Migrar P96 a `FN_GET_PARAMETRO('RUC','TEXTO')` / `'RAZON_SOCIAL'` / `'DIRECCION'`
-- [ ] Capturar P96 al repo después del cambio
+- [x] Migrar P96 a `FN_GET_PARAMETRO('RUC'|'RAZON_SOCIAL'|'DIRECCION','TEXTO')` (+ nuevas
+      claves `TELEFONO`, `CIUDAD`, `ACTIVIDAD_ECONOMICA`, `TIPO_CONTRIBUYENTE`)
+- [x] Capturar P96 al repo (`apex-work/.../page_00096.sql` + `delete_00096.sql` +
+      `install_f12_pages.sql`)
+- [ ] Verificación visual en browser (PO): abrir una factura → imprimir P96
+- Nota: **sin CDC ni QR reales** (sistema no integrado a SIFEN) — P96 es representación
+  gráfica con leyenda "sin validez fiscal".
 
 **Badges de estado.** En F9.C se intentó aplicar badge HTML con expresión condicional
 del tipo `<span class="t-Label u-color-{case '&ESTADO.' when ...}">&ESTADO.</span>` en
@@ -1042,6 +1049,9 @@ de columnas. Quedó como CSS class fijo (no condicional). Para arreglarlo:
 - [ ] Columna print en P95 sobre filas con cobros (reimprimir histórico) — deferido
 - [x] Test browser end-to-end: cobrar cuota → ver modal P119 → confirmado por PO 2026-06-08
 - [x] Capturado al repo: `apex-work/.../page_00119.sql` + `delete_00119.sql` + entry en `install_page.sql`
+- [x] **F13 (2026-06-11):** P119 remaquetada con la identidad visual de la factura KuDE
+      (`db/F13_kude_recibo.sql` → `FN_KUDE_RECIBO_HTML`). El recibo **no** es DE SIFEN:
+      titulado "Recibo de Dinero", sin CDC/QR. Verificación visual browser pendiente (PO).
 
 ---
 

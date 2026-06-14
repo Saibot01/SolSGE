@@ -9,6 +9,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **Planes activos:**
 - `PLAN_VENTAS.md` — módulo Presupuestos/Ventas (F1–F7 cerradas; deuda P30/P31 + P5 menú).
 - `PLAN_FACTURACION.md` — módulo Facturación + Caja. **F8 cerrada el 2026-06-07** (tag `f8-facturacion-contado`, commit `a67ccf3`). **F9 pendiente** (cobro de cuotas + recibo).
+- **F12 KuDE (2026-06-10):** P96 (Documento Factura) remaquetada al layout **KuDE** de la SET. Su HTML lo genera `WKSP_WORKPLACE.FN_KUDE_FACTURA_HTML(:P96_ID_COMPROBANTE)` (no inline en la página) y usa `FN_NUMERO_A_LETRAS` para el total en letras — ambas en `db/F12_kude_factura.sql`. **Sin CDC ni QR** (no integrado a SIFEN): es representación gráfica con leyenda "sin validez fiscal". Subtotales por tasa se calculan desde `DETALLE_COMPROBANTE.PORCENTAJE_IVA` (las columnas `COMPROBANTES.TOTAL_GRAVADA_*`/`TOTAL_EXENTA` están NULL en los datos reales; solo `TOTAL_IVA_5/10` se llenan). Emisor en `PARAMETROS` TIPO=`EMPRESA`.
+- **F13 Recibo (2026-06-11):** P119 (Documento Recibo) recibió la **misma identidad visual** que P96 vía `WKSP_WORKPLACE.FN_KUDE_RECIBO_HTML(:P119_ID_RECIBO)` (`db/F13_kude_recibo.sql`). **Ojo:** el recibo de cobro **NO es un Documento Electrónico SIFEN** (SIFEN solo cubre factura/NC/ND/remisión/autofactura) → se titula "Recibo de Dinero", sin CDC/QR/"KuDE", reusa el estilo solo por coherencia. **Inconsistencia de datos a recordar:** `MOVIMIENTOS_CAJA.MONEDA` guarda el **texto** (`'PYG'`) mientras `COMPROBANTES.MONEDA` guarda el **código** (`'1'`); por eso el join a `MONEDAS` en ambas funciones es `ON (CODIGO_MONEDA = x OR DESCRIPCION = x)`.
 
 ## Environment
 
