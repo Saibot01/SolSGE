@@ -32,7 +32,7 @@ P96 (factura print). No requiere nuevo modelo de roles.
 | 1 | **Workflow con aprobación.** Cajero `SOLICITA` → factura pasa a `ESTADO='P'` (pendiente). Supervisor `APRUEBA` (→ `ESTADO='N'`, anulada, se ejecutan reversiones) o `RECHAZA` (→ `ESTADO='A'`, vuelve a activa con motivo de rechazo registrado). |
 | 2 | **Bloquear anulación si existe alguna cuota cobrada.** Si la factura es a crédito y `EXISTS (SELECT 1 FROM CUENTAS_COBRAR_DET WHERE ID_CXC=... AND ESTADO='PAGADA')` → no permitir `SOLICITAR`. El usuario debe revertir cobros primero (deuda futura: pantalla de "reverso de cobro"). |
 | 3 | **OV vuelve a `APROBADO`** al aprobar la anulación. Queda disponible para re-facturar. **Reservas no se reactivan** (ya fueron `ANULADA`). |
-| 4 | **Ventana temporal = mismo mes calendario.** Solo se puede solicitar si `TRUNC(c.FECHA,'MM') = TRUNC(SYSDATE,'MM')`. Coherente con cierres mensuales. |
+| 4 | ~~**Ventana temporal = mismo mes calendario.**~~ **Reemplazada (2026-06-15) por plazo SIFEN.** Ahora se valida contra `PARAMETROS.HORAS_LIMITE_CANCELACION` (default **48h**, regla SIFEN para facturas) tanto al **solicitar** como al **aprobar**: `v_c.FECHA < SYSDATE - NUMTODSINTERVAL(horas,'HOUR')`. El valor es parametrico (editable desde el mantenedor de PARAMETROS sin re-deploy). Limitacion conocida: `COMPROBANTES.FECHA` es DATE sin hora real (datos a medianoche), por lo que el plazo se mide desde la medianoche de emision; para exactitud horaria haria falta `FECHA_HORA_EMISION TIMESTAMP` (futuro). Fuera de plazo → corresponde **Nota de Credito** (modulo pendiente). |
 | 5 | **Aprobador = cualquier usuario con acceso a P121** (auth estándar APEX, sin nuevo modelo de roles). Patrón coherente con P110/P112 (aprobación órdenes de compra). |
 | 6 | **Contado: EGRESO de reversión** (contramovimiento). Se inserta `MOVIMIENTOS_CAJA TIPO='EGRESO'` por el monto contra la caja abierta del aprobador. El `INGRESO_VENTA` original queda intacto (auditoría limpia). |
 | 7 | **Crédito (FORMA_PAGO=1):** al aprobar se marcan `CUENTAS_COBRAR.ESTADO='ANULADA'` y todas sus `CUENTAS_COBRAR_DET.ESTADO='ANULADA'`. No se borra historia. |
@@ -318,7 +318,7 @@ así para no bloquearse en el MVP).
 
 | # | Descripción | Página | Severidad |
 |---|-------------|--------|-----------|
-| D1 | Validaciones BEFORE_HEADER en P122 que avisen pre-submit: factura fuera de mes / con cuotas cobradas / no en estado `'A'`. Hoy el error llega como ORA-20933 etc. al apretar SOLICITAR. | P122 | Media (UX) |
+| ~~D1~~ | ~~Validaciones BEFORE_HEADER en P122 que avisen pre-submit.~~ **Cerrada 2026-06-15.** Función `FN_MOTIVO_BLOQUEO_ANULACION(p_id)` (en `db/F11_anulacion_facturas.sql`) devuelve mensaje amigable o NULL. El BEFORE_HEADER de P122 setea `P122_BLOQUEO`; cuando no es NULL se muestra el aviso (display only) y se ocultan el campo Motivo y el botón SOLICITAR (`ITEM_IS_NULL`). La procedure sigue siendo el guard real en submit. | ~~P122~~ | ~~Media (UX)~~ |
 | D2 | Badge de ESTADO en columnas de P66 (Activa verde / Pendiente ámbar / Anulada rojo) y P120. Mejor lectura visual. | P66 + P120 | Baja |
 | D3 | Filtros default + saved report "Pendientes del mes" en P120. Link a P96 desde columna print. | P120 | Baja |
 | D4 | P67 ESTADO como Display Only de los 3 estados (`A`/`P`/`N`) en vez del legacy `Anular;N,Activo;A`. Botón "Solicitar Anulación" en P67 y región read-only "Información de Anulación". | P67 | Media |
@@ -329,3 +329,68 @@ así para no bloquearse en el MVP).
 
 Cuando se retome F11 → priorizar **D4** (P67 ESTADO + botón anular) y **D6**
 (menú) por UX, después D1/D2/D3 (cosmético).
+
+## 11. Alineación SIFEN — Solicitud de anulación (2026-06-15)
+
+Pedido del profesor: que la anulación contemple lo que **dicta SIFEN** como
+válido. Relevamiento contra el Manual Técnico SIFEN v150:
+
+- **Plazo del Evento de Cancelación:** SIFEN permite cancelar una **factura**
+  hasta **48 h** posteriores a la aprobación del DTE (168 h / 7 días para los
+  demás documentos). Fuera de ese plazo ya **no se cancela** → corresponde
+  **Nota de Crédito**.
+- **Motivo (`mOtEve`):** texto **libre** 5–500 chars. SIFEN **no** impone lista
+  cerrada de motivos para cancelar. (La lista codificada `iMotEmi` es exclusiva
+  de la **Nota de Crédito/Débito**.)
+
+### Cambios implementados (`db/F11_anulacion_facturas.sql`, in-place)
+- Nuevo parámetro `PARAMETROS.HORAS_LIMITE_CANCELACION` (default **48**, editable
+  sin re-deploy desde el mantenedor de PARAMETROS).
+- `PRC_SOLICITAR_ANULACION` y `PRC_APROBAR_ANULACION`: ventana "mismo mes"
+  reemplazada por el plazo paramétrico (validado al solicitar **y** al aprobar,
+  porque la transmisión del evento también debe caer en plazo). Errores
+  `-20933 / -20942` ahora citan el plazo y sugieren Nota de Crédito.
+- Motivo de anulación: **sin cambios** (sigue libre ≥10 chars, compatible con
+  SIFEN `mOtEve`).
+- **Exactitud horaria (resuelta 2026-06-15):** el date picker de P67 guardaba
+  `COMPROBANTES.FECHA` a medianoche. Se agregó la columna `FECHA_HORA_EMISION
+  TIMESTAMP`, poblada server-side por el trigger `TRG_COMPROBANTE_FECHA_HORA`
+  (`LOCALTIMESTAMP`) en cada INSERT, independiente del date picker. Las facturas
+  históricas heredaron `FECHA` (medianoche) vía backfill. El plazo se evalúa
+  sobre `NVL(FECHA_HORA_EMISION, FECHA)` contra `LOCALTIMESTAMP` (mismo TZ de
+  sesión, sin conversiones implícitas). Verificado: el trigger captura la hora
+  real (ej. `03:13:36.154`); factura nueva pasa la ventana, factura del 08/06
+  bloquea con `-20933`.
+- **Demo:** con 48 h, las facturas de prueba viejas (jun-07/08) ya no son
+  anulables. Para demostrar el flujo, subir temporalmente el parámetro (ej.
+  `4320` = 6 meses) y volver a `48`.
+
+### Groundwork Nota de Crédito (`db/F11_2_motivos_nc.sql`)
+- Tabla **`MOTIVOS_NOTA_CREDITO`** (catálogo) sembrada con los 8 códigos
+  `iMotEmi` de SIFEN. Modelada como tabla dedicada (no en PARAMETROS) porque
+  será **target de FK** desde la futura NC, tiene varios atributos por fila y es
+  un dominio fiscal estándar. **No** está cableada al flujo de cancelación.
+
+### UX — Pre-validación amigable en P122 (cierra D1)
+- Función **`FN_MOTIVO_BLOQUEO_ANULACION(p_id)`** (en `db/F11_anulacion_facturas.sql`):
+  centraliza las reglas de elegibilidad y devuelve un mensaje amigable en español
+  (factura inexistente / ya anulada / pendiente / fuera de plazo 48h / con cuotas
+  cobradas) o **NULL** si se puede anular. Espeja a `PRC_SOLICITAR_ANULACION`, que
+  sigue siendo el guard real en submit (defensa en profundidad).
+- **P122** (re-exportada del Builder antes de editar, re-importada y verificada):
+  - Ítem `P122_BLOQUEO` (Display Only) que muestra el aviso solo cuando hay bloqueo.
+  - Proceso BEFORE_HEADER setea `:P122_BLOQUEO := FN_MOTIVO_BLOQUEO_ANULACION(...)`.
+  - Campo **Motivo** y botón **SOLICITAR** condicionados a `ITEM_IS_NULL` sobre
+    `P122_BLOQUEO` → desaparecen cuando la factura no es anulable.
+  - Resultado: en vez del `ORA-20933` crudo al submit, el usuario ve el motivo
+    al abrir el modal y no puede intentar una anulación inválida.
+- Nota técnica: en `create_page_item` el parámetro de condición server-side es
+  `p_display_when` / `p_display_when_type` (no `p_display_condition*`, que es de
+  columnas de región). Verificado por re-export: APEX aceptó los 4 componentes.
+
+### Pendiente / próximo
+- **Módulo Nota de Crédito** (camino para anulaciones fuera de plazo): documento
+  NC que referencia la factura original + `COD_MOTIVO` (FK a `MOTIVOS_NOTA_CREDITO`).
+  Es trabajo aparte, fuera del alcance de esta tanda.
+- Verificado en BD el 2026-06-15: bloqueo `-20933` OK sobre factura del 08/06;
+  camino feliz OK subiendo el parámetro (con `ROLLBACK`, datos intactos).

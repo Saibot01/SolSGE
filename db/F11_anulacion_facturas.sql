@@ -13,6 +13,17 @@
 --   7. PRC_RECHAZAR_ANULACION: P -> A (con motivo de rechazo)
 --   8. V_ANULACIONES_FACTURAS: vista para P120
 --
+-- Ventana de cancelacion (SIFEN): el plazo para solicitar/aprobar la anulacion
+-- es parametrico (PARAMETROS.HORAS_LIMITE_CANCELACION, default 48h = regla SIFEN
+-- para facturas). Reemplaza la ventana "mismo mes calendario" original. El motivo
+-- de anulacion sigue siendo texto libre (SIFEN: campo mOtEve, libre 5-500 chars).
+-- NOTA: COMPROBANTES.FECHA es DATE sin hora (el date picker de P67 la guarda a
+-- medianoche). Para medir el plazo de 48h con exactitud horaria se agrega la
+-- columna FECHA_HORA_EMISION TIMESTAMP, poblada server-side por el trigger
+-- TRG_COMPROBANTE_FECHA_HORA (LOCALTIMESTAMP) al insertar. Las facturas
+-- historicas heredan FECHA (medianoche) via backfill. El plazo se evalua sobre
+-- NVL(FECHA_HORA_EMISION, FECHA) usando LOCALTIMESTAMP (mismo TZ de sesion).
+--
 -- Idempotente: re-correrlo es no-op.
 --
 -- Pre-requisitos: F8_facturacion.sql y F9_cobros.sql aplicados.
@@ -75,6 +86,30 @@ BEGIN
   add_col('USUARIO_APRUEBA',  'USUARIO_APRUEBA VARCHAR2(60)');
   add_col('FECHA_RESOLUCION', 'FECHA_RESOLUCION DATE');
   add_col('MOTIVO_RECHAZO',   'MOTIVO_RECHAZO VARCHAR2(500)');
+  -- Hora real de emision (el date picker de P67 guarda FECHA a medianoche):
+  -- necesaria para medir el plazo SIFEN de 48h con exactitud horaria.
+  add_col('FECHA_HORA_EMISION','FECHA_HORA_EMISION TIMESTAMP');
+END;
+/
+
+prompt == F11.2b Backfill + trigger de FECHA_HORA_EMISION ==
+-- Backfill historico: las filas previas heredan FECHA (medianoche). Da igual,
+-- estan fuera de cualquier ventana de 48h. Idempotente (solo toca NULLs).
+UPDATE WKSP_WORKPLACE.COMPROBANTES
+   SET FECHA_HORA_EMISION = FECHA
+ WHERE FECHA_HORA_EMISION IS NULL;
+COMMIT;
+
+-- Trigger independiente: setea la hora real server-side al insertar una factura,
+-- sin depender del date picker de P67. Solo actua si viene NULL (no pisa cargas
+-- explicitas ni el backfill). Convive con otros BEFORE INSERT si los hubiera.
+CREATE OR REPLACE TRIGGER WKSP_WORKPLACE.TRG_COMPROBANTE_FECHA_HORA
+BEFORE INSERT ON WKSP_WORKPLACE.COMPROBANTES
+FOR EACH ROW
+BEGIN
+  IF :NEW.FECHA_HORA_EMISION IS NULL THEN
+    :NEW.FECHA_HORA_EMISION := LOCALTIMESTAMP;
+  END IF;
 END;
 /
 
@@ -184,6 +219,27 @@ BEGIN
 END;
 /
 
+prompt == F11.6b Parametro HORAS_LIMITE_CANCELACION (plazo SIFEN, default 48h) ==
+DECLARE
+  v_cnt PLS_INTEGER;
+BEGIN
+  SELECT COUNT(*) INTO v_cnt FROM WKSP_WORKPLACE.PARAMETROS
+   WHERE CLAVE = 'HORAS_LIMITE_CANCELACION';
+  IF v_cnt = 0 THEN
+    INSERT INTO WKSP_WORKPLACE.PARAMETROS
+      (TIPO_PARAMETRO, CLAVE, VALOR_NUMERICO, DESCRIPCION, ACTIVO, USUARIO_CREACION)
+    VALUES
+      ('CANCELACION', 'HORAS_LIMITE_CANCELACION', 48,
+       'Plazo maximo en horas para solicitar/aprobar la cancelacion de una factura '
+       ||'(SIFEN: 48h facturas). El admin lo edita desde el mantenedor de PARAMETROS.',
+       'S', 'SYSTEM');
+    DBMS_OUTPUT.PUT_LINE('  + Parametro HORAS_LIMITE_CANCELACION=48 creado');
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('  = Parametro HORAS_LIMITE_CANCELACION ya existe (valor no modificado)');
+  END IF;
+END;
+/
+
 prompt == F11.7 PRC_SOLICITAR_ANULACION (ESTADO A -> P) ==
 CREATE OR REPLACE PROCEDURE WKSP_WORKPLACE.PRC_SOLICITAR_ANULACION (
   p_id_comprobante IN NUMBER,
@@ -192,6 +248,7 @@ CREATE OR REPLACE PROCEDURE WKSP_WORKPLACE.PRC_SOLICITAR_ANULACION (
 ) IS
   v_c        WKSP_WORKPLACE.COMPROBANTES%ROWTYPE;
   v_cuotas_pagadas PLS_INTEGER;
+  v_horas_limite   NUMBER;
 BEGIN
   IF p_motivo IS NULL OR LENGTH(TRIM(p_motivo)) < 10 THEN
     RAISE_APPLICATION_ERROR(-20930, 'El motivo de anulacion debe tener al menos 10 caracteres.');
@@ -211,11 +268,16 @@ BEGIN
       ||'Solo facturas en estado A pueden solicitar anulacion.');
   END IF;
 
-  IF TRUNC(v_c.FECHA, 'MM') <> TRUNC(SYSDATE, 'MM') THEN
+  -- Ventana de cancelacion SIFEN: parametrica (default 48h para facturas).
+  v_horas_limite := NVL(TO_NUMBER(
+                      WKSP_WORKPLACE.FN_GET_PARAMETRO('HORAS_LIMITE_CANCELACION','NUMERICO')), 48);
+  IF NVL(v_c.FECHA_HORA_EMISION, CAST(v_c.FECHA AS TIMESTAMP))
+       < LOCALTIMESTAMP - NUMTODSINTERVAL(v_horas_limite, 'HOUR') THEN
     RAISE_APPLICATION_ERROR(-20933,
-      'Fuera de ventana: la factura es del mes '
-      ||TO_CHAR(v_c.FECHA,'MM/YYYY')||' y hoy es '||TO_CHAR(SYSDATE,'MM/YYYY')||'. '
-      ||'Solo se puede anular dentro del mismo mes calendario.');
+      'Fuera de plazo de cancelacion: la factura #'||v_c.NRO_COMPROBANTE||' fue emitida el '
+      ||TO_CHAR(NVL(v_c.FECHA_HORA_EMISION, CAST(v_c.FECHA AS TIMESTAMP)),'DD/MM/YYYY HH24:MI')
+      ||' y el plazo SIFEN es de '||v_horas_limite
+      ||' horas desde la emision. Pasado el plazo corresponde emitir una Nota de Credito.');
   END IF;
 
   IF v_c.FORMA_PAGO = '1' THEN
@@ -253,6 +315,7 @@ CREATE OR REPLACE PROCEDURE WKSP_WORKPLACE.PRC_APROBAR_ANULACION (
   v_cuotas_pagadas PLS_INTEGER;
   v_mov_origen NUMBER;
   v_id_nuevo_mov NUMBER;
+  v_horas_limite   NUMBER;
 BEGIN
   IF p_usuario IS NULL THEN
     RAISE_APPLICATION_ERROR(-20940, 'Usuario aprobador requerido.');
@@ -268,10 +331,18 @@ BEGIN
       'La factura #'||v_c.NRO_COMPROBANTE||' no esta pendiente de anulacion (ESTADO='||v_c.ESTADO||').');
   END IF;
 
-  IF TRUNC(v_c.FECHA, 'MM') <> TRUNC(SYSDATE, 'MM') THEN
+  -- Re-validar ventana SIFEN al aprobar: la transmision del evento de cancelacion
+  -- tambien debe caer dentro del plazo (no solo la solicitud).
+  v_horas_limite := NVL(TO_NUMBER(
+                      WKSP_WORKPLACE.FN_GET_PARAMETRO('HORAS_LIMITE_CANCELACION','NUMERICO')), 48);
+  IF NVL(v_c.FECHA_HORA_EMISION, CAST(v_c.FECHA AS TIMESTAMP))
+       < LOCALTIMESTAMP - NUMTODSINTERVAL(v_horas_limite, 'HOUR') THEN
     RAISE_APPLICATION_ERROR(-20942,
-      'Fuera de ventana: la factura es del mes '||TO_CHAR(v_c.FECHA,'MM/YYYY')
-      ||' y hoy es '||TO_CHAR(SYSDATE,'MM/YYYY')||'.');
+      'Fuera de plazo de cancelacion al aprobar: la factura #'||v_c.NRO_COMPROBANTE
+      ||' fue emitida el '
+      ||TO_CHAR(NVL(v_c.FECHA_HORA_EMISION, CAST(v_c.FECHA AS TIMESTAMP)),'DD/MM/YYYY HH24:MI')
+      ||' y el plazo SIFEN es de '||v_horas_limite
+      ||' horas. Pasado el plazo corresponde emitir una Nota de Credito.');
   END IF;
 
   IF v_c.FORMA_PAGO = '1' THEN
@@ -421,6 +492,60 @@ BEGIN
 END;
 /
 
+prompt == F11.9b FN_MOTIVO_BLOQUEO_ANULACION (mensaje amigable para UI; NULL = se puede) ==
+-- Centraliza las reglas de elegibilidad para PRE-validar en la UI (P122) sin
+-- esperar al error de la procedure. Devuelve un texto amigable si NO se puede
+-- solicitar la anulacion, o NULL si esta habilitada. Espeja las validaciones de
+-- PRC_SOLICITAR_ANULACION (la procedure sigue siendo el guard real en submit).
+CREATE OR REPLACE FUNCTION WKSP_WORKPLACE.FN_MOTIVO_BLOQUEO_ANULACION (
+  p_id_comprobante IN NUMBER
+) RETURN VARCHAR2 IS
+  v_c            WKSP_WORKPLACE.COMPROBANTES%ROWTYPE;
+  v_horas_limite NUMBER;
+  v_cuotas       PLS_INTEGER;
+  v_emision      TIMESTAMP;
+BEGIN
+  BEGIN
+    SELECT * INTO v_c
+      FROM WKSP_WORKPLACE.COMPROBANTES
+     WHERE ID_COMPROBANTE = p_id_comprobante;
+  EXCEPTION WHEN NO_DATA_FOUND THEN
+    RETURN 'La factura indicada no existe.';
+  END;
+
+  IF v_c.ESTADO = 'N' THEN
+    RETURN 'Esta factura ya fue anulada.';
+  ELSIF v_c.ESTADO = 'P' THEN
+    RETURN 'Esta factura ya tiene una solicitud de anulacion pendiente de aprobacion.';
+  ELSIF v_c.ESTADO <> 'A' THEN
+    RETURN 'La factura no esta en un estado que permita solicitar la anulacion.';
+  END IF;
+
+  v_horas_limite := NVL(TO_NUMBER(
+                      WKSP_WORKPLACE.FN_GET_PARAMETRO('HORAS_LIMITE_CANCELACION','NUMERICO')), 48);
+  v_emision := NVL(v_c.FECHA_HORA_EMISION, CAST(v_c.FECHA AS TIMESTAMP));
+  IF v_emision < LOCALTIMESTAMP - NUMTODSINTERVAL(v_horas_limite, 'HOUR') THEN
+    RETURN 'Pasaron mas de '||v_horas_limite||' horas desde la emision ('
+           ||TO_CHAR(v_emision,'DD/MM/YYYY HH24:MI')||'). '
+           ||'Esta factura ya no puede anularse; corresponde emitir una Nota de Credito.';
+  END IF;
+
+  IF v_c.FORMA_PAGO = '1' THEN
+    SELECT COUNT(*) INTO v_cuotas
+      FROM WKSP_WORKPLACE.CUENTAS_COBRAR     cxc
+      JOIN WKSP_WORKPLACE.CUENTAS_COBRAR_DET ccd ON ccd.ID_CXC = cxc.ID_CXC
+     WHERE cxc.ID_COMPROBANTE = p_id_comprobante
+       AND ccd.ESTADO = 'PAGADA';
+    IF v_cuotas > 0 THEN
+      RETURN 'La factura tiene '||v_cuotas||' cuota(s) cobrada(s). '
+             ||'Reversa los cobros antes de solicitar la anulacion.';
+    END IF;
+  END IF;
+
+  RETURN NULL; -- habilitada para solicitar anulacion
+END;
+/
+
 prompt == F11.10 Vista V_ANULACIONES_FACTURAS ==
 CREATE OR REPLACE VIEW WKSP_WORKPLACE.V_ANULACIONES_FACTURAS AS
 SELECT c.ID_COMPROBANTE,
@@ -494,6 +619,8 @@ BEGIN
   check_col('USUARIO_APRUEBA');
   check_col('FECHA_RESOLUCION');
   check_col('MOTIVO_RECHAZO');
+  check_col('FECHA_HORA_EMISION');
+  check_obj('TRG_COMPROBANTE_FECHA_HORA', 'TRIGGER');
   check_ck('CK_COMPROBANTES_ESTADO');
   check_ck('CK_COMPROBANTES_AUDIT');
   check_ck('CK_CXC_ESTADO');
@@ -503,7 +630,17 @@ BEGIN
   check_obj('PRC_SOLICITAR_ANULACION',      'PROCEDURE');
   check_obj('PRC_APROBAR_ANULACION',        'PROCEDURE');
   check_obj('PRC_RECHAZAR_ANULACION',       'PROCEDURE');
+  check_obj('FN_MOTIVO_BLOQUEO_ANULACION',  'FUNCTION');
   check_obj('V_ANULACIONES_FACTURAS',       'VIEW');
+
+  SELECT COUNT(*) INTO v_cnt FROM WKSP_WORKPLACE.PARAMETROS
+   WHERE CLAVE='HORAS_LIMITE_CANCELACION' AND ACTIVO='S';
+  IF v_cnt = 1 THEN
+    DBMS_OUTPUT.PUT_LINE('  OK  PARAM      HORAS_LIMITE_CANCELACION');
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('  FAIL PARAM      HORAS_LIMITE_CANCELACION (count='||v_cnt||')');
+    v_ok := FALSE;
+  END IF;
 
   IF v_ok THEN
     DBMS_OUTPUT.PUT_LINE(CHR(10)||'F11 aplicado OK.');

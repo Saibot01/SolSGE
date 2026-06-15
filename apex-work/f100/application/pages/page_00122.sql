@@ -43,6 +43,8 @@ wwv_flow_imp_page.create_page_button(
 ,p_button_template_id=>4072362960822175091
 ,p_button_is_hot=>'Y'
 ,p_button_image_alt=>'Solicitar'
+,p_button_condition=>'P122_BLOQUEO'
+,p_button_condition_type=>'ITEM_IS_NULL'
 ,p_grid_new_row=>'Y'
 );
 wwv_flow_imp_page.create_page_item(
@@ -148,6 +150,8 @@ wwv_flow_imp_page.create_page_item(
 ,p_prompt=>'Motivo'
 ,p_display_as=>'NATIVE_TEXT_FIELD'
 ,p_cSize=>30
+,p_display_when=>'P122_BLOQUEO'
+,p_display_when_type=>'ITEM_IS_NULL'
 ,p_field_template=>1609121967514267634
 ,p_item_template_options=>'#DEFAULT#'
 ,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
@@ -155,6 +159,22 @@ wwv_flow_imp_page.create_page_item(
   'submit_when_enter_pressed', 'N',
   'subtype', 'TEXT',
   'trim_spaces', 'BOTH')).to_clob
+);
+wwv_flow_imp_page.create_page_item(
+ p_id=>wwv_flow_imp.id(23068089552889460)
+,p_name=>'P122_BLOQUEO'
+,p_item_sequence=>5
+,p_item_plug_id=>wwv_flow_imp.id(23066762730889437)
+,p_prompt=>'No se puede anular'
+,p_display_as=>'NATIVE_DISPLAY_ONLY'
+,p_display_when=>'P122_BLOQUEO'
+,p_display_when_type=>'ITEM_IS_NOT_NULL'
+,p_field_template=>1609121967514267634
+,p_item_template_options=>'#DEFAULT#'
+,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
+  'based_on', 'VALUE',
+  'format', 'PLAIN',
+  'show_line_breaks', 'Y')).to_clob
 );
 wwv_flow_imp_page.create_page_validation(
  p_id=>wwv_flow_imp.id(23067891551889448)
@@ -206,19 +226,10 @@ wwv_flow_imp_page.create_page_process(
 ,p_process_sequence=>10
 ,p_process_point=>'BEFORE_HEADER'
 ,p_process_type=>'NATIVE_PLSQL'
-,p_process_name=>'Pre-check: factura activa + ventana + cuotas'
+,p_process_name=>'Pre-check: motivo de bloqueo de anulacion'
 ,p_process_sql_clob=>wwv_flow_string.join(wwv_flow_t_varchar2(
-'DECLARE',
-'  v_estado    COMPROBANTES.ESTADO%TYPE;',
-'  v_fecha     COMPROBANTES.FECHA%TYPE;',
-'  v_fp        COMPROBANTES.FORMA_PAGO%TYPE;',
-'  v_nro       COMPROBANTES.NRO_COMPROBANTE%TYPE;',
-'  v_cuotas    PLS_INTEGER;',
 'BEGIN',
-'  SELECT ESTADO, FECHA, FORMA_PAGO, NRO_COMPROBANTE',
-'    INTO v_estado, v_fecha, v_fp, v_nro',
-'    FROM COMPROBANTES WHERE ID_COMPROBANTE = :P122_ID_COMPROBANTE;',
-'',
+'  :P122_BLOQUEO := FN_MOTIVO_BLOQUEO_ANULACION(:P122_ID_COMPROBANTE);',
 'END;'))
 ,p_process_clob_language=>'PLSQL'
 ,p_internal_uid=>23067508324889445
