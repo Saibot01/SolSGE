@@ -146,3 +146,8 @@ invocan sus funciones) → importar P96/P119 con los `install_f1X_pages.sql`.
   requieren integración real con la SET (proyecto aparte).
 - P6 (presupuesto): no se tocó.
 - Cambios en el flujo/numeración de facturación (P67) y en triggers.
+
+> **Nota cruzada:** `FN_KUDE_FACTURA_HTML` (P96) lleva además un **watermark
+> "ANULADA" + footer de auditoría** cuando la factura está anulada. Eso pertenece
+> a la feature de anulación (F11.D5, commit `9255420`) y se documenta en
+> `PLAN_ANULACION_FACTURAS.md`, no en este plan.
