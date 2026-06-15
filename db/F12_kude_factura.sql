@@ -176,7 +176,8 @@ CREATE OR REPLACE FUNCTION WKSP_WORKPLACE.FN_KUDE_FACTURA_HTML (
            C.ID_COMPROBANTE, C.FECHA, C.TOTAL_MONEDA_LOCAL AS TOTAL, C.NRO_COMPROBANTE, C.FORMA_PAGO,
            NVL(MO.DESCRIPCION, C.MONEDA) AS MONEDA, MO.ES_LOCAL,
            NVL(C.TOTAL_IVA_5,0) AS IVA5, NVL(C.TOTAL_IVA_10,0) AS IVA10, NVL(C.TOTAL_IVA,0) AS IVATOT,
-           T.TIMBRADO, T.FECHA_INICIO AS TIMB_INI
+           T.TIMBRADO, T.FECHA_INICIO AS TIMB_INI,
+           C.ESTADO, C.MOTIVO_ANULACION, C.USUARIO_APRUEBA, C.FECHA_RESOLUCION
       FROM WKSP_WORKPLACE.COMPROBANTES C
       JOIN WKSP_WORKPLACE.CLIENTES  CL ON CL.ID_PERSONA   = C.ID_CLIENTE
       JOIN WKSP_WORKPLACE.PERSONAS  PE ON PE.ID_PERSONA   = CL.ID_PERSONA
@@ -197,6 +198,8 @@ CREATE OR REPLACE FUNCTION WKSP_WORKPLACE.FN_KUDE_FACTURA_HTML (
   v_cond    VARCHAR2(30);
   v_tel_cli VARCHAR2(100); v_dir_cli VARCHAR2(300);
   v_ce      VARCHAR2(40); v_c5 VARCHAR2(40); v_c10 VARCHAR2(40);
+  v_anul    BOOLEAN;
+  v_kclass  VARCHAR2(40);
 
   -- Formato guarani: separador de miles "." y sin decimales.
   FUNCTION fmt(n NUMBER) RETURN VARCHAR2 IS
@@ -207,6 +210,8 @@ BEGIN
   FOR v IN cr LOOP
     v_sub_ex := 0; v_sub_5 := 0; v_sub_10 := 0;
     v_cond := CASE WHEN v.FORMA_PAGO = '1' THEN 'Cr&eacute;dito' ELSE 'Contado' END;
+    v_anul := (v.ESTADO = 'N');
+    v_kclass := CASE WHEN v_anul THEN 'kude anulada' ELSE 'kude' END;
 
     BEGIN
       SELECT NRO_TELEFONO INTO v_tel_cli
@@ -217,7 +222,27 @@ BEGIN
         FROM WKSP_WORKPLACE.DIRECCIONES WHERE ID_PERSONA = v.ID_PERSONA AND ROWNUM = 1;
     EXCEPTION WHEN NO_DATA_FOUND THEN v_dir_cli := NULL; END;
 
-    v_html := '<div class="kude"><div class="ktit">KuDE de Factura Electr&oacute;nica</div>';
+    IF v_anul THEN
+      v_html := '<style>'
+             || '.kude.anulada{position:relative;}'
+             || '.kude.anulada .kanul-wm{position:absolute;top:50%;left:50%;'
+             || 'transform:translate(-50%,-50%) rotate(-28deg);font-size:120px;'
+             || 'font-weight:900;color:rgba(220,38,38,.22);letter-spacing:14px;'
+             || 'border:10px solid rgba(220,38,38,.30);padding:18px 56px;border-radius:14px;'
+             || 'pointer-events:none;z-index:999;white-space:nowrap;}'
+             || '.kanul-foot{margin-top:14px;padding:10px 14px;border:2px solid #b91c1c;'
+             || 'background:#fef2f2;color:#7f1d1d;font-size:12px;border-radius:6px;}'
+             || '.kanul-foot b{color:#7f1d1d;}'
+             || '@media print{.kude.anulada .kanul-wm{color:rgba(220,38,38,.30);'
+             || 'border-color:rgba(220,38,38,.45);-webkit-print-color-adjust:exact;'
+             || 'print-color-adjust:exact;}}'
+             || '</style>';
+      v_html := v_html || '<div class="'||v_kclass||'">'
+                       || '<div class="kanul-wm">ANULADA</div>';
+    ELSE
+      v_html := '<div class="'||v_kclass||'">';
+    END IF;
+    v_html := v_html || '<div class="ktit">KuDE de Factura Electr&oacute;nica</div>';
     v_html := v_html || '<table class="khead"><tr><td class="kemis"><b>'||v_razon||'</b><br>'
                      || v_dir||'<br>'||v_ciudad||'<br>Tel.: '||v_tel||'<br>Act. Econ.: '||v_act||'</td>';
     v_html := v_html || '<td class="r"><b>RUC:</b> '||v_ruc
@@ -266,7 +291,19 @@ BEGIN
     v_html := v_html || '<div class="kleg">ESTE DOCUMENTO ES UNA REPRESENTACI&Oacute;N GR&Aacute;FICA DE UN DOCUMENTO ELECTR&Oacute;NICO<br>'
                      || 'Si su documento electr&oacute;nico presenta alg&uacute;n error, podr&aacute; solicitar la modificaci&oacute;n dentro '
                      || 'de las 72 horas siguientes de la emisi&oacute;n de este comprobante.<br>'
-                     || '<i>Representaci&oacute;n de demostraci&oacute;n &mdash; sin validez fiscal.</i></div></div>';
+                     || '<i>Representaci&oacute;n de demostraci&oacute;n &mdash; sin validez fiscal.</i></div>';
+
+    IF v_anul THEN
+      v_html := v_html || '<div class="kanul-foot">'
+                       || '<b>FACTURA ANULADA</b><br>'
+                       || '<b>Motivo:</b> ' || NVL(v.MOTIVO_ANULACION,'-') || '<br>'
+                       || '<b>Aprobada por:</b> ' || NVL(v.USUARIO_APRUEBA,'-')
+                       || ' &nbsp;&middot;&nbsp; <b>Fecha de resoluci&oacute;n:</b> '
+                       || NVL(TO_CHAR(v.FECHA_RESOLUCION,'dd/mm/yyyy HH24:MI'),'-')
+                       || '</div>';
+    END IF;
+
+    v_html := v_html || '</div>';
   END LOOP;
 
   IF v_html IS NULL THEN
@@ -324,9 +361,30 @@ BEGIN
     IF v_id IS NOT NULL THEN
       v_clob := WKSP_WORKPLACE.FN_KUDE_FACTURA_HTML(v_id);
       chk(DBMS_LOB.GETLENGTH(v_clob) > 0 AND v_clob LIKE '%KuDE de Factura%',
-          'FN_KUDE_FACTURA_HTML(ID='||v_id||') genera HTML ('||DBMS_LOB.GETLENGTH(v_clob)||' chars)');
+          'FN_KUDE_FACTURA_HTML(ID='||v_id||') genera HTML activo ('||DBMS_LOB.GETLENGTH(v_clob)||' chars)');
+      chk(v_clob NOT LIKE '%kanul-wm%' AND v_clob NOT LIKE '%FACTURA ANULADA%',
+          '  activo SIN watermark ni footer de anulacion');
     ELSE
-      DBMS_OUTPUT.PUT_LINE('  -    sin facturas FA emitidas: smoke test omitido');
+      DBMS_OUTPUT.PUT_LINE('  -    sin facturas FA activas: smoke activo omitido');
+    END IF;
+  END;
+
+  -- Smoke test sobre factura ANULADA (watermark + footer)
+  DECLARE
+    v_id   NUMBER;
+    v_clob CLOB;
+  BEGIN
+    SELECT MAX(ID_COMPROBANTE) INTO v_id
+      FROM WKSP_WORKPLACE.COMPROBANTES
+     WHERE TIPO_COMPROBANTE='FA' AND ESTADO='N' AND NRO_COMPROBANTE IS NOT NULL;
+    IF v_id IS NOT NULL THEN
+      v_clob := WKSP_WORKPLACE.FN_KUDE_FACTURA_HTML(v_id);
+      chk(v_clob LIKE '%kude anulada%' AND v_clob LIKE '%kanul-wm%>ANULADA<%',
+          'FN_KUDE_FACTURA_HTML(ID='||v_id||') anulada CON watermark');
+      chk(v_clob LIKE '%FACTURA ANULADA%' AND v_clob LIKE '%Aprobada por:%',
+          '  anulada CON footer de auditoria (motivo + usuario + fecha)');
+    ELSE
+      DBMS_OUTPUT.PUT_LINE('  -    sin facturas FA anuladas: smoke anulada omitido');
     END IF;
   END;
 

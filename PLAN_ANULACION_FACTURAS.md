@@ -210,8 +210,13 @@ Marcamos `[ ]` pendiente, `[x]` cerrado.
 - [ ] ~~P67: ESTADO Display Only + botón "Solicitar Anulación" + región info auditoría~~ — deuda (§10). La anulación se solicita desde P66, P67 sigue mostrando ESTADO como Select List legacy.
 - [x] Re-export P66 a `apex-work/.../page_00066.sql` (la nueva versión sobreescribe la previa).
 
-### Hito 6 — P96 Watermark "ANULADA"
-- [ ] **Deuda** — no implementado. Ver §10. Hoy la factura anulada se imprime igual que una activa.
+### Hito 6 — P96 Watermark "ANULADA" ✅ (2026-06-14)
+- [x] Watermark + footer de auditoría inyectados desde `FN_KUDE_FACTURA_HTML`
+  cuando `COMPROBANTES.ESTADO='N'`. Solo se carga el `<style>` en facturas
+  anuladas (HTML activo intacto, ~700 bytes menos). Incluye `@media print`
+  con `print-color-adjust:exact` para que el watermark sobreviva al PDF.
+  Footer: motivo + usuario aprueba + fecha resolución. Verificado en browser
+  con factura 86 (anulada) y 85 (activa). Sin tocar la página APEX.
 
 ### Hito 7 — Menú entry "Anulaciones de Facturas"
 - [ ] **Deuda** — no implementado. Ver §10. Acceso a P120 hoy solo vía URL directa (`f?p=100:120`) o link desde P66.
@@ -303,7 +308,8 @@ así para no bloquearse en el MVP).
 - UI no avisa "fuera de mes" / "hay cuotas cobradas" antes del submit —
   el error llega como mensaje técnico de Oracle desde la procedure BD.
   La factura igual no se anula (la BD bloquea), solo es UX rugosa.
-- P96 no marca visualmente las facturas anuladas.
+- ~~P96 no marca visualmente las facturas anuladas.~~ **Resuelto 2026-06-14**
+  vía `FN_KUDE_FACTURA_HTML` (D5 cerrada).
 - P67 no muestra el estado correctamente cuando una factura está anulada.
 - Sin entry de menú: hay que entrar a P120 escribiendo `f?p=100:120` en
   la URL.
@@ -316,10 +322,10 @@ así para no bloquearse en el MVP).
 | D2 | Badge de ESTADO en columnas de P66 (Activa verde / Pendiente ámbar / Anulada rojo) y P120. Mejor lectura visual. | P66 + P120 | Baja |
 | D3 | Filtros default + saved report "Pendientes del mes" en P120. Link a P96 desde columna print. | P120 | Baja |
 | D4 | P67 ESTADO como Display Only de los 3 estados (`A`/`P`/`N`) en vez del legacy `Anular;N,Activo;A`. Botón "Solicitar Anulación" en P67 y región read-only "Información de Anulación". | P67 | Media |
-| D5 | P96 watermark "ANULADA" + footer con motivo + usuario aprueba + fecha. Hoy la factura anulada se imprime igual que una activa. | P96 | **Alta** (riesgo real de confusión contable) |
+| ~~D5~~ | ~~P96 watermark "ANULADA" + footer con motivo + usuario aprueba + fecha.~~ **Cerrada 2026-06-14** — implementada server-side en `WKSP_WORKPLACE.FN_KUDE_FACTURA_HTML` (`db/F12_kude_factura.sql`); P96 sin cambios. | ~~P96~~ | ~~Alta~~ |
 | D6 | Entry de menú "Anulaciones de Facturas" → P120 bajo "Ventas" con `security_pkg.can_access`. | Menú | Media |
 | D7 | Aprobación de "4 ojos": validar en `PRC_APROBAR_ANULACION` que `p_usuario_aprueba <> USUARIO_SOLICITA`. Hoy el mismo usuario que solicita puede aprobar (decisión MVP del PO). | BD | Baja (decisión consciente) |
 | D8 | Probar casos B/C/D/E del test plan §7 manualmente en browser. La BD los valida pero no se probaron end-to-end por UI. | Manual | Baja |
 
-Cuando se retome F11 → priorizar **D5** (watermark) primero por riesgo
-contable, después D4/D6 (UX), después D1/D2/D3 (cosmético).
+Cuando se retome F11 → priorizar **D4** (P67 ESTADO + botón anular) y **D6**
+(menú) por UX, después D1/D2/D3 (cosmético).
