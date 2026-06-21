@@ -20,4 +20,12 @@ prompt --install_page
 @@application/pages/page_00122.sql
 @@application/pages/delete_00123.sql
 @@application/pages/page_00123.sql
+@@application/pages/delete_00124.sql
+@@application/pages/page_00124.sql
+@@application/pages/delete_00125.sql
+@@application/pages/page_00125.sql
+@@application/pages/delete_00126.sql
+@@application/pages/page_00126.sql
+@@application/pages/delete_00127.sql
+@@application/pages/page_00127.sql
 @@application/end_environment.sql

@@ -528,6 +528,22 @@ wwv_flow_imp_page.create_region_column(
 ,p_enable_hide=>true
 ,p_escape_on_http_output=>true
 );
+wwv_flow_imp_page.create_region_column(
+ p_id=>wwv_flow_imp.id(23093000000000001)
+,p_name=>unistr('Emitir Nota de Cr\00E9dito')
+,p_source_type=>'NONE'
+,p_item_type=>'NATIVE_LINK'
+,p_heading=>unistr('Nota de Cr\00E9dito')
+,p_heading_alignment=>'LEFT'
+,p_display_sequence=>21
+,p_value_alignment=>'LEFT'
+,p_link_target=>'f?p=&APP_ID.:125:&SESSION.::&DEBUG.:125:P125_ID_FACTURA:\&ID_COMPROBANTE.\'
+,p_link_text=>unistr('<span role="img" aria-label="Nota de Cr\00E9dito" class="fa fa-file-text-o" title="Emitir Nota de Cr\00E9dito"></span>')
+,p_link_attributes=>'&APEX$LINK.'
+,p_use_as_row_header=>false
+,p_enable_hide=>true
+,p_escape_on_http_output=>true
+);
 wwv_flow_imp_page.create_interactive_grid(
  p_id=>wwv_flow_imp.id(12794136499370642)
 ,p_internal_uid=>12794136499370642
@@ -707,6 +723,14 @@ wwv_flow_imp_page.create_ig_report_column(
 ,p_view_id=>wwv_flow_imp.id(12794753181370642)
 ,p_display_seq=>18
 ,p_column_id=>wwv_flow_imp.id(23066694590889436)
+,p_is_visible=>true
+,p_is_frozen=>false
+);
+wwv_flow_imp_page.create_ig_report_column(
+ p_id=>wwv_flow_imp.id(23093000000000002)
+,p_view_id=>wwv_flow_imp.id(12794753181370642)
+,p_display_seq=>19
+,p_column_id=>wwv_flow_imp.id(23093000000000001)
 ,p_is_visible=>true
 ,p_is_frozen=>false
 );

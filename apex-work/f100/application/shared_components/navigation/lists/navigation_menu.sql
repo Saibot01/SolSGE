@@ -15,7 +15,7 @@ wwv_flow_imp_shared.create_list(
  p_id=>wwv_flow_imp.id(7706470273831245)
 ,p_name=>'Navigation Menu'
 ,p_list_status=>'PUBLIC'
-,p_version_scn=>39029290249265
+,p_version_scn=>39029712343603
 );
 wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(8007399120830870)
@@ -240,6 +240,29 @@ wwv_flow_imp_shared.create_list_item(
 ,p_parent_list_item_id=>wwv_flow_imp.id(8339507211145106)
 ,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
 ,p_list_item_current_for_pages=>'117'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(23053340017849650)
+,p_list_item_display_sequence=>710
+,p_list_item_link_text=>'Anulaciones de Facturas'
+,p_list_item_link_target=>'f?p=&APP_ID.:120:&APP_SESSION.::&DEBUG.:::'
+,p_list_item_icon=>'fa-table'
+,p_parent_list_item_id=>wwv_flow_imp.id(8339507211145106)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'120'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(23241219633193117)
+,p_list_item_display_sequence=>730
+,p_list_item_link_text=>unistr('Notas de Cr\00E9dito')
+,p_list_item_link_target=>'f?p=&APP_ID.:124:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-clipboard-edit'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID,:APP_USER,124,NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(8339507211145106)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'124'
 );
 wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(9808235671312828)
@@ -515,6 +538,16 @@ wwv_flow_imp_shared.create_list_item(
 ,p_parent_list_item_id=>wwv_flow_imp.id(12725308437975347)
 ,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
 ,p_list_item_current_for_pages=>'61'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(23100640779464825)
+,p_list_item_display_sequence=>720
+,p_list_item_link_text=>'Movimientos Caja'
+,p_list_item_link_target=>'f?p=&APP_ID.:123:&APP_SESSION.::&DEBUG.:::'
+,p_list_item_icon=>'fa-table'
+,p_parent_list_item_id=>wwv_flow_imp.id(12725308437975347)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'123'
 );
 wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(12815939864378893)
