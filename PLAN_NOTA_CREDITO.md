@@ -2,7 +2,9 @@
 
 **Proyecto:** SolSGE — APEX 24.2 (App 100, alias `f100`)
 **Workspace:** `WKSP_WORKPLACE` · **Conexión:** `tesis_db`
-**Estado del plan:** PROPUESTO 2026-06-15 — pendiente de aprobación del PO.
+**Estado del plan:** ✅ implementado y cerrado (aprobado por el PO 2026-06-17,
+cierre 2026-06-21). Backend `db/F14_nota_credito.sql` aplicado + P124–P127 capturadas
++ link en P66 + entry de menú P124. Capa APEX verificada (menú confirmado 2026-06-21).
 
 > Plan separado. Continúa la línea fiscal de `PLAN_ANULACION_FACTURAS.md`:
 > aquel cubre el **Evento de Cancelación** SIFEN (ventana de 48 h, F11). Este
@@ -273,10 +275,10 @@ subtotales por tasa, total en letras, leyenda "sin validez fiscal".
 - [x] **Hito 3** — ✅ P124 (link a P126 vía detail link) + P126 (display items + validación motivo + procesos APROBAR/RECHAZAR + close) (2026-06-17). Importados OK.
 - [x] **Hito 4** — ✅ P127 Documento NC (KuDE) (2026-06-17): clon de P96 llamando
   `FN_KUDE_NOTA_CREDITO_HTML`, importado quirúrgicamente, verificado en `apex_application_pages`.
-- [x] **Hito 5 (parcial)** — ✅ Link "Emitir Nota de Crédito" en P66 (columna
+- [x] **Hito 5** — ✅ Link "Emitir Nota de Crédito" en P66 (columna
   `NATIVE_LINK` en el IG → P125 con `P125_ID_FACTURA`, espejo del link de anulación),
-  importado OK (2026-06-17). ⏳ **Falta entry de menú** "Notas de Crédito" → P124
-  (lo hace el PO en el Builder por R8: shared components no upsert por `@@`).
+  importado OK (2026-06-17). Entry de menú "Notas de Crédito" → P124 **presente**
+  en `navigation_menu.sql` (línea 257, `current_for_pages='124'`) — verificado 2026-06-21.
 - [x] **Hito 6** — ✅ Test end-to-end por navegador (PO, 2026-06-17..21): solicitar
   total/parcial (devolución/descuento/ajuste), aprobar contado y crédito, rechazar,
   imprimir NC. Ajuste a CxC verificado contablemente (factura 031). Varios bugs
@@ -495,12 +497,10 @@ PO armó shells en Builder; Claude exportó, cableó y re-importó quirúrgicame
   `CANT_ACREDITAR>0` a `SOLICITUD_NC_DETALLE` (re-fetch de precio/IVA desde la
   factura; guard `TIPO_NC='P'` y `≤ FN_CANT_ACREDITABLE`), (90) close dialog.
 
-**Pendiente para cerrar la capa APEX:**
-- **Hito 5:** link "Emitir Nota de Crédito" en P66 (→ P125 con `P125_ID_FACTURA`)
-  + entry de menú "Notas de Crédito" → P124 (editar menú en Builder por R8).
-- **Hito 6:** test end-to-end por **navegador** (el cableado importó limpio pero
-  el runtime de modales + IG editable se valida en browser). URLs para probar sin
-  el link de P66: `f?p=100:125:0::::P125_ID_FACTURA:<id_factura>` y `f?p=100:124`.
+**Pendiente para cerrar la capa APEX:** — ✅ todo cerrado (verificado 2026-06-21)
+- ~~**Hito 5:**~~ link "Emitir Nota de Crédito" en P66 + entry de menú
+  "Notas de Crédito" → P124: **ambos hechos** (entry en `navigation_menu.sql` línea 257).
+- ~~**Hito 6:**~~ test end-to-end por navegador: **hecho** (PO, 2026-06-17..21, ver §6 Hito 6).
 
 ## 11. Casos de uso (guía detallada)
 

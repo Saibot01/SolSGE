@@ -38,11 +38,37 @@ wwv_flow_imp_page.create_page_plug(
 '       (select max(mc.FECHA_EMISION_RECIBO)',
 '          from MOVIMIENTOS_CAJA mc',
 '         where mc.ID_CUENTA_COBRAR_DET = d.ID_DETALLE',
-'           and mc.TIPO = ''COBRO_CXC'') as FECHA_PAGO,',
+'           and mc.TIPO = ''COBRO_CXC''',
+'           and not exists (select 1 from MOVIMIENTOS_CAJA r',
+'                            where r.ID_MOVIMIENTO_REVERSADO = mc.ID_MOVIMIENTO)) as FECHA_PAGO,',
 '       (select max(mc.NRO_RECIBO)',
 '          from MOVIMIENTOS_CAJA mc',
 '         where mc.ID_CUENTA_COBRAR_DET = d.ID_DETALLE',
-'           and mc.TIPO = ''COBRO_CXC'') as NRO_RECIBO',
+'           and mc.TIPO = ''COBRO_CXC''',
+'           and not exists (select 1 from MOVIMIENTOS_CAJA r',
+'                            where r.ID_MOVIMIENTO_REVERSADO = mc.ID_MOVIMIENTO)) as NRO_RECIBO,',
+'       case when d.ESTADO = ''PAGADA'' then',
+'         ''<a href="''||',
+'           apex_page.get_url(p_page=>128, p_clear_cache=>''128'',',
+'             p_items=>''P128_ID_MOVIMIENTO'',',
+'             p_values=>to_char((select max(mc.ID_MOVIMIENTO) from MOVIMIENTOS_CAJA mc',
+'                                 where mc.ID_CUENTA_COBRAR_DET = d.ID_DETALLE',
+'                                   and mc.TIPO = ''COBRO_CXC''',
+'                                   and not exists (select 1 from MOVIMIENTOS_CAJA r',
+'                                      where r.ID_MOVIMIENTO_REVERSADO = mc.ID_MOVIMIENTO))))||''" ''||',
+'         ''title="Solicitar reverso"><span class="fa fa-undo" aria-label="Solicitar reverso"></span></a>''',
+'       end as REVERSO_HTML,',
+'       case when d.ESTADO = ''PAGADA'' then',
+'         ''<a href="''||',
+'           apex_page.get_url(p_page=>119, p_clear_cache=>''119'',',
+'             p_items=>''P119_ID_RECIBO'',',
+'             p_values=>to_char((select max(mc.ID_MOVIMIENTO) from MOVIMIENTOS_CAJA mc',
+'                                 where mc.ID_CUENTA_COBRAR_DET = d.ID_DETALLE',
+'                                   and mc.TIPO = ''COBRO_CXC''',
+'                                   and not exists (select 1 from MOVIMIENTOS_CAJA r',
+'                                      where r.ID_MOVIMIENTO_REVERSADO = mc.ID_MOVIMIENTO))))||''" ''||',
+'         ''title="Imprimir recibo"><span class="fa fa-print" aria-label="Imprimir recibo"></span></a>''',
+'       end as IMPRIMIR_HTML',
 '  from CUENTAS_COBRAR_DET d',
 '  where d.id_cxc = :P99_ID_CXC'))
 ,p_plug_source_type=>'NATIVE_IG'
@@ -53,6 +79,7 @@ wwv_flow_imp_page.create_region_column(
  p_id=>wwv_flow_imp.id(16182843047278070)
 ,p_name=>'APEX$LINK'
 ,p_source_type=>'NONE'
+,p_session_state_data_type=>'VARCHAR2'
 ,p_item_type=>'NATIVE_LINK'
 ,p_heading_alignment=>'CENTER'
 ,p_display_sequence=>10
@@ -76,6 +103,7 @@ wwv_flow_imp_page.create_region_column(
 ,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
   'value_protected', 'Y')).to_clob
 ,p_enable_filter=>false
+,p_use_as_row_header=>false
 ,p_enable_hide=>true
 ,p_is_primary_key=>true
 ,p_duplicate_value=>true
@@ -202,6 +230,7 @@ wwv_flow_imp_page.create_region_column(
 ,p_source_type=>'DB_COLUMN'
 ,p_source_expression=>'ESTADO'
 ,p_data_type=>'VARCHAR2'
+,p_session_state_data_type=>'VARCHAR2'
 ,p_is_query_only=>false
 ,p_item_type=>'NATIVE_HTML_EXPRESSION'
 ,p_heading=>'Estado'
@@ -226,6 +255,7 @@ wwv_flow_imp_page.create_region_column(
 ,p_source_type=>'DB_COLUMN'
 ,p_source_expression=>'FECHA_PAGO'
 ,p_data_type=>'DATE'
+,p_session_state_data_type=>'VARCHAR2'
 ,p_is_query_only=>false
 ,p_item_type=>'NATIVE_DATE_PICKER_APEX'
 ,p_heading=>'Fecha Pago'
@@ -258,6 +288,7 @@ wwv_flow_imp_page.create_region_column(
 ,p_source_type=>'DB_COLUMN'
 ,p_source_expression=>'NRO_RECIBO'
 ,p_data_type=>'VARCHAR2'
+,p_session_state_data_type=>'VARCHAR2'
 ,p_is_query_only=>false
 ,p_item_type=>'NATIVE_TEXT_FIELD'
 ,p_heading=>'Nro Recibo'
@@ -281,6 +312,52 @@ wwv_flow_imp_page.create_region_column(
 ,p_is_primary_key=>false
 ,p_duplicate_value=>true
 ,p_include_in_export=>true
+);
+wwv_flow_imp_page.create_region_column(
+ p_id=>wwv_flow_imp.id(23930000000000001)
+,p_name=>'REVERSO'
+,p_source_type=>'DB_COLUMN'
+,p_source_expression=>'REVERSO_HTML'
+,p_data_type=>'VARCHAR2'
+,p_session_state_data_type=>'VARCHAR2'
+,p_is_query_only=>true
+,p_item_type=>'NATIVE_HTML_EXPRESSION'
+,p_heading=>'Reverso'
+,p_heading_alignment=>'CENTER'
+,p_display_sequence=>100
+,p_value_alignment=>'CENTER'
+,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
+  'html_expression', '&REVERSO!RAW.')).to_clob
+,p_enable_filter=>false
+,p_use_as_row_header=>false
+,p_enable_sort_group=>false
+,p_enable_hide=>true
+,p_is_primary_key=>false
+,p_duplicate_value=>true
+,p_include_in_export=>false
+);
+wwv_flow_imp_page.create_region_column(
+ p_id=>wwv_flow_imp.id(23930000000000007)
+,p_name=>'IMPRIMIR'
+,p_source_type=>'DB_COLUMN'
+,p_source_expression=>'IMPRIMIR_HTML'
+,p_data_type=>'VARCHAR2'
+,p_session_state_data_type=>'VARCHAR2'
+,p_is_query_only=>true
+,p_item_type=>'NATIVE_HTML_EXPRESSION'
+,p_heading=>'Recibo'
+,p_heading_alignment=>'CENTER'
+,p_display_sequence=>105
+,p_value_alignment=>'CENTER'
+,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
+  'html_expression', '&IMPRIMIR!RAW.')).to_clob
+,p_enable_filter=>false
+,p_use_as_row_header=>false
+,p_enable_sort_group=>false
+,p_enable_hide=>true
+,p_is_primary_key=>false
+,p_duplicate_value=>true
+,p_include_in_export=>false
 );
 wwv_flow_imp_page.create_interactive_grid(
  p_id=>wwv_flow_imp.id(16182010218278069)
@@ -389,6 +466,22 @@ wwv_flow_imp_page.create_ig_report_column(
 ,p_view_id=>wwv_flow_imp.id(16182673596278070)
 ,p_display_seq=>9
 ,p_column_id=>wwv_flow_imp.id(22999179914484108)
+,p_is_visible=>true
+,p_is_frozen=>false
+);
+wwv_flow_imp_page.create_ig_report_column(
+ p_id=>wwv_flow_imp.id(23930000000000002)
+,p_view_id=>wwv_flow_imp.id(16182673596278070)
+,p_display_seq=>10
+,p_column_id=>wwv_flow_imp.id(23930000000000001)
+,p_is_visible=>true
+,p_is_frozen=>false
+);
+wwv_flow_imp_page.create_ig_report_column(
+ p_id=>wwv_flow_imp.id(23930000000000008)
+,p_view_id=>wwv_flow_imp.id(16182673596278070)
+,p_display_seq=>11
+,p_column_id=>wwv_flow_imp.id(23930000000000007)
 ,p_is_visible=>true
 ,p_is_frozen=>false
 );

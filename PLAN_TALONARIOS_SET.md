@@ -2,7 +2,12 @@
 
 **Proyecto:** SolSGE — APEX 24.2 (App 100, alias `f100`)
 **Workspace / Schema:** `WKSP_WORKPLACE`
-**Estado del plan:** aprobado 2026-06-08 (post F9).
+**Estado del plan:** ✅ implementado y verificado en `tesis_db` (2026-06-21).
+Backend F10 + F10.1 aplicado: columna/FK `ID_CAJA_CONF`, índice único parcial
+`UQ_TALONARIO_CAJA_TIPO_ACT` (VALID/UNIQUE), FK `FK_TALONARIO_CAJA_CONF`
+(ENABLED/VALIDATED), trigger `TRG_TALONARIO_DERIVA_OFICINA`, `FN_CAJA_CONF_USUARIO`,
+`V_TALONARIOS_DISPONIBLES` y `FN_COBRAR_CUOTA` todos VALID. Migración de datos
+completa (3 talonarios re-anclados a su caja, sin `ID_CAJA_CONF` NULL).
 **Tag esperado al cierre:** `f10-talonarios-set`.
 
 > Plan separado de `PLAN_FACTURACION.md` (cerrado el 2026-06-08 con F9). Cubre
@@ -242,12 +247,13 @@ Smoke tests confirmados contra `tesis_db`:
   `-20961` y mensaje "OFICINAS.ESTABLECIMIENTO_SET no esta cargado para la
   oficina N. Cargarlo antes de crear talonarios para sus cajas."
 
-### Pendiente operativo
+### Pendiente operativo — ✅ RESUELTO (verificado 2026-06-21)
 
-- Para empezar a operar fiscalmente la **oficina 2 (Suc - Villarrica)**, el
+- ~~Para empezar a operar fiscalmente la **oficina 2 (Suc - Villarrica)**, el
   admin debe primero `UPDATE OFICINAS SET ESTABLECIMIENTO_SET='<codigo>'
-  WHERE CODIGO_OFICINA=2` (con el código SET que SET haya asignado a esa
-  sucursal). Sin eso, ningún INSERT de talonario pasa.
+  WHERE CODIGO_OFICINA=2`.~~ **Hecho:** la oficina 2 ya tiene
+  `ESTABLECIMIENTO_SET='2'` cargado en `tesis_db` (oficina 1 = `'1'`).
+  Villarrica está lista para emitir talonarios cuando se le cree una caja.
 
 ## 7. Rollback
 

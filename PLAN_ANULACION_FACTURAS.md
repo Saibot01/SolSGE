@@ -218,8 +218,9 @@ Marcamos `[ ]` pendiente, `[x]` cerrado.
   Footer: motivo + usuario aprueba + fecha resolución. Verificado en browser
   con factura 86 (anulada) y 85 (activa). Sin tocar la página APEX.
 
-### Hito 7 — Menú entry "Anulaciones de Facturas"
-- [ ] **Deuda** — no implementado. Ver §10. Acceso a P120 hoy solo vía URL directa (`f?p=100:120`) o link desde P66.
+### Hito 7 — Menú entry "Anulaciones de Facturas" ✅ (verificado 2026-06-21)
+- [x] Entry "Anulaciones de Facturas" → P120 presente bajo "Ventas" en
+  `navigation_menu.sql` (línea 247, `current_for_pages='120'`). Capturado en repo.
 
 ### Hito 8 — Test plan end-to-end ✅ parcial (2026-06-10)
 - [x] Caso A — anulación contado feliz: factura `001-001-0000027` (ID 86) solicitada y aprobada por TCASCO. Verificado: `COMPROBANTES.ESTADO='N'`, `USUARIO_APRUEBA=TCASCO`, `FECHA_RESOLUCION=2026-06-10`. Reversiones aplicadas por `PRC_APROBAR_ANULACION` (stock, OV, EGRESO de caja).
@@ -311,8 +312,8 @@ así para no bloquearse en el MVP).
 - ~~P96 no marca visualmente las facturas anuladas.~~ **Resuelto 2026-06-14**
   vía `FN_KUDE_FACTURA_HTML` (D5 cerrada).
 - P67 no muestra el estado correctamente cuando una factura está anulada.
-- Sin entry de menú: hay que entrar a P120 escribiendo `f?p=100:120` en
-  la URL.
+- ~~Sin entry de menú.~~ **Resuelto:** entry "Anulaciones de Facturas" → P120
+  ya está en el menú bajo "Ventas" (verificado 2026-06-21).
 
 ## 10. Deuda técnica F11 (para retomar)
 
@@ -323,12 +324,12 @@ así para no bloquearse en el MVP).
 | D3 | Filtros default + saved report "Pendientes del mes" en P120. Link a P96 desde columna print. | P120 | Baja |
 | D4 | P67 ESTADO como Display Only de los 3 estados (`A`/`P`/`N`) en vez del legacy `Anular;N,Activo;A`. Botón "Solicitar Anulación" en P67 y región read-only "Información de Anulación". | P67 | Media |
 | ~~D5~~ | ~~P96 watermark "ANULADA" + footer con motivo + usuario aprueba + fecha.~~ **Cerrada 2026-06-14** — implementada server-side en `WKSP_WORKPLACE.FN_KUDE_FACTURA_HTML` (`db/F12_kude_factura.sql`); P96 sin cambios. | ~~P96~~ | ~~Alta~~ |
-| D6 | Entry de menú "Anulaciones de Facturas" → P120 bajo "Ventas" con `security_pkg.can_access`. | Menú | Media |
+| ~~D6~~ | ~~Entry de menú "Anulaciones de Facturas" → P120 bajo "Ventas".~~ **Cerrada (verificado 2026-06-21):** ya está en `navigation_menu.sql` (línea 247). | ~~Menú~~ | ~~Media~~ |
 | D7 | Aprobación de "4 ojos": validar en `PRC_APROBAR_ANULACION` que `p_usuario_aprueba <> USUARIO_SOLICITA`. Hoy el mismo usuario que solicita puede aprobar (decisión MVP del PO). | BD | Baja (decisión consciente) |
 | D8 | Probar casos B/C/D/E del test plan §7 manualmente en browser. La BD los valida pero no se probaron end-to-end por UI. | Manual | Baja |
 
-Cuando se retome F11 → priorizar **D4** (P67 ESTADO + botón anular) y **D6**
-(menú) por UX, después D1/D2/D3 (cosmético).
+Cuando se retome F11 → priorizar **D4** (P67 ESTADO + botón anular) por UX,
+después D2/D3 (cosmético). D6 (menú) ya está cerrada.
 
 ## 11. Alineación SIFEN — Solicitud de anulación (2026-06-15)
 

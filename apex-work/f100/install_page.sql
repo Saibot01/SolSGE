@@ -28,4 +28,12 @@ prompt --install_page
 @@application/pages/page_00126.sql
 @@application/pages/delete_00127.sql
 @@application/pages/page_00127.sql
+@@application/pages/delete_00128.sql
+@@application/pages/page_00128.sql
+@@application/pages/delete_00129.sql
+@@application/pages/page_00129.sql
+@@application/pages/delete_00130.sql
+@@application/pages/page_00130.sql
+@@application/pages/delete_00131.sql
+@@application/pages/page_00131.sql
 @@application/end_environment.sql
