@@ -120,18 +120,31 @@ inconsistencia conocida (factura < CxC) y se documenta.
 
 ## 4. Hitos
 
-- [ ] **H1** — Backend `db/F16_interes_financiacion.sql`: columna
+- [x] **H1** — Backend `db/F16_interes_financiacion.sql`: columna
   `COMPROBANTES.INTERES_FINANCIACION` + `TRG_INS_CUENTAS_COBRAR` v2 + verificación.
-  Smoke con `ROLLBACK`.
-- [ ] **H2** — P67 (shell del PO si requiere ítem nuevo `P67_INTERES_FINANCIACION`
-  + cableado Claude): proceso que setea interés + totales financiados cuando
-  `FORMA_PAGO='1'`.
-- [ ] **H3** — `FN_KUDE_FACTURA_HTML`: fila de interés + interés en bucket IVA 10%
-  (+ bloque de cuotas).
-- [ ] **H4** — Test e2e: factura crédito Plan A → `factura.total == CxC.SALDO ==
-  Σ cuotas`, IVA 10% incluye el interés, KuDE muestra la fila; **contado** sin
-  cambios; stock de bienes intacto.
-- [ ] **H5** — Cierre: re-export, `CLAUDE.md`, commit `feat(F16)`, tag.
+  Smoke con `ROLLBACK`. **Hecho 2026-06-25.** El trigger arma la CxC desde
+  `:NEW.TOTAL_MONEDA_LOCAL` (sin re-sumar interés); cuotas en enteros PYG
+  (`ROUND(...,0)`, SIFEN) con la última cuota absorbiendo el remanente →
+  `factura == CxC.SALDO == Σ cuotas` exacto.
+- [x] **H2** — P67: ítem oculto `P67_INTERES_FINANCIACION` (source = columna
+  `INTERES_FINANCIACION`, mapeado al form DML) + proceso AFTER_SUBMIT
+  `Calcular interes financiacion` (seq 9, antes del form DML seq 10): cuando
+  `FORMA_PAGO='1'` setea interés + financia `TOTAL_MONEDA_LOCAL`/`TOTAL_IVA_10`/
+  `TOTAL_IVA`. **Hecho 2026-06-25** (live + smoke integración con `ROLLBACK`).
+- [x] **H3** — `FN_KUDE_FACTURA_HTML`: fila "Interés de financiación" (monto en
+  columna IVA 10%) + interés sumado al subtotal gravada-10 (reconcilia tabla vs.
+  Total a Pagar) + bloque "Condición de Venta: Crédito" con las cuotas (gPagCred).
+  **Hecho 2026-06-25.** El cambio vive en `db/F12_kude_factura.sql` (hogar de la
+  función); para desplegar F16 completo hay que re-correr F12. Verificado sobre la
+  factura real 001-001-0000032 (subtotal IVA10 = 65.520 = Total a Pagar; contado
+  sin cambios).
+- [x] **H4** — Test e2e: factura crédito real **001-001-0000032** (Plan A, Mouse
+  62.400) → `factura.total = CxC.SALDO = Σ cuotas = 65.520`, interés 3.120, IVA 10%
+  incluye el interés (5.957 = 5.673 + 284), KuDE muestra fila de interés + cuotas;
+  **contado** (ID 143) sin cambios. **Hecho 2026-06-25** (validado por el PO en el
+  navegador + datos verificados en BD).
+- [x] **H5** — Cierre: P67 re-exportado y sincronizado a `apex-work`, `CLAUDE.md`
+  actualizado, commit `feat(F16)` + tag `f16-interes-financiacion`. **Hecho 2026-06-25.**
 
 ---
 

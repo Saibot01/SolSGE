@@ -15,6 +15,7 @@ wwv_flow_imp_page.create_page(
  p_id=>67
 ,p_name=>'Proceso Ventas'
 ,p_alias=>'PROCESO-VENTAS'
+,p_page_mode=>'MODAL'
 ,p_step_title=>'Proceso Ventas'
 ,p_autocomplete_on_off=>'OFF'
 ,p_javascript_code=>wwv_flow_string.join(wwv_flow_t_varchar2(
@@ -75,6 +76,7 @@ wwv_flow_imp_page.create_page(
 '}',
 ''))
 ,p_page_template_options=>'#DEFAULT#'
+,p_dialog_resizable=>'Y'
 ,p_protection_level=>'C'
 ,p_page_component_map=>'02'
 );
@@ -1130,6 +1132,21 @@ wwv_flow_imp_page.create_page_item(
 ,p_item_plug_id=>wwv_flow_imp.id(12007879735524747)
 ,p_item_source_plug_id=>wwv_flow_imp.id(12776927328370633)
 ,p_source=>'TIPO_COMPROBANTE'
+,p_source_type=>'REGION_SOURCE_COLUMN'
+,p_display_as=>'NATIVE_HIDDEN'
+,p_is_persistent=>'N'
+,p_protection_level=>'S'
+,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
+  'value_protected', 'Y')).to_clob
+);
+wwv_flow_imp_page.create_page_item(
+ p_id=>wwv_flow_imp.id(15983166713097207)
+,p_name=>'P67_INTERES_FINANCIACION'
+,p_source_data_type=>'NUMBER'
+,p_item_sequence=>55
+,p_item_plug_id=>wwv_flow_imp.id(12007879735524747)
+,p_item_source_plug_id=>wwv_flow_imp.id(12776927328370633)
+,p_source=>'INTERES_FINANCIACION'
 ,p_source_type=>'REGION_SOURCE_COLUMN'
 ,p_display_as=>'NATIVE_HIDDEN'
 ,p_is_persistent=>'N'
@@ -2267,6 +2284,45 @@ wwv_flow_imp_page.create_page_process(
 ,p_process_when=>'CREATE'
 ,p_process_when_type=>'REQUEST_IN_CONDITION'
 ,p_internal_uid=>12792268809100000
+);
+wwv_flow_imp_page.create_page_process(
+ p_id=>wwv_flow_imp.id(15983166713097307)
+,p_process_sequence=>9
+,p_process_point=>'AFTER_SUBMIT'
+,p_process_type=>'NATIVE_PLSQL'
+,p_process_name=>'Calcular interes financiacion'
+,p_process_sql_clob=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'DECLARE',
+'  v_tasa NUMBER;',
+'  v_base NUMBER;',
+'  v_int  NUMBER;',
+'  v_iva  NUMBER;',
+'BEGIN',
+'  -- F16: solo venta a credito (FORMA_PAGO=1). En contado (21) no aplica.',
+'  IF NVL(TO_CHAR(:P67_FORMA_PAGO), ''0'') <> ''1'' THEN',
+'    RETURN;',
+'  END IF;',
+'  IF :P67_ID_PLAN_CUOTA IS NULL THEN',
+'    RETURN;',
+'  END IF;',
+'  SELECT NVL(TASA_INTERES_PORCENTAJE, 0) INTO v_tasa',
+'    FROM WKSP_WORKPLACE.PLANES_CUOTA WHERE ID_PLAN_CUOTA = :P67_ID_PLAN_CUOTA;',
+'  -- Los items de totales guardan string formateado: se limpian separadores.',
+'  v_base := TO_NUMBER(REPLACE(REPLACE(NVL(:P67_TOTAL_MONEDA_LOCAL, ''0''), ''.'', ''''), '','', ''''));',
+'  v_int  := ROUND(v_base * v_tasa / 100, 0);   -- interes (IVA incluido), PYG entero',
+'  v_iva  := ROUND(v_int * 10 / 110, 0);        -- IVA 10% contenido en el interes',
+'  -- Financiar la cabecera ANTES del INSERT (form DML, seq 10) ->',
+'  -- factura = CxC = Sum cuotas (el trigger arma la CxC desde este total).',
+'  :P67_INTERES_FINANCIACION := TO_CHAR(v_int);',
+'  :P67_TOTAL_MONEDA_LOCAL   := TO_CHAR(v_base + v_int);',
+'  :P67_TOTAL_IVA_10 := TO_CHAR(TO_NUMBER(REPLACE(REPLACE(NVL(:P67_TOTAL_IVA_10, ''0''), ''.'', ''''), '','', '''')) + v_iva);',
+'  :P67_TOTAL_IVA    := TO_CHAR(TO_NUMBER(REPLACE(REPLACE(NVL(:P67_TOTAL_IVA, ''0''), ''.'', ''''), '','', '''')) + v_iva);',
+'END;'))
+,p_process_clob_language=>'PLSQL'
+,p_error_display_location=>'INLINE_IN_NOTIFICATION'
+,p_process_when=>'CREATE'
+,p_process_when_type=>'REQUEST_IN_CONDITION'
+,p_internal_uid=>15983166713097307
 );
 wwv_flow_imp_page.create_page_process(
  p_id=>wwv_flow_imp.id(12792268806370641)

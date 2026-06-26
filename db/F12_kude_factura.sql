@@ -176,6 +176,7 @@ CREATE OR REPLACE FUNCTION WKSP_WORKPLACE.FN_KUDE_FACTURA_HTML (
            C.ID_COMPROBANTE, C.FECHA, C.TOTAL_MONEDA_LOCAL AS TOTAL, C.NRO_COMPROBANTE, C.FORMA_PAGO,
            NVL(MO.DESCRIPCION, C.MONEDA) AS MONEDA, MO.ES_LOCAL,
            NVL(C.TOTAL_IVA_5,0) AS IVA5, NVL(C.TOTAL_IVA_10,0) AS IVA10, NVL(C.TOTAL_IVA,0) AS IVATOT,
+           NVL(C.INTERES_FINANCIACION,0) AS INTERES,
            T.TIMBRADO, T.FECHA_INICIO AS TIMB_INI,
            C.ESTADO, C.MOTIVO_ANULACION, C.USUARIO_APRUEBA, C.FECHA_RESOLUCION
       FROM WKSP_WORKPLACE.COMPROBANTES C
@@ -192,6 +193,14 @@ CREATE OR REPLACE FUNCTION WKSP_WORKPLACE.FN_KUDE_FACTURA_HTML (
       JOIN WKSP_WORKPLACE.PRODUCTOS PR ON PR.ID_PRODUCTO = DC.ID_PRODUCTO
      WHERE DC.ID_COMPROBANTE = p_id
      ORDER BY DC.ID_DETALLE;
+
+  -- F16: cuotas de la venta a credito (condicion de venta, estilo gPagCred SIFEN).
+  CURSOR cq (p_id NUMBER) IS
+    SELECT D.NRO_CUOTA, D.FECHA_VENCIMIENTO, D.MONTO_CUOTA
+      FROM WKSP_WORKPLACE.CUENTAS_COBRAR_DET D
+      JOIN WKSP_WORKPLACE.CUENTAS_COBRAR    CC ON CC.ID_CXC = D.ID_CXC
+     WHERE CC.ID_COMPROBANTE = p_id
+     ORDER BY D.NRO_CUOTA;
 
   v_html    CLOB;
   v_sub_ex  NUMBER; v_sub_5 NUMBER; v_sub_10 NUMBER;
@@ -278,6 +287,18 @@ BEGIN
                        || '<td class="r">'||v_ce||'</td><td class="r">'||v_c5||'</td><td class="r">'||v_c10||'</td></tr>';
     END LOOP;
 
+    -- F16: el interes de financiacion vive en la cabecera (no en el detalle).
+    -- Se dibuja como fila gravada al 10% y se suma al subtotal 10% para que la
+    -- tabla cuadre con el Total a Pagar y con la liquidacion del IVA (que ya
+    -- incluyen el interes y su IVA contenido).
+    IF v.INTERES > 0 THEN
+      v_sub_10 := v_sub_10 + v.INTERES;
+      v_html := v_html || '<tr><td class="c"></td><td>Inter&eacute;s de financiaci&oacute;n</td>'
+                       || '<td class="r"></td><td class="r"></td>'
+                       || '<td class="r"></td><td class="r"></td>'
+                       || '<td class="r">'||fmt(v.INTERES)||'</td></tr>';
+    END IF;
+
     v_html := v_html || '<tr class="ksub"><td colspan="4" class="r"><b>Subtotales</b></td><td class="r">'||fmt(v_sub_ex)
                      || '</td><td class="r">'||fmt(v_sub_5)||'</td><td class="r">'||fmt(v_sub_10)||'</td></tr></tbody></table>';
 
@@ -287,6 +308,19 @@ BEGIN
                      || '</td><td class="r"><b>'||fmt(v.TOTAL)||'</b></td></tr>';
     v_html := v_html || '<tr><td>Liquidaci&oacute;n del IVA: (5%) '||fmt(v.IVA5)||' &nbsp; (10%) '||fmt(v.IVA10)
                      || '</td><td class="r"><b>Total IVA: '||fmt(v.IVATOT)||'</b></td></tr></table>';
+
+    -- F16: condicion de credito (cuotas). Solo en venta a credito (gPagCred SIFEN).
+    IF v.FORMA_PAGO = '1' THEN
+      v_html := v_html || '<table class="kitems" style="margin-top:10px"><thead>'
+                       || '<tr><th colspan="3">Condici&oacute;n de Venta: Cr&eacute;dito</th></tr>'
+                       || '<tr><th>Cuota</th><th>Vencimiento</th><th>Monto</th></tr></thead><tbody>';
+      FOR q IN cq(v.ID_COMPROBANTE) LOOP
+        v_html := v_html || '<tr><td class="c">'||TO_CHAR(q.NRO_CUOTA)||'</td>'
+                         || '<td class="c">'||NVL(TO_CHAR(q.FECHA_VENCIMIENTO,'dd/mm/yyyy'),'-')||'</td>'
+                         || '<td class="r">'||fmt(q.MONTO_CUOTA)||'</td></tr>';
+      END LOOP;
+      v_html := v_html || '</tbody></table>';
+    END IF;
 
     v_html := v_html || '<div class="kleg">ESTE DOCUMENTO ES UNA REPRESENTACI&Oacute;N GR&Aacute;FICA DE UN DOCUMENTO ELECTR&Oacute;NICO<br>'
                      || 'Si su documento electr&oacute;nico presenta alg&uacute;n error, podr&aacute; solicitar la modificaci&oacute;n dentro '
