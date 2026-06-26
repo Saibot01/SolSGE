@@ -117,6 +117,47 @@ wwv_flow_imp_page.create_page_item(
 ,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
   'page_action_on_selection', 'NONE')).to_clob
 );
+wwv_flow_imp_page.create_page_item(
+ p_id=>wwv_flow_imp.id(36000000000061010)
+,p_name=>'P61_SALDO_ESPERADO'
+,p_source_data_type=>'NUMBER'
+,p_item_sequence=>25
+,p_item_plug_id=>wwv_flow_imp.id(13181578701363537)
+,p_item_default=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'SELECT SUM(v.SALDO_ESPERADO)',
+'  FROM WKSP_WORKPLACE.V_CAJA_SALDO v',
+'  JOIN WKSP_WORKPLACE.CAJAS c     ON c.ID_CAJA = v.ID_CAJA',
+'  JOIN WKSP_WORKPLACE.EMPLEADOS e ON e.ID_EMPLEADO = c.ID_EMPLEADO',
+' WHERE UPPER(e.CODIGO_USUARIO) = UPPER(V(''APP_USER''))',
+'   AND c.ESTADO = ''A'''))
+,p_item_default_type=>'SQL_QUERY'
+,p_prompt=>'Saldo esperado (sistema)'
+,p_format_mask=>'999G999G999G990'
+,p_display_as=>'NATIVE_DISPLAY_ONLY'
+,p_field_template=>1609121967514267634
+,p_item_template_options=>'#DEFAULT#'
+,p_is_persistent=>'N'
+,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
+  'based_on', 'VALUE',
+  'format', 'PLAIN',
+  'send_on_page_submit', 'N')).to_clob
+);
+wwv_flow_imp_page.create_page_item(
+ p_id=>wwv_flow_imp.id(36000000000061020)
+,p_name=>'P61_MONTO_DECLARADO'
+,p_source_data_type=>'NUMBER'
+,p_item_sequence=>27
+,p_item_plug_id=>wwv_flow_imp.id(13181578701363537)
+,p_prompt=>'Efectivo contado (declarado)'
+,p_format_mask=>'999G999G999G990'
+,p_display_as=>'NATIVE_NUMBER_FIELD'
+,p_field_template=>1609121967514267634
+,p_item_template_options=>'#DEFAULT#'
+,p_is_persistent=>'N'
+,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
+  'number_alignment', 'right',
+  'virtual_keyboard', 'decimal')).to_clob
+);
 wwv_flow_imp_page.create_page_process(
  p_id=>wwv_flow_imp.id(13181927581363541)
 ,p_process_sequence=>10
@@ -124,15 +165,26 @@ wwv_flow_imp_page.create_page_process(
 ,p_process_type=>'NATIVE_PLSQL'
 ,p_process_name=>'Cerrar caja'
 ,p_process_sql_clob=>wwv_flow_string.join(wwv_flow_t_varchar2(
-'Begin',
-'    cerrar_caja(p_id_caja => :P61_CAFA_CONF,',
-'                p_usuario => V(''APP_USER''));',
-'    COMMIT;',
-'END;                '))
+'DECLARE',
+'    v_decl NUMBER;',
+'BEGIN',
+'    -- Guardar el efectivo contado antes de cerrar; CERRAR_CAJA v3 calcula',
+'    -- MONTO_DIFERENCIA = declarado - esperado por moneda.',
+'    -- El item guarda string formateado (215.000) -> parsear quitando . y ,',
+'    -- (mismo patron que los totales de P67, ver CLAUDE.md).',
+'    IF :P61_MONTO_DECLARADO IS NOT NULL THEN',
+'        v_decl := TO_NUMBER(REPLACE(REPLACE(:P61_MONTO_DECLARADO, ''.'', ''''), '','', ''''));',
+'        UPDATE WKSP_WORKPLACE.CAJA_MONEDAS',
+'           SET MONTO_DECLARADO = v_decl',
+'         WHERE ID_CAJA = :P61_CAFA_CONF;',
+'    END IF;',
+'    WKSP_WORKPLACE.cerrar_caja(p_id_caja => :P61_CAFA_CONF,',
+'                              p_usuario => V(''APP_USER''));',
+'END;'))
 ,p_process_clob_language=>'PLSQL'
 ,p_error_display_location=>'INLINE_IN_NOTIFICATION'
 ,p_process_when_button_id=>wwv_flow_imp.id(13181881987363540)
-,p_process_success_message=>'Caja Cerrada'
+,p_process_success_message=>'Caja cerrada. Pod&eacute;s ver el arqueo desde la pantalla de Estado de Caja.'
 ,p_internal_uid=>13181927581363541
 );
 wwv_flow_imp_page.create_page_process(
