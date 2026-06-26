@@ -249,4 +249,4 @@ con el fix de backend como prerrequisito transversal.
 ### H6 — Cierre del módulo
 - [x] e2e: estado en vivo → cerrar con conteo declarado → arqueo. **Validado por el PO el 2026-06-26** cerrando la caja 121 (esperado 215.975, declarado 200.000, diferencia −15.975 faltante; cierre = saldo real, no la apertura).
 - [x] Validado por el PO en la app en vivo.
-- [ ] Commit + tag (`feat: F17 cierre y arqueo de caja`); actualizar `CLAUDE.md` (Planes activos).
+- [x] Commit `feat(F17)` (1b96146) + tag `f17-cierre-arqueo-caja`, pusheados a `main`; `CLAUDE.md` actualizado (Planes activos). **2026-06-26**
