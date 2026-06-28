@@ -253,7 +253,21 @@ Página normal (no modal). Filtros: período (rango de meses), oficina, vendedor
 
 ---
 
-## 7. Aprobación
+## 7. Mejoras pendientes (opcionales, no bloquean el cierre)
+
+- **Presets de fecha en P135** — botones rápidos **Hoy / Este mes / Este año** que
+  llenan `P135_DESDE`/`P135_HASTA` con un clic (DA "Set Value" + refresh del informe).
+  Hoy el rango se carga a mano (default = este mes). No implementado aún.
+- **Entry de menú directa a P135** "Informe de Ventas" (hoy se llega por el botón del
+  dashboard P133). La agrega el PO en el Builder.
+- **Filtro de fecha de la NC**: al combinar `condición` con NC, la NC no se filtra por
+  condición (se restan todas las del rango) — impacto chico (4 NC), documentado en la
+  función. Afinar si crece el dataset.
+- Replicar la plantilla a **Compras / Inventario / Cobros**.
+
+---
+
+## 8. Aprobación
 
 > Decisiones de definición tomadas con el PO el 2026-06-26 (vendedor = quien carga
 > el presupuesto; estampado por trigger; `METAS_VENTA` con `PERIODO DATE`; dos
