@@ -5,7 +5,7 @@ begin
 --   Manifest End
 wwv_flow_imp.component_begin (
  p_version_yyyy_mm_dd=>'2024.11.30'
-,p_release=>'24.2.16'
+,p_release=>'24.2.17'
 ,p_default_workspace_id=>7697821598969118
 ,p_default_application_id=>100
 ,p_default_id_offset=>0
@@ -21,7 +21,7 @@ wwv_flow_imp_page.create_page(
 ,p_page_template_options=>'#DEFAULT#'
 ,p_dialog_resizable=>'Y'
 ,p_protection_level=>'C'
-,p_page_component_map=>'02'
+,p_page_component_map=>'25'
 );
 wwv_flow_imp_page.create_page_plug(
  p_id=>wwv_flow_imp.id(21978273595430727)
@@ -522,9 +522,9 @@ unistr('        p_message => ''Transici\00F3n inv\00E1lida: '' || v_actual || ''
 '',
 '    UPDATE WKSP_WORKPLACE.ORDENES_VENTA',
 '       SET ESTADO             = v_target,',
-'           FECHA_APROBACION   = CASE WHEN v_target = ''APROBADO'' THEN SYSDATE     ELSE FECHA_APROBACION   END,',
+'           FECHA_APROBACION   = CASE WHEN v_target = ''APROBADO'' THEN WKSP_WORKPLACE.FN_AHORA     ELSE FECHA_APROBACION   END,',
 '           USUARIO_APROBACION = CASE WHEN v_target = ''APROBADO'' THEN :APP_USER   ELSE USUARIO_APROBACION END,',
-'           FECHA_ANULACION    = CASE WHEN v_target = ''ANULADO''  THEN SYSDATE     ELSE FECHA_ANULACION    END,',
+'           FECHA_ANULACION    = CASE WHEN v_target = ''ANULADO''  THEN WKSP_WORKPLACE.FN_AHORA     ELSE FECHA_ANULACION    END,',
 '           USUARIO_ANULACION  = CASE WHEN v_target = ''ANULADO''  THEN :APP_USER   ELSE USUARIO_ANULACION  END,',
 '           MOTIVO_ANULACION   = CASE WHEN v_target = ''ANULADO''  THEN :P118_MOTIVO ELSE MOTIVO_ANULACION END',
 '     WHERE ID_ORDEN = :P118_ID_ORDEN;',

@@ -698,7 +698,7 @@ wwv_flow_imp_page.create_page_item(
 ,p_lov=>wwv_flow_string.join(wwv_flow_t_varchar2(
 unistr('SELECT ''Borrador (pendiente aprobaci\00F3n)'' AS DISPLAY_VALUE, ''B'' AS RETURN_VALUE FROM DUAL UNION ALL'),
 'SELECT ''Rechazada''                       AS DISPLAY_VALUE, ''X'' AS RETURN_VALUE FROM DUAL UNION ALL',
-unistr('SELECT ''Pendiente recepci\00F3n''             AS DISPLAY_VALUE, ''P'' AS RETURN_VALUE FROM DUAL UNION ALL'),
+unistr('SELECT ''Aprobado (Pendiente recepci\00F3n)''  AS DISPLAY_VALUE, ''P'' AS RETURN_VALUE FROM DUAL UNION ALL'),
 unistr('SELECT ''Recepci\00F3n parcial''               AS DISPLAY_VALUE, ''R'' AS RETURN_VALUE FROM DUAL UNION ALL'),
 'SELECT ''Completada''                      AS DISPLAY_VALUE, ''C'' AS RETURN_VALUE FROM DUAL UNION ALL',
 'SELECT ''Anulada''                         AS DISPLAY_VALUE, ''A'' AS RETURN_VALUE FROM DUAL'))
@@ -1083,7 +1083,7 @@ wwv_flow_imp_page.create_page_process(
 '  UPDATE ORDENES_COMPRA SET',
 '    ESTADO           = ''P'',',
 '    ID_APROBADOR     = l_id_aprobador,',
-'    FECHA_APROBACION = SYSDATE',
+'    FECHA_APROBACION = WKSP_WORKPLACE.FN_AHORA',
 '  WHERE ID_ORDEN_COMPRA = :P112_ID_ORDEN_COMPRA',
 '    AND ESTADO          = ''B'';',
 '',
@@ -1114,7 +1114,7 @@ wwv_flow_imp_page.create_page_process(
 '  UPDATE ORDENES_COMPRA SET',
 '    ESTADO           = ''X'',',
 '    ID_APROBADOR     = l_id_aprobador,',
-'    FECHA_APROBACION = SYSDATE,',
+'    FECHA_APROBACION = WKSP_WORKPLACE.FN_AHORA,',
 '    MOTIVO_RECHAZO   = :P112_MOTIVO_RECHAZO',
 '  WHERE ID_ORDEN_COMPRA = :P112_ID_ORDEN_COMPRA',
 '    AND ESTADO          = ''B'';',

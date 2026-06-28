@@ -2442,7 +2442,7 @@ wwv_flow_imp_page.create_page_process(
 '    MONEDA, TIPO_CAMBIO, TOTAL_MONEDA_ORIGEN, ESTADO,',
 '    TIPO, ID_COMPROBANTE, USUARIO',
 '  ) VALUES (',
-'    :P67_ID_CLIENTE, v_id_caja, SYSTIMESTAMP, v_total,',
+'    :P67_ID_CLIENTE, v_id_caja, WKSP_WORKPLACE.FN_AHORA, v_total,',
 '    NVL(:P67_MONEDA, ''PYG''), NULL, NULL, ''A'',',
 '    ''INGRESO_VENTA'', :P67_ID_COMPROBANTE, V(''APP_USER'')',
 '  ) RETURNING ID_MOVIMIENTO INTO v_id_movimiento;',

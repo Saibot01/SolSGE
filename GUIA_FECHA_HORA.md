@@ -61,19 +61,25 @@ WKSP_WORKPLACE.FN_AHORA RETURN DATE
 | Fecha de movimiento de caja / cierre | `FN_AHORA` | `MOVIMIENTOS_CAJA.FECHA`, `CAJAS.FEC_CIERRE` |
 | "Generado el ..." en documentos/reportes | `FN_AHORA` | `TO_CHAR(WKSP_WORKPLACE.FN_AHORA,'dd/mm/yyyy hh24:mi')` |
 
-### Qué SÍ puede quedar en `SYSDATE`/`SYSTIMESTAMP`
+### Auditoría también es local
 
-Solo **auditoría técnica pura** que no se compara como fecha de negocio ni se
-muestra como hora local al usuario:
+La **auditoría también usa `FN_AHORA`** (`FECHA_CREACION`, `FECHA_MODIFICACION`,
+`FECHA_RESOLUCION`, `FECHA_SOLICITUD`, `FECHA_CAMBIO`, `FECHA_ALTA`, etc.). Toda
+fecha/hora que se persista o muestre va en hora local. Regla simple:
+**no uses `SYSDATE`/`SYSTIMESTAMP` para nada que se guarde o se muestre.**
 
-- `FECHA_CREACION`, `FECHA_MODIFICACION`, `FECHA_RESOLUCION`, `FECHA_SOLICITUD`,
-  `FECHA_CAMBIO` (columnas de auditoría de registro).
-- Ventanas técnicas internamente consistentes (ej. tokens de `PKG_EMPLEADOS`:
-  el expiry y la comparación usan ambos `SYSTIMESTAMP`, así que la ventana de
-  24h funciona igual en cualquier zona).
+### Únicas excepciones que quedan en UTC (a propósito)
 
-> Si tenés dudas entre auditoría y negocio: si el valor se **muestra al usuario**
-> como fecha/hora, o se **compara/agrupa por día**, es **negocio** → `FN_HOY`/`FN_AHORA`.
+1. **Tokens de `PKG_EMPLEADOS`** (autenticación): el expiry (`SYSTIMESTAMP + INTERVAL`)
+   y la comparación (`> SYSTIMESTAMP`) usan ambos UTC; la ventana de 24h funciona
+   igual en cualquier zona. No tocar (riesgo de romper login).
+2. **DEFAULT de columna** (`... DEFAULT SYSDATE`): Oracle **no permite** llamar a
+   una función de usuario en un DEFAULT (ORA-00904). Donde importa, un trigger
+   sobreescribe con hora local (ej. `PRODUCTO_PROVEEDORES` via `TRG_PP_SET_AUDIT`).
+   Si creás una tabla nueva con auditoría, **no confíes en `DEFAULT SYSDATE`**:
+   poné un trigger `BEFORE INSERT` que setee la columna con `FN_AHORA`.
+3. **DMLs de migración de una sola vez** (seeds/backfills ya ejecutados) y
+   `start_date` de jobs de `DBMS_SCHEDULER`.
 
 ## Reglas prácticas
 
@@ -120,5 +126,18 @@ SELECT page_id, process_name FROM apex_application_page_proc
 - **APEX:** `apex-work/f100/install_p67.sql` (P67) y
   `apex-work/f100/install_p_tz.sql` (P15, P52, P72, P104, P106, P109, P112).
 
-**Se dejó deliberadamente en UTC:** los timestamps de auditoría puros y los
-tokens de `PKG_EMPLEADOS`.
+## Auditoría también local (2da pasada)
+
+- **Migración:** `db/F21_fecha_local_auditoria.sql` (objetos que solo vivían en
+  la base: `EMPLEADOS_T_CONTRA`, `PR_ALTA_RAPIDA_CLIENTE`, `PRC_TRANSFERIR_STOCK`,
+  `SP_INSERTAR_PRODUCTO_PROVEEDOR`, `TRG_CIERRE_MARGEN_ANTERIOR`, `TRG_PARAMETRO_BI/BU`,
+  `TRG_STOCK_CONFIG_BIU`, `TRG_AUD_PP`, `TRG_CIERRE_PP_ANTERIOR`).
+- **In-place:** `FECHA_RESOLUCION/SOLICITUD` y logs en `F11`/`F14`/`F15`;
+  `FECHA_ENVIO/APROBACION/RECHAZO` y `fecha_creacion` en `F20`; trigger
+  `TRG_PP_SET_AUDIT` en `PP_audit_fix.sql`.
+- **APEX:** `apex-work/f100/install_p_tz_aud.sql` (P104, P105, P112, P118) + P67
+  ("Movimiento de caja contado").
+
+**Únicas excepciones que quedan en UTC (a propósito):** tokens de `PKG_EMPLEADOS`,
+DEFAULTs de columna (limitación de Oracle, respaldados por trigger donde importa)
+y DMLs de migración de una sola vez.

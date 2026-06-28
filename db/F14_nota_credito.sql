@@ -341,7 +341,7 @@ BEGIN
     ESTADO, USUARIO_SOLICITA, FECHA_SOLICITUD
   ) VALUES (
     p_id_factura, p_cod_motivo, p_tipo_nc, v_devstock, p_observacion,
-    'P', p_usuario, SYSDATE
+    'P', p_usuario, WKSP_WORKPLACE.FN_AHORA
   ) RETURNING ID_SOLICITUD_NC INTO p_id_solicitud;
 
   -- Total: poblar automaticamente todas las lineas con la cantidad acreditable.
@@ -475,7 +475,7 @@ BEGIN
     COD_MOTIVO, ID_COMPROBANTE_ORIGEN
   ) VALUES (
     v_f.ID_CLIENTE, v_f.ID_OFICINA, NULL, 'NC',
-    SYSDATE, ROUND(v_total,2), v_f.MONEDA, v_f.TIPO_CAMBIO,
+    WKSP_WORKPLACE.FN_AHORA, ROUND(v_total,2), v_f.MONEDA, v_f.TIPO_CAMBIO,
     ROUND(v_total / NVL(v_f.TIPO_CAMBIO,1),2),
     NULL, 'A',
     'Nota de Credito sobre factura '||v_f.NRO_COMPROBANTE||' - '||
@@ -508,9 +508,9 @@ BEGIN
         FECHA_MOVIMIENTO, REFERENCIA, OBSERVACION, USUARIO, FECHA, HORA
       ) VALUES (
         d.ID_PRODUCTO, v_f.ID_OFICINA, 'ENTRADA', d.CANTIDAD,
-        SYSDATE, 'NOTA_CREDITO#'||v_nro_nc,
+        WKSP_WORKPLACE.FN_AHORA, 'NOTA_CREDITO#'||v_nro_nc,
         'Devolucion por NC '||v_nro_nc||' (factura '||v_f.NRO_COMPROBANTE||')',
-        p_usuario, SYSDATE, TO_CHAR(SYSDATE,'HH24:MI:SS')
+        p_usuario, WKSP_WORKPLACE.FN_AHORA, TO_CHAR(WKSP_WORKPLACE.FN_AHORA,'HH24:MI:SS')
       );
     END LOOP;
   END IF;
@@ -587,7 +587,7 @@ BEGIN
 
   -- Cerrar la solicitud
   UPDATE WKSP_WORKPLACE.SOLICITUDES_NOTA_CREDITO
-     SET ESTADO='A', USUARIO_APRUEBA=p_usuario, FECHA_RESOLUCION=SYSDATE,
+     SET ESTADO='A', USUARIO_APRUEBA=p_usuario, FECHA_RESOLUCION=WKSP_WORKPLACE.FN_AHORA,
          ID_NC_GENERADA=v_id_nc
    WHERE ID_SOLICITUD_NC = p_id_solicitud;
 END;
@@ -617,7 +617,7 @@ BEGIN
 
   UPDATE WKSP_WORKPLACE.SOLICITUDES_NOTA_CREDITO
      SET ESTADO='R', MOTIVO_RECHAZO=TRIM(p_motivo_rechazo),
-         USUARIO_APRUEBA=p_usuario, FECHA_RESOLUCION=SYSDATE
+         USUARIO_APRUEBA=p_usuario, FECHA_RESOLUCION=WKSP_WORKPLACE.FN_AHORA
    WHERE ID_SOLICITUD_NC = p_id_solicitud;
 END;
 /

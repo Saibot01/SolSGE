@@ -237,13 +237,13 @@ BEGIN
     WHERE  dcp.id_comprobante  = :NEW.id_comprobante
       AND  dcp.precio_unitario IS NOT NULL
   ) LOOP
-    -- fecha_inicio = fecha local de negocio; fecha_creacion queda en UTC (auditoria)
+    -- fecha_inicio (negocio) y fecha_creacion (auditoria) en fecha/hora local
     INSERT INTO WKSP_WORKPLACE.PRODUCTO_PROVEEDORES (
         id_producto, id_persona, fecha_inicio, precio,
         estado, usuario_creacion, fecha_creacion
     ) VALUES (
         linea.id_producto, :NEW.id_proveedor, WKSP_WORKPLACE.FN_HOY,
-        linea.precio_pyg, 'ACTIVO', v_user, SYSDATE
+        linea.precio_pyg, 'ACTIVO', v_user, WKSP_WORKPLACE.FN_AHORA
     );
   END LOOP;
 END TRG_ACTUALIZAR_COSTO_COMPRA;
@@ -363,7 +363,7 @@ CREATE OR REPLACE PACKAGE BODY WKSP_WORKPLACE.INVENTARIO_PKG AS
     UPDATE INVENTARIO
        SET ESTADO='ENVIADO',
            USUARIO_ENVIO = p_usuario,
-           FECHA_ENVIO   = SYSDATE
+           FECHA_ENVIO   = WKSP_WORKPLACE.FN_AHORA
      WHERE ID_INVENTARIO = p_id_inventario;
   END enviar;
 
@@ -403,7 +403,7 @@ CREATE OR REPLACE PACKAGE BODY WKSP_WORKPLACE.INVENTARIO_PKG AS
     UPDATE INVENTARIO
        SET ESTADO             = 'APROBADO',
            USUARIO_APROBACION = p_usuario,
-           FECHA_APROBACION   = SYSDATE
+           FECHA_APROBACION   = WKSP_WORKPLACE.FN_AHORA
      WHERE ID_INVENTARIO = p_id_inventario;
   END aprobar;
 
@@ -414,7 +414,7 @@ CREATE OR REPLACE PACKAGE BODY WKSP_WORKPLACE.INVENTARIO_PKG AS
     UPDATE INVENTARIO
        SET ESTADO          = 'RECHAZADO',
            USUARIO_RECHAZO = p_usuario,
-           FECHA_RECHAZO   = SYSDATE,
+           FECHA_RECHAZO   = WKSP_WORKPLACE.FN_AHORA,
            OBSERVACION     = NVL(OBSERVACION,'')||CHR(10)||'Rechazado: '||p_obs
      WHERE ID_INVENTARIO = p_id_inventario;
   END rechazar;
