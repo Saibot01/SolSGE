@@ -174,7 +174,7 @@ BEGIN
 
   v_html := v_html || '<div class="kleg">Documento de control interno &mdash; arqueo y cierre de caja.<br>'
                    || '<i>No es un documento electr&oacute;nico (SIFEN) &mdash; sin validez fiscal.</i><br>'
-                   || 'Generado el '||TO_CHAR(SYSTIMESTAMP,'dd/mm/yyyy hh24:mi')||'.</div></div>';
+                   || 'Generado el '||TO_CHAR(WKSP_WORKPLACE.FN_AHORA,'dd/mm/yyyy hh24:mi')||'.</div></div>';
 
   RETURN v_html;
 END FN_CIERRE_CAJA_HTML;

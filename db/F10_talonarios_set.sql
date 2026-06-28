@@ -267,7 +267,7 @@ SELECT t.ID_TALONARIO,
          AS DESCRIPCION
   FROM WKSP_WORKPLACE.TALONARIOS t
  WHERE t.ACTIVO = 'S'
-   AND TRUNC(SYSDATE) BETWEEN t.FECHA_INICIO AND t.FECHA_FIN
+   AND WKSP_WORKPLACE.FN_HOY BETWEEN t.FECHA_INICIO AND t.FECHA_FIN
    AND t.NRO_ACTUAL < t.NRO_FINAL;
 
 prompt == F10.9 FN_COBRAR_CUOTA (validacion paso 4 -> ID_CAJA_CONF) ==
@@ -355,10 +355,10 @@ BEGIN
     ESTADO, TIPO, USUARIO,
     NRO_RECIBO, ID_TALONARIO_RECIBO, FECHA_EMISION_RECIBO, ID_CUENTA_COBRAR_DET
   ) VALUES (
-    v_cxc.ID_PERSONA, p_id_caja, SYSTIMESTAMP,
+    v_cxc.ID_PERSONA, p_id_caja, WKSP_WORKPLACE.FN_AHORA,
     v_monto_mov, NVL(p_moneda,'PYG'), 1, v_monto_mov,
     'A', 'COBRO_CXC', p_usuario,
-    v_nro_rec, p_id_talonario_rc, TRUNC(SYSDATE), p_id_detalle
+    v_nro_rec, p_id_talonario_rc, WKSP_WORKPLACE.FN_HOY, p_id_detalle
   ) RETURNING ID_MOVIMIENTO INTO v_id_mov;
 
   -- 7) Detalle por forma+metodo de pago

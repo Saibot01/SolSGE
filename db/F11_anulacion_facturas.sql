@@ -400,7 +400,7 @@ BEGIN
       TIPO_CAMBIO, TOTAL_MONEDA_ORIGEN, ESTADO, OBSERVACION,
       TIPO, ID_COMPROBANTE, USUARIO
     ) VALUES (
-      v_c.ID_CLIENTE, v_id_caja, SYSTIMESTAMP, v_c.TOTAL_MONEDA_LOCAL, v_c.MONEDA,
+      v_c.ID_CLIENTE, v_id_caja, WKSP_WORKPLACE.FN_AHORA, v_c.TOTAL_MONEDA_LOCAL, v_c.MONEDA,
       v_c.TIPO_CAMBIO, v_c.TOTAL_MONEDA_ORIGEN, 'A',
       'Anulacion factura '||v_c.NRO_COMPROBANTE,
       'EGRESO', p_id_comprobante, p_usuario

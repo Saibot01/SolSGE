@@ -2,7 +2,7 @@ prompt --application/pages/delete_00109
 begin
 wwv_flow_imp.component_begin (
  p_version_yyyy_mm_dd=>'2024.11.30'
-,p_release=>'24.2.16'
+,p_release=>'24.2.17'
 ,p_default_workspace_id=>7697821598969118
 ,p_default_application_id=>100
 ,p_default_id_offset=>0

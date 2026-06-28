@@ -149,7 +149,7 @@ BEGIN
     :NEW.ID_PRODUCTO,
     v_id_oficina,
     :NEW.CANTIDAD,
-    SYSDATE,
+    WKSP_WORKPLACE.FN_AHORA,
     'VIGENTE',
     'Reserva automatica desde orden',
     :NEW.ID_ORDEN

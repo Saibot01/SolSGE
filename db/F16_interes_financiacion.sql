@@ -131,7 +131,7 @@ BEGIN
             :NEW.ID_COMPROBANTE,
             v_total_a_pagar,
             v_total_a_pagar,
-            SYSDATE,
+            WKSP_WORKPLACE.FN_AHORA,
             'PENDIENTE'
         )
         RETURNING ID_CXC INTO v_id_cxc;

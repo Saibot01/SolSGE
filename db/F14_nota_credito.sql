@@ -443,7 +443,7 @@ BEGIN
     SELECT MIN(ID_TALONARIO) INTO v_id_talon
       FROM WKSP_WORKPLACE.TALONARIOS
      WHERE TIPO_COMPROBANTE='NC' AND ACTIVO='S' AND ID_OFICINA = v_f.ID_OFICINA
-       AND TRUNC(SYSDATE) BETWEEN FECHA_INICIO AND FECHA_FIN
+       AND WKSP_WORKPLACE.FN_HOY BETWEEN FECHA_INICIO AND FECHA_FIN
        AND NRO_ACTUAL < NRO_FINAL;
   END;
   IF v_id_talon IS NULL THEN
@@ -567,7 +567,8 @@ BEGIN
     -- La caja abierta debe ser del dia de hoy (coherente con la facturacion:
     -- no se postea efectivo de hoy a una caja de un dia anterior aun abierta).
     SELECT FEC_APERTURA INTO v_fec_caja FROM WKSP_WORKPLACE.CAJAS WHERE ID_CAJA = v_id_caja;
-    IF TRUNC(v_fec_caja) <> TRUNC(SYSDATE) THEN
+    -- Fecha LOCAL (server UTC); FN_HOY evita el falso "no es del dia" despues de ~21hs.
+    IF TRUNC(v_fec_caja) <> WKSP_WORKPLACE.FN_HOY THEN
       RAISE_APPLICATION_ERROR(-20988,
         'Tu caja abierta (#'||v_id_caja||') fue abierta el '||TO_CHAR(v_fec_caja,'DD/MM/YYYY')
         ||' y no corresponde al dia de hoy. Cerrala y abri una caja del dia para emitir la NC de contado.');
@@ -577,7 +578,7 @@ BEGIN
       TIPO_CAMBIO, TOTAL_MONEDA_ORIGEN, ESTADO, OBSERVACION,
       TIPO, ID_COMPROBANTE, USUARIO
     ) VALUES (
-      v_f.ID_CLIENTE, v_id_caja, SYSTIMESTAMP, ROUND(v_total,2), v_f.MONEDA,
+      v_f.ID_CLIENTE, v_id_caja, WKSP_WORKPLACE.FN_AHORA, ROUND(v_total,2), v_f.MONEDA,
       v_f.TIPO_CAMBIO, ROUND(v_total / NVL(v_f.TIPO_CAMBIO,1),2), 'A',
       'Nota de Credito '||v_nro_nc||' (factura '||v_f.NRO_COMPROBANTE||')',
       'EGRESO', v_id_nc, p_usuario

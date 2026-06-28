@@ -63,6 +63,8 @@ This repo is set up for the APEX toolchain. For anything touching the applicatio
 
 ## Pitfalls specific to this repo
 
+- **Fecha/hora: la BD corre en UTC (`DBTIMEZONE=+00:00`).** `SYSDATE` y `SYSTIMESTAMP` están en UTC → después de ~21hs locales adelantan el día. **NUNCA** uses `SYSDATE`/`SYSTIMESTAMP` para fecha/hora de **negocio**: usá `WKSP_WORKPLACE.FN_HOY` (fecha) o `WKSP_WORKPLACE.FN_AHORA` (fecha+hora), ambas en `db/F19_fecha_local.sql` y basadas en `America/Argentina/Buenos_Aires` (UTC-3). **No uses `America/Asuncion`** (timezone file de la BD desactualizado → devuelve UTC-4 en invierno). Solo la auditoría pura (`FECHA_CREACION/MODIFICACION/...`) puede quedar en UTC. Guía completa con tabla de casos: `GUIA_FECHA_HORA.md`. El fix vive en `db/F19`/`db/F20` + ediciones in-place + `apex-work/f100/install_p67.sql` e `install_p_tz.sql`.
+
 - The `delete_NNNNN.sql` file for a page is **required** before its `page_NNNNN.sql` — APEX import needs the page dropped first. Untracked `page_*.sql` files in `apex-work/.../pages/` without a matching `delete_*.sql` indicate an in-progress export.
 - `wallet/`, `*.env`, and `export-prev/festive-varahamihira-3893ce/` are gitignored — do not stage them.
 - Page exports embed JavaScript with Spanish identifiers and `unistr(...)` escapes for accented characters. When editing, preserve the `wwv_flow_string.join(wwv_flow_t_varchar2(...))` chunking and the `unistr('...\00EDsmbolo...')` form; do not "fix" them to plain strings.

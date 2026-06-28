@@ -1140,21 +1140,6 @@ wwv_flow_imp_page.create_page_item(
   'value_protected', 'Y')).to_clob
 );
 wwv_flow_imp_page.create_page_item(
- p_id=>wwv_flow_imp.id(15983166713097207)
-,p_name=>'P67_INTERES_FINANCIACION'
-,p_source_data_type=>'NUMBER'
-,p_item_sequence=>55
-,p_item_plug_id=>wwv_flow_imp.id(12007879735524747)
-,p_item_source_plug_id=>wwv_flow_imp.id(12776927328370633)
-,p_source=>'INTERES_FINANCIACION'
-,p_source_type=>'REGION_SOURCE_COLUMN'
-,p_display_as=>'NATIVE_HIDDEN'
-,p_is_persistent=>'N'
-,p_protection_level=>'S'
-,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
-  'value_protected', 'Y')).to_clob
-);
-wwv_flow_imp_page.create_page_item(
  p_id=>wwv_flow_imp.id(12779329267370635)
 ,p_name=>'P67_ID_FAC_ORIGEN'
 ,p_source_data_type=>'VARCHAR2'
@@ -1661,6 +1646,21 @@ wwv_flow_imp_page.create_page_item(
 ,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
   'number_alignment', 'left',
   'virtual_keyboard', 'decimal')).to_clob
+);
+wwv_flow_imp_page.create_page_item(
+ p_id=>wwv_flow_imp.id(15983166713097207)
+,p_name=>'P67_INTERES_FINANCIACION'
+,p_source_data_type=>'NUMBER'
+,p_item_sequence=>55
+,p_item_plug_id=>wwv_flow_imp.id(12007879735524747)
+,p_item_source_plug_id=>wwv_flow_imp.id(12776927328370633)
+,p_source=>'INTERES_FINANCIACION'
+,p_source_type=>'REGION_SOURCE_COLUMN'
+,p_display_as=>'NATIVE_HIDDEN'
+,p_is_persistent=>'N'
+,p_protection_level=>'S'
+,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
+  'value_protected', 'Y')).to_clob
 );
 wwv_flow_imp_page.create_page_validation(
  p_id=>wwv_flow_imp.id(15464606428249339)
@@ -2501,10 +2501,11 @@ wwv_flow_imp_page.create_page_process(
 '      p_display_location => apex_error.c_inline_in_notification);',
 '    RETURN;',
 '  END IF;',
-'  -- Verifica que la caja sea del dia actual',
+'  -- Verifica que la caja sea del dia actual (fecha LOCAL, no UTC del server).',
+'  -- El server corre en UTC; SYSDATE adelanta el dia ~21hs local. Usar hora local PY/AR (UTC-3).',
 '  SELECT FEC_APERTURA INTO v_fec_ap',
 '    FROM WKSP_WORKPLACE.CAJAS WHERE ID_CAJA = v_id_caja;',
-'  IF TRUNC(v_fec_ap) <> TRUNC(SYSDATE) THEN',
+'  IF TRUNC(v_fec_ap) <> TRUNC(CAST(SYSTIMESTAMP AT TIME ZONE ''America/Argentina/Buenos_Aires'' AS DATE)) THEN',
 '    apex_error.add_error(',
 '      p_message => ''Tu caja fue abierta en una fecha distinta a hoy. Cerrala desde Cierre de Caja y abri una nueva.'',',
 '      p_display_location => apex_error.c_inline_in_notification);',

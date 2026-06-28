@@ -5,7 +5,7 @@ begin
 --   Manifest End
 wwv_flow_imp.component_begin (
  p_version_yyyy_mm_dd=>'2024.11.30'
-,p_release=>'24.2.16'
+,p_release=>'24.2.17'
 ,p_default_workspace_id=>7697821598969118
 ,p_default_application_id=>100
 ,p_default_id_offset=>0
@@ -201,8 +201,8 @@ wwv_flow_imp_page.create_page_plug(
 '         FECHA_VENCIMIENTO,',
 '         case',
 '           when ESTADO not in (''PENDIENTE'',''APROBADO'')                                then ''t-Badge--muted''',
-'           when FECHA_VENCIMIENTO < trunc(sysdate)                                    then ''t-Badge--danger''',
-'           when FECHA_VENCIMIENTO between trunc(sysdate) and trunc(sysdate)+3         then ''t-Badge--warning''',
+'           when FECHA_VENCIMIENTO < WKSP_WORKPLACE.FN_HOY                             then ''t-Badge--danger''',
+'           when FECHA_VENCIMIENTO between WKSP_WORKPLACE.FN_HOY and WKSP_WORKPLACE.FN_HOY+3 then ''t-Badge--warning''',
 '           else                                                                           ''t-Badge--success''',
 '         end as VENC_CLASS,',
 '         CAST(NULL AS VARCHAR2(200)) AS Impresion',
@@ -352,6 +352,7 @@ wwv_flow_imp_page.create_worksheet_column(
 ,p_column_label=>'Venc Class'
 ,p_column_type=>'STRING'
 ,p_display_text_as=>'HIDDEN_ESCAPE_SC'
+,p_use_as_row_header=>'N'
 );
 wwv_flow_imp_page.create_worksheet_rpt(
  p_id=>wwv_flow_imp.id(12018393350728465)

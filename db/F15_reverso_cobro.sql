@@ -288,7 +288,8 @@ BEGIN
       'Para aprobar un reverso necesitas tener caja abierta. Abri caja primero (P65).');
   END IF;
   SELECT FEC_APERTURA INTO v_fec_caja FROM WKSP_WORKPLACE.CAJAS WHERE ID_CAJA = v_id_caja;
-  IF TRUNC(v_fec_caja) <> TRUNC(SYSDATE) THEN
+  -- Fecha LOCAL (server UTC); FN_HOY evita el falso "no es del dia" despues de ~21hs.
+  IF TRUNC(v_fec_caja) <> WKSP_WORKPLACE.FN_HOY THEN
     RAISE_APPLICATION_ERROR(-20994,
       'Tu caja abierta (#'||v_id_caja||') fue abierta el '||TO_CHAR(v_fec_caja,'DD/MM/YYYY')
       ||' y no corresponde al dia de hoy. Cerrala y abri una caja del dia.');
@@ -300,7 +301,7 @@ BEGIN
     TIPO_CAMBIO, TOTAL_MONEDA_ORIGEN, ESTADO, OBSERVACION,
     TIPO, USUARIO, ID_MOVIMIENTO_REVERSADO
   ) VALUES (
-    v_mov.ID_CLIENTE, v_id_caja, SYSTIMESTAMP, v_mov.TOTAL_MONEDA_LOCAL, v_mov.MONEDA,
+    v_mov.ID_CLIENTE, v_id_caja, WKSP_WORKPLACE.FN_AHORA, v_mov.TOTAL_MONEDA_LOCAL, v_mov.MONEDA,
     v_mov.TIPO_CAMBIO, v_mov.TOTAL_MONEDA_ORIGEN, 'A',
     'Reverso de cobro recibo '||NVL(v_nro_rec,'(s/n)')||' - '||v_s.MOTIVO,
     'EGRESO', p_usuario, v_mov.ID_MOVIMIENTO
@@ -322,7 +323,7 @@ BEGIN
      WHERE ID_DETALLE = v_mov.ID_CUENTA_COBRAR_DET FOR UPDATE;
 
     UPDATE WKSP_WORKPLACE.CUENTAS_COBRAR_DET
-       SET ESTADO = CASE WHEN FECHA_VENCIMIENTO < TRUNC(SYSDATE) THEN 'VENCIDA' ELSE 'PENDIENTE' END
+       SET ESTADO = CASE WHEN FECHA_VENCIMIENTO < WKSP_WORKPLACE.FN_HOY THEN 'VENCIDA' ELSE 'PENDIENTE' END
      WHERE ID_DETALLE = v_mov.ID_CUENTA_COBRAR_DET;
 
     -- 6) Subir el saldo de la CxC
