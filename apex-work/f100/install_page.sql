@@ -40,4 +40,8 @@ prompt --install_page
 @@application/pages/page_00131.sql
 @@application/pages/delete_00132.sql
 @@application/pages/page_00132.sql
+@@application/pages/delete_00133.sql
+@@application/pages/page_00133.sql
+@@application/pages/delete_00135.sql
+@@application/pages/page_00135.sql
 @@application/end_environment.sql
