@@ -2,8 +2,11 @@
 
 **Proyecto:** SolSGE — APEX 24.2 (App 100, alias `f100`)
 **Workspace / Schema:** `WKSP_WORKPLACE` · **Conexión:** `tesis_db`
-**Estado del plan:** PROPUESTO 2026-06-21 (actualizado 2026-06-24 con workflow de
-aprobación). Pendiente de aprobación del PO.
+**Estado del plan:** PROPUESTO 2026-06-21 (workflow 2026-06-24) → **OCULTO 2026-06-29**
+(ver §12). El backend y las pantallas siguen intactos; solo se ocultaron los puntos
+de entrada con un interruptor reversible, porque la NC ya reconcilia las cuotas
+pendientes de la CxC y el reverso devuelve efectivo (contra la regla del PO "no se
+devuelve dinero").
 **Rango de error reservado:** `-20991 … -20999` (no colisiona con F11 -20930.. ni F14 -20970..-20990).
 
 > Plan separado. Cierra la deuda cruzada anotada en `PLAN_FACTURACION.md §F9`,
@@ -448,3 +451,55 @@ Vigente/Reversado) en el SQL del IR, columna 🖨 (link a P119 con
 `P119_ID_RECIBO = #ID_RECIBO#`), ocultar columnas internas (IDs), filtros default
 por fecha. Entry de menú "Recibos de Cobro" → P131 bajo "Cuentas a Cobrar" lo
 agrega el PO (R8).
+
+---
+
+## 12. F15.2 — Módulo OCULTO (interruptor reversible, 2026-06-29)
+
+**Motivo.** Tras cerrar F14.2 (la NC reconcilia las cuotas pendientes de la CxC) y la
+regla del PO **"nunca se devuelve dinero al cliente"**, el reverso de cobro —que
+genera un `EGRESO` de caja, es decir **devuelve efectivo**— se oculta de la UI. **No
+se borra nada**: backend (`PRC_*`, `FN_COBRO_REVERSABLE`, `V_SOLICITUDES_REVERSO`,
+tablas, índice), páginas P128/P129/P130 y captura en `apex-work` quedan **intactos**.
+
+> Importante: la NC **no** reemplaza al reverso para cuotas **ya cobradas** — ahí
+> bloquea con `-20982`. Ocultar el reverso implica aceptar que, hoy, esa parte ya
+> cobrada **no se acredita ni se devuelve** (queda con la empresa). El reemplazo
+> correcto es el **saldo a favor del cliente** (proyecto aparte, aún sin construir).
+
+**Mecanismo — interruptor maestro `PARAMETROS.REVERSO_COBRO_ACTIVO`** (`db/F15_2_ocultar_reverso.sql`,
+idempotente; default `'N'`=oculto). Las guardas de UI lo leen con
+`FN_GET_PARAMETRO('REVERSO_COBRO_ACTIVO','TEXTO')`:
+- **P99 (ícono "Solicitar reverso", `fa-undo`):** el `case` que arma `REVERSO_HTML`
+  ahora exige además `... = 'S'` → con `'N'` la columna queda NULL (sin ícono). El
+  ícono 🖨 de reimpresión de recibo (P119) **no se tocó**. Capturado en
+  `apex-work/.../page_00099.sql`.
+- **Menú "Reversos de Cobro" → P129 (paso del PO, shared component):** condicionar la
+  entrada en el Builder con `Condition = PL/SQL Expression`:
+  `WKSP_WORKPLACE.FN_GET_PARAMETRO('REVERSO_COBRO_ACTIVO','TEXTO')='S'` (o desmarcarla).
+  No se importa por `@@` (R8).
+- **P128/P129/P130:** quedan inalcanzables vía UI al ocultar las dos entradas. No se
+  les puso guarda de URL (decisión: ocultar, no bloqueo duro). Si se quiere bloqueo
+  por URL directo, agregar un Before-Header que lea el parámetro.
+- **P131 "Recibos de Cobro"** (reimpresión) y el badge "Reversado": **se mantienen**
+  (son independientes del reverso; informan estado histórico).
+
+**Reversible con un solo cambio:**
+```sql
+UPDATE WKSP_WORKPLACE.PARAMETROS SET VALOR_TEXTO='S' WHERE CLAVE='REVERSO_COBRO_ACTIVO';
+COMMIT;
+```
+(+ re-mostrar la entrada de menú en el Builder). Verificado 2026-06-29: con `'S'` el
+ícono reaparece en cuotas PAGADA; con `'N'` desaparece; el backend nunca se tocó.
+
+**Textos cruzados suavizados (2026-06-29) ✅.** Los mensajes que sugerían "reversá el
+cobro primero" se reescribieron para no apuntar al módulo oculto:
+- **F14 `-20982`** (`PRC_APROBAR_NOTA_CREDITO`): "…supera el saldo pendiente (Y). Solo
+  puede acreditarse hasta el saldo pendiente; la parte ya cobrada no se acredita."
+- **F11 `-20934`** (`PRC_SOLICITAR_ANULACION`) y **`FN_MOTIVO_BLOQUEO_ANULACION`** (aviso
+  P122): "…la factura tiene N cuota(s) ya cobrada(s)… Para ajustar el saldo pendiente,
+  emití una Nota de Crédito." → redirige al camino real (NC) en vez del reverso.
+
+Verificado en `ALL_SOURCE`: ningún procedure menciona ya "revers*/revierta los cobros".
+(Cuando exista el módulo de **saldo a favor**, estos textos se volverán a revisar para
+ofrecer esa vía sobre la parte ya cobrada.)

@@ -21,7 +21,7 @@ wwv_flow_imp_page.create_page(
 ,p_page_template_options=>'#DEFAULT#'
 ,p_dialog_resizable=>'Y'
 ,p_protection_level=>'C'
-,p_page_component_map=>'16'
+,p_page_component_map=>'25'
 );
 wwv_flow_imp_page.create_page_plug(
  p_id=>wwv_flow_imp.id(23156727766069525)
@@ -34,28 +34,91 @@ wwv_flow_imp_page.create_page_plug(
   'expand_shortcuts', 'N',
   'output_as', 'HTML')).to_clob
 );
+wwv_flow_imp_page.create_page_plug(
+ p_id=>wwv_flow_imp.id(23157201759069530)
+,p_plug_name=>unistr('Aprobaci\00F3n')
+,p_region_template_options=>'#DEFAULT#:t-Region--scrollBody'
+,p_plug_template=>4072358936313175081
+,p_plug_display_sequence=>30
+,p_location=>null
+,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
+  'expand_shortcuts', 'N',
+  'output_as', 'HTML')).to_clob
+);
+wwv_flow_imp_page.create_page_plug(
+ p_id=>wwv_flow_imp.id(23158000000000040)
+,p_plug_name=>unistr('Detalle de la Nota de Cr\00E9dito')
+,p_region_template_options=>'#DEFAULT#:t-Region--scrollBody'
+,p_plug_template=>4072358936313175081
+,p_plug_display_sequence=>20
+,p_location=>null
+,p_function_body_language=>'PLSQL'
+,p_plug_source=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'DECLARE',
+'  v CLOB; v_tot NUMBER := 0;',
+'  FUNCTION f(n NUMBER) RETURN VARCHAR2 IS BEGIN',
+'    RETURN TRANSLATE(TO_CHAR(NVL(n,0),''FM999G999G999G990''),'','',''.''); END;',
+'BEGIN',
+'  v := ''<table class="t-Report-report" style="width:100%"><thead><tr>''',
+'    ||''<th>Producto</th><th>Cant.</th><th style="text-align:right">Precio facturado</th>''',
+'    ||''<th style="text-align:right">Precio nuevo</th><th style="text-align:right">Cr&eacute;dito x u.</th>''',
+'    ||''<th style="text-align:right">Subtotal</th></tr></thead><tbody>'';',
+'  FOR r IN (',
+'    SELECT pr.NOMBRE prod, d.CANTIDAD cant, oc.PRECIO_UNITARIO p_fac,',
+'           (oc.PRECIO_UNITARIO - d.PRECIO_UNITARIO) p_nuevo, d.PRECIO_UNITARIO cred,',
+'           d.CANTIDAD*d.PRECIO_UNITARIO sub',
+'      FROM WKSP_WORKPLACE.SOLICITUD_NC_DETALLE d',
+'      JOIN WKSP_WORKPLACE.DETALLE_COMPROBANTE oc ON oc.ID_DETALLE=d.ID_DETALLE_ORIGEN',
+'      JOIN WKSP_WORKPLACE.PRODUCTOS pr ON pr.ID_PRODUCTO=d.ID_PRODUCTO',
+'     WHERE d.ID_SOLICITUD_NC = :P126_ID_SOLICITUD) LOOP',
+'    v := v||''<tr><td>''||r.prod||''</td><td class="u-tR">''||r.cant||''</td>''',
+'      ||''<td class="u-tR">''||f(r.p_fac)||''</td><td class="u-tR">''||f(r.p_nuevo)||''</td>''',
+'      ||''<td class="u-tR">''||f(r.cred)||''</td><td class="u-tR">''||f(r.sub)||''</td></tr>'';',
+'    v_tot := v_tot + r.sub;',
+'  END LOOP;',
+'  -- F14.2: la NC total tambien reversa el interes de financiacion (mismo guard que el backend)',
+'  FOR i IN (',
+'    SELECT NVL(f.INTERES_FINANCIACION,0) interes',
+'      FROM WKSP_WORKPLACE.SOLICITUDES_NOTA_CREDITO s',
+'      JOIN WKSP_WORKPLACE.COMPROBANTES f ON f.ID_COMPROBANTE = s.ID_COMPROBANTE_ORIGEN',
+'     WHERE s.ID_SOLICITUD_NC = :P126_ID_SOLICITUD AND s.TIPO_NC = ''T''',
+'       AND NVL(f.INTERES_FINANCIACION,0) > 0',
+'       AND NOT EXISTS (SELECT 1 FROM WKSP_WORKPLACE.COMPROBANTES n',
+'                        WHERE n.ID_COMPROBANTE_ORIGEN = s.ID_COMPROBANTE_ORIGEN',
+'                          AND n.TIPO_COMPROBANTE=''NC'' AND n.ESTADO=''A'')) LOOP',
+'    v := v||''<tr><td>Reverso de inter&eacute;s de financiaci&oacute;n</td><td></td><td></td>''',
+'      ||''<td></td><td></td><td class="u-tR">''||f(i.interes)||''</td></tr>'';',
+'    v_tot := v_tot + i.interes;',
+'  END LOOP;',
+'  v := v||''</tbody><tfoot><tr><th colspan="5" style="text-align:right">Total NC a acreditar</th>''',
+'    ||''<th style="text-align:right">''||f(v_tot)||''</th></tr></tfoot></table>'';',
+'  RETURN v;',
+'END;'))
+,p_lazy_loading=>false
+,p_plug_source_type=>'NATIVE_DYNAMIC_CONTENT'
+);
 wwv_flow_imp_page.create_page_button(
  p_id=>wwv_flow_imp.id(23157074872069528)
-,p_button_sequence=>30
-,p_button_plug_id=>wwv_flow_imp.id(23156727766069525)
+,p_button_sequence=>10
+,p_button_plug_id=>wwv_flow_imp.id(23157201759069530)
 ,p_button_name=>'APROBAR'
 ,p_button_action=>'SUBMIT'
-,p_button_template_options=>'#DEFAULT#'
+,p_button_template_options=>'#DEFAULT#:t-Button--success'
 ,p_button_template_id=>4072362960822175091
 ,p_button_is_hot=>'Y'
 ,p_button_image_alt=>'Aprobar'
-,p_grid_new_row=>'Y'
+,p_button_position=>'NEXT'
 );
 wwv_flow_imp_page.create_page_button(
  p_id=>wwv_flow_imp.id(23157155621069529)
-,p_button_sequence=>40
-,p_button_plug_id=>wwv_flow_imp.id(23156727766069525)
+,p_button_sequence=>10
+,p_button_plug_id=>wwv_flow_imp.id(23157201759069530)
 ,p_button_name=>'RECHAZAR'
 ,p_button_action=>'SUBMIT'
-,p_button_template_options=>'#DEFAULT#'
+,p_button_template_options=>'#DEFAULT#:t-Button--danger'
 ,p_button_template_id=>4072362960822175091
 ,p_button_image_alt=>'Rechazar'
-,p_grid_new_row=>'Y'
+,p_button_position=>'PREVIOUS'
 );
 wwv_flow_imp_page.create_page_item(
  p_id=>wwv_flow_imp.id(23156898115069526)
@@ -212,44 +275,6 @@ wwv_flow_imp_page.create_page_process(
 ,p_attribute_02=>'Y'
 ,p_error_display_location=>'INLINE_IN_NOTIFICATION'
 ,p_internal_uid=>23158000000000032
-);
-wwv_flow_imp_page.create_page_plug(
- p_id=>wwv_flow_imp.id(23158000000000040)
-,p_plug_name=>unistr('Detalle de la Nota de Cr\00E9dito')
-,p_region_template_options=>'#DEFAULT#:t-Region--scrollBody'
-,p_plug_template=>4072358936313175081
-,p_plug_display_sequence=>20
-,p_location=>null
-,p_function_body_language=>'PLSQL'
-,p_plug_source=>wwv_flow_string.join(wwv_flow_t_varchar2(
-'DECLARE',
-'  v CLOB; v_tot NUMBER := 0;',
-'  FUNCTION f(n NUMBER) RETURN VARCHAR2 IS BEGIN',
-'    RETURN TRANSLATE(TO_CHAR(NVL(n,0),''FM999G999G999G990''),'','',''.''); END;',
-'BEGIN',
-'  v := ''<table class="t-Report-report" style="width:100%"><thead><tr>''',
-'    ||''<th>Producto</th><th>Cant.</th><th style="text-align:right">Precio facturado</th>''',
-'    ||''<th style="text-align:right">Precio nuevo</th><th style="text-align:right">Cr&eacute;dito x u.</th>''',
-'    ||''<th style="text-align:right">Subtotal</th></tr></thead><tbody>'';',
-'  FOR r IN (',
-'    SELECT pr.NOMBRE prod, d.CANTIDAD cant, oc.PRECIO_UNITARIO p_fac,',
-'           (oc.PRECIO_UNITARIO - d.PRECIO_UNITARIO) p_nuevo, d.PRECIO_UNITARIO cred,',
-'           d.CANTIDAD*d.PRECIO_UNITARIO sub',
-'      FROM WKSP_WORKPLACE.SOLICITUD_NC_DETALLE d',
-'      JOIN WKSP_WORKPLACE.DETALLE_COMPROBANTE oc ON oc.ID_DETALLE=d.ID_DETALLE_ORIGEN',
-'      JOIN WKSP_WORKPLACE.PRODUCTOS pr ON pr.ID_PRODUCTO=d.ID_PRODUCTO',
-'     WHERE d.ID_SOLICITUD_NC = :P126_ID_SOLICITUD) LOOP',
-'    v := v||''<tr><td>''||r.prod||''</td><td class="u-tR">''||r.cant||''</td>''',
-'      ||''<td class="u-tR">''||f(r.p_fac)||''</td><td class="u-tR">''||f(r.p_nuevo)||''</td>''',
-'      ||''<td class="u-tR">''||f(r.cred)||''</td><td class="u-tR">''||f(r.sub)||''</td></tr>'';',
-'    v_tot := v_tot + r.sub;',
-'  END LOOP;',
-'  v := v||''</tbody><tfoot><tr><th colspan="5" style="text-align:right">Total NC a acreditar</th>''',
-'    ||''<th style="text-align:right">''||f(v_tot)||''</th></tr></tfoot></table>'';',
-'  RETURN v;',
-'END;'))
-,p_lazy_loading=>false
-,p_plug_source_type=>'NATIVE_DYNAMIC_CONTENT'
 );
 wwv_flow_imp.component_end;
 end;

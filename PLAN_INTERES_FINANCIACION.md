@@ -168,7 +168,10 @@ inconsistencia conocida (factura < CxC) y se documenta.
 - **Fix `DETALLE_COMPROBANTE.ID_TIPO_IVA`** (el cursor de P67 lo deja NULL): deuda
   separada, no se toca el cursor en B.
 - Backfill de facturas a crédito históricas.
-- NC que acredite la porción de interés (la NC opera sobre líneas de bienes).
+- ~~NC que acredite la porción de interés (la NC opera sobre líneas de bienes).~~
+  **Resuelto para NC total (F14.2, 2026-06-28, ver `PLAN_NOTA_CREDITO.md §12`):** la NC
+  total reversa también el interés (vía la cabecera, no como línea de bien). La NC
+  **parcial** sigue sin acreditar/re-amortizar el interés (deuda menor que persiste).
 - Interés compuesto o tasas por cliente/segmento (hoy tasa única por plan).
 - Integración SIFEN real (`gPagCred` en XML firmado).
 

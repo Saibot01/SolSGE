@@ -421,6 +421,8 @@ CREATE OR REPLACE PROCEDURE WKSP_WORKPLACE.PRC_APROBAR_NOTA_CREDITO (
   v_id_caja  NUMBER;
   v_fec_caja DATE;
   v_rem      NUMBER;
+  v_interes  NUMBER := 0;       -- F14.2: interes de financiacion a reversar (solo NC total)
+  v_prev_nc  PLS_INTEGER;       -- F14.2: NC previas aprobadas sobre la misma factura
 BEGIN
   IF p_usuario IS NULL THEN
     RAISE_APPLICATION_ERROR(-20978,'Usuario aprobador requerido.');
@@ -463,6 +465,22 @@ BEGIN
     RAISE_APPLICATION_ERROR(-20981,'El total de la NC debe ser mayor a cero.');
   END IF;
 
+  -- F14.2: la NC TOTAL reversa tambien el interes de financiacion de la factura.
+  -- El interes vive en la cabecera (no en lineas; mismo criterio que F16/F12), por
+  -- eso se suma aparte. Solo aplica si es la PRIMERA NC sobre la factura (reversion
+  -- limpia) -> en NC parcial el financiamiento sigue vivo y NO se acredita (R7).
+  -- Contado: INTERES_FINANCIACION es NULL -> no aplica. Entra antes del INSERT de
+  -- cabecera y del cap -20982, asi que el documento y la validacion ya usan el total
+  -- con interes (NC total sin pagos = SALDO exacto -> pasa; con cuotas pagadas -> -20982).
+  SELECT COUNT(*) INTO v_prev_nc FROM WKSP_WORKPLACE.COMPROBANTES
+   WHERE ID_COMPROBANTE_ORIGEN = v_f.ID_COMPROBANTE
+     AND TIPO_COMPROBANTE='NC' AND ESTADO='A';
+  IF v_s.TIPO_NC = 'T' AND v_prev_nc = 0 AND NVL(v_f.INTERES_FINANCIACION,0) > 0 THEN
+    v_interes := v_f.INTERES_FINANCIACION;
+    v_total   := v_total + v_interes;
+    v_iva10   := v_iva10 + ROUND(v_interes*10/110, 0);  -- IVA contenido del interes (F16, PYG entero)
+  END IF;
+
   -- Reservar numero NC
   v_nro_nc := WKSP_WORKPLACE.FN_OBTENER_COMPROBANTE(v_id_talon);
 
@@ -472,7 +490,7 @@ BEGIN
     FECHA, TOTAL_MONEDA_LOCAL, MONEDA, TIPO_CAMBIO, TOTAL_MONEDA_ORIGEN,
     FORMA_PAGO, ESTADO, OBSERVACION, ID_TALONARIO, NRO_COMPROBANTE,
     TOTAL_IVA_5, TOTAL_IVA_10, TOTAL_IVA,
-    COD_MOTIVO, ID_COMPROBANTE_ORIGEN
+    COD_MOTIVO, ID_COMPROBANTE_ORIGEN, INTERES_FINANCIACION
   ) VALUES (
     v_f.ID_CLIENTE, v_f.ID_OFICINA, NULL, 'NC',
     WKSP_WORKPLACE.FN_AHORA, ROUND(v_total,2), v_f.MONEDA, v_f.TIPO_CAMBIO,
@@ -482,7 +500,7 @@ BEGIN
       (SELECT DESCRIPCION FROM WKSP_WORKPLACE.MOTIVOS_NOTA_CREDITO WHERE COD_MOTIVO=v_s.COD_MOTIVO),
     v_id_talon, v_nro_nc,
     ROUND(v_iva5,2), ROUND(v_iva10,2), ROUND(v_iva5+v_iva10,2),
-    v_s.COD_MOTIVO, v_f.ID_COMPROBANTE
+    v_s.COD_MOTIVO, v_f.ID_COMPROBANTE, NULLIF(v_interes,0)
   ) RETURNING ID_COMPROBANTE INTO v_id_nc;
 
   -- Detalle NC (no mueve stock: TIPO_COMPROBANTE='NC')
@@ -529,8 +547,9 @@ BEGIN
 
     IF v_total > v_cxc.SALDO + 0.01 THEN
       RAISE_APPLICATION_ERROR(-20982,
-        'La NC ('||ROUND(v_total,2)||') excede el saldo pendiente de la cuenta '||
-        '('||v_cxc.SALDO||'). Reverse los cobros antes de acreditar lo ya pagado.');
+        'La NC ('||ROUND(v_total,2)||') supera el saldo pendiente de la cuenta '||
+        '('||v_cxc.SALDO||'). Solo puede acreditarse hasta el saldo pendiente; '||
+        'la parte ya cobrada no se acredita.');
     END IF;
 
     IF v_s.TIPO_NC = 'T' OR v_total >= v_cxc.SALDO - 0.01 THEN
@@ -694,6 +713,7 @@ CREATE OR REPLACE FUNCTION WKSP_WORKPLACE.FN_KUDE_NOTA_CREDITO_HTML (
            C.ID_COMPROBANTE, C.FECHA, C.TOTAL_MONEDA_LOCAL AS TOTAL, C.NRO_COMPROBANTE,
            NVL(MO.DESCRIPCION, C.MONEDA) AS MONEDA, MO.ES_LOCAL,
            NVL(C.TOTAL_IVA_5,0) AS IVA5, NVL(C.TOTAL_IVA_10,0) AS IVA10, NVL(C.TOTAL_IVA,0) AS IVATOT,
+           NVL(C.INTERES_FINANCIACION,0) AS INTERES,
            T.TIMBRADO, T.FECHA_INICIO AS TIMB_INI,
            MT.DESCRIPCION AS MOTIVO,
            F.NRO_COMPROBANTE AS FAC_NRO, F.FECHA AS FAC_FECHA
@@ -758,6 +778,16 @@ BEGIN
                        || '</td><td class="r">'||fmt(d.PRECIO_UNITARIO)||'</td>'
                        || '<td class="r">'||v_ce||'</td><td class="r">'||v_c5||'</td><td class="r">'||v_c10||'</td></tr>';
     END LOOP;
+    -- F14.2: la NC total reversa el interes de financiacion (vive en la cabecera, no
+    -- en lineas; mismo criterio que F12). Fila gravada al 10%, sumada al subtotal 10%
+    -- para que la tabla cuadre con el Total de la NC y la liquidacion del IVA (que ya
+    -- lo incluyen). Solo aparece si la cabecera de la NC trae interes (>0).
+    IF v.INTERES > 0 THEN
+      v_sub_10 := v_sub_10 + v.INTERES;
+      v_html := v_html || '<tr><td class="c"></td><td>Reverso de inter&eacute;s de financiaci&oacute;n</td>'
+                       || '<td class="r"></td><td class="r"></td>'
+                       || '<td class="r"></td><td class="r">'||fmt(v.INTERES)||'</td></tr>';
+    END IF;
     v_html := v_html || '<tr class="ksub"><td colspan="3" class="r"><b>Subtotales</b></td><td class="r">'||fmt(v_sub_ex)
                      || '</td><td class="r">'||fmt(v_sub_5)||'</td><td class="r">'||fmt(v_sub_10)||'</td></tr></tbody></table>';
 

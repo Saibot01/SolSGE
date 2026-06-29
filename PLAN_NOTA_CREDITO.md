@@ -312,7 +312,7 @@ subtotales por tasa, total en letras, leyenda "sin validez fiscal".
 | R2 | Doble acreditación parcial concurrente. | `FN_CANT_ACREDITABLE` + lock `FOR UPDATE` de la solicitud + re-check al aprobar. |
 | R3 | `CK_NC_MOTIVO` vs 3 NC legacy con `COD_MOTIVO` NULL. | **Resuelto vía limpieza (Paso 1b):** las 3 NC legacy malformadas se eliminan (DELETE guardado por `ID_ORDEN_VENTA IS NOT NULL`) → CK `ENABLE VALIDATE` sin backfill. `ID_COMPROBANTE_ORIGEN` se garantiza por procedure. |
 | R4 | NC en crédito **sobre cuotas ya cobradas** (monto NC excede saldo pendiente). | **Fuera de alcance MVP:** la NC se capa al saldo pendiente; acreditar lo ya cobrado exige reverso de cobro (pantalla futura, ya anotada como deuda en F11 §2 #2). Con el cap + la reconciliación de cuotas (§5.1 Paso 7), el invariante `SALDO = Σ cuotas vigentes` se mantiene siempre. |
-| R7 | NC parcial sobre crédito: el **interés financiero** del monto acreditado no se recalcula. | Deuda menor: se reduce capital/cuotas pero la tasa de interés original no se re-amortiza. Aceptable para el MVP. |
+| R7 | NC parcial sobre crédito: el **interés financiero** del monto acreditado no se recalcula. | Deuda menor: se reduce capital/cuotas pero la tasa de interés original no se re-amortiza. Aceptable para el MVP. **Parcialmente cerrada (F14.2, §12):** la NC **total** ahora sí reversa el interés completo de la factura; la NC **parcial** sigue sin re-amortizar (deuda menor que persiste). |
 | R5 | Número NC quemado si falla post-reserva. | Todo en una transacción sin commit intermedio → rollback libera `NRO_ACTUAL`. |
 | R6 | Re-import del menú con `@@` falla (shared components no-upsert). | Editar menú en Builder + re-exportar manual (igual R8 de F11). |
 | — | Integración SIFEN real (CDC/QR/envío del DTE). | Fuera de alcance: SolSGE es representación gráfica "sin validez fiscal" (igual que F12/F13). |
@@ -602,3 +602,71 @@ sobre-acreditar — decisión: se dejó abierto, sin límite de 1 pendiente.)
 | Aumentar el importe / agregar cargos sobre una factura | **Nota de Débito** (SIFEN tipo 6) — *no implementada* |
 | Vender productos nuevos / nueva operación | **Factura nueva** |
 | Cancelar dentro de 48 h | **Evento de Cancelación** (F11) |
+
+---
+
+## 12. F14.2 — NC total reversa también el interés de financiación
+
+**Estado:** EN CURSO (2026-06-28).
+
+> Cierra la deuda cruzada de §8 R7 y de `PLAN_INTERES_FINANCIACION.md §6` ("NC sobre
+> la porción de interés"). Detectado al revisar el módulo con el PO: una NC **total**
+> sobre una factura a crédito documentaba solo los **bienes**, pero
+> `PRC_APROBAR_NOTA_CREDITO` ya anula la CxC **completa** (interés incluido). Resultado:
+> el documento fiscal sub-reportaba por el interés y su IVA quedaba sin acreditar
+> (inconsistencia documento ↔ CxC ↔ IVA). La NC **parcial** queda como está (el
+> financiamiento sigue vivo — §8 R7).
+
+### 12.1 Decisión de alcance
+- **Solo se acredita el interés cuando `TIPO_NC='T'`** (total explícito) **y** no hubo
+  NC previa aprobada sobre esa factura (reversión limpia y primera).
+- El interés se modela **en la cabecera de la NC** (columna `COMPROBANTES.INTERES_FINANCIACION`,
+  ya existente), **espejando F16/F12** — no se inventa una línea en el detalle.
+- **Contado** queda fuera naturalmente: `INTERES_FINANCIACION` es NULL en facturas
+  contado → no dispara nada.
+- Sin nuevos errores, sin cambios de tablas, sin tocar la rama parcial.
+
+### 12.2 Backend — `db/F14_nota_credito.sql` (in-place, `CREATE OR REPLACE`)
+
+**`PRC_APROBAR_NOTA_CREDITO`:**
+- Variables nuevas `v_interes NUMBER := 0;` y `v_prev_nc PLS_INTEGER;`.
+- Tras el cálculo de totales (antes de reservar el número NC): si `TIPO_NC='T'`, no hay
+  NC previa (`COUNT` de `COMPROBANTES TIPO='NC' ESTADO='A'` por `ID_COMPROBANTE_ORIGEN`)
+  y `INTERES_FINANCIACION>0` → `v_interes := v_f.INTERES_FINANCIACION`,
+  `v_total += v_interes`, `v_iva10 += ROUND(v_interes*10/110,0)` (IVA contenido, PYG entero).
+- Como entra **antes** del INSERT de cabecera y del cap `-20982`: la cabecera NC ya sale
+  con el interés; el cap compara el total **con** interés (NC total sin pagos = `SALDO`
+  exacto → pasa; con cuotas pagadas → `-20982`, correcto).
+- INSERT de cabecera: agregar columna `INTERES_FINANCIACION` con `NULLIF(v_interes,0)`.
+- La CxC **no cambia**: la rama `T` ya pone `SALDO=0`; ahora el documento coincide.
+
+**`FN_KUDE_NOTA_CREDITO_HTML`:**
+- Cursor `cr`: agregar `NVL(C.INTERES_FINANCIACION,0) AS INTERES`.
+- Tras el loop de items y antes de Subtotales: fila "Reverso de interés de financiación"
+  (importe en columna IVA 10%, sumado a `v_sub_10`), espejo de `FN_KUDE_FACTURA_HTML`
+  (6 columnas). Total y liquidación de IVA no cambian (leen la cabecera, ya con interés).
+
+### 12.3 APEX — P126
+El desglose "Total NC a acreditar" se calcula desde las **líneas** → para una NC total
+mostraría solo los bienes. Se le suma el interés cuando `TIPO_NC='T'` para que el
+aprobador vea el número real. Única edición de página (re-export antes de tocar). P127
+no cambia (solo llama a la función).
+
+### 12.4 Test plan (smoke con `ROLLBACK`)
+| Caso | Setup | Esperado |
+|------|-------|----------|
+| A | NC **total**, factura crédito **sin** cuotas pagadas | NC = bienes + interés = total factura; CxC `SALDO=0`/`ANULADA`; KuDE con fila "Reverso de interés"; IVA cuadra |
+| B | NC **parcial** sobre la misma | Sin cambios (interés NO se acredita) — regresión |
+| C | NC **total** con cuotas pagadas (ej. factura 0035) | `-20982` (total ahora incluye interés) |
+| D | NC **total** habiendo NC previa | No acredita interés (guard `v_prev_nc=0`) — limitación documentada |
+| E | NC **total contado** | Sin interés (columna NULL) — sin cambios |
+| F | Idempotencia: re-correr `F14_nota_credito.sql` 2× | Sin error |
+
+### 12.5 Riesgos / limitaciones
+- **R1** — NC total tras parciales: no acredita interés (guard). El caso normal es
+  "primera NC = total". Documentado.
+- **R2** — Redondeo IVA del interés `ROUND(interes*10/110,0)` (PYG entero, criterio F16)
+  → ±1 Gs. irrelevante.
+- **R3 (footgun deploy)** — el cambio vive en `db/F14_nota_credito.sql`; desplegar =
+  **re-correr F14** (idempotente; el DELETE de NC legacy sigue guardado por
+  `ID_ORDEN_VENTA IS NOT NULL`).

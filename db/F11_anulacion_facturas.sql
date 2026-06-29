@@ -288,8 +288,8 @@ BEGIN
        AND ccd.ESTADO = 'PAGADA';
     IF v_cuotas_pagadas > 0 THEN
       RAISE_APPLICATION_ERROR(-20934,
-        'No se puede anular: hay '||v_cuotas_pagadas||' cuota(s) cobrada(s). '
-        ||'Revierta los cobros primero.');
+        'No se puede anular: la factura tiene '||v_cuotas_pagadas||' cuota(s) ya cobrada(s). '
+        ||'Para ajustar el saldo pendiente, emiti una Nota de Credito.');
     END IF;
   END IF;
 
@@ -537,8 +537,8 @@ BEGIN
      WHERE cxc.ID_COMPROBANTE = p_id_comprobante
        AND ccd.ESTADO = 'PAGADA';
     IF v_cuotas > 0 THEN
-      RETURN 'La factura tiene '||v_cuotas||' cuota(s) cobrada(s). '
-             ||'Reversa los cobros antes de solicitar la anulacion.';
+      RETURN 'La factura tiene '||v_cuotas||' cuota(s) ya cobrada(s), por lo que no puede anularse. '
+             ||'Para ajustar el saldo pendiente, emiti una Nota de Credito.';
     END IF;
   END IF;
 
