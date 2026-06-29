@@ -44,4 +44,16 @@ prompt --install_page
 @@application/pages/page_00133.sql
 @@application/pages/delete_00135.sql
 @@application/pages/page_00135.sql
+@@application/pages/delete_00136.sql
+@@application/pages/page_00136.sql
+@@application/pages/delete_00137.sql
+@@application/pages/page_00137.sql
+@@application/pages/delete_00138.sql
+@@application/pages/page_00138.sql
+@@application/pages/delete_00139.sql
+@@application/pages/page_00139.sql
+@@application/pages/delete_00140.sql
+@@application/pages/page_00140.sql
+@@application/pages/delete_00141.sql
+@@application/pages/page_00141.sql
 @@application/end_environment.sql

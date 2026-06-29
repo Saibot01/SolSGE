@@ -255,6 +255,20 @@ Página normal (no modal). Filtros: período (rango de meses), oficina, vendedor
 
 ## 7. Mejoras pendientes (opcionales, no bloquean el cierre)
 
+- **[HECHO 2026-06-29] Pantalla de carga de Metas de Venta (P140 + P141).** Antes
+  `METAS_VENTA` solo se cargaba por SQL (seed); ahora tiene ABM (mismo patrón
+  reporte+modal que P138/P139 de cobros). **P140 "Metas de Venta"**: Interactive
+  Report (patrón P13/P63 de la app) de
+  `METAS_VENTA` con Tipo (Vendedor/Sucursal) · dimensión (`COALESCE(empleado.nombre,
+  oficina.descripcion)`) · período · monto + venta neta/cumplimiento (join
+  `V_VENTAS_VENDEDOR_META`, solo para metas de vendedor), link de edición + botón
+  Crear + DA refresh al cerrar el modal. **P141 "Meta de Venta"** (modal): form DML
+  sobre `METAS_VENTA` con select **Tipo** que muestra el select Vendedor **o**
+  Sucursal y limpia/oculta el otro (DA JS `apex.item().show/hide`, fire-on-load + un
+  proceso BEFORE_HEADER que setea `P141_TIPO` según la dimensión al editar); la regla
+  1-de-2 la respaldan el CHECK + `TRG_METAS_VENTA_BI`. Import aislado `install_p140.sql`
+  (P141 antes que P140). Pendiente: validación visual + entry de menú (PO). Entry
+  recomendada: "Metas de Venta" → P140.
 - **Presets de fecha en P135** — botones rápidos **Hoy / Este mes / Este año** que
   llenan `P135_DESDE`/`P135_HASTA` con un clic (DA "Set Value" + refresh del informe).
   Hoy el rango se carga a mano (default = este mes). No implementado aún.
