@@ -301,9 +301,10 @@ default "Todos los meses"), como P133/P136.
   `install_p145.sql`. El botón de P144 abre P145.
 - [x] **H5 — Cierre. HECHO 2026-07-02.** P144/P145 registradas en `install_page.sql`
   (tracking), `CLAUDE.md` (entrada F25) y memoria `reportes-gerenciales` actualizadas
-  (replicación **COMPLETA**: Ventas/Cobros/Inventario/Compras). **Pendiente del PO:**
-  validación visual de P144/P145 + entrada de menú "Dashboard de Compras" → P144.
-  Commit `feat(F25)` a cargo del PO.
+  (replicación **COMPLETA**: Ventas/Cobros/Inventario/Compras). **Validado
+  visualmente por el PO el 2026-07-02.** Commit `feat(F25)` `6c378a8` + F24 `595a70e`
+  integrados a `main` (fast-forward). **Único pendiente:** entrada de menú "Dashboard
+  de Compras" → P144 (la agrega el PO en el Builder).
 
 ---
 
