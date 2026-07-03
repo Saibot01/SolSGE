@@ -367,11 +367,17 @@ END;
 /
 show errors procedure PRC_SOLICITAR_NOTA_CREDITO
 
-prompt == F14.10 PRC_VALIDAR_SOLICITUD_NC (cantidades acreditables; >0 lineas) ==
+prompt == F14.10 PRC_VALIDAR_SOLICITUD_NC (cantidades acreditables; >0 lineas; monto>0) ==
+-- Punto unico de validacion: lo llaman P125 al SOLICITAR y PRC_APROBAR al aprobar.
+-- Debe frenar aca cualquier solicitud sin valor economico (precio a acreditar 0 o
+-- negativo, o total 0). Antes solo PRC_APROBAR chequeaba el total (-20981), asi que
+-- una solicitud con monto 0/negativo se generaba y quedaba PENDIENTE (bug reportado).
+-- Se alinea con la NC de compra (F26 PRC_REGISTRAR_NC_COMPRA -20913/-20914).
 CREATE OR REPLACE PROCEDURE WKSP_WORKPLACE.PRC_VALIDAR_SOLICITUD_NC (
   p_id_solicitud IN NUMBER
 ) IS
   v_lineas PLS_INTEGER;
+  v_total  NUMBER;
 BEGIN
   SELECT COUNT(*) INTO v_lineas
     FROM WKSP_WORKPLACE.SOLICITUD_NC_DETALLE WHERE ID_SOLICITUD_NC = p_id_solicitud;
@@ -393,13 +399,22 @@ BEGIN
         'La cantidad a acreditar ('||r.CANTIDAD||') excede lo disponible ('||r.acred||
         ') en una de las lineas. Otra NC pudo haberla consumido.');
     END IF;
-    -- Tope SIFEN: no se puede acreditar a un precio mayor al facturado.
-    IF r.precio_nc > r.precio_fac THEN
+    -- Precio a acreditar valido: > 0 (sin valor no hay NC) y <= facturado (tope SIFEN).
+    IF NVL(r.precio_nc,0) <= 0 OR r.precio_nc > r.precio_fac THEN
       RAISE_APPLICATION_ERROR(-20989,
-        'El precio a acreditar ('||r.precio_nc||') supera el precio facturado ('||r.precio_fac||
-        ') en una de las lineas.');
+        'El precio a acreditar ('||r.precio_nc||') debe ser mayor a 0 y no superar el '||
+        'precio facturado ('||r.precio_fac||') en una de las lineas.');
     END IF;
   END LOOP;
+
+  -- Total economico de la solicitud > 0 (defensa de red; espejo del -20981 de PRC_APROBAR
+  -- y del -20914 de F26). Frena el monto 0 ya en la SOLICITUD, no recien al aprobar.
+  SELECT NVL(SUM(d.CANTIDAD * NVL(d.PRECIO_UNITARIO,0)),0) INTO v_total
+    FROM WKSP_WORKPLACE.SOLICITUD_NC_DETALLE d
+   WHERE d.ID_SOLICITUD_NC = p_id_solicitud;
+  IF v_total <= 0 THEN
+    RAISE_APPLICATION_ERROR(-20981,'El total de la Nota de Credito debe ser mayor a cero.');
+  END IF;
 END;
 /
 show errors procedure PRC_VALIDAR_SOLICITUD_NC

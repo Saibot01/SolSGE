@@ -670,3 +670,36 @@ no cambia (solo llama a la función).
 - **R3 (footgun deploy)** — el cambio vive en `db/F14_nota_credito.sql`; desplegar =
   **re-correr F14** (idempotente; el DELETE de NC legacy sigue guardado por
   `ID_ORDEN_VENTA IS NOT NULL`).
+
+## 13. Fix — solicitud con monto 0 o negativo (2026-07-03)
+
+**Bug reportado:** el PO pudo generar una **solicitud de NC con monto 0** (y la prueba
+mostró que también aceptaba **negativos**). La solicitud quedaba en estado `P` (pendiente)
+en la bandeja de aprobación P124/P126.
+
+**Causa raíz:** `PRC_VALIDAR_SOLICITUD_NC` (F14.10) es el **único punto de validación**
+(lo llaman P125 al *solicitar* y `PRC_APROBAR` al *aprobar*). Validaba `CANTIDAD > 0`,
+`CANTIDAD ≤ acreditable` y `precio ≤ facturado`, pero **no** exigía `precio a acreditar > 0`
+ni `total > 0`. El único chequeo de monto (`-20981`) estaba solo en `PRC_APROBAR`, es decir
+recién al aprobar → la **solicitud** se generaba igual con monto 0/negativo. Reproducido en
+la BD con `ROLLBACK`: precio `0` y `-5000` pasaban la validación.
+
+**Fix (in-place, `CREATE OR REPLACE` en `db/F14_nota_credito.sql`):** se alineó
+`PRC_VALIDAR_SOLICITUD_NC` al estándar de la NC de compra (F26 `PRC_REGISTRAR_NC_COMPRA`,
+`-20913`/`-20914`):
+- Por línea: el precio a acreditar debe ser **> 0** y ≤ facturado → se amplió el `-20989`
+  (antes solo "supera el precio facturado"; ahora "debe ser mayor a 0 y no superar el precio
+  facturado").
+- Agregado: **total > 0** → `-20981` (mismo código/mensaje que `PRC_APROBAR`), ahora frenado
+  ya en la **solicitud**, no recién al aprobar.
+
+Al ser el punto único de validación, cierra el hueco en las dos puntas (crear y aprobar).
+Verificado post-fix: precio `0`/`-5000` bloqueados con `-20989`, precio válido (≤ facturado)
+pasa. Objeto `VALID`.
+
+**NC de proveedores (F26):** revisada, **no** tenía el bug — `PRC_REGISTRAR_NC_COMPRA` ya
+valida precio `<= 0 OR > facturado` (`-20913`) y total `<= 0` (`-20914`). Sin cambios.
+
+**Pendiente de datos:** la solicitud de prueba **#12** (`P`, motivo 8, 0 líneas, del 17/06)
+quedó colgada en la bandeja; con el fix nunca puede aprobarse (`-20975`). Limpieza a criterio
+del PO.
