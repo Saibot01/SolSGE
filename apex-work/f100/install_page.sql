@@ -60,6 +60,10 @@ prompt --install_page
 @@application/pages/page_00142.sql
 @@application/pages/delete_00143.sql
 @@application/pages/page_00143.sql
+@@application/pages/delete_00144.sql
+@@application/pages/page_00144.sql
+@@application/pages/delete_00145.sql
+@@application/pages/page_00145.sql
 @@application/pages/delete_00097.sql
 @@application/pages/page_00097.sql
 @@application/pages/delete_00041.sql
