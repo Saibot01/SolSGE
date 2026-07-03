@@ -82,4 +82,8 @@ prompt --install_page
 @@application/pages/page_00149.sql
 @@application/pages/delete_00150.sql
 @@application/pages/page_00150.sql
+@@application/pages/delete_00094.sql
+@@application/pages/page_00094.sql
+@@application/pages/delete_00151.sql
+@@application/pages/page_00151.sql
 @@application/end_environment.sql

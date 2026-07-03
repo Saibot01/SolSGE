@@ -19,26 +19,33 @@ set define off
 whenever sqlerror exit sql.sqlcode rollback
 
 prompt == F25.1 V_CMP_COMPRA (grano comprobante = gasto) ==
+-- Incluye FA (gasto +) y NC de compra (credito -, F26): el gasto neto = SUM(TOTAL).
+-- La columna TIPO_COMPROBANTE permite a las vistas downstream distinguir FA de NC.
 CREATE OR REPLACE FORCE VIEW WKSP_WORKPLACE.V_CMP_COMPRA AS
 SELECT c.ID_COMPROBANTE,
        c.ID_PROVEEDOR,
        TRIM(perp.PRIMER_NOMBRE||' '||perp.PRIMER_APELLIDO) PROVEEDOR,
        c.FECHA_EMISION,
        TRUNC(c.FECHA_EMISION,'MM')                         PERIODO,
-       c.TOTAL_COMPROBANTE                                 TOTAL,
+       CASE WHEN c.TIPO_COMPROBANTE='NC' THEN -c.TOTAL_COMPROBANTE
+            ELSE c.TOTAL_COMPROBANTE END                   TOTAL,
        c.ESTADO,
-       CASE c.ESTADO WHEN 'R' THEN 'Registrada'
-                     WHEN 'PR' THEN 'Recepcion parcial'
-                     WHEN 'C' THEN 'Completada'
-                     WHEN 'A' THEN 'Anulada' ELSE c.ESTADO END ESTADO_LABEL,
+       CASE WHEN c.TIPO_COMPROBANTE='NC' THEN 'Nota de credito'
+            ELSE CASE c.ESTADO WHEN 'R' THEN 'Registrada'
+                               WHEN 'PR' THEN 'Recepcion parcial'
+                               WHEN 'C' THEN 'Completada'
+                               WHEN 'A' THEN 'Anulada' ELSE c.ESTADO END
+       END                                                 ESTADO_LABEL,
        c.FORMA_PAGO,
-       CASE c.FORMA_PAGO WHEN '1' THEN 'Credito'
-                         WHEN '21' THEN 'Contado' ELSE 'Otro' END CONDICION,
+       CASE WHEN c.TIPO_COMPROBANTE='NC' THEN 'Nota de credito'
+            WHEN c.FORMA_PAGO='1'  THEN 'Credito'
+            WHEN c.FORMA_PAGO='21' THEN 'Contado' ELSE 'Otro' END CONDICION,
        NVL(oc.ID_OFICINA, c.ID_OFICINA)                    ID_OFICINA,
        ofi.DESCRIPCION                                     OFICINA,
        oc.ID_ORDEN_COMPRA,
        oc.ID_EMPLEADO,
-       NVL(TRIM(pere.PRIMER_NOMBRE||' '||pere.PRIMER_APELLIDO),'(sin asignar)') COMPRADOR
+       NVL(TRIM(pere.PRIMER_NOMBRE||' '||pere.PRIMER_APELLIDO),'(sin asignar)') COMPRADOR,
+       c.TIPO_COMPROBANTE
   FROM WKSP_WORKPLACE.COMPROBANTES_PROVEEDOR c
   JOIN WKSP_WORKPLACE.PROVEEDORES pr        ON pr.ID_PERSONA   = c.ID_PROVEEDOR
   LEFT JOIN WKSP_WORKPLACE.PERSONAS perp    ON perp.ID_PERSONA = pr.ID_PERSONA
@@ -46,7 +53,7 @@ SELECT c.ID_COMPROBANTE,
   LEFT JOIN WKSP_WORKPLACE.EMPLEADOS emp    ON emp.ID_EMPLEADO = oc.ID_EMPLEADO
   LEFT JOIN WKSP_WORKPLACE.PERSONAS pere    ON pere.ID_PERSONA = emp.ID_PERSONA
   LEFT JOIN WKSP_WORKPLACE.OFICINAS ofi     ON ofi.CODIGO_OFICINA = NVL(oc.ID_OFICINA, c.ID_OFICINA)
- WHERE c.TIPO_COMPROBANTE = 'FA'
+ WHERE c.TIPO_COMPROBANTE IN ('FA','NC')
    AND c.ESTADO <> 'A'
    AND c.TOTAL_COMPROBANTE IS NOT NULL;
 
@@ -66,15 +73,16 @@ SELECT d.ID_DETALLE,
   FROM WKSP_WORKPLACE.DETALLE_COMPROBANTE_PROV d
   JOIN WKSP_WORKPLACE.V_CMP_COMPRA cc          ON cc.ID_COMPROBANTE = d.ID_COMPROBANTE
   LEFT JOIN WKSP_WORKPLACE.PRODUCTOS p         ON p.ID_PRODUCTO = d.ID_PRODUCTO
-  LEFT JOIN WKSP_WORKPLACE.CATEGORIAS_PRODUCTOS cat ON cat.ID_CATEGORIA = p.ID_CATEGORIA;
+  LEFT JOIN WKSP_WORKPLACE.CATEGORIAS_PRODUCTOS cat ON cat.ID_CATEGORIA = p.ID_CATEGORIA
+ WHERE cc.TIPO_COMPROBANTE = 'FA';   -- top productos = compras (FA); las lineas de NC no suman
 
 prompt == F25.1 V_CMP_GASTO_MES (gasto por periodo/proveedor) ==
 CREATE OR REPLACE FORCE VIEW WKSP_WORKPLACE.V_CMP_GASTO_MES AS
 SELECT PERIODO,
        ID_PROVEEDOR,
        PROVEEDOR,
-       COUNT(*)    N_COMPRAS,
-       SUM(TOTAL)  GASTO
+       SUM(CASE WHEN TIPO_COMPROBANTE='FA' THEN 1 ELSE 0 END) N_COMPRAS,  -- NC no cuenta como compra
+       SUM(TOTAL)  GASTO   -- gasto neto: FA (+) menos NC (-)
   FROM WKSP_WORKPLACE.V_CMP_COMPRA
  GROUP BY PERIODO, ID_PROVEEDOR, PROVEEDOR;
 
