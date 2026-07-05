@@ -15,7 +15,7 @@ wwv_flow_imp_shared.create_list(
  p_id=>wwv_flow_imp.id(7706470273831245)
 ,p_name=>'Navigation Menu'
 ,p_list_status=>'PUBLIC'
-,p_version_scn=>39029712343603
+,p_version_scn=>39030253963895
 );
 wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(8007399120830870)
@@ -62,9 +62,12 @@ wwv_flow_imp_shared.create_list_item(
 wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(11527866378699159)
 ,p_list_item_display_sequence=>10010
-,p_list_item_link_text=>'Empleados IG'
+,p_list_item_link_text=>'Empleados'
 ,p_list_item_link_target=>'f?p=&APP_ID.:16:&SESSION.::&DEBUG.::::'
 ,p_list_item_icon=>'fa-table'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 16, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
 ,p_parent_list_item_id=>wwv_flow_imp.id(8171737903383999)
 ,p_list_item_current_type=>'TARGET_PAGE'
 );
@@ -82,9 +85,10 @@ wwv_flow_imp_shared.create_list_item(
 );
 wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(8255106441955864)
-,p_list_item_display_sequence=>40
+,p_list_item_display_sequence=>10035
 ,p_list_item_link_text=>'Clientes'
 ,p_list_item_icon=>'fa-file-user'
+,p_parent_list_item_id=>wwv_flow_imp.id(8171737903383999)
 ,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
 ,p_list_item_current_for_pages=>'19,20'
 );
@@ -134,31 +138,6 @@ wwv_flow_imp_shared.create_list_item(
 ,p_list_item_current_for_pages=>'26,27'
 );
 wwv_flow_imp_shared.create_list_item(
- p_id=>wwv_flow_imp.id(9641252169881528)
-,p_list_item_display_sequence=>190
-,p_list_item_link_text=>'PRUEBA C IG'
-,p_list_item_link_target=>'f?p=&APP_ID.:28:&SESSION.::&DEBUG.::::'
-,p_list_item_icon=>'fa-table-pointer'
-,p_list_item_disp_cond_type=>'EXPRESSION'
-,p_list_item_disp_condition=>wwv_flow_string.join(wwv_flow_t_varchar2(
-'security_pkg.can_access(:APP_ID, :APP_USER, 28, NULL)',
-''))
-,p_list_item_disp_condition2=>'PLSQL'
-,p_parent_list_item_id=>wwv_flow_imp.id(8255106441955864)
-,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
-,p_list_item_current_for_pages=>'28,29'
-);
-wwv_flow_imp_shared.create_list_item(
- p_id=>wwv_flow_imp.id(9751669625480181)
-,p_list_item_display_sequence=>200
-,p_list_item_link_text=>'Prueba Direccion IG'
-,p_list_item_link_target=>'f?p=&APP_ID.:34:&APP_SESSION.::&DEBUG.:::'
-,p_list_item_icon=>'fa-table-pointer'
-,p_parent_list_item_id=>wwv_flow_imp.id(9641252169881528)
-,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
-,p_list_item_current_for_pages=>'34,35'
-);
-wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(11819013165293128)
 ,p_list_item_display_sequence=>290
 ,p_list_item_link_text=>'Clientes'
@@ -167,6 +146,46 @@ wwv_flow_imp_shared.create_list_item(
 ,p_parent_list_item_id=>wwv_flow_imp.id(8255106441955864)
 ,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
 ,p_list_item_current_for_pages=>'4'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(9808235671312828)
+,p_list_item_display_sequence=>10045
+,p_list_item_link_text=>'Proveedores'
+,p_list_item_icon=>'fa-truck'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 41, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(8171737903383999)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'41,42'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(9808235671312900)
+,p_list_item_display_sequence=>215
+,p_list_item_link_text=>'Proveedores'
+,p_list_item_link_target=>'f?p=&APP_ID.:41:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-users-alt'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 41, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(9808235671312828)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'41,42'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(9828298994464714)
+,p_list_item_display_sequence=>220
+,p_list_item_link_text=>'Contactos'
+,p_list_item_link_target=>'f?p=&APP_ID.:43:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-table-pointer'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'security_pkg.can_access(:APP_ID, :APP_USER, 43, NULL)',
+''))
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(9808235671312828)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'43,44'
 );
 wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(8339507211145106)
@@ -204,8 +223,7 @@ wwv_flow_imp_shared.create_list_item(
 wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(12148205276723968)
 ,p_list_item_display_sequence=>460
-,p_list_item_link_text=>'Reporte Orden'
-,p_list_item_link_target=>'f?p=&APP_ID.:58:&SESSION.::&DEBUG.::::'
+,p_list_item_link_text=>'Reportes'
 ,p_list_item_icon=>'fa-print'
 ,p_parent_list_item_id=>wwv_flow_imp.id(8339507211145106)
 ,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
@@ -215,8 +233,11 @@ wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(12149799653730083)
 ,p_list_item_display_sequence=>380
 ,p_list_item_link_text=>'Reservas de Productos'
-,p_list_item_link_target=>'f?p=&APP_ID.:59:&APP_SESSION.::&DEBUG.:::'
+,p_list_item_link_target=>'f?p=&APP_ID.:59:&SESSION.::&DEBUG.::::'
 ,p_list_item_icon=>'fa-cart-magnifying-glass'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 59, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
 ,p_parent_list_item_id=>wwv_flow_imp.id(12148205276723968)
 ,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
 ,p_list_item_current_for_pages=>'59'
@@ -224,19 +245,49 @@ wwv_flow_imp_shared.create_list_item(
 wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(22383933923345757)
 ,p_list_item_display_sequence=>680
-,p_list_item_link_text=>'Anulados y Vencidos'
-,p_list_item_link_target=>'f?p=&APP_ID.:111:&APP_SESSION.::&DEBUG.:::'
+,p_list_item_link_text=>'Presupuestos Anulados y Vencidos'
+,p_list_item_link_target=>'f?p=&APP_ID.:111:&SESSION.::&DEBUG.::::'
 ,p_list_item_icon=>'fa-ban'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 111, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
 ,p_parent_list_item_id=>wwv_flow_imp.id(12148205276723968)
 ,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
 ,p_list_item_current_for_pages=>'111'
 );
 wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(23835433689673325)
+,p_list_item_display_sequence=>10050
+,p_list_item_link_text=>'Dashboard interactivo Ventas'
+,p_list_item_link_target=>'f?p=&APP_ID.:133:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-ai-sparkle-generate-document'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 133, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(12148205276723968)
+,p_list_item_current_type=>'TARGET_PAGE'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(24039047260953207)
+,p_list_item_display_sequence=>10060
+,p_list_item_link_text=>'Dashboard de Cobros'
+,p_list_item_link_target=>'f?p=&APP_ID.:136:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-ai-sparkle-generate-document'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 136, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(12148205276723968)
+,p_list_item_current_type=>'TARGET_PAGE'
+);
+wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(22392719337723612)
 ,p_list_item_display_sequence=>690
 ,p_list_item_link_text=>unistr('Aprobaci\00F3n de Presupuestos')
-,p_list_item_link_target=>'f?p=&APP_ID.:117:&APP_SESSION.::&DEBUG.:::'
+,p_list_item_link_target=>'f?p=&APP_ID.:117:&SESSION.::&DEBUG.::::'
 ,p_list_item_icon=>'fa-thumbs-o-up'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 117, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
 ,p_parent_list_item_id=>wwv_flow_imp.id(8339507211145106)
 ,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
 ,p_list_item_current_for_pages=>'117'
@@ -245,8 +296,11 @@ wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(23053340017849650)
 ,p_list_item_display_sequence=>710
 ,p_list_item_link_text=>'Anulaciones de Facturas'
-,p_list_item_link_target=>'f?p=&APP_ID.:120:&APP_SESSION.::&DEBUG.:::'
+,p_list_item_link_target=>'f?p=&APP_ID.:120:&SESSION.::&DEBUG.::::'
 ,p_list_item_icon=>'fa-table'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 120, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
 ,p_parent_list_item_id=>wwv_flow_imp.id(8339507211145106)
 ,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
 ,p_list_item_current_for_pages=>'120'
@@ -265,50 +319,150 @@ wwv_flow_imp_shared.create_list_item(
 ,p_list_item_current_for_pages=>'124'
 );
 wwv_flow_imp_shared.create_list_item(
- p_id=>wwv_flow_imp.id(9808235671312828)
-,p_list_item_display_sequence=>210
-,p_list_item_link_text=>'Proveedores'
-,p_list_item_link_target=>'f?p=&APP_ID.:41:&SESSION.::&DEBUG.::::'
+ p_id=>wwv_flow_imp.id(24040286957000332)
+,p_list_item_display_sequence=>740
+,p_list_item_link_text=>'Metas de Venta'
+,p_list_item_link_target=>'f?p=&APP_ID.:140:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-range-chart-bar'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 140, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(8339507211145106)
+,p_list_item_current_type=>'TARGET_PAGE'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(16135373289245386)
+,p_list_item_display_sequence=>10070
+,p_list_item_link_text=>'Cobranzas'
+,p_list_item_icon=>'fa-money-bag'
+,p_parent_list_item_id=>wwv_flow_imp.id(8339507211145106)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(16148657170363760)
+,p_list_item_display_sequence=>610
+,p_list_item_link_text=>'Cobros'
+,p_list_item_link_target=>'f?p=&APP_ID.:95:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-money-bag'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 95, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(16135373289245386)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'95,98'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(23803360707234785)
+,p_list_item_display_sequence=>750
+,p_list_item_link_text=>'Recibos de Cobro'
+,p_list_item_link_target=>'f?p=&APP_ID.:131:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-file-text-o'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 131, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(16135373289245386)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'131'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(24039501093971912)
+,p_list_item_display_sequence=>760
+,p_list_item_link_text=>'Metas de Cobranza'
+,p_list_item_link_target=>'f?p=&APP_ID.:138:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-line-area-chart'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 138, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(16135373289245386)
+,p_list_item_current_type=>'TARGET_PAGE'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(12725308437975347)
+,p_list_item_display_sequence=>10080
+,p_list_item_link_text=>'Caja'
+,p_list_item_icon=>'fa-cash-register'
+,p_parent_list_item_id=>wwv_flow_imp.id(8339507211145106)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'62'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(12733619303987508)
+,p_list_item_display_sequence=>440
+,p_list_item_link_text=>unistr('Configuraci\00F3n de Cajas')
+,p_list_item_link_target=>'f?p=&APP_ID.:63:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-abacus'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 63, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(12725308437975347)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'63,64'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(12745977496199273)
+,p_list_item_display_sequence=>450
+,p_list_item_link_text=>'Apertura de Caja'
+,p_list_item_link_target=>'f?p=&APP_ID.:65:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-ai-sparkle-enlarge'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 65, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(12725308437975347)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'65'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(13320903194673444)
+,p_list_item_display_sequence=>500
+,p_list_item_link_text=>'Cierre de Caja'
+,p_list_item_link_target=>'f?p=&APP_ID.:61:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-money-bag'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 61, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(12725308437975347)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'61'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(23100640779464825)
+,p_list_item_display_sequence=>720
+,p_list_item_link_text=>'Movimientos Caja'
+,p_list_item_link_target=>'f?p=&APP_ID.:123:&SESSION.::&DEBUG.::::'
 ,p_list_item_icon=>'fa-table'
 ,p_list_item_disp_cond_type=>'EXPRESSION'
-,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 41, NULL)'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 123, NULL)'
 ,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(12725308437975347)
 ,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
-,p_list_item_current_for_pages=>'41,42'
+,p_list_item_current_for_pages=>'123'
 );
 wwv_flow_imp_shared.create_list_item(
- p_id=>wwv_flow_imp.id(9828298994464714)
-,p_list_item_display_sequence=>220
-,p_list_item_link_text=>'Contactos'
-,p_list_item_link_target=>'f?p=&APP_ID.:43:&SESSION.::&DEBUG.::::'
-,p_list_item_icon=>'fa-table-pointer'
+ p_id=>wwv_flow_imp.id(23832830738842929)
+,p_list_item_display_sequence=>10040
+,p_list_item_link_text=>'Estado de Caja'
+,p_list_item_link_target=>'f?p=&APP_ID.:62:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-cash-register'
 ,p_list_item_disp_cond_type=>'EXPRESSION'
-,p_list_item_disp_condition=>wwv_flow_string.join(wwv_flow_t_varchar2(
-'security_pkg.can_access(:APP_ID, :APP_USER, 43, NULL)',
-''))
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 62, NULL)'
 ,p_list_item_disp_condition2=>'PLSQL'
-,p_parent_list_item_id=>wwv_flow_imp.id(9808235671312828)
-,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
-,p_list_item_current_for_pages=>'43,44'
+,p_parent_list_item_id=>wwv_flow_imp.id(12725308437975347)
+,p_list_item_current_type=>'TARGET_PAGE'
 );
 wwv_flow_imp_shared.create_list_item(
- p_id=>wwv_flow_imp.id(16001999386644355)
-,p_list_item_display_sequence=>590
-,p_list_item_link_text=>'Nota de Credito Proveedor'
-,p_list_item_link_target=>'f?p=&APP_ID.:94:&SESSION.::&DEBUG.::::'
-,p_list_item_icon=>'fa-ai-sparkle-eraser'
-,p_list_item_disp_cond_type=>'EXPRESSION'
-,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 94, NULL)'
-,p_list_item_disp_condition2=>'PLSQL'
-,p_parent_list_item_id=>wwv_flow_imp.id(9808235671312828)
+ p_id=>wwv_flow_imp.id(12108709573618278)
+,p_list_item_display_sequence=>320
+,p_list_item_link_text=>'Productos e Inventario'
+,p_list_item_icon=>'fa-package'
 ,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
-,p_list_item_current_for_pages=>'94'
+,p_list_item_current_for_pages=>'12'
 );
 wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(11719915312104968)
 ,p_list_item_display_sequence=>230
 ,p_list_item_link_text=>'Productos'
-,p_list_item_icon=>'fa-cash-register'
+,p_list_item_icon=>'fa-package'
+,p_parent_list_item_id=>wwv_flow_imp.id(12108709573618278)
 ,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
 ,p_list_item_current_for_pages=>'3'
 );
@@ -360,7 +514,7 @@ wwv_flow_imp_shared.create_list_item(
 wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(11802612667263059)
 ,p_list_item_display_sequence=>280
-,p_list_item_link_text=>'Categoria'
+,p_list_item_link_text=>unistr('Categor\00EDa')
 ,p_list_item_link_target=>'f?p=&APP_ID.:40:&SESSION.::&DEBUG.::::'
 ,p_list_item_icon=>'fa-ai-innovation-lightbulb'
 ,p_list_item_disp_cond_type=>'EXPRESSION'
@@ -381,14 +535,6 @@ wwv_flow_imp_shared.create_list_item(
 ,p_parent_list_item_id=>wwv_flow_imp.id(11719915312104968)
 ,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
 ,p_list_item_current_for_pages=>'108'
-);
-wwv_flow_imp_shared.create_list_item(
- p_id=>wwv_flow_imp.id(12108709573618278)
-,p_list_item_display_sequence=>320
-,p_list_item_link_text=>'Inventarios'
-,p_list_item_icon=>'fa-stock-chart'
-,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
-,p_list_item_current_for_pages=>'12'
 );
 wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(12111748507630559)
@@ -424,7 +570,6 @@ wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(12138835757706400)
 ,p_list_item_display_sequence=>350
 ,p_list_item_link_text=>'Reporte Inventario'
-,p_list_item_link_target=>'f?p=&APP_ID.:55:&APP_SESSION.::&DEBUG.:::'
 ,p_list_item_icon=>'fa-print'
 ,p_parent_list_item_id=>wwv_flow_imp.id(12108709573618278)
 ,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
@@ -436,6 +581,9 @@ wwv_flow_imp_shared.create_list_item(
 ,p_list_item_link_text=>'Movimiento de Stock'
 ,p_list_item_link_target=>'f?p=&APP_ID.:56:&SESSION.::&DEBUG.::::'
 ,p_list_item_icon=>'fa-cart-times'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 56, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
 ,p_parent_list_item_id=>wwv_flow_imp.id(12138835757706400)
 ,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
 ,p_list_item_current_for_pages=>'56'
@@ -454,6 +602,18 @@ wwv_flow_imp_shared.create_list_item(
 ,p_list_item_current_for_pages=>'88'
 );
 wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(24085420516062624)
+,p_list_item_display_sequence=>10090
+,p_list_item_link_text=>'Dashboard de Inventario'
+,p_list_item_link_target=>'f?p=&APP_ID.:142:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-ai-sparkle-generate-document'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 142, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(12138835757706400)
+,p_list_item_current_type=>'TARGET_PAGE'
+);
+wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(14746849516426949)
 ,p_list_item_display_sequence=>540
 ,p_list_item_link_text=>'Proceso de Inventario'
@@ -469,7 +629,7 @@ wwv_flow_imp_shared.create_list_item(
 wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(15248561116464006)
 ,p_list_item_display_sequence=>550
-,p_list_item_link_text=>'Conteo Fisico'
+,p_list_item_link_text=>unistr('Conteo F\00EDsico')
 ,p_list_item_link_target=>'f?p=&APP_ID.:73:&SESSION.::&DEBUG.::::'
 ,p_list_item_icon=>'fa-abacus'
 ,p_list_item_disp_cond_type=>'EXPRESSION'
@@ -482,7 +642,7 @@ wwv_flow_imp_shared.create_list_item(
 wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(15360295200775388)
 ,p_list_item_display_sequence=>560
-,p_list_item_link_text=>'Revision'
+,p_list_item_link_text=>unistr('Revisi\00F3n')
 ,p_list_item_link_target=>'f?p=&APP_ID.:80:&SESSION.::&DEBUG.::::'
 ,p_list_item_icon=>'fa-ai'
 ,p_list_item_disp_cond_type=>'EXPRESSION'
@@ -493,67 +653,10 @@ wwv_flow_imp_shared.create_list_item(
 ,p_list_item_current_for_pages=>'80,85'
 );
 wwv_flow_imp_shared.create_list_item(
- p_id=>wwv_flow_imp.id(12725308437975347)
-,p_list_item_display_sequence=>430
-,p_list_item_link_text=>'Caja'
-,p_list_item_icon=>'fa-file-o'
-,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
-,p_list_item_current_for_pages=>'62'
-);
-wwv_flow_imp_shared.create_list_item(
- p_id=>wwv_flow_imp.id(12733619303987508)
-,p_list_item_display_sequence=>440
-,p_list_item_link_text=>'Configuracion de Cajas'
-,p_list_item_link_target=>'f?p=&APP_ID.:63:&SESSION.::&DEBUG.::::'
-,p_list_item_icon=>'fa-abacus'
-,p_list_item_disp_cond_type=>'EXPRESSION'
-,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 63, NULL)'
-,p_list_item_disp_condition2=>'PLSQL'
-,p_parent_list_item_id=>wwv_flow_imp.id(12725308437975347)
-,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
-,p_list_item_current_for_pages=>'63,64'
-);
-wwv_flow_imp_shared.create_list_item(
- p_id=>wwv_flow_imp.id(12745977496199273)
-,p_list_item_display_sequence=>450
-,p_list_item_link_text=>'Apertura de Caja'
-,p_list_item_link_target=>'f?p=&APP_ID.:65:&SESSION.::&DEBUG.::::'
-,p_list_item_icon=>'fa-ai-sparkle-enlarge'
-,p_list_item_disp_cond_type=>'EXPRESSION'
-,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 65, NULL)'
-,p_list_item_disp_condition2=>'PLSQL'
-,p_parent_list_item_id=>wwv_flow_imp.id(12725308437975347)
-,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
-,p_list_item_current_for_pages=>'65'
-);
-wwv_flow_imp_shared.create_list_item(
- p_id=>wwv_flow_imp.id(13320903194673444)
-,p_list_item_display_sequence=>500
-,p_list_item_link_text=>'Cierre de Caja'
-,p_list_item_link_target=>'f?p=&APP_ID.:61:&SESSION.::&DEBUG.::::'
-,p_list_item_icon=>'fa-money-bag'
-,p_list_item_disp_cond_type=>'EXPRESSION'
-,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 61, NULL)'
-,p_list_item_disp_condition2=>'PLSQL'
-,p_parent_list_item_id=>wwv_flow_imp.id(12725308437975347)
-,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
-,p_list_item_current_for_pages=>'61'
-);
-wwv_flow_imp_shared.create_list_item(
- p_id=>wwv_flow_imp.id(23100640779464825)
-,p_list_item_display_sequence=>720
-,p_list_item_link_text=>'Movimientos Caja'
-,p_list_item_link_target=>'f?p=&APP_ID.:123:&APP_SESSION.::&DEBUG.:::'
-,p_list_item_icon=>'fa-table'
-,p_parent_list_item_id=>wwv_flow_imp.id(12725308437975347)
-,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
-,p_list_item_current_for_pages=>'123'
-);
-wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(12815939864378893)
 ,p_list_item_display_sequence=>470
-,p_list_item_link_text=>'Compras'
-,p_list_item_icon=>'fa-file-o'
+,p_list_item_link_text=>'Compras y Pagos'
+,p_list_item_icon=>'fa-shopping-cart'
 ,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
 );
 wwv_flow_imp_shared.create_list_item(
@@ -583,6 +686,19 @@ wwv_flow_imp_shared.create_list_item(
 ,p_list_item_current_for_pages=>'71,72'
 );
 wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(16001999386644355)
+,p_list_item_display_sequence=>590
+,p_list_item_link_text=>'Nota de Credito Proveedor'
+,p_list_item_link_target=>'f?p=&APP_ID.:94:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-ai-sparkle-eraser'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 94, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(12815939864378893)
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'94'
+);
+wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(16589424898057873)
 ,p_list_item_display_sequence=>630
 ,p_list_item_link_text=>unistr('Recepci\00F3n de Orden de Compra')
@@ -599,31 +715,50 @@ wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(20550788537145581)
 ,p_list_item_display_sequence=>660
 ,p_list_item_link_text=>unistr('Aprobaci\00F3n de \00D3rdenes de Compra')
-,p_list_item_link_target=>'f?p=&APP_ID.:110:&APP_SESSION.::&DEBUG.:::'
+,p_list_item_link_target=>'f?p=&APP_ID.:110:&SESSION.::&DEBUG.::::'
 ,p_list_item_icon=>'fa-thumbs-o-up'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 110, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
 ,p_parent_list_item_id=>wwv_flow_imp.id(12815939864378893)
 ,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
 ,p_list_item_current_for_pages=>'110'
 );
 wwv_flow_imp_shared.create_list_item(
- p_id=>wwv_flow_imp.id(16135373289245386)
-,p_list_item_display_sequence=>600
-,p_list_item_link_text=>'Cuentas a Cobrar'
-,p_list_item_icon=>'fa-money-bag'
-,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+ p_id=>wwv_flow_imp.id(24104738297877190)
+,p_list_item_display_sequence=>10100
+,p_list_item_link_text=>'Deuda a Proveedores'
+,p_list_item_link_target=>'f?p=&APP_ID.:146:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-abacus'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 146, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(12815939864378893)
+,p_list_item_current_type=>'TARGET_PAGE'
 );
 wwv_flow_imp_shared.create_list_item(
- p_id=>wwv_flow_imp.id(16148657170363760)
-,p_list_item_display_sequence=>610
-,p_list_item_link_text=>'Cobros'
-,p_list_item_link_target=>'f?p=&APP_ID.:95:&SESSION.::&DEBUG.::::'
-,p_list_item_icon=>'fa-money-bag'
+ p_id=>wwv_flow_imp.id(24107040002635073)
+,p_list_item_display_sequence=>10110
+,p_list_item_link_text=>unistr('\00D3rdenes de Pago')
+,p_list_item_link_target=>'f?p=&APP_ID.:148:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-dollar'
 ,p_list_item_disp_cond_type=>'EXPRESSION'
-,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 95, NULL)'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 148, NULL)'
 ,p_list_item_disp_condition2=>'PLSQL'
-,p_parent_list_item_id=>wwv_flow_imp.id(16135373289245386)
-,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
-,p_list_item_current_for_pages=>'95,98'
+,p_parent_list_item_id=>wwv_flow_imp.id(12815939864378893)
+,p_list_item_current_type=>'TARGET_PAGE'
+);
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(24110713389747319)
+,p_list_item_display_sequence=>10120
+,p_list_item_link_text=>'Dashboard de Compras'
+,p_list_item_link_target=>'f?p=&APP_ID.:144:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-ai-sparkle-generate-document'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 144, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
+,p_parent_list_item_id=>wwv_flow_imp.id(12815939864378893)
+,p_list_item_current_type=>'TARGET_PAGE'
 );
 wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(19213877930556526)
@@ -638,9 +773,8 @@ wwv_flow_imp_shared.create_list_item(
 wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(8044595892830593)
 ,p_list_item_display_sequence=>10000
-,p_list_item_link_text=>'Administration'
-,p_list_item_link_target=>'f?p=&APP_ID.:10000:&SESSION.::&DEBUG.::::'
-,p_list_item_icon=>'fa-user-wrench'
+,p_list_item_link_text=>unistr('Configuraci\00F3n')
+,p_list_item_icon=>'fa-cog'
 ,p_list_item_current_type=>'TARGET_PAGE'
 );
 wwv_flow_imp_shared.create_list_item(
@@ -700,7 +834,7 @@ wwv_flow_imp_shared.create_list_item(
 wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(12715912646950195)
 ,p_list_item_display_sequence=>420
-,p_list_item_link_text=>'Metodos de Pago'
+,p_list_item_link_text=>unistr('M\00E9todos de Pago')
 ,p_list_item_link_target=>'f?p=&APP_ID.:57:&SESSION.::&DEBUG.::::'
 ,p_list_item_icon=>'fa-money-check-pen'
 ,p_list_item_disp_cond_type=>'EXPRESSION'
@@ -726,7 +860,7 @@ wwv_flow_imp_shared.create_list_item(
 wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(16531242107171066)
 ,p_list_item_display_sequence=>620
-,p_list_item_link_text=>'Cotizacion'
+,p_list_item_link_text=>unistr('Cotizaci\00F3n')
 ,p_list_item_link_target=>'f?p=&APP_ID.:101:&SESSION.::&DEBUG.::::'
 ,p_list_item_icon=>'fa-exchange'
 ,p_list_item_disp_cond_type=>'EXPRESSION'
@@ -742,6 +876,9 @@ wwv_flow_imp_shared.create_list_item(
 ,p_list_item_link_text=>unistr('Par\00E1metros')
 ,p_list_item_link_target=>'f?p=&APP_ID.:103:&SESSION.::&DEBUG.::::'
 ,p_list_item_icon=>'fa-design'
+,p_list_item_disp_cond_type=>'EXPRESSION'
+,p_list_item_disp_condition=>'security_pkg.can_access(:APP_ID, :APP_USER, 103, NULL)'
+,p_list_item_disp_condition2=>'PLSQL'
 ,p_parent_list_item_id=>wwv_flow_imp.id(8044595892830593)
 ,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
 ,p_list_item_current_for_pages=>'103,105'
@@ -750,6 +887,7 @@ wwv_flow_imp_shared.create_list_item(
  p_id=>wwv_flow_imp.id(14175335484895525)
 ,p_list_item_display_sequence=>10020
 ,p_list_item_link_text=>'Seguridad'
+,p_list_item_icon=>'fa-shield'
 ,p_list_item_current_type=>'TARGET_PAGE'
 );
 wwv_flow_imp_shared.create_list_item(

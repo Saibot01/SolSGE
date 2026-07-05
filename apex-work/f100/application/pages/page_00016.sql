@@ -1,7 +1,7 @@
-prompt --application/pages/page_00041
+prompt --application/pages/page_00016
 begin
 --   Manifest
---     PAGE: 00041
+--     PAGE: 00016
 --   Manifest End
 wwv_flow_imp.component_begin (
  p_version_yyyy_mm_dd=>'2024.11.30'
@@ -12,46 +12,39 @@ wwv_flow_imp.component_begin (
 ,p_default_owner=>'WKSP_WORKPLACE'
 );
 wwv_flow_imp_page.create_page(
- p_id=>41
-,p_name=>'Proveedores'
-,p_alias=>'PROVEEDORES-IG'
-,p_step_title=>'Proveedores'
+ p_id=>16
+,p_name=>'Empleados IG'
+,p_alias=>'EMPLEADOS-IG'
+,p_step_title=>'Empleados'
 ,p_autocomplete_on_off=>'OFF'
 ,p_page_template_options=>'#DEFAULT#'
 ,p_protection_level=>'C'
 ,p_page_component_map=>'18'
 );
 wwv_flow_imp_page.create_page_plug(
- p_id=>wwv_flow_imp.id(9808649399312828)
-,p_plug_name=>'Proveedores'
+ p_id=>wwv_flow_imp.id(11516387187464580)
+,p_plug_name=>'Empleados IG'
 ,p_region_template_options=>'#DEFAULT#:t-IRR-region--hideHeader js-addHiddenHeadingRoleDesc'
 ,p_plug_template=>2100526641005906379
 ,p_plug_display_sequence=>10
 ,p_query_type=>'SQL'
 ,p_plug_source=>wwv_flow_string.join(wwv_flow_t_varchar2(
-'SELECT',
-'	ID_PERSONA,',
-'	(select p.primer_nombre || '' '' || NVL(p.segundo_nombre, '''') || '' '' || p.primer_apellido || '' '' || NVL(p.segundo_apellido, '''') AS nombre_completo from personas p where p.id_persona = proveedores.id_persona) nombre,',
-'       CODIGO_USUARIO,',
-'       CASE ESTADO ',
-'           WHEN ''A'' THEN ''Activo''',
-'           WHEN ''I'' THEN ''Inactivo''',
-'           ELSE ''Desconocido''',
-'       END AS ESTADO,',
-'       FECHA_REGISTRO,',
-'       CASE CATEGORIA ',
-'           WHEN ''N'' THEN ''Nacional''',
-'           WHEN ''I'' THEN ''Internacional''',
-'           ELSE ''Desconocido'' END AS CATEGORIA,',
-'       PLAZO_PAGO_DIAS,',
-'       ''Ver contactos'' as VER_CONTACTOS',
-'  from Proveedores'))
+'select e.ID_EMPLEADO,',
+'       e.NOMBRE,',
+'       e.FECHA_ALTA,',
+'       e.CARGO,',
+'       e."CONTRASEÑA",',
+'       e.CODIGO_USUARIO,',
+'       e.CODIGO_VERIFICACION,',
+'       e.CORREO,',
+'       case e.ACTIVO when ''S'' then ''Activo'' when ''N'' then ''Inactivo'' else e.ACTIVO end as ACTIVO',
+'  from EMPLEADOS e'))
 ,p_plug_source_type=>'NATIVE_IR'
-,p_prn_page_header=>'Proveedores'
+,p_prn_page_header=>'Empleados IG'
 );
 wwv_flow_imp_page.create_worksheet(
- p_id=>wwv_flow_imp.id(9808734934312828)
-,p_name=>'Proveedores'
+ p_id=>wwv_flow_imp.id(11516480733464580)
+,p_name=>'Empleados IG'
 ,p_max_row_count_message=>'The maximum row count for this report is #MAX_ROW_COUNT# rows.  Please apply a filter to reduce the number of records in your query.'
 ,p_no_data_found_message=>'No data found.'
 ,p_pagination_type=>'ROWS_X_TO_Y'
@@ -62,18 +55,18 @@ wwv_flow_imp_page.create_worksheet(
 ,p_show_notify=>'Y'
 ,p_download_formats=>'CSV:HTML:XLSX:PDF'
 ,p_enable_mail_download=>'Y'
-,p_detail_link=>'f?p=&APP_ID.:42:&APP_SESSION.::&DEBUG.:RP:P42_ID_PERSONA:\#ID_PERSONA#\'
+,p_detail_link=>'f?p=&APP_ID.:20:&APP_SESSION.::&DEBUG.:RP:P20_ID_EMPLEADO:\#ID_EMPLEADO#\'
 ,p_detail_link_text=>'<span role="img" aria-label="Edit" class="fa fa-edit" title="Edit"></span>'
 ,p_owner=>'SIS_APEX'
-,p_internal_uid=>9808734934312828
+,p_internal_uid=>11516480733464580
 );
 wwv_flow_imp_page.create_worksheet_column(
- p_id=>wwv_flow_imp.id(9809426734312831)
-,p_db_column_name=>'ID_PERSONA'
+ p_id=>wwv_flow_imp.id(11517110538464585)
+,p_db_column_name=>'ID_EMPLEADO'
 ,p_display_order=>0
 ,p_is_primary_key=>'Y'
 ,p_column_identifier=>'A'
-,p_column_label=>'Id Persona'
+,p_column_label=>'Id Empleado'
 ,p_column_type=>'NUMBER'
 ,p_display_text_as=>'HIDDEN_ESCAPE_SC'
 ,p_heading_alignment=>'LEFT'
@@ -81,104 +74,97 @@ wwv_flow_imp_page.create_worksheet_column(
 ,p_use_as_row_header=>'N'
 );
 wwv_flow_imp_page.create_worksheet_column(
- p_id=>wwv_flow_imp.id(9809840056312831)
-,p_db_column_name=>'CODIGO_USUARIO'
-,p_display_order=>2
-,p_column_identifier=>'B'
-,p_column_label=>'Codigo Usuario'
-,p_column_type=>'STRING'
-,p_heading_alignment=>'LEFT'
-,p_tz_dependent=>'N'
-,p_use_as_row_header=>'N'
-);
-wwv_flow_imp_page.create_worksheet_column(
- p_id=>wwv_flow_imp.id(9810292289312831)
-,p_db_column_name=>'ESTADO'
+ p_id=>wwv_flow_imp.id(11517962756464587)
+,p_db_column_name=>'NOMBRE'
 ,p_display_order=>3
 ,p_column_identifier=>'C'
-,p_column_label=>'Estado'
+,p_column_label=>'Nombre'
 ,p_column_type=>'STRING'
 ,p_heading_alignment=>'LEFT'
 ,p_tz_dependent=>'N'
 ,p_use_as_row_header=>'N'
 );
 wwv_flow_imp_page.create_worksheet_column(
- p_id=>wwv_flow_imp.id(9810633726312832)
-,p_db_column_name=>'FECHA_REGISTRO'
+ p_id=>wwv_flow_imp.id(11518373061464587)
+,p_db_column_name=>'FECHA_ALTA'
 ,p_display_order=>4
 ,p_column_identifier=>'D'
-,p_column_label=>'Fecha Registro'
+,p_column_label=>'Fecha Alta'
 ,p_column_type=>'DATE'
 ,p_heading_alignment=>'LEFT'
 ,p_tz_dependent=>'N'
 ,p_use_as_row_header=>'N'
 );
 wwv_flow_imp_page.create_worksheet_column(
- p_id=>wwv_flow_imp.id(9811077068312832)
-,p_db_column_name=>'CATEGORIA'
+ p_id=>wwv_flow_imp.id(11518746012464587)
+,p_db_column_name=>'CARGO'
 ,p_display_order=>5
 ,p_column_identifier=>'E'
-,p_column_label=>'Categoria'
+,p_column_label=>'Cargo'
 ,p_column_type=>'STRING'
 ,p_heading_alignment=>'LEFT'
 ,p_tz_dependent=>'N'
 ,p_use_as_row_header=>'N'
 );
 wwv_flow_imp_page.create_worksheet_column(
- p_id=>wwv_flow_imp.id(9716592082137613)
-,p_db_column_name=>'NOMBRE'
-,p_display_order=>15
+ p_id=>wwv_flow_imp.id(11519180934464587)
+,p_db_column_name=>unistr('CONTRASE\00D1A')
+,p_display_order=>6
 ,p_column_identifier=>'F'
-,p_column_label=>'Nombre'
+,p_column_label=>unistr('Contrase\00F1a')
+,p_column_type=>'STRING'
+,p_display_text_as=>'HIDDEN_ESCAPE_SC'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(11519527981464588)
+,p_db_column_name=>'CODIGO_USUARIO'
+,p_display_order=>7
+,p_column_identifier=>'G'
+,p_column_label=>'Codigo del Usuario'
 ,p_column_type=>'STRING'
 ,p_heading_alignment=>'LEFT'
 ,p_use_as_row_header=>'N'
 );
 wwv_flow_imp_page.create_worksheet_column(
- p_id=>wwv_flow_imp.id(9814827990357500)
-,p_db_column_name=>'PLAZO_PAGO_DIAS'
-,p_display_order=>20
-,p_column_identifier=>'G'
-,p_column_label=>'Plazo pago (dias)'
-,p_column_type=>'NUMBER'
-,p_heading_alignment=>'RIGHT'
-,p_column_alignment=>'RIGHT'
-,p_format_mask=>'999G990'
-,p_tz_dependent=>'N'
+ p_id=>wwv_flow_imp.id(11519971171464588)
+,p_db_column_name=>'CODIGO_VERIFICACION'
+,p_display_order=>8
+,p_column_identifier=>'H'
+,p_column_label=>'Codigo Verificacion'
+,p_column_type=>'STRING'
+,p_display_text_as=>'HIDDEN_ESCAPE_SC'
+);
+wwv_flow_imp_page.create_worksheet_column(
+ p_id=>wwv_flow_imp.id(11520352203464588)
+,p_db_column_name=>'CORREO'
+,p_display_order=>9
+,p_column_identifier=>'I'
+,p_column_label=>'Correo Laboral'
+,p_column_type=>'STRING'
+,p_heading_alignment=>'LEFT'
 ,p_use_as_row_header=>'N'
 );
 wwv_flow_imp_page.create_worksheet_column(
- p_id=>wwv_flow_imp.id(9814827990357600)
-,p_db_column_name=>'VER_CONTACTOS'
-,p_display_order=>30
-,p_column_identifier=>'H'
-,p_column_label=>'Contactos'
+ p_id=>wwv_flow_imp.id(23787375078550721)
+,p_db_column_name=>'ACTIVO'
+,p_display_order=>69
+,p_column_identifier=>'J'
+,p_column_label=>'Activo'
 ,p_column_type=>'STRING'
-,p_column_link=>'f?p=&APP_ID.:43:&SESSION.::&DEBUG.:RP,43:P43_ID_PROVEEDOR:#ID_PERSONA#'
-,p_column_linktext=>'<span class="fa fa-address-book" aria-hidden="true"></span> Ver contactos'
-,p_heading_alignment=>'CENTER'
-,p_column_alignment=>'CENTER'
-,p_allow_sorting=>'N'
-,p_allow_filtering=>'N'
-,p_allow_highlighting=>'N'
-,p_allow_ctrl_breaks=>'N'
-,p_allow_aggregations=>'N'
-,p_allow_computations=>'N'
-,p_allow_pivot=>'N'
-,p_tz_dependent=>'N'
+,p_heading_alignment=>'LEFT'
 ,p_use_as_row_header=>'N'
 );
 wwv_flow_imp_page.create_worksheet_rpt(
- p_id=>wwv_flow_imp.id(9814827990357464)
+ p_id=>wwv_flow_imp.id(11523044968465097)
 ,p_application_user=>'APXWS_DEFAULT'
 ,p_report_seq=>10
-,p_report_alias=>'98149'
+,p_report_alias=>'115231'
 ,p_status=>'PUBLIC'
 ,p_is_default=>'Y'
-,p_report_columns=>'ID_PERSONA:CODIGO_USUARIO:ESTADO:FECHA_REGISTRO:CATEGORIA:NOMBRE:PLAZO_PAGO_DIAS:VER_CONTACTOS'
+,p_report_columns=>unistr('ID_EMPLEADO:NOMBRE:FECHA_ALTA:CARGO:CONTRASE\00D1A:CODIGO_USUARIO:CODIGO_VERIFICACION:CORREO')
 );
 wwv_flow_imp_page.create_page_plug(
- p_id=>wwv_flow_imp.id(9813105564312834)
+ p_id=>wwv_flow_imp.id(11522404563464591)
 ,p_plug_name=>'Breadcrumb'
 ,p_region_template_options=>'#DEFAULT#:t-BreadcrumbRegion--useBreadcrumbTitle'
 ,p_component_template_options=>'#DEFAULT#'
@@ -190,9 +176,9 @@ wwv_flow_imp_page.create_page_plug(
 ,p_menu_template_id=>4072363345357175094
 );
 wwv_flow_imp_page.create_page_button(
- p_id=>wwv_flow_imp.id(9811539523312832)
+ p_id=>wwv_flow_imp.id(11520888599464589)
 ,p_button_sequence=>10
-,p_button_plug_id=>wwv_flow_imp.id(9808649399312828)
+,p_button_plug_id=>wwv_flow_imp.id(11516387187464580)
 ,p_button_name=>'CREATE'
 ,p_button_action=>'REDIRECT_PAGE'
 ,p_button_template_options=>'#DEFAULT#'
@@ -200,27 +186,27 @@ wwv_flow_imp_page.create_page_button(
 ,p_button_is_hot=>'Y'
 ,p_button_image_alt=>'Crear'
 ,p_button_position=>'RIGHT_OF_IR_SEARCH_BAR'
-,p_button_redirect_url=>'f?p=&APP_ID.:42:&APP_SESSION.::&DEBUG.:42::'
+,p_button_redirect_url=>'f?p=&APP_ID.:20:&APP_SESSION.::&DEBUG.:20::'
 );
 wwv_flow_imp_page.create_page_da_event(
- p_id=>wwv_flow_imp.id(9811867371312833)
+ p_id=>wwv_flow_imp.id(11521117502464589)
 ,p_name=>'Edit Report - Dialog Closed'
 ,p_event_sequence=>10
 ,p_triggering_element_type=>'REGION'
-,p_triggering_region_id=>wwv_flow_imp.id(9808649399312828)
+,p_triggering_region_id=>wwv_flow_imp.id(11516387187464580)
 ,p_bind_type=>'bind'
 ,p_execution_type=>'IMMEDIATE'
 ,p_bind_event_type=>'apexafterclosedialog'
 );
 wwv_flow_imp_page.create_page_da_action(
- p_id=>wwv_flow_imp.id(9812346069312834)
-,p_event_id=>wwv_flow_imp.id(9811867371312833)
+ p_id=>wwv_flow_imp.id(11521661217464590)
+,p_event_id=>wwv_flow_imp.id(11521117502464589)
 ,p_event_result=>'TRUE'
 ,p_action_sequence=>10
 ,p_execute_on_page_init=>'N'
 ,p_action=>'NATIVE_REFRESH'
 ,p_affected_elements_type=>'REGION'
-,p_affected_region_id=>wwv_flow_imp.id(9808649399312828)
+,p_affected_region_id=>wwv_flow_imp.id(11516387187464580)
 );
 wwv_flow_imp.component_end;
 end;
