@@ -390,8 +390,9 @@ válido. Relevamiento contra el Manual Técnico SIFEN v150:
   columnas de región). Verificado por re-export: APEX aceptó los 4 componentes.
 
 ### Pendiente / próximo
-- **Módulo Nota de Crédito** (camino para anulaciones fuera de plazo): documento
-  NC que referencia la factura original + `COD_MOTIVO` (FK a `MOTIVOS_NOTA_CREDITO`).
-  Es trabajo aparte, fuera del alcance de esta tanda.
+- ~~**Módulo Nota de Crédito** (camino para anulaciones fuera de plazo): documento
+  NC que referencia la factura original + `COD_MOTIVO` (FK a `MOTIVOS_NOTA_CREDITO`).~~
+  **✅ HECHO en F14** (`PLAN_NOTA_CREDITO.md`, cerrada 2026-06-21): NC electrónica que
+  referencia la factura vía `COMPROBANTES.ID_COMPROBANTE_ORIGEN` + `COD_MOTIVO`.
 - Verificado en BD el 2026-06-15: bloqueo `-20933` OK sobre factura del 08/06;
   camino feliz OK subiendo el parámetro (con `ROLLBACK`, datos intactos).

@@ -3,7 +3,7 @@
 **Proyecto:** SolSGE — APEX 24.2 (App 100, alias `f100`)
 **Workspace:** `WKSP_WORKPLACE`
 **Schema de aplicación:** `WKSP_WORKPLACE`
-**Estado del plan:** pendiente de aprobación (2026-06-06).
+**Estado del plan:** ✅ CERRADO. F8 cerrada 2026-06-07 (tag `f8-facturacion-contado`, commit `a67ccf3`); F9 cerrada 2026-06-08 (cobro de cuotas + recibo P119). El cierre de caja de F8.C quedó superado por **F17** (`PLAN_CIERRE_CAJA.md`). Deuda menor no bloqueante: F9.E (estado de cuenta cliente, opcional) + F9.G (cosmética de números/badges).
 
 > Plan separado de `PLAN_VENTAS.md`. Aquel cubre el ciclo del **presupuesto**
 > (`ORDENES_VENTA`); éste cubre la conversión del presupuesto en **factura**
@@ -734,9 +734,13 @@ los siguientes pueden arrancar. Marcamos ⏳ los pendientes y ✅ los cerrados.
 5. Test browser: abrir caja → confirmar `USU_APERTURA = TCASCO`.
 6. Re-export a `apex-work/.../page_00065.sql` + agregar a `install_page.sql`.
 
-### Hito 3 — P61 Cierre de caja (F8.C) ⏳
+### Hito 3 — P61 Cierre de caja (F8.C) ✅ (superado por F17)
 
-**Entregable:** P61 retocada + re-export.
+> El cierre/arqueo de caja se rehízo por completo en **F17** (`PLAN_CIERRE_CAJA.md`,
+> cerrado 2026-06-26): P61 captura el conteo declarado y el cierre real vive en P62
+> (Estado de Caja) + `CERRAR_CAJA` v3. Este hito queda superado.
+
+**Entregable original:** P61 retocada + re-export.
 
 1. `P61_EMPLEADO` Display Only desde APP_USER.
 2. `P61_CAFA_CONF` LOV restringido a cajas del empleado actual.
@@ -794,14 +798,16 @@ los siguientes pueden arrancar. Marcamos ⏳ los pendientes y ✅ los cerrados.
 4. Botón COBRAR + proceso que invoca `FN_COBRAR_CUOTA`.
 5. Validaciones de caja, monto, estado.
 
-### Hito 9 — P95/P99 retoques + Limpieza (F9.C/D) ⏳
+### Hito 9 — P95/P99 retoques + Limpieza (F9.C/D) ✅ (2026-06-08)
 
 1. P95: columna SALDO_PCT, badges, filtros.
 2. P99: badges por estado, orden por NRO_CUOTA.
 3. Eliminar P98 (huérfana) y P93 (placeholder) o reapuntarlas.
 4. Update menú para sacar `current_for_pages='93'`.
 
-### Hito 10 — P119 Documento Recibo (F9.F) ⏳
+> Ver detalle en el checklist F9.C/F9.D más abajo. Deuda cosmética de badges → F9.G.
+
+### Hito 10 — P119 Documento Recibo (F9.F) ✅ (2026-06-08)
 
 **Entregable:** P119 nueva creada en APEX Builder.
 
@@ -811,9 +817,12 @@ los siguientes pueden arrancar. Marcamos ⏳ los pendientes y ✅ los cerrados.
 4. Columna print en P95 para reimprimir cualquier recibo histórico.
 5. Test browser end-to-end (cobrar cuota → modal con recibo → imprimir).
 
-### Hito 11 — Cierre F9 ⏳
+### Hito 11 — Cierre F9 ✅ (2026-06-08)
 
 1. Re-export, commit, tag `f9-cobros`.
+
+> F9 cerrada. Deuda menor no bloqueante: F9.E (estado de cuenta cliente, opcional)
+> + F9.G (cosmética de números/badges), ambas documentadas en el checklist.
 
 ---
 
@@ -987,10 +996,21 @@ los siguientes pueden arrancar. Marcamos ⏳ los pendientes y ✅ los cerrados.
 - [x] Header de menú renombrado a "Cuentas a Cobrar" y `current_for_pages` cambiado de '93' a '95' — decisión PO 2026-06-08
 - [x] Estructura header+child del menú se mantiene (decisión PO)
 
-### F9.E — Estado de cuenta cliente (opcional, post-F9) 🕓
+### F9.E — Estado de cuenta cliente (opcional, post-F9) ✅ cubierto funcionalmente
 
-- [ ] Página nueva con saldo por cliente, cuotas vencidas, próximas a vencer
-- [ ] Histórico de pagos
+**Decisión 2026-07-06 (PO): no se construye página dedicada.** La información ya es
+accesible hoy, filtrando por cliente, repartida en tres pantallas existentes:
+- **Saldo por cuenta** → P95 "Cobros" (`CUENTAS_COBRAR`, con `SALDO`/`TOTAL_A_PAGAR`/`SALDO_PCT`).
+- **Cuotas vencidas / próximas + fecha de pago por cuota** → P99 "Detalle de Cuotas" (+ aging de cartera del dashboard F22 P136).
+- **Histórico de pagos** → P131 "Recibos de Cobro" (`V_RECIBOS_LISTA`, Vigente/Reversado).
+
+Lo único que agregaría una página F9.E dedicada es **consolidar** eso en una sola vista
+centrada en el cliente (comodidad, no funcionalidad faltante). Solo se retomaría si el
+profesor pide explícitamente un **estado de cuenta imprimible por cliente** (ahí sí haría
+falta una `FN_ESTADO_CUENTA_HTML` estilo KuDE + página modal).
+
+- [x] ~~Página nueva con saldo por cliente, cuotas vencidas, próximas a vencer~~ → cubierto por P95/P99
+- [x] ~~Histórico de pagos~~ → cubierto por P131
 
 ### F9.G — Cosmética visual (deuda técnica) 🕓
 

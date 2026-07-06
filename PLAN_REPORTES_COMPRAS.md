@@ -2,7 +2,7 @@
 
 **Proyecto:** SolSGE — APEX 24.2 (App 100, alias `f100`)
 **Workspace / Schema:** `WKSP_WORKPLACE` · **Conexión:** `tesis_db`
-**Estado del plan:** EN DEFINICIÓN — 2026-07-01 · **revisado 2026-07-02 (F24 cerrado → dependencia RESUELTA)**. **Cuarto y último módulo gerencial**; replica la plantilla de Ventas (F18) / Cobros (F22) / Inventario (F23).
+**Estado del plan:** ✅ CERRADO — construido y validado visualmente por el PO el **2026-07-02** (commit `feat(F25)` `6c378a8`). **Cuarto y último módulo gerencial**; replica la plantilla de Ventas (F18) / Cobros (F22) / Inventario (F23). **Único pendiente:** entrada de menú "Dashboard de Compras" → P144 (la agrega el PO en el Builder).
 **Rango de error reservado:** `-20945 … -20948` (bloque libre entre F10 `-20944`/F17 y F10 `-20949`).
 **Páginas APEX nuevas:** **P144** (Dashboard de Compras, interactivo) · **P145** (Generador de Informe de Compras, imprimible).
 **Decisiones PO (2026-07-01):** alcance = **Gasto de compra + Embudo de OC + Desempeño de recepción/lead time + OC abiertas (+ KPI límite mensual) + Deuda a proveedores/aging CxP**; dataset = **enriquecer con seed demo** (como Inventario).
@@ -346,6 +346,6 @@ default "Todos los meses"), como P133/P136.
 > Decisiones tomadas con el PO el 2026-07-01 (alcance A+B+C+D+E+H; deuda/aging CxP
 > **no demo** → se construyó el feature transaccional F24 primero; enriquecer dataset
 > con seed demo). **Dependencia F24: RESUELTA (cerrada 2026-07-02, `PLAN_CUENTAS_PAGAR.md`).**
-> Toda la CxP/aging/pagos es real. F25 arranca por **H1**
-> (`db/F25_seed_compras_demo.sql`); ninguna capa queda bloqueada. **Pendiente de
-> arranque de implementación — el PO da el OK para tocar objetos.**
+> Toda la CxP/aging/pagos es real. **✅ IMPLEMENTADO Y CERRADO 2026-07-02** (H1–H5
+> hechas, validado visualmente por el PO, commit `feat(F25)` `6c378a8`). Único
+> pendiente: la entrada de menú "Dashboard de Compras" → P144, que el PO agrega en el Builder.
