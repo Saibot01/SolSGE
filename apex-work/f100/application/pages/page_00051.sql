@@ -37,12 +37,14 @@ wwv_flow_imp_page.create_region_column(
  p_id=>wwv_flow_imp.id(12692494510943746)
 ,p_name=>'APEX$LINK'
 ,p_source_type=>'NONE'
+,p_session_state_data_type=>'VARCHAR2'
 ,p_item_type=>'NATIVE_LINK'
 ,p_heading_alignment=>'CENTER'
 ,p_display_sequence=>10
 ,p_value_alignment=>'CENTER'
 ,p_link_target=>'f?p=&APP_ID.:53:&APP_SESSION.::&DEBUG.:RP,53:P53_ID_TALONARIO:\&ID_TALONARIO.\'
 ,p_link_text=>'<span role="img" aria-label="Edit" class="fa fa-edit" title="Edit"></span>'
+,p_use_as_row_header=>false
 ,p_enable_hide=>true
 ,p_is_primary_key=>false
 );
@@ -59,6 +61,7 @@ wwv_flow_imp_page.create_region_column(
 ,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
   'value_protected', 'Y')).to_clob
 ,p_enable_filter=>false
+,p_use_as_row_header=>false
 ,p_enable_hide=>true
 ,p_is_primary_key=>true
 ,p_duplicate_value=>true
@@ -104,25 +107,24 @@ wwv_flow_imp_page.create_region_column(
 ,p_data_type=>'VARCHAR2'
 ,p_session_state_data_type=>'VARCHAR2'
 ,p_is_query_only=>false
-,p_item_type=>'NATIVE_TEXT_FIELD'
+,p_item_type=>'NATIVE_SELECT_LIST'
 ,p_heading=>'Tipo Comprobante'
 ,p_heading_alignment=>'LEFT'
 ,p_display_sequence=>40
 ,p_value_alignment=>'LEFT'
 ,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
-  'disabled', 'N',
-  'send_on_page_submit', 'N',
-  'submit_when_enter_pressed', 'N',
-  'subtype', 'TEXT',
-  'trim_spaces', 'BOTH')).to_clob
+  'page_action_on_selection', 'NONE')).to_clob
 ,p_is_required=>true
-,p_max_length=>2
+,p_lov_type=>'STATIC'
+,p_lov_source=>'STATIC:Factura;FA,Nota de Credito;NC,Recibo de Dinero;RC'
+,p_lov_display_extra=>true
+,p_lov_display_null=>false
 ,p_enable_filter=>true
 ,p_filter_operators=>'C:S:CASE_INSENSITIVE:REGEXP'
 ,p_filter_is_required=>false
 ,p_filter_text_case=>'MIXED'
 ,p_filter_exact_match=>true
-,p_filter_lov_type=>'DISTINCT'
+,p_filter_lov_type=>'LOV'
 ,p_use_as_row_header=>false
 ,p_enable_sort_group=>true
 ,p_enable_control_break=>true
@@ -409,25 +411,24 @@ wwv_flow_imp_page.create_region_column(
 ,p_data_type=>'VARCHAR2'
 ,p_session_state_data_type=>'VARCHAR2'
 ,p_is_query_only=>false
-,p_item_type=>'NATIVE_TEXT_FIELD'
+,p_item_type=>'NATIVE_SELECT_LIST'
 ,p_heading=>'Activo'
 ,p_heading_alignment=>'LEFT'
 ,p_display_sequence=>130
 ,p_value_alignment=>'LEFT'
 ,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
-  'disabled', 'N',
-  'send_on_page_submit', 'N',
-  'submit_when_enter_pressed', 'N',
-  'subtype', 'TEXT',
-  'trim_spaces', 'BOTH')).to_clob
+  'page_action_on_selection', 'NONE')).to_clob
 ,p_is_required=>false
-,p_max_length=>1
+,p_lov_type=>'STATIC'
+,p_lov_source=>'STATIC:Si;S,No;N'
+,p_lov_display_extra=>true
+,p_lov_display_null=>false
 ,p_enable_filter=>true
 ,p_filter_operators=>'C:S:CASE_INSENSITIVE:REGEXP'
 ,p_filter_is_required=>false
 ,p_filter_text_case=>'MIXED'
 ,p_filter_exact_match=>true
-,p_filter_lov_type=>'DISTINCT'
+,p_filter_lov_type=>'LOV'
 ,p_use_as_row_header=>false
 ,p_enable_sort_group=>true
 ,p_enable_control_break=>true
@@ -600,7 +601,7 @@ wwv_flow_imp_page.create_page_button(
 ,p_button_template_options=>'#DEFAULT#'
 ,p_button_template_id=>4072362960822175091
 ,p_button_is_hot=>'Y'
-,p_button_image_alt=>'Create'
+,p_button_image_alt=>'Crear'
 ,p_button_position=>'EDIT'
 ,p_button_redirect_url=>'f?p=&APP_ID.:53:&APP_SESSION.::&DEBUG.:53::'
 );

@@ -255,6 +255,61 @@ Smoke tests confirmados contra `tesis_db`:
   `ESTABLECIMIENTO_SET='2'` cargado en `tesis_db` (oficina 1 = `'1'`).
   Villarrica está lista para emitir talonarios cuando se le cree una caja.
 
+## 6.c F27 — PUNTO_EXPEDICION derivado desde CAJA_CONF (2026-07-06)
+
+Cierra la última brecha SET de la misma familia que F10.1, pero para el **punto
+de expedición**. Hasta F27, `TALONARIOS.PUNTO_EXPEDICION` se tipeaba a mano en
+P53 → dos cajas de la misma oficina podían declarar el mismo punto, o una caja
+tener talonarios con puntos distintos (viola que el punto identifique una única
+terminal).
+
+### Cambios DB (`db/F27_punto_expedicion_caja.sql`)
+
+1. `ALTER TABLE CAJA_CONF ADD PUNTO_EXPEDICION VARCHAR2(3)` (nullable mientras la
+   caja no opere fiscalmente).
+2. Populate auto: por cada caja con talonarios, copiar su `PUNTO_EXPEDICION`
+   único. Si una caja tiene talonarios con puntos divergentes, abortar `-20931`.
+3. `CREATE UNIQUE INDEX UQ_CAJA_CONF_OFI_PUNTO` sobre `(ID_OFICINA,
+   PUNTO_EXPEDICION)` (parcial vía CASE, solo filas con punto no NULL) → dos
+   cajas de la misma oficina no pueden compartir punto de expedición.
+4. `CREATE OR REPLACE TRIGGER TRG_TALONARIO_DERIVA_OFICINA` — cuerpo expandido:
+   además de `ID_OFICINA`/`ESTABLECIMIENTO`, deriva `PUNTO_EXPEDICION` desde
+   `CAJA_CONF.PUNTO_EXPEDICION`. Si es NULL para la caja, aborta `-20930`.
+   **Nombre del trigger se mantiene** por historicidad (ahora deriva 3 cosas).
+5. Bloque de verificación (col + índice + trigger + ningún talonario incoherente)
+   → `-20932` si falla. Errores F27: `-20930..-20933`.
+
+### Cambios APEX (`apex-work/f100/install_f27_pages.sql`)
+
+- **P53**: `Punto Expedicion` pasa a `NATIVE_DISPLAY_ONLY` no-required (derivado,
+  igual que Establecimiento). `Tipo Comprobante` y `Activo` pasan a select list
+  con LOV estática (`STATIC:Factura;FA,Nota de Credito;NC,Recibo de Dinero;RC` y
+  `STATIC:Si;S,No;N`). Nueva validación `VAL_TALONARIO_UNICO_CAJA_TIPO`
+  (FUNC_BODY_RETURNING_ERR_TEXT) con mensaje amigable que respalda al índice
+  `UQ_TALONARIO_CAJA_TIPO_ACT` (evita el ORA-00001 crudo y el bypass por
+  mayúsculas al forzar valores fijos).
+- **P51** (IG display-only): columnas `Tipo Comprobante` y `Activo` con LOV
+  estática para mostrar el texto amigable.
+- **P64** (Configuración de Cajas): nuevo item `P64_PUNTO_EXPEDICION` mapeado a la
+  columna nueva — es donde el admin carga el punto de la caja.
+
+### Pendiente operativo — ✅ RESUELTO (verificado 2026-07-06)
+
+- ~~**Caja 2 (`ID_CAJA_CONF=21`, oficina 1)** aún tiene `PUNTO_EXPEDICION` NULL.~~
+  **Hecho por el PO:** Caja 2 tiene `PUNTO_EXPEDICION='2'` cargado en P64. Se le
+  creó su primer talonario (FA, `ID_TALONARIO=42`) y el trigger derivó
+  `ESTABLECIMIENTO='1'` + `PUNTO_EXPEDICION='2'` correctamente → numera
+  `001-002-XXXXXXX`. Caja 1 quedó con punto `'1'` (poblado desde su talonario
+  histórico).
+
+### Verificación (contra `tesis_db`, 2026-07-06)
+
+- INSERT de talonario en caja sin punto cargado → `-20930`. ✔
+- `UPDATE CAJA_CONF SET PUNTO_EXPEDICION='1' WHERE ID_CAJA_CONF=21` (colisión con
+  Caja 1 en oficina 1) → `ORA-00001 (UQ_CAJA_CONF_OFI_PUNTO)`. ✔
+- Metadata APEX: P53 tipo/activo select list + punto display-only + validación
+  presente; P51 columnas con LOV STATIC; P64 con item punto. ✔
+
 ## 7. Rollback
 
 En orden inverso:

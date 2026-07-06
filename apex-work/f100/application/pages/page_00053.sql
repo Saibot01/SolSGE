@@ -58,9 +58,9 @@ wwv_flow_imp_page.create_page_button(
 ,p_button_action=>'DEFINED_BY_DA'
 ,p_button_template_options=>'#DEFAULT#'
 ,p_button_template_id=>4072362960822175091
-,p_button_image_alt=>'Cancel'
+,p_button_image_alt=>'Cancelar'
 ,p_button_position=>'CLOSE'
-,p_button_alignment=>'RIGHT'
+,p_warn_on_unsaved_changes=>null
 );
 wwv_flow_imp_page.create_page_button(
  p_id=>wwv_flow_imp.id(12688198654943744)
@@ -70,9 +70,8 @@ wwv_flow_imp_page.create_page_button(
 ,p_button_action=>'SUBMIT'
 ,p_button_template_options=>'#DEFAULT#'
 ,p_button_template_id=>4072362960822175091
-,p_button_image_alt=>'Delete'
+,p_button_image_alt=>'Eliminar'
 ,p_button_position=>'DELETE'
-,p_button_alignment=>'RIGHT'
 ,p_button_execute_validations=>'N'
 ,p_confirm_message=>'&APP_TEXT$DELETE_MSG!RAW.'
 ,p_confirm_style=>'danger'
@@ -89,9 +88,8 @@ wwv_flow_imp_page.create_page_button(
 ,p_button_template_options=>'#DEFAULT#'
 ,p_button_template_id=>4072362960822175091
 ,p_button_is_hot=>'Y'
-,p_button_image_alt=>'Apply Changes'
+,p_button_image_alt=>'Guardar'
 ,p_button_position=>'NEXT'
-,p_button_alignment=>'RIGHT'
 ,p_button_condition=>'P53_ID_TALONARIO'
 ,p_button_condition_type=>'ITEM_IS_NOT_NULL'
 ,p_database_action=>'UPDATE'
@@ -105,9 +103,8 @@ wwv_flow_imp_page.create_page_button(
 ,p_button_template_options=>'#DEFAULT#'
 ,p_button_template_id=>4072362960822175091
 ,p_button_is_hot=>'Y'
-,p_button_image_alt=>'Create'
+,p_button_image_alt=>'Crear'
 ,p_button_position=>'NEXT'
-,p_button_alignment=>'RIGHT'
 ,p_button_condition=>'P53_ID_TALONARIO'
 ,p_button_condition_type=>'ITEM_IS_NULL'
 ,p_database_action=>'INSERT'
@@ -172,24 +169,22 @@ wwv_flow_imp_page.create_page_item(
 ,p_prompt=>'Tipo Comprobante'
 ,p_source=>'TIPO_COMPROBANTE'
 ,p_source_type=>'REGION_SOURCE_COLUMN'
-,p_display_as=>'NATIVE_TEXT_FIELD'
-,p_cSize=>32
-,p_cMaxlength=>2
+,p_display_as=>'NATIVE_SELECT_LIST'
+,p_lov=>'STATIC:Factura;FA,Nota de Credito;NC,Recibo de Dinero;RC'
+,p_cHeight=>1
 ,p_label_alignment=>'RIGHT'
 ,p_field_template=>1609122147107268652
 ,p_item_template_options=>'#DEFAULT#'
 ,p_is_persistent=>'N'
+,p_lov_display_extra=>'YES'
+,p_lov_display_null=>'NO'
 ,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
-  'disabled', 'N',
-  'submit_when_enter_pressed', 'N',
-  'subtype', 'TEXT',
-  'trim_spaces', 'BOTH')).to_clob
+  'page_action_on_selection', 'NONE')).to_clob
 );
 wwv_flow_imp_page.create_page_item(
  p_id=>wwv_flow_imp.id(12679147983943740)
 ,p_name=>'P53_ESTABLECIMIENTO'
 ,p_source_data_type=>'VARCHAR2'
-,p_is_required=>false
 ,p_item_sequence=>40
 ,p_item_plug_id=>wwv_flow_imp.id(12677598892943738)
 ,p_item_source_plug_id=>wwv_flow_imp.id(12677598892943738)
@@ -212,26 +207,23 @@ wwv_flow_imp_page.create_page_item(
  p_id=>wwv_flow_imp.id(12679577546943740)
 ,p_name=>'P53_PUNTO_EXPEDICION'
 ,p_source_data_type=>'VARCHAR2'
-,p_is_required=>true
 ,p_item_sequence=>50
 ,p_item_plug_id=>wwv_flow_imp.id(12677598892943738)
 ,p_item_source_plug_id=>wwv_flow_imp.id(12677598892943738)
 ,p_use_cache_before_default=>'NO'
-,p_prompt=>'Punto Expedicion'
+,p_prompt=>'Punto Expedicion (derivado)'
 ,p_source=>'PUNTO_EXPEDICION'
 ,p_source_type=>'REGION_SOURCE_COLUMN'
-,p_display_as=>'NATIVE_TEXT_FIELD'
-,p_cSize=>32
-,p_cMaxlength=>3
+,p_display_as=>'NATIVE_DISPLAY_ONLY'
 ,p_label_alignment=>'RIGHT'
 ,p_field_template=>1609122147107268652
 ,p_item_template_options=>'#DEFAULT#'
 ,p_is_persistent=>'N'
 ,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
-  'disabled', 'N',
-  'submit_when_enter_pressed', 'N',
-  'subtype', 'TEXT',
-  'trim_spaces', 'BOTH')).to_clob
+  'based_on', 'VALUE',
+  'format', 'PLAIN',
+  'send_on_page_submit', 'N',
+  'show_line_breaks', 'N')).to_clob
 );
 wwv_flow_imp_page.create_page_item(
  p_id=>wwv_flow_imp.id(12679931848943740)
@@ -403,18 +395,17 @@ wwv_flow_imp_page.create_page_item(
 ,p_prompt=>'Activo'
 ,p_source=>'ACTIVO'
 ,p_source_type=>'REGION_SOURCE_COLUMN'
-,p_display_as=>'NATIVE_TEXT_FIELD'
-,p_cSize=>32
-,p_cMaxlength=>1
+,p_display_as=>'NATIVE_SELECT_LIST'
+,p_lov=>'STATIC:Si;S,No;N'
+,p_cHeight=>1
 ,p_label_alignment=>'RIGHT'
 ,p_field_template=>1609121967514267634
 ,p_item_template_options=>'#DEFAULT#'
 ,p_is_persistent=>'N'
+,p_lov_display_extra=>'YES'
+,p_lov_display_null=>'NO'
 ,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
-  'disabled', 'N',
-  'submit_when_enter_pressed', 'N',
-  'subtype', 'TEXT',
-  'trim_spaces', 'BOTH')).to_clob
+  'page_action_on_selection', 'NONE')).to_clob
 );
 wwv_flow_imp_page.create_page_da_event(
  p_id=>wwv_flow_imp.id(12686868058943744)
@@ -468,6 +459,32 @@ wwv_flow_imp_page.create_page_process(
 ,p_process_name=>'Initialize form Talonarios'
 ,p_error_display_location=>'INLINE_IN_NOTIFICATION'
 ,p_internal_uid=>12689371392943745
+);
+wwv_flow_imp_page.create_page_validation(
+ p_id=>wwv_flow_imp.id(12690811111111111)
+,p_validation_name=>'VAL_TALONARIO_UNICO_CAJA_TIPO'
+,p_validation_sequence=>10
+,p_validation=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'DECLARE',
+'  v_cnt NUMBER;',
+'BEGIN',
+'  IF NVL(:P53_ACTIVO,''N'') = ''S'' THEN',
+'    SELECT COUNT(*) INTO v_cnt',
+'      FROM WKSP_WORKPLACE.TALONARIOS',
+'     WHERE ID_CAJA_CONF   = :P53_ID_CAJA_CONF',
+'       AND TIPO_COMPROBANTE = :P53_TIPO_COMPROBANTE',
+'       AND ACTIVO = ''S''',
+'       AND (:P53_ID_TALONARIO IS NULL OR ID_TALONARIO <> :P53_ID_TALONARIO);',
+'    IF v_cnt > 0 THEN',
+unistr('      RETURN ''Ya existe un talonario activo de ese tipo de comprobante para esta caja. Seg\00FAn la SET, cada punto de expedici\00F3n admite un solo talonario activo por tipo.'';'),
+'    END IF;',
+'  END IF;',
+'  RETURN NULL;',
+'END;'))
+,p_validation2=>'PLSQL'
+,p_validation_type=>'FUNC_BODY_RETURNING_ERR_TEXT'
+,p_error_display_location=>'INLINE_IN_NOTIFICATION'
+,p_associated_item=>wwv_flow_imp.id(12678746381943739)
 );
 wwv_flow_imp.component_end;
 end;
