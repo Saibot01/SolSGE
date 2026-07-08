@@ -51,10 +51,10 @@ casos de uso, nombre del sistema).
 - **4 dashboards gerenciales** (Ventas F18, Cobros F22, Inventario F23, Compras F25) con **metas** e informes imprimibles.
 
 ### Lo que está desactualizado
-- **Nombre del sistema:** el anteproyecto dice *"Sole Sistema Gestion Empresarial"* / empresa *"Sole
-  Informática"*; el sistema entregado y los diagramas usan **"Sol – Sistema de Gestión Empresarial"
-  (SOLSGE)**. ⚠️ **CONFIRMAR con el alumno** cuál es el correcto (¿empresa "Sole Informática",
-  sistema "Sol/SolSGE"?) y unificar. Faltan acentos en todo el doc (Gestion, Asuncion, Solucion…).
+- **Nombre del sistema (CONFIRMADO 2026-07-08):** sistema = **"Sole – Sistema de Gestión Empresarial"**
+  (sigla **SOLSGE**); empresa = **"Sole Informática"**. ⚠️ Los diagramas ya hechos decían "Sol" (sin e)
+  → **ya corregido** en `doc/diagramas/` (default de `_build/docxlib.js` + rebuild de los 7 docx). El
+  anteproyecto debe usar este nombre. Faltan acentos en todo el doc (Gestión, Asunción, Solución…).
 - **Actores:** el anteproyecto lista Administrador, Ventas, Compras, Reportes(Gerente). Los **reales**
   son: **Vendedor, Cajero, Supervisor, Comprador, Encargado de Depósito, Gerente, Administrador**.
 - **Requisitos funcionales (§7.1):** muy genéricos → expandir por módulo con lo real (caja, crédito/cuotas,
@@ -81,7 +81,8 @@ casos de uso, nombre del sistema).
    mantener el encuadre de propuesta (es el documento de la etapa de anteproyecto) y solo **alinear el
    alcance** (módulos, actores, requisitos, casos de uso) con lo construido, para que no contradiga al
    resto del libro.
-2. **Nombre del sistema/empresa** (ver brecha arriba). Unificar con los diagramas.
+2. ~~Nombre del sistema/empresa~~ **RESUELTO:** sistema "Sole – Sistema de Gestión Empresarial" (SOLSGE),
+   empresa "Sole Informática". Ya unificado en los diagramas.
 3. **Detalle del diccionario de datos:** alto nivel (una entidad por concepto) o exhaustivo (tablas reales).
 4. **Fecha/portada:** ¿conservar "Agosto 2024" (fecha original de la etapa) o "Julio 2026" (versión del libro)?
 

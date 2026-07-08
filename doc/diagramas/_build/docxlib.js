@@ -112,7 +112,7 @@ function makeCaratula(c) {
     cLine("DISEÑO DE DIAGRAMAS", { after: 200 }),
     ...(c.subtitulo ? [cLine("(" + c.subtitulo + ")")] : []),
     cBlank(),
-    cLine(c.sistema || "Sol – Sistema de Gestión Empresarial"),
+    cLine(c.sistema || "Sole – Sistema de Gestión Empresarial"),
     cBlank(),
     cLine(c.sigla || "SOLSGE"),
     cBlank(),
