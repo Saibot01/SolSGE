@@ -1,0 +1,70 @@
+@startuml actividad_facturar_contado
+' ============================================================================
+' SolSGE - Diagrama de Actividades - "Facturar contado"
+' Flujo de control real: P67 (procesos AFTER_SUBMIT) + triggers.
+' ============================================================================
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam ActivityFontSize 12
+skinparam activity {
+  BackgroundColor #DCE9F5
+  BorderColor #2E5A88
+  DiamondBackgroundColor #FBF3D0
+  DiamondBorderColor #B9A24B
+  ArrowColor #34506B
+}
+
+title Diagrama de Actividades — Facturar contado (SOLSGE)
+
+|Cajero|
+start
+:Abrir pantalla de Facturación;
+
+|Sistema|
+if (¿Caja abierta del cajero?) then (no)
+  :Mostrar error\n"No tiene caja abierta";
+  stop
+else (sí)
+endif
+
+|Cajero|
+:Seleccionar presupuesto APROBADO;
+:Elegir forma de pago = Contado,\ningresar monto recibido y confirmar;
+
+|Sistema|
+if (¿Presupuesto facturable\ny monto >= total?) then (no)
+  :Mostrar error de validación;
+  stop
+else (sí)
+endif
+
+:Reservar N.º de comprobante\n(FN_OBTENER_COMPROBANTE);
+if (¿Talonario FA vigente?) then (no)
+  :Abortar (-20001/-20002);
+  stop
+else (sí)
+endif
+
+:Registrar factura (COMPROBANTES, FA, 'A');
+:Marcar presupuesto = FACTURADO\ny liberar reservas de stock;
+
+repeat :Insertar línea de detalle;
+  if (¿Stock suficiente?) then (no)
+    :Abortar transacción (-20005);
+    stop
+  else (sí)
+    :Registrar SALIDA de stock\n(descontar STOCK_PRODUCTO);
+  endif
+repeat while (¿más líneas?) is (sí)
+->no;
+
+:Registrar ingreso en caja\n(MOVIMIENTOS_CAJA = INGRESO_VENTA);
+:Generar documento KuDE (P96);
+
+|Cajero|
+:Imprimir factura;
+stop
+
+@enduml

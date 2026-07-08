@@ -1,0 +1,43 @@
+@startuml estados_presupuesto
+' ============================================================================
+' SolSGE - Diagrama de Estados - Presupuesto (ORDENES_VENTA.ESTADO)
+' Transiciones reales: FN_PUEDE_TRANSICION_OV, P118 ProcesarCambioEstado,
+' TRG_FACTURA_ORDEN, JOB_VENCER_PRESUPUESTOS.
+' ============================================================================
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam state {
+  BackgroundColor #DCE9F5
+  BorderColor #2E5A88
+  ArrowColor #34506B
+  FontSize 13
+}
+
+title Diagrama de Estados — Presupuesto (SOLSGE)
+
+[*] --> Pendiente : crear presupuesto
+
+state "Pendiente\n(PENDIENTE)" as Pendiente
+state "Aprobado\n(APROBADO)" as Aprobado
+state "Facturado\n(FACTURADO)" as Facturado
+state "Anulado\n(ANULADO)" as Anulado
+state "Vencido\n(VENCIDO)" as Vencido
+
+Pendiente --> Aprobado : aprobar\n[Supervisor — P118]
+Pendiente --> Anulado : anular\n[Supervisor, con motivo]
+Pendiente --> Vencido : vencimiento\n[fecha_venc < hoy — JOB_VENCER_PRESUPUESTOS]
+Aprobado --> Facturado : facturar\n[TRG_FACTURA_ORDEN — solo desde APROBADO]
+Aprobado --> Anulado : anular\n[Supervisor, con motivo]
+
+Facturado --> [*]
+Anulado --> [*]
+Vencido --> [*]
+
+note bottom of Anulado
+  Al anular o vencer, TRG_OV_LIBERA_RESERVA
+  pone las reservas VIGENTE en ANULADA.
+end note
+
+@enduml

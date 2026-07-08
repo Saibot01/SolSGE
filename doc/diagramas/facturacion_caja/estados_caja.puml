@@ -1,0 +1,33 @@
+@startuml estados_caja
+' ============================================================================
+' SolSGE - Diagrama de Estados - Caja (CAJAS.ESTADO)
+' Transiciones reales: apertura (INSERT), CERRAR_CAJA v3.
+' ============================================================================
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam state {
+  BackgroundColor #DCE9F5
+  BorderColor #2E5A88
+  ArrowColor #34506B
+  FontSize 13
+}
+
+title Diagrama de Estados — Caja (SOLSGE)
+
+[*] --> Abierta : abrir caja\n(1 caja abierta por empleado — TRG_CAJA_UNA_POR_DIA)
+
+state "Abierta\n(ESTADO='A')" as Abierta
+state "Cerrada\n(ESTADO='C')" as Cerrada
+
+Abierta --> Cerrada : cerrar y arquear\n[CERRAR_CAJA v3 — calcula saldo esperado\ny diferencia contra lo declarado]
+Cerrada --> [*]
+
+note bottom of Abierta
+  Mientras está Abierta recibe movimientos
+  (INGRESO_VENTA, COBRO_CXC, EGRESO).
+  Al cerrar, sus movimientos pasan a ESTADO='C'.
+end note
+
+@enduml

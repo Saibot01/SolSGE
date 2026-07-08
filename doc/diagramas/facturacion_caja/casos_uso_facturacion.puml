@@ -1,0 +1,54 @@
+@startuml casos_uso_facturacion
+' ============================================================================
+' SolSGE - Diagrama de Casos de Uso - Módulo Facturación + Caja
+' Mapa general: actores y casos de uso principales del módulo.
+' ============================================================================
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam packageStyle rectangle
+skinparam usecase {
+  BackgroundColor #DCE9F5
+  BorderColor #2E5A88
+  ArrowColor #34506B
+}
+skinparam actor {
+  BackgroundColor #DCE9F5
+  BorderColor #2E5A88
+}
+left to right direction
+
+title Diagrama de Casos de Uso — Módulo Facturación + Caja (SOLSGE)
+
+actor Cajero as C
+actor Supervisor as S
+
+rectangle "Facturación + Caja" {
+  usecase "Abrir caja" as UC1
+  usecase "Cerrar y arquear caja" as UC2
+  usecase "Facturar contado" as UC3
+  usecase "Facturar a crédito" as UC4
+  usecase "Cobrar cuota" as UC5
+  usecase "Solicitar anulación\nde factura" as UC6
+  usecase "Aprobar anulación\nde factura" as UC7
+  usecase "Emitir Nota de Crédito" as UC8
+}
+
+C --> UC1
+C --> UC2
+C --> UC3
+C --> UC4
+C --> UC5
+C --> UC6
+S --> UC7
+S --> UC8
+
+' Dependencias entre casos
+UC3 ..> UC1 : «include»\n(requiere caja abierta)
+UC4 ..> UC1 : «include»
+UC5 ..> UC1 : «include»
+UC7 ..> UC6 : «extend»\n(tras la solicitud)
+UC8 .> UC4 : sobre factura\nfuera de plazo
+
+@enduml

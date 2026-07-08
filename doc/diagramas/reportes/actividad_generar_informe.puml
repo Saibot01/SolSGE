@@ -1,0 +1,32 @@
+@startuml actividad_generar_informe
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam ActivityFontSize 12
+skinparam activity {
+  BackgroundColor #DCE9F5
+  BorderColor #2E5A88
+  DiamondBackgroundColor #FBF3D0
+  DiamondBorderColor #B9A24B
+  ArrowColor #34506B
+}
+title Diagrama de Actividades — Generar informe gerencial (SOLSGE)
+
+|Gerente|
+start
+:Elegir el área (ventas / cobros / compras / inventario);
+:Elegir los filtros (rango, sucursal, dimensión);
+:Solicitar el informe;
+|Sistema|
+:Ejecutar FN_INFORME_<área>_HTML;
+:Consultar las vistas agregadas (hechos vs metas);
+:Componer el HTML imprimible (barras, @media print);
+|Gerente|
+:Visualizar el informe;
+if (¿Imprimir?) then (sí)
+  :Imprimir / exportar;
+else (no)
+endif
+stop
+@enduml

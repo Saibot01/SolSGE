@@ -1,0 +1,39 @@
+@startuml estados_inventario
+' ============================================================================
+' SolSGE - Diagrama de Estados - Inventario físico (INVENTARIO.ESTADO)
+' Transiciones reales: INVENTARIO_PKG.enviar / aprobar / rechazar.
+' ============================================================================
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam state {
+  BackgroundColor #DCE9F5
+  BorderColor #2E5A88
+  ArrowColor #34506B
+  FontSize 13
+}
+
+title Diagrama de Estados — Inventario físico (SOLSGE)
+
+[*] --> Borrador : crear inventario\n(Encargado de Depósito carga el conteo)
+
+state "Borrador\n(BORRADOR)" as B
+state "Enviado\n(ENVIADO)" as E
+state "Aprobado\n(APROBADO)" as A
+state "Rechazado\n(RECHAZADO)" as R
+
+B --> E : enviar a aprobación\n[INVENTARIO_PKG.enviar]
+E --> A : aprobar\n[INVENTARIO_PKG.aprobar → genera ajustes\nde stock por cada diferencia ≠ 0]
+E --> R : rechazar\n[INVENTARIO_PKG.rechazar]
+A --> [*]
+R --> [*]
+
+note bottom of A
+  Al aprobar, por cada línea con diferencia:
+  diferencia > 0 → ENTRADA de ajuste,
+  diferencia < 0 → SALIDA de ajuste,
+  que reconcilian STOCK_PRODUCTO.
+end note
+
+@enduml

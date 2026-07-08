@@ -1,0 +1,56 @@
+@startuml actividad_anular_factura
+' ============================================================================
+' SolSGE - Diagrama de Actividades - "Anular factura" (F11)
+' Flujo real: PRC_SOLICITAR_ANULACION + PRC_APROBAR_ANULACION.
+' ============================================================================
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam ActivityFontSize 12
+skinparam activity {
+  BackgroundColor #DCE9F5
+  BorderColor #2E5A88
+  DiamondBackgroundColor #FBF3D0
+  DiamondBorderColor #B9A24B
+  ArrowColor #34506B
+}
+
+title Diagrama de Actividades — Anular factura (SOLSGE)
+
+|Cajero|
+start
+:Solicitar anulación con motivo;
+
+|Sistema|
+if (¿ESTADO='A', dentro de 48 h,\nmotivo válido y sin cuotas pagadas?) then (no)
+  :Rechazar\n"corresponde Nota de Crédito";
+  stop
+else (sí)
+endif
+:Marcar factura PENDIENTE de anulación (ESTADO='P');
+
+|Supervisor|
+:Revisar la solicitud;
+if (¿Aprobar?) then (no)
+  |Sistema|
+  :Rechazar (ESTADO vuelve a 'A' con motivo);
+  stop
+else (sí)
+endif
+
+|Sistema|
+:Re-validar ventana SIFEN y cuotas;
+:Reversar stock (ENTRADA por línea);
+if (¿fue contado?) then (sí)
+  :Reversar caja (EGRESO de contrapartida);
+else (no)
+  :Anular CxC y cuotas (si fue crédito);
+endif
+:Marcar factura ANULADA (ESTADO='N')\n+ usuario/fecha de resolución;
+
+|Supervisor|
+:Factura anulada;
+stop
+
+@enduml

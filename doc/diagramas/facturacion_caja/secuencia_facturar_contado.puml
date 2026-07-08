@@ -1,0 +1,87 @@
+@startuml secuencia_facturar_contado
+' ============================================================================
+' SolSGE - Diagrama de Secuencia - "Facturar contado"
+' Derivado de la orquestacion real de P67 (procesos AFTER_SUBMIT) + triggers.
+' ============================================================================
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam sequenceMessageAlign center
+skinparam ParticipantFontSize 12
+skinparam sequence {
+  ArrowColor #34506B
+  LifeLineBorderColor #7A93AB
+  ParticipantBorderColor #2E5A88
+  ParticipantBackgroundColor #DCE9F5
+  ActorBorderColor #2E5A88
+  ActorBackgroundColor #DCE9F5
+}
+
+title Diagrama de Secuencia — Facturar contado (SOLSGE)
+
+actor Cajero as C
+participant "P67\nFacturación" as P67 <<página>>
+participant "FN_OBTENER_\nCOMPROBANTE" as FN <<función>>
+participant "TALONARIOS" as TAL <<entidad>>
+participant "COMPROBANTES" as CMP <<entidad>>
+participant "TRG_FACTURA_ORDEN\n/ ORDENES_VENTA" as TFO <<trigger>>
+participant "DETALLE_\nCOMPROBANTE" as DET <<entidad>>
+participant "TRG_MOV_STOCK\n/ STOCK_PRODUCTO" as TST <<trigger>>
+participant "MOVIMIENTOS_CAJA" as MC <<entidad>>
+participant "P96\nKuDE Factura" as P96 <<página>>
+
+C -> P67 : abre pantalla de facturación
+activate P67
+P67 -> P67 : BEFORE_HEADER — Validación de Caja\nFN_CAJA_ABIERTA_USUARIO(:APP_USER)
+alt no hay caja abierta
+  P67 --> C : error: "No tiene caja abierta"
+end
+P67 --> C : muestra presupuesto APROBADO + forma de pago
+deactivate P67
+
+C -> P67 : selecciona Contado, ingresa monto recibido y confirma
+activate P67
+
+group AFTER_SUBMIT (secuencia de procesos)
+  P67 -> TFO : (seq 3) FN_PUEDE_TRANSICION_OV(estado, 'FACTURADO')
+  P67 -> P67 : (seq 5) valida monto recibido ≥ total
+
+  P67 -> FN : (seq 8) FN_OBTENER_COMPROBANTE(id_talonario)
+  activate FN
+  FN -> TAL : SELECT ... FOR UPDATE (lock)
+  FN -> TAL : valida vigencia (FN_HOY) y numeración
+  FN -> TAL : UPDATE NRO_ACTUAL = NRO_ACTUAL + 1
+  FN --> P67 : nro_comprobante (EEE-PPP-NNNNNNN)
+  deactivate FN
+
+  P67 -> CMP : (seq 10) INSERT COMPROBANTE (FA, estado='A', contado)
+  activate CMP
+  CMP -> TFO : TRG_FACTURA_ORDEN
+  activate TFO
+  TFO -> TFO : UPDATE ORDENES_VENTA.ESTADO = 'FACTURADO'\n(+ libera reservas de stock)
+  deactivate TFO
+  note right of CMP : TRG_INS_CUENTAS_COBRAR no actúa\n(solo crédito FORMA_PAGO='1')
+  deactivate CMP
+
+  loop por cada línea del presupuesto
+    P67 -> DET : (seq 20) INSERT DETALLE_COMPROBANTE
+    activate DET
+    DET -> TST : TRG_MOV_STOCK_DETALLE
+    activate TST
+    TST -> TST : valida stock ≥ cantidad
+    TST -> TST : INSERT MOVIMIENTOS_STOCK (SALIDA)\n→ baja STOCK_PRODUCTO.CANTIDAD
+    deactivate TST
+    deactivate DET
+  end
+
+  P67 -> MC : (seq 40) INSERT MOVIMIENTOS_CAJA (INGRESO_VENTA)\n+ DETALLE_MOVIMIENTO_CAJA (forma de pago)
+end
+
+P67 -> P96 : redirige al documento (KuDE)
+deactivate P67
+activate P96
+P96 --> C : muestra / imprime la factura
+deactivate P96
+
+@enduml

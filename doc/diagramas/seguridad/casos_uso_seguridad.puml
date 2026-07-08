@@ -1,0 +1,41 @@
+@startuml casos_uso_seguridad
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam packageStyle rectangle
+skinparam usecase {
+  BackgroundColor #DCE9F5
+  BorderColor #2E5A88
+  ArrowColor #34506B
+}
+skinparam actor {
+  BackgroundColor #DCE9F5
+  BorderColor #2E5A88
+}
+left to right direction
+
+title Diagrama de Casos de Uso — Módulo Seguridad (SOLSGE)
+
+actor Usuario as U
+actor Administrador as A
+
+rectangle "Seguridad" {
+  usecase "Autenticarse" as UC1
+  usecase "Cambiar contraseña" as UC2
+  usecase "Registrar usuario" as UC3
+  usecase "Asignar roles\na un usuario" as UC4
+  usecase "Administrar privilegios\nde un rol" as UC5
+}
+
+U --> UC1
+U --> UC2
+A --> UC3
+A --> UC4
+A --> UC5
+A --> UC1
+
+UC1 ..> UC5 : «usa»\ncontrol de acceso (can_access)
+UC4 ..> UC3 : sobre un usuario
+
+@enduml

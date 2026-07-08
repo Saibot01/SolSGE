@@ -1,0 +1,36 @@
+@startuml estados_factura
+' ============================================================================
+' SolSGE - Diagrama de Estados - Factura (COMPROBANTES.ESTADO, TIPO='FA')
+' Transiciones reales: PRC_SOLICITAR / APROBAR / RECHAZAR_ANULACION (db/F11).
+' ============================================================================
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam state {
+  BackgroundColor #DCE9F5
+  BorderColor #2E5A88
+  ArrowColor #34506B
+  FontSize 13
+}
+
+title Diagrama de Estados — Factura (SOLSGE)
+
+[*] --> Activa : facturar\n(emitir comprobante FA)
+
+state "Activa\n(ESTADO='A')" as Activa
+state "Pendiente de anulación\n(ESTADO='P')" as Pendiente
+state "Anulada\n(ESTADO='N')" as Anulada
+
+Activa --> Pendiente : solicitar anulación\n[dentro de 48 h — PRC_SOLICITAR_ANULACION]
+Pendiente --> Anulada : aprobar anulación\n[PRC_APROBAR_ANULACION →\nreversa stock, caja y CxC]
+Pendiente --> Activa : rechazar anulación\n[PRC_RECHAZAR_ANULACION]
+Anulada --> [*]
+
+note bottom of Activa
+  Fuera de las 48 h la factura no se anula:
+  se corrige con Nota de Crédito (documento nuevo),
+  la factura permanece Activa.
+end note
+
+@enduml

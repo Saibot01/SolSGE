@@ -1,0 +1,33 @@
+@startuml actividad_generar_informe
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam ActivityFontSize 12
+skinparam activity {
+  BackgroundColor #DCE9F5
+  BorderColor #2E5A88
+  DiamondBackgroundColor #FBF3D0
+  DiamondBorderColor #B9A24B
+  ArrowColor #34506B
+}
+title Diagrama de Actividades — Generar informe de inventario (SOLSGE)
+
+|Gerente|
+start
+:Abrir el generador de informe (P143);
+:Elegir sucursal, categoría y rango de fechas;
+:Solicitar el informe;
+|Sistema|
+:Consultar valorización y niveles (snapshot de stock);
+:Consultar rotación / flujo del rango (movimientos);
+:Componer el HTML (barras, formato de impresión);
+|Gerente|
+:Visualizar el informe;
+if (¿Imprimir?) then (sí)
+  :Imprimir / exportar;
+else (no)
+endif
+stop
+
+@enduml

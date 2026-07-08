@@ -1,0 +1,48 @@
+@startuml secuencia_actualizar_stock
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam sequenceMessageAlign center
+skinparam ParticipantFontSize 12
+skinparam sequence {
+  ArrowColor #34506B
+  LifeLineBorderColor #7A93AB
+  ParticipantBorderColor #2E5A88
+  ParticipantBackgroundColor #DCE9F5
+  ActorBorderColor #2E5A88
+  ActorBackgroundColor #DCE9F5
+}
+title Diagrama de Secuencia — Actualización de stock por movimiento (SOLSGE)
+
+participant "Módulo origen\n(Facturación / Compras)" as O <<módulo>>
+participant "MOVIMIENTOS_STOCK" as MS <<entidad>>
+participant "TRG_ACTUALIZAR_\nSTOCK_MOVIMIENTO" as TR <<trigger>>
+participant "STOCK_PRODUCTO" as SP <<entidad>>
+
+O -> MS : INSERT MOVIMIENTOS_STOCK\n(tipo ENTRADA / SALIDA, producto, oficina, cantidad)
+activate MS
+MS -> TR : TRG_ACTUALIZAR_STOCK_MOVIMIENTO
+activate TR
+TR -> SP : SELECT CANTIDAD ... FOR UPDATE\n(crea la fila con 0 si no existe)
+alt tipo = ENTRADA
+  TR -> SP : CANTIDAD = CANTIDAD + :cantidad
+else tipo = SALIDA
+  TR -> TR : valida CANTIDAD >= :cantidad
+  alt stock insuficiente
+    TR --> O : error (-20001) "stock insuficiente"
+  else
+    TR -> SP : CANTIDAD = CANTIDAD - :cantidad
+  end
+end
+deactivate TR
+deactivate MS
+
+note right of SP
+  El on-hand queda consistente con el
+  kardex. La ENTRADA proviene de
+  Compras/recepción; la SALIDA, de
+  Facturación (venta).
+end note
+
+@enduml

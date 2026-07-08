@@ -1,0 +1,119 @@
+@startuml clases_compras
+' ============================================================================
+' SolSGE - Diagrama de Clases - Módulo Compras
+' Fuente de verdad: BD real (WKSP_WORKPLACE) - tablas, PK/FK reales.
+' ============================================================================
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam classFontSize 12
+skinparam classAttributeFontSize 11
+skinparam DefaultFontName Segoe UI
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #2E5A88
+  HeaderBackgroundColor #DCE9F5
+  ArrowColor #34506B
+}
+hide circle
+hide methods
+
+title Diagrama de Clases — Módulo Compras (SOLSGE)
+
+class OrdenCompra <<ORDENES_COMPRA>> {
+  +id_orden_compra : Number «PK»
+  --
+  fecha_orden : Date
+  estado : Char  'B→P→C / X / A'
+  total_orden : Number
+  id_aprobador : Number
+  fecha_aprobacion : Date
+  motivo_rechazo : Varchar2
+}
+
+class DetalleRecepcion <<DETALLE_RECEPCION_COMPRA>> {
+  +id_detalle_rec : Number «PK»
+  --
+  cantidad_recibida : Number
+}
+
+class ComprobanteProveedor <<COMPROBANTES_PROVEEDOR>> {
+  +id_comprobante : Number «PK»
+  --
+  tipo_comprobante : Char  'FA / NC'
+  nro_comprobante : Varchar2
+  fecha_emision : Date
+  total_comprobante : Number
+  estado : Varchar2  'R→PR→C / A'
+  forma_pago : Varchar2  '1=crédito / 21=contado'
+  cod_motivo : Number  '(NC)'
+}
+
+class DetalleComprobanteProv <<DETALLE_COMPROBANTE_PROV>> {
+  +id_detalle : Number «PK»
+  --
+  cantidad : Number
+  precio_unitario : Number
+  total : Number
+}
+
+class CuentaPagar <<CUENTAS_PAGAR>> {
+  +id_cxp : Number «PK»
+  --
+  total_a_pagar : Number
+  saldo : Number
+  fecha_vencimiento : Date
+  estado : Varchar2  'PENDIENTE→PARCIAL→PAGADA'
+}
+
+class OrdenPago <<ORDENES_PAGO>> {
+  +id_orden_pago : Number «PK»
+  --
+  fecha_emision : Date
+  fecha_pago : Date
+  total_pago : Number
+  estado : Varchar2  'BORRADOR→CONFIRMADA / ANULADA'
+  motivo_anulacion : Varchar2
+}
+
+class OrdenPagoDet <<ORDEN_PAGO_DET>> {
+  +id_detalle : Number «PK»
+  --
+  monto_aplicado : Number
+}
+
+' ---- frontera ----
+class Proveedor <<PROVEEDORES>> #EFEFEF {
+  +id_persona : Number «PK»
+  plazo_pago_dias : Number
+}
+class Producto <<PRODUCTOS>> #EFEFEF {
+  +id_producto : Number «PK»
+}
+class MovimientoStock <<MOVIMIENTOS_STOCK>> #EFEFEF {
+  +id_movimiento : Number «PK»
+  tipo_movimiento : 'ENTRADA / SALIDA'
+}
+
+' ============================================================================
+' RELACIONES
+' ============================================================================
+OrdenCompra "1" *-- "0..*" DetalleRecepcion : recepciones
+ComprobanteProveedor "1" *-- "1..*" DetalleComprobanteProv : contiene
+ComprobanteProveedor "1" --> "0..1" CuentaPagar : genera (crédito)
+OrdenPago "1" *-- "1..*" OrdenPagoDet : aplica
+OrdenPagoDet "0..*" --> "1" CuentaPagar : paga
+
+ComprobanteProveedor "0..1" --> "1" OrdenCompra : factura de
+ComprobanteProveedor "0..*" --> "1" Proveedor : de
+OrdenCompra "0..*" --> "1" Proveedor : a
+CuentaPagar "0..*" --> "1" Proveedor : deuda con
+OrdenPago "0..*" --> "1" Proveedor : a
+DetalleComprobanteProv "0..*" --> "1" Producto : de
+
+' Dependencias (triggers)
+DetalleRecepcion ..> MovimientoStock : «dispara»\nENTRADA (TRG_MOV_STOCK_RECEPCION)
+ComprobanteProveedor ..> CuentaPagar : «dispara»\n(TRG_INS_CUENTAS_PAGAR)
+
+@enduml

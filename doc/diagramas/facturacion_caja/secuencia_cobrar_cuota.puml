@@ -1,0 +1,69 @@
+@startuml secuencia_cobrar_cuota
+' ============================================================================
+' SolSGE - Diagrama de Secuencia - "Cobrar cuota"
+' Derivado de la funcion real FN_COBRAR_CUOTA (db/F9_cobros.sql).
+' ============================================================================
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam sequenceMessageAlign center
+skinparam ParticipantFontSize 12
+skinparam sequence {
+  ArrowColor #34506B
+  LifeLineBorderColor #7A93AB
+  ParticipantBorderColor #2E5A88
+  ParticipantBackgroundColor #DCE9F5
+  ActorBorderColor #2E5A88
+  ActorBackgroundColor #DCE9F5
+}
+
+title Diagrama de Secuencia — Cobrar cuota (SOLSGE)
+
+actor Cajero as C
+participant "Página\nCobro CxC" as PG <<página>>
+participant "FN_COBRAR_CUOTA" as FN <<función>>
+participant "CUENTAS_COBRAR_DET\n(cuota)" as CCD <<entidad>>
+participant "CUENTAS_COBRAR" as CXC <<entidad>>
+participant "CAJAS" as CAJ <<entidad>>
+participant "FN_OBTENER_\nCOMPROBANTE\n/ TALONARIOS" as FNC <<función>>
+participant "MOVIMIENTOS_CAJA" as MC <<entidad>>
+participant "P119\nKuDE Recibo" as P119 <<página>>
+
+C -> PG : selecciona cuota pendiente, forma/método de pago y monto
+activate PG
+PG -> FN : FN_COBRAR_CUOTA(id_detalle, id_caja,\nid_talonario_rc, forma, método, monto)
+activate FN
+
+FN -> CCD : (1) SELECT cuota FOR UPDATE (lock)
+FN -> FN : valida estado en {PENDIENTE, VENCIDA}\ny monto >= MONTO_CUOTA
+alt validación falla
+  FN --> PG : RAISE_APPLICATION_ERROR (-20911 / -20912)
+  PG --> C : muestra error
+end
+
+FN -> CXC : (2) SELECT CxC FOR UPDATE (lock)
+FN -> CAJ : (3) SELECT caja — valida ESTADO = 'A' (abierta)
+FN -> FNC : (4) valida talonario RC vigente y de la oficina de la caja
+
+FN -> FNC : (5) FN_OBTENER_COMPROBANTE(talonario_rc)
+activate FNC
+FNC -> FNC : lock TALONARIOS, valida vigencia,\nNRO_ACTUAL = NRO_ACTUAL + 1
+FNC --> FN : nro_recibo
+deactivate FNC
+
+FN -> MC : (6) INSERT MOVIMIENTOS_CAJA (COBRO_CXC)
+FN -> MC : (7) INSERT DETALLE_MOVIMIENTO_CAJA (forma + método)
+FN -> CCD : (8) UPDATE cuota → ESTADO = 'PAGADA'
+FN -> CXC : (9) UPDATE SALDO = SALDO − monto_cuota\n(si SALDO = 0 → ESTADO = 'PAGADA')
+
+FN --> PG : nro_recibo
+deactivate FN
+
+PG -> P119 : redirige al documento (KuDE Recibo)
+deactivate PG
+activate P119
+P119 --> C : muestra / imprime el recibo
+deactivate P119
+
+@enduml

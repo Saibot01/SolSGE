@@ -1,0 +1,39 @@
+@startuml secuencia_nc_compra
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam sequenceMessageAlign center
+skinparam ParticipantFontSize 12
+skinparam sequence {
+  ArrowColor #34506B
+  LifeLineBorderColor #7A93AB
+  ParticipantBorderColor #2E5A88
+  ParticipantBackgroundColor #DCE9F5
+  ActorBorderColor #2E5A88
+  ActorBackgroundColor #DCE9F5 }
+title Diagrama de Secuencia — Registrar nota de crédito de compra (SOLSGE)
+
+actor Comprador as C
+participant "P94\nNC de Compra" as PG <<página>>
+participant "PRC_REGISTRAR_\nNC_COMPRA" as PR <<procedimiento>>
+participant "COMPROBANTES_\nPROVEEDOR" as CP <<entidad>>
+participant "CUENTAS_PAGAR" as CXP <<entidad>>
+participant "MOVIMIENTOS_STOCK" as MS <<entidad>>
+
+C -> PG : captura la NC del proveedor\n(motivo + líneas a acreditar)
+activate PG
+PG -> PR : PRC_REGISTRAR_NC_COMPRA(factura, motivo, líneas)
+activate PR
+PR -> PR : valida elegibilidad y cantidad acreditable
+PR -> CP : INSERT COMPROBANTES_PROVEEDOR\n(TIPO='NC', FORMA_PAGO=NULL)
+PR -> CXP : baja SALDO de la CxP (cap al saldo)\ntotal → PAGADA · parcial → PARCIAL
+alt motivo = Devolución (1 ó 2)
+  PR -> MS : INSERT MOVIMIENTOS_STOCK (SALIDA)\n(capada a lo recibido — FN_CANT_DEVOLVIBLE_COMPRA)
+else Descuento / Ajuste
+  PR -> PR : no toca stock
+end
+deactivate PR
+PG --> C : NC registrada (deuda ajustada)
+deactivate PG
+@enduml

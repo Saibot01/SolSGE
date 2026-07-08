@@ -1,0 +1,41 @@
+@startuml actividad_nc_compra
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam ActivityFontSize 12
+skinparam activity {
+  BackgroundColor #DCE9F5
+  BorderColor #2E5A88
+  DiamondBackgroundColor #FBF3D0
+  DiamondBorderColor #B9A24B
+  ArrowColor #34506B }
+title Diagrama de Actividades — Registrar nota de crédito de compra (SOLSGE)
+
+|Comprador|
+start
+:Elegir la factura de proveedor;
+:Seleccionar el motivo y las líneas/montos a acreditar;
+:Registrar la NC;
+|Sistema|
+if (¿Elegible y cantidad acreditable válida?) then (no)
+  :Rechazar (-20910..-20920);
+  stop
+else (sí)
+endif
+:Registrar la NC (COMPROBANTES_PROVEEDOR, TIPO='NC');
+:Bajar el saldo de la CxP (cap al saldo);
+if (¿Saldo llega a 0?) then (sí)
+  :Marcar CxP PAGADA;
+else (no)
+  :Marcar CxP PARCIAL;
+endif
+if (¿Motivo = Devolución?) then (sí)
+  :Registrar SALIDA de stock\n(capada a lo recibido);
+else (no)
+  :No toca stock;
+endif
+|Comprador|
+:NC registrada;
+stop
+@enduml

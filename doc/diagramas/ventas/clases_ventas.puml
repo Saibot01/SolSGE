@@ -1,0 +1,92 @@
+@startuml clases_ventas
+' ============================================================================
+' SolSGE - Diagrama de Clases - Módulo Ventas (Presupuestos / Pedidos)
+' Fuente de verdad: BD real (WKSP_WORKPLACE) - tablas, PK/FK reales.
+' ============================================================================
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam classFontSize 12
+skinparam classAttributeFontSize 11
+skinparam DefaultFontName Segoe UI
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #2E5A88
+  HeaderBackgroundColor #DCE9F5
+  ArrowColor #34506B
+}
+hide circle
+hide methods
+
+title Diagrama de Clases — Módulo Ventas (Presupuestos)
+
+class Presupuesto <<ORDENES_VENTA>> {
+  +id_orden : Number «PK»
+  --
+  fecha_orden : Date
+  estado : Varchar2(20)  'PENDIENTE→APROBADO→FACTURADO / ANULADO / VENCIDO'
+  total : Number(12,2)
+  fecha_vencimiento : Date
+  fecha_aprobacion : Date
+  usuario_aprobacion : Varchar2(60)
+  fecha_anulacion : Date
+  motivo_anulacion : Varchar2(400)
+  usuario_creacion : Varchar2(60)
+}
+
+class DetallePresupuesto <<DETALLE_ORDEN>> {
+  +id_detalle : Number «PK»
+  --
+  cantidad : Number
+  precio_unitario : Number(12,2)
+  total : Number(12,2)
+}
+
+class ReservaProducto <<RESERVAS_PRODUCTO>> {
+  +id_reserva : Number «PK»
+  --
+  cantidad_reservada : Number
+  fecha_reserva : Date
+  estado : Varchar2(20)  'VIGENTE / ANULADA'
+  observacion : Varchar2(255)
+}
+
+' ---- clases frontera ----
+class Producto <<PRODUCTOS>> #EFEFEF {
+  +id_producto : Number «PK»
+}
+class StockProducto <<STOCK_PRODUCTO>> #EFEFEF {
+  +id_producto : Number «PK,FK»
+  +id_oficina : Number «PK,FK»
+  cantidad : Number
+}
+class Cliente <<CLIENTES / PERSONAS>> #EFEFEF {
+  +id_persona : Number «PK»
+}
+class Oficina <<OFICINAS>> #EFEFEF {
+  +codigo_oficina : Number «PK»
+}
+class Comprobante <<COMPROBANTES>> #EFEFEF {
+  +id_comprobante : Number «PK»
+  'factura del presupuesto'
+}
+
+' ============================================================================
+' RELACIONES
+' ============================================================================
+Presupuesto "1" *-- "1..*" DetallePresupuesto : contiene
+Presupuesto "1" o-- "0..*" ReservaProducto : reserva stock
+
+DetallePresupuesto "0..*" --> "1" Producto : de
+ReservaProducto "0..*" --> "1" Producto : de
+ReservaProducto "0..*" --> "1" Oficina : en
+Presupuesto "0..*" --> "1" Cliente : solicitado por
+Presupuesto "0..*" --> "1" Oficina : de entrega
+Comprobante "0..1" --> "1" Presupuesto : factura de
+
+' Dependencias (triggers / funciones)
+DetallePresupuesto ..> ReservaProducto : «genera»\n(TRG_GENERAR_RESERVA_ORDEN)
+ReservaProducto ..> StockProducto : «afecta»\ndisponibilidad (FN_HAY_STOCK)
+
+@enduml

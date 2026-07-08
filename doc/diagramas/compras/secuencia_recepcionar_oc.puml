@@ -1,0 +1,46 @@
+@startuml secuencia_recepcionar_oc
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam sequenceMessageAlign center
+skinparam ParticipantFontSize 12
+skinparam sequence {
+  ArrowColor #34506B
+  LifeLineBorderColor #7A93AB
+  ParticipantBorderColor #2E5A88
+  ParticipantBackgroundColor #DCE9F5
+  ActorBorderColor #2E5A88
+  ActorBackgroundColor #DCE9F5 }
+title Diagrama de Secuencia — Recepcionar orden de compra (SOLSGE)
+
+actor "Encargado\nde Depósito" as C
+participant "Pantalla\nRecepción" as PG <<página>>
+participant "DETALLE_RECEPCION_\nCOMPRA" as DR <<entidad>>
+participant "TRG_MOV_STOCK_\nRECEPCION" as TR <<trigger>>
+participant "MOVIMIENTOS_STOCK" as MS <<entidad>>
+participant "TRG_ACTUALIZAR_\nSTOCK_MOVIMIENTO" as TA <<trigger>>
+participant "STOCK_PRODUCTO" as SP <<entidad>>
+participant "ORDENES_COMPRA" as OC <<entidad>>
+
+C -> PG : registra las cantidades recibidas por ítem
+activate PG
+loop por cada ítem recibido
+  PG -> DR : INSERT DETALLE_RECEPCION_COMPRA
+  activate DR
+  DR -> TR : TRG_MOV_STOCK_RECEPCION
+  activate TR
+  TR -> MS : INSERT MOVIMIENTOS_STOCK (ENTRADA)
+  activate MS
+  MS -> TA : TRG_ACTUALIZAR_STOCK_MOVIMIENTO
+  activate TA
+  TA -> SP : STOCK_PRODUCTO.CANTIDAD += recibido
+  deactivate TA
+  deactivate MS
+  deactivate TR
+  deactivate DR
+end
+PG -> OC : actualiza estado OC → Completada (o Pendiente si es parcial)
+PG --> C : recepción registrada (stock actualizado)
+deactivate PG
+@enduml

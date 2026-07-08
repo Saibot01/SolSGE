@@ -1,0 +1,34 @@
+@startuml secuencia_ver_dashboard
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam sequenceMessageAlign center
+skinparam ParticipantFontSize 12
+skinparam sequence {
+  ArrowColor #34506B
+  LifeLineBorderColor #7A93AB
+  ParticipantBorderColor #2E5A88
+  ParticipantBackgroundColor #DCE9F5
+  ActorBorderColor #2E5A88
+  ActorBackgroundColor #DCE9F5
+}
+title Diagrama de Secuencia — Ver dashboard gerencial (SOLSGE)
+
+actor Gerente as G
+participant "Dashboard\n(P133/P136/P144/P142)" as PG <<página>>
+participant "Vistas V_*\n(por área)" as V <<vista>>
+participant "Hechos +\nMETAS_*" as E <<entidad>>
+
+G -> PG : abre el dashboard del área y elige período / sucursal
+activate PG
+loop por cada gráfico / KPI
+  PG -> V : consulta la vista agregada
+  activate V
+  V -> E : lee los hechos del área y las metas del período
+  V --> PG : datos agregados (real vs meta)
+  deactivate V
+end
+PG --> G : muestra KPIs y gráficos JET
+deactivate PG
+@enduml

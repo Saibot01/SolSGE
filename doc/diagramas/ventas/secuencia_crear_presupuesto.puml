@@ -1,0 +1,75 @@
+@startuml secuencia_crear_presupuesto
+' ============================================================================
+' SolSGE - Diagrama de Secuencia - "Crear presupuesto"
+' Derivado de P54 + triggers reales (TRG_OV_FECHA_VENCIMIENTO,
+' TRG_OV_USUARIO_CREACION, TRG_GENERAR_RESERVA_ORDEN) y FN_HAY_STOCK/FN_PRECIO_VENTA.
+' ============================================================================
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam sequenceMessageAlign center
+skinparam ParticipantFontSize 12
+skinparam sequence {
+  ArrowColor #34506B
+  LifeLineBorderColor #7A93AB
+  ParticipantBorderColor #2E5A88
+  ParticipantBackgroundColor #DCE9F5
+  ActorBorderColor #2E5A88
+  ActorBackgroundColor #DCE9F5
+}
+
+title Diagrama de Secuencia — Crear presupuesto (SOLSGE)
+
+actor Vendedor as V
+participant "P54\nPresupuesto" as P54 <<página>>
+participant "FN_HAY_STOCK /\nFN_OFICINAS_CON_STOCK" as FS <<función>>
+participant "FN_PRECIO_VENTA" as FP <<función>>
+participant "ORDENES_VENTA" as OV <<entidad>>
+participant "TRG BEFORE INSERT\n(vencimiento, usuario)" as TB <<trigger>>
+participant "DETALLE_ORDEN" as DO <<entidad>>
+participant "TRG_GENERAR_RESERVA\n/ RESERVAS_PRODUCTO" as TR <<trigger>>
+
+V -> P54 : abre pantalla, elige cliente y oficina de entrega
+activate P54
+
+loop por cada producto agregado
+  V -> P54 : selecciona producto
+  P54 -> FS : FN_HAY_STOCK(producto, oficina)
+  activate FS
+  alt sin disponibilidad
+    FS -> FS : FN_OFICINAS_CON_STOCK(producto)
+    FS --> P54 : aviso "hay stock en: …" (bloquea la línea)
+  else disponible
+    FS --> P54 : OK
+  end
+  deactivate FS
+  P54 -> FP : FN_PRECIO_VENTA(producto, categoría cliente)
+  FP --> P54 : precio unitario (autocompleta)
+end
+
+V -> P54 : guarda el presupuesto
+P54 -> P54 : valida por línea FN_HAY_STOCK = 'S'\n(si no, error bloqueante)
+
+P54 -> OV : INSERT ORDENES_VENTA (ESTADO='PENDIENTE')
+activate OV
+OV -> TB : TRG_OV_FECHA_VENCIMIENTO / TRG_OV_USUARIO_CREACION
+activate TB
+TB -> TB : setea FECHA_VENCIMIENTO (FN_GET_PARAMETRO)\ny USUARIO_CREACION (APP_USER)
+deactivate TB
+deactivate OV
+
+loop por cada línea
+  P54 -> DO : INSERT DETALLE_ORDEN
+  activate DO
+  DO -> TR : TRG_GENERAR_RESERVA_ORDEN
+  activate TR
+  TR -> TR : si presupuesto PENDIENTE/APROBADO →\nINSERT RESERVAS_PRODUCTO (VIGENTE)
+  deactivate TR
+  deactivate DO
+end
+
+P54 --> V : presupuesto creado (PENDIENTE)
+deactivate P54
+
+@enduml

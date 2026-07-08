@@ -1,0 +1,225 @@
+// ============================================================================
+// Módulo COMPRAS — contenido del Word de diagramas UML. Modelo aprobado.
+// Vertical: 1 Casos de Uso, 2 Estados, 3 Actividades, 4 Clases.
+// Horizontal: 5 Secuencia (las 4 son anchas).
+// ============================================================================
+const path = require("path");
+const lib = require(path.join(__dirname, "..", "_build", "docxlib.js"));
+const { P, Field, H1, H2, H3, SubBold, bullet, num, caption, pageBreak,
+        makeImg, makeCaratula, portraitSection, landscapeSection, buildDoc } = lib;
+const { PORT_PX, ACT_H, LAND_H_SEQ } = lib.SIZES;
+const { imgFit, imgFitH } = makeImg(__dirname);
+const OUT = path.join(__dirname, "..", "MUESTRA_Compras.docx");
+
+const specCrearOC = [
+  H2("Especificación de caso de uso: Crear orden de compra"),
+  H3("Descripción"),
+  P("Permite al Comprador emitir una orden de compra (OC) a un proveedor con las líneas de productos a adquirir. La OC nace en Borrador y, al aprobarse, queda Pendiente de recepción."),
+  Field("Actor principal: ", "Comprador."),
+  Field("Entorno de invocación: ", "pantalla de Órdenes de Compra."),
+  H3("Flujo de Eventos"), SubBold("Flujo Básico"),
+  num("El Comprador elige el **proveedor** y la oficina, y agrega las **líneas** (producto, cantidad, precio)."),
+  num("El sistema registra la OC (ORDENES_COMPRA) en estado **Borrador ('B')** con su total."),
+  num("Al **aprobar/enviar**, la OC pasa a **Pendiente de recepción ('P')**."),
+  SubBold("Flujos Alternativos"),
+  H3("Rechazo"),
+  P("La OC en Borrador puede rechazarse (estado 'X') con motivo, sin generar recepción ni deuda."),
+  H3("Precondiciones"),
+  bullet("El Comprador está autenticado; existe el proveedor y productos."),
+  H3("Pos-condiciones"),
+  bullet("OC registrada (Borrador → Pendiente de recepción)."),
+  H3("Puntos de Extensión"),
+  bullet("Aprobar orden de compra; Registrar factura de proveedor."),
+];
+
+const specAprobarOC = [
+  pageBreak(),
+  H2("Especificación de caso de uso: Aprobar / rechazar orden de compra"),
+  H3("Descripción"),
+  P("Permite al Supervisor revisar una orden de compra en Borrador y aprobarla (queda Pendiente de recepción) o rechazarla con motivo. Solo las OC aprobadas se recepcionan."),
+  Field("Actor principal: ", "Supervisor."),
+  Field("Entorno de invocación: ", "pantalla de aprobación de órdenes de compra."),
+  H3("Flujo de Eventos"), SubBold("Flujo Básico"),
+  num("El Supervisor abre una OC en **Borrador** y revisa proveedor, líneas y total."),
+  num("**Aprueba** la OC: pasa a **Pendiente de recepción ('P')**, registrando el aprobador y la fecha (ID_APROBADOR / FECHA_APROBACION)."),
+  SubBold("Flujos Alternativos"),
+  H3("Rechazar la orden"),
+  P("El Supervisor rechaza la OC con motivo (estado 'X', MOTIVO_RECHAZO); no genera recepción ni deuda."),
+  H3("Precondiciones"),
+  bullet("Existe una OC en estado Borrador."),
+  H3("Pos-condiciones"),
+  bullet("OC aprobada (Pendiente de recepción) o rechazada con motivo."),
+  H3("Puntos de Extensión"),
+  bullet("Recepcionar orden de compra (una vez aprobada)."),
+];
+
+const specRecepcionar = [
+  pageBreak(),
+  H2("Especificación de caso de uso: Recepcionar orden de compra"),
+  H3("Descripción"),
+  P("Permite al Encargado de Depósito registrar la recepción de la mercadería de una OC aprobada: cuenta e ingresa las cantidades recibidas por ítem. Cada ítem recibido genera una entrada de stock. Si se recibe todo lo pedido, la OC se completa; si no, queda pendiente."),
+  Field("Actor principal: ", "Encargado de Depósito."),
+  Field("Entorno de invocación: ", "pantalla de recepción de la OC."),
+  H3("Flujo de Eventos"), SubBold("Flujo Básico"),
+  num("El Encargado de Depósito abre la OC aprobada e ingresa las **cantidades recibidas** por ítem tras el conteo físico."),
+  num("Por cada ítem, el sistema registra la línea de recepción (DETALLE_RECEPCION_COMPRA)."),
+  num("Cada línea dispara **TRG_MOV_STOCK_RECEPCION** → una **ENTRADA** de stock (MOVIMIENTOS_STOCK) que incrementa STOCK_PRODUCTO."),
+  num("Si se recibió todo lo pedido, la OC pasa a **Completada ('C')**; si no, sigue **Pendiente ('P')**."),
+  SubBold("Flujos Alternativos"),
+  H3("Recepción parcial"),
+  P("Si las cantidades recibidas son menores a las pedidas, la OC permanece en Pendiente de recepción y puede recibir el resto más adelante."),
+  H3("Precondiciones"),
+  bullet("Existe una OC en estado Pendiente de recepción."),
+  H3("Pos-condiciones"),
+  bullet("Stock incrementado por los ítems recibidos; OC Completada o Pendiente según lo recibido."),
+];
+
+const specFacturaProv = [
+  pageBreak(),
+  H2("Especificación de caso de uso: Registrar factura de proveedor"),
+  H3("Descripción"),
+  P("Permite al Comprador registrar la factura de compra emitida por el proveedor. Si la condición es a crédito, la deuda (cuenta por pagar) nace al registrar la factura, sin esperar la recepción."),
+  Field("Actor principal: ", "Comprador."),
+  Field("Entorno de invocación: ", "pantalla de facturas de proveedor (P70)."),
+  H3("Flujo de Eventos"), SubBold("Flujo Básico"),
+  num("El Comprador carga la factura del proveedor (número, timbrado, total, **condición** contado/crédito) referenciando la OC."),
+  num("El sistema registra la factura (COMPROBANTES_PROVEEDOR, TIPO='FA', ESTADO='R')."),
+  num("Si la condición es **crédito**, el trigger **TRG_INS_CUENTAS_PAGAR** genera la **cuenta por pagar** (CUENTAS_PAGAR, PENDIENTE) con vencimiento = emisión + PLAZO_PAGO_DIAS."),
+  num("El sistema registra el **detalle** de la factura (DETALLE_COMPROBANTE_PROV)."),
+  SubBold("Flujos Alternativos"),
+  H3("Compra al contado"),
+  P("Si la condición es contado, no se genera cuenta por pagar."),
+  H3("Precondiciones"),
+  bullet("Existe el proveedor; la OC referenciada existe (opcional)."),
+  H3("Pos-condiciones"),
+  bullet("Factura de proveedor registrada; cuenta por pagar generada si es a crédito."),
+  H3("Puntos de Extensión"),
+  bullet("Generar y confirmar orden de pago; Registrar nota de crédito de compra."),
+];
+
+const specOrdenPago = [
+  pageBreak(),
+  H2("Especificación de caso de uso: Generar y confirmar orden de pago"),
+  H3("Descripción"),
+  P("Permite pagar cuentas por pagar de un proveedor en dos pasos con doble validación: el Comprador genera una orden de pago en Borrador (autoriza, sin bajar el saldo) y el Supervisor la confirma para ejecutar el pago (baja el saldo de las CxP) o la rechaza."),
+  Field("Actores: ", "Comprador (genera), Supervisor (confirma / rechaza)."),
+  Field("Entorno de invocación: ", "P147 (generar) + P150 (resolver: confirmar / anular)."),
+  H3("Flujo de Eventos"), SubBold("Flujo Básico"),
+  num("El **Comprador** selecciona las **CxP** del proveedor y el **monto** a aplicar por cada una."),
+  num("El sistema ejecuta **PRC_GENERAR_ORDEN_PAGO**: registra la OP en **Borrador** con su detalle (autoriza; **no** baja saldo)."),
+  num("El **Supervisor** abre la OP y presiona **Confirmar**, eligiendo el método de pago."),
+  num("El sistema ejecuta **PRC_CONFIRMAR_ORDEN_PAGO**: bloquea la OP, valida que esté en Borrador, y por cada CxP **baja el saldo** marcándola PAGADA o PARCIAL."),
+  num("La OP queda **Confirmada** con fecha de pago y método."),
+  SubBold("Flujos Alternativos"),
+  H3("Rechazo / anulación de la orden de pago"),
+  P("El Supervisor puede rechazar la OP en Borrador anulándola con motivo (PRC_ANULAR_ORDEN_PAGO); no impacta las CxP."),
+  H3("OP no está en Borrador"),
+  P("Al confirmar, si la OP no está en Borrador, el sistema aborta (−20937/…)."),
+  H3("Precondiciones"),
+  bullet("Existen cuentas por pagar con saldo del proveedor."),
+  H3("Pos-condiciones"),
+  bullet("OP Confirmada; saldo de las CxP reducido (PAGADA/PARCIAL)."),
+];
+
+const specNCCompra = [
+  pageBreak(),
+  H2("Especificación de caso de uso: Registrar nota de crédito de compra"),
+  H3("Descripción"),
+  P("Permite al Comprador capturar una nota de crédito emitida por el proveedor. Baja la cuenta por pagar (cap al saldo) y, solo si el motivo es devolución, genera una salida de stock capada a lo recibido. La caja está fuera de alcance."),
+  Field("Actor principal: ", "Comprador."),
+  Field("Entorno de invocación: ", "P94 (captura de NC de compra)."),
+  H3("Flujo de Eventos"), SubBold("Flujo Básico"),
+  num("El Comprador elige la **factura** de proveedor, el **motivo** y las líneas/montos a acreditar."),
+  num("El sistema ejecuta **PRC_REGISTRAR_NC_COMPRA**: valida elegibilidad y cantidad acreditable."),
+  num("Registra la NC (COMPROBANTES_PROVEEDOR, TIPO='NC', FORMA_PAGO=NULL) referenciando la factura origen."),
+  num("**Baja el saldo** de la CxP (cap al saldo): total → PAGADA; parcial → PARCIAL."),
+  num("Si el **motivo es Devolución**, registra una **SALIDA de stock** capada a lo recibido (FN_CANT_DEVOLVIBLE_COMPRA); Descuento/Ajuste no tocan stock."),
+  SubBold("Flujos Alternativos"),
+  H3("No elegible"),
+  P("Si la factura no admite NC o la cantidad excede lo acreditable / lo recibido, el sistema aborta (−20910..−20920)."),
+  H3("Precondiciones"),
+  bullet("Existe la factura de proveedor con saldo (o ítems recibidos, para devolución)."),
+  H3("Pos-condiciones"),
+  bullet("NC registrada; CxP ajustada; stock devuelto solo en caso de devolución."),
+];
+
+if (require.main === module) buildDoc({
+  outPath: OUT,
+  sections: [
+    portraitSection(makeCaratula({ subtitulo: "Módulo Compras" }), true),
+
+    // ===== BLOQUE VERTICAL =====
+    portraitSection([
+      H1("1. Casos de Uso"),
+      P("Mapa general del módulo (actores y casos de uso principales) y las especificaciones de cada caso, en el formato de la plantilla, reflejando la lógica real del sistema.", { after: 60 }),
+      imgFit("casos_uso_compras.png", PORT_PX, 2.583),
+      caption("Figura 1. Diagrama de casos de uso — Módulo Compras."),
+      pageBreak(),
+      H2("1.1. Especificaciones de casos de uso"),
+      ...specCrearOC, ...specAprobarOC, ...specRecepcionar, ...specFacturaProv, ...specOrdenPago, ...specNCCompra,
+    ]),
+    portraitSection([
+      H1("2. Diagramas de Estados"),
+      P("Objetos del módulo con más de un estado, indicando el evento de cada transición.", { after: 120 }),
+      H2("2.1. Orden de Compra"),
+      imgFit("estados_orden_compra.png", PORT_PX, 1.106),
+      caption("Figura 2. Estados de la Orden de Compra (ORDENES_COMPRA.ESTADO)."),
+      pageBreak(),
+      H2("2.2. Comprobante de Proveedor"),
+      imgFit("estados_comprobante_prov.png", PORT_PX, 2.192),
+      caption("Figura 3. Estados del Comprobante de Proveedor."),
+      pageBreak(),
+      H2("2.3. Cuenta por Pagar"),
+      imgFit("estados_cuenta_pagar.png", PORT_PX, 1.762),
+      caption("Figura 4. Estados de la Cuenta por Pagar."),
+      pageBreak(),
+      H2("2.4. Orden de Pago"),
+      imgFit("estados_orden_pago.png", PORT_PX, 2.703),
+      caption("Figura 5. Estados de la Orden de Pago."),
+    ]),
+    portraitSection([
+      H1("3. Diagramas de Actividades"),
+      P("Flujo de control de los procesos transaccionales, con decisiones y caminos de error.", { after: 60 }),
+      H2("3.1. Recepcionar orden de compra"),
+      imgFitH("actividad_recepcionar_oc.png", ACT_H, 0.993),
+      caption("Figura 6. Actividad — Recepcionar orden de compra."),
+      pageBreak(),
+      H2("3.2. Generar y confirmar orden de pago"),
+      imgFitH("actividad_orden_pago.png", ACT_H, 0.800),
+      caption("Figura 7. Actividad — Generar y confirmar orden de pago."),
+      pageBreak(),
+      H2("3.3. Registrar nota de crédito de compra"),
+      imgFitH("actividad_nc_compra.png", ACT_H, 0.872),
+      caption("Figura 8. Actividad — Registrar nota de crédito de compra."),
+    ]),
+    portraitSection([
+      H1("4. Diagrama de Clases"),
+      P("Entidades del módulo Compras y sus relaciones tipadas, obtenidas de las tablas reales. Las clases en gris son clases frontera de otros módulos.", { after: 60 }),
+      imgFit("clases_compras.png", PORT_PX, 1.152),
+      caption("Figura 9. Diagrama de clases — Módulo Compras."),
+    ]),
+
+    // ===== BLOQUE HORIZONTAL =====
+    landscapeSection([
+      H1("5. Diagramas de Secuencia"),
+      P("Derivados de los casos de uso; muestran las llamadas reales entre la página, los procedimientos/triggers PL/SQL y las entidades.", { after: 60 }),
+      H2("5.1. Recepcionar orden de compra"),
+      imgFitH("secuencia_recepcionar_oc.png", LAND_H_SEQ, 3.478),
+      caption("Figura 10. Secuencia — Recepcionar orden de compra."),
+      pageBreak(),
+      H2("5.2. Registrar factura de proveedor"),
+      imgFitH("secuencia_registrar_factura_prov.png", LAND_H_SEQ, 2.212),
+      caption("Figura 11. Secuencia — Registrar factura de proveedor."),
+      pageBreak(),
+      H2("5.3. Generar y confirmar orden de pago"),
+      imgFitH("secuencia_orden_pago.png", LAND_H_SEQ, 2.565),
+      caption("Figura 12. Secuencia — Generar y confirmar orden de pago."),
+      pageBreak(),
+      H2("5.4. Registrar nota de crédito de compra"),
+      imgFitH("secuencia_nc_compra.png", LAND_H_SEQ, 1.978),
+      caption("Figura 13. Secuencia — Registrar nota de crédito de compra."),
+    ]),
+  ],
+});
+
+module.exports = { especificaciones: [...specCrearOC, ...specAprobarOC, ...specRecepcionar, ...specFacturaProv, ...specOrdenPago, ...specNCCompra] };

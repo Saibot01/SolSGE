@@ -1,0 +1,50 @@
+@startuml secuencia_orden_pago
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam sequenceMessageAlign center
+skinparam ParticipantFontSize 12
+skinparam sequence {
+  ArrowColor #34506B
+  LifeLineBorderColor #7A93AB
+  ParticipantBorderColor #2E5A88
+  ParticipantBackgroundColor #DCE9F5
+  ActorBorderColor #2E5A88
+  ActorBackgroundColor #DCE9F5 }
+title Diagrama de Secuencia — Generar y confirmar orden de pago (SOLSGE)
+
+actor Comprador as C
+actor Supervisor as S
+participant "P147\nGenerar OP" as P147 <<página>>
+participant "PRC_GENERAR_\nORDEN_PAGO" as PG <<procedimiento>>
+participant "ORDENES_PAGO\n/ ORDEN_PAGO_DET" as OP <<entidad>>
+participant "P150\nResolver OP" as P150 <<página>>
+participant "PRC_CONFIRMAR_\nORDEN_PAGO" as PC <<procedimiento>>
+participant "CUENTAS_PAGAR" as CXP <<entidad>>
+
+== Generar (BORRADOR) — Comprador ==
+C -> P147 : selecciona las CxP del proveedor y los montos
+activate P147
+P147 -> PG : PRC_GENERAR_ORDEN_PAGO(proveedor, cxps, montos)
+activate PG
+PG -> OP : INSERT ORDENES_PAGO (BORRADOR) + ORDEN_PAGO_DET
+note right of PG : autoriza el pago,\nNO baja el saldo todavía
+deactivate PG
+P147 --> C : orden de pago en BORRADOR
+deactivate P147
+
+== Confirmar (ejecuta el pago) — Supervisor ==
+S -> P150 : abre la OP y presiona Confirmar (elige método)\no la rechaza con motivo
+activate P150
+P150 -> PC : PRC_CONFIRMAR_ORDEN_PAGO(id_op, método)
+activate PC
+PC -> OP : SELECT ... FOR UPDATE — valida ESTADO='BORRADOR'
+loop por cada detalle (CxP aplicada)
+  PC -> CXP : baja SALDO; marca PAGADA / PARCIAL
+end
+PC -> OP : UPDATE ESTADO='CONFIRMADA', FECHA_PAGO, método
+deactivate PC
+P150 --> S : pago confirmado
+deactivate P150
+@enduml

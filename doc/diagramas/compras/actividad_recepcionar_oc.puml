@@ -1,0 +1,34 @@
+@startuml actividad_recepcionar_oc
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam ActivityFontSize 12
+skinparam activity {
+  BackgroundColor #DCE9F5
+  BorderColor #2E5A88
+  DiamondBackgroundColor #FBF3D0
+  DiamondBorderColor #B9A24B
+  ArrowColor #34506B }
+title Diagrama de Actividades — Recepcionar orden de compra (SOLSGE)
+
+|Encargado de Depósito|
+start
+:Abrir la orden de compra pendiente;
+:Ingresar las cantidades recibidas por ítem;
+:Confirmar la recepción;
+|Sistema|
+repeat :Registrar la línea de recepción;
+  :Generar ENTRADA de stock (MOVIMIENTOS_STOCK);
+  :Incrementar STOCK_PRODUCTO;
+repeat while (¿más ítems?) is (sí)
+->no;
+if (¿Se recibió todo lo pedido?) then (sí)
+  :Marcar OC Completada (C);
+else (no)
+  :Mantener OC Pendiente de recepción (P);
+endif
+|Encargado de Depósito|
+:Recepción registrada;
+stop
+@enduml

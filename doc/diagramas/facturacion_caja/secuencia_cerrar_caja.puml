@@ -1,0 +1,61 @@
+@startuml secuencia_cerrar_caja
+' ============================================================================
+' SolSGE - Diagrama de Secuencia - "Cerrar y arquear caja" (F17)
+' Derivado de CERRAR_CAJA v3 + V_CAJA_SALDO reales.
+' ============================================================================
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam sequenceMessageAlign center
+skinparam ParticipantFontSize 12
+skinparam sequence {
+  ArrowColor #34506B
+  LifeLineBorderColor #7A93AB
+  ParticipantBorderColor #2E5A88
+  ParticipantBackgroundColor #DCE9F5
+  ActorBorderColor #2E5A88
+  ActorBackgroundColor #DCE9F5
+}
+
+title Diagrama de Secuencia — Cerrar y arquear caja (SOLSGE)
+
+actor Cajero as C
+participant "P62\nEstado de Caja" as P62 <<página>>
+participant "P61\nArqueo" as P61 <<página>>
+participant "V_CAJA_SALDO" as VS <<vista>>
+participant "CERRAR_CAJA v3" as CC <<procedimiento>>
+participant "CAJAS" as CAJ <<entidad>>
+participant "CAJA_MONEDAS" as CM <<entidad>>
+participant "P132\nDoc. Arqueo" as P132 <<página>>
+
+C -> P62 : abre Estado de Caja
+activate P62
+P62 -> VS : saldo esperado por moneda + movimientos
+VS --> P62 : saldos
+P62 --> C : muestra saldo esperado
+C -> P62 : presiona Cerrar
+P62 -> P61 : abre arqueo
+deactivate P62
+activate P61
+C -> P61 : ingresa el efectivo contado (monto declarado) y confirma
+P61 -> CC : CERRAR_CAJA(id_caja, usuario)
+activate CC
+CC -> CAJ : UPDATE ESTADO='C', FEC_CIERRE, USU_CIERRE\n(WHERE ESTADO='A')
+alt no hay caja abierta
+  CC --> P61 : error (-20940)
+else caja abierta
+  loop por cada moneda
+    CC -> VS : SALDO_ESPERADO (join normalizado)
+    CC -> CM : UPDATE MONTO_CIERRE = esperado\nMONTO_DIFERENCIA = declarado − esperado
+  end
+  CC -> CAJ : movimientos de la caja → ESTADO='C'
+end
+deactivate CC
+P61 -> P132 : abre documento de arqueo (FN_CIERRE_CAJA_HTML)
+deactivate P61
+activate P132
+P132 --> C : muestra / imprime el arqueo (sobrante/faltante)
+deactivate P132
+
+@enduml

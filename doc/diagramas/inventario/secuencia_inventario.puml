@@ -1,0 +1,63 @@
+@startuml secuencia_inventario
+' ============================================================================
+' SolSGE - Diagrama de Secuencia - "Realizar y aprobar inventario físico"
+' Derivado de INVENTARIO_PKG.enviar / aprobar reales.
+' ============================================================================
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam sequenceMessageAlign center
+skinparam ParticipantFontSize 12
+skinparam sequence {
+  ArrowColor #34506B
+  LifeLineBorderColor #7A93AB
+  ParticipantBorderColor #2E5A88
+  ParticipantBackgroundColor #DCE9F5
+  ActorBorderColor #2E5A88
+  ActorBackgroundColor #DCE9F5
+}
+
+title Diagrama de Secuencia — Realizar y aprobar inventario físico (SOLSGE)
+
+actor "Encargado\nde Depósito" as D
+actor Supervisor as S
+participant "Pantalla\nInventario" as PG <<página>>
+participant "INVENTARIO /\nINVENTARIO_DETALLE" as INV <<entidad>>
+participant "INVENTARIO_PKG" as PK <<paquete>>
+participant "MOVIMIENTOS_STOCK" as MS <<entidad>>
+participant "STOCK_PRODUCTO" as SP <<entidad>>
+
+== Conteo (Encargado de Depósito) ==
+D -> PG : crea el inventario y registra el conteo físico por producto
+activate PG
+PG -> INV : INSERT INVENTARIO (BORRADOR) + INVENTARIO_DETALLE\n(STOCK_SISTEMA, CANTIDAD_FISICA, DIFERENCIA)
+D -> PG : envía a aprobación
+PG -> PK : INVENTARIO_PKG.enviar(id, usuario)
+activate PK
+PK -> INV : valida BORRADOR → ESTADO='ENVIADO'
+deactivate PK
+deactivate PG
+
+== Aprobación (Supervisor) ==
+S -> PG : aprueba el inventario
+activate PG
+PG -> PK : INVENTARIO_PKG.aprobar(id, usuario)
+activate PK
+PK -> INV : valida ENVIADO
+loop por cada línea con diferencia ≠ 0
+  alt diferencia > 0
+    PK -> MS : INSERT MOVIMIENTOS_STOCK (ENTRADA de ajuste)
+  else diferencia < 0
+    PK -> MS : INSERT MOVIMIENTOS_STOCK (SALIDA de ajuste)
+  end
+  activate MS
+  MS -> SP : TRG_ACTUALIZAR_STOCK_MOVIMIENTO ajusta STOCK_PRODUCTO
+  deactivate MS
+end
+PK -> INV : ESTADO='APROBADO'
+deactivate PK
+PG --> S : inventario aprobado (existencias reconciliadas)
+deactivate PG
+
+@enduml

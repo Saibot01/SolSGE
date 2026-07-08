@@ -1,0 +1,75 @@
+@startuml clases_seguridad
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam classFontSize 12
+skinparam classAttributeFontSize 11
+skinparam DefaultFontName Segoe UI
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #2E5A88
+  HeaderBackgroundColor #DCE9F5
+  ArrowColor #34506B
+}
+hide circle
+hide methods
+
+title Diagrama de Clases — Módulo Seguridad (SOLSGE)
+
+class Empleado <<EMPLEADOS>> {
+  +id_empleado : Number «PK»
+  --
+  codigo_usuario : Varchar2
+  nombre : Varchar2
+  cargo : Varchar2
+  correo : Varchar2
+  contrasena : Varchar2  '(hash)'
+  salt_contrasena : Varchar2
+  contrasena_temp : Varchar2
+  intentos_fallidos : Number
+  token_reset : Varchar2
+  activo : Varchar2  'S / N'
+}
+
+class EmpleadoRol <<EMPLEADOS_ROLES>> {
+  +id_empleado_rol : Number «PK»
+  --
+  fecha_asignacion : Date
+}
+
+class Rol <<ROLES>> {
+  +id_rol : Number «PK»
+  --
+  nombre_rol : Varchar2
+  descripcion : Varchar2
+}
+
+class Privilegio <<PRIVILEGIOS>> {
+  +id_priv : Number «PK»
+  --
+  codigo : Varchar2
+  nombre : Varchar2
+  activo : Char
+}
+
+class Persona <<PERSONAS>> #EFEFEF {
+  +id_persona : Number «PK»
+}
+
+' ============================================================================
+' RELACIONES
+' ============================================================================
+Empleado "1" *-- "0..*" EmpleadoRol : asignaciones
+EmpleadoRol "0..*" --> "1" Rol : de
+Rol "0..*" -- "0..*" Privilegio : ROLES_PRIVILEGIOS
+Empleado "0..1" --> "1" Persona : es
+
+note bottom of EmpleadoRol
+  Un empleado tiene muchos roles y un rol muchos
+  privilegios (RBAC). El acceso efectivo de un
+  usuario = unión de los privilegios de sus roles
+  (SECURITY_PKG.can_access).
+end note
+
+@enduml

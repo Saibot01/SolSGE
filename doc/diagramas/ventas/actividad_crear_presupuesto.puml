@@ -1,0 +1,58 @@
+@startuml actividad_crear_presupuesto
+' ============================================================================
+' SolSGE - Diagrama de Actividades - "Crear presupuesto"
+' Flujo real de P54 + triggers.
+' ============================================================================
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam ActivityFontSize 12
+skinparam activity {
+  BackgroundColor #DCE9F5
+  BorderColor #2E5A88
+  DiamondBackgroundColor #FBF3D0
+  DiamondBorderColor #B9A24B
+  ArrowColor #34506B
+}
+
+title Diagrama de Actividades — Crear presupuesto (SOLSGE)
+
+|Vendedor|
+start
+:Abrir pantalla de Presupuesto;
+:Elegir cliente y oficina de entrega;
+
+repeat :Agregar producto;
+  |Sistema|
+  :Verificar disponibilidad\n(FN_HAY_STOCK en la oficina);
+  if (¿Hay disponibilidad?) then (no)
+    :Avisar oficinas con stock\n(FN_OFICINAS_CON_STOCK) y bloquear la línea;
+    |Vendedor|
+    :Corregir producto/cantidad u oficina;
+    detach
+  else (sí)
+    :Calcular precio (FN_PRECIO_VENTA);
+  endif
+  |Vendedor|
+repeat while (¿Agregar otra línea?) is (sí)
+->no;
+
+:Guardar el presupuesto;
+
+|Sistema|
+if (¿Todas las líneas con stock?) then (no)
+  :Error bloqueante;
+  stop
+else (sí)
+endif
+:Registrar cabecera (ORDENES_VENTA, PENDIENTE);
+:Setear fecha de vencimiento y usuario\n(triggers BEFORE INSERT);
+:Registrar líneas (DETALLE_ORDEN);
+:Generar reservas VIGENTE\n(TRG_GENERAR_RESERVA_ORDEN);
+
+|Vendedor|
+:Presupuesto creado (PENDIENTE);
+stop
+
+@enduml

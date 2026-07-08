@@ -1,0 +1,42 @@
+@startuml casos_uso_reportes
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam packageStyle rectangle
+skinparam usecase {
+  BackgroundColor #DCE9F5
+  BorderColor #2E5A88
+  ArrowColor #34506B
+}
+skinparam actor {
+  BackgroundColor #DCE9F5
+  BorderColor #2E5A88
+}
+left to right direction
+
+title Diagrama de Casos de Uso — Módulo Reportes Gerenciales (SOLSGE)
+
+actor Gerente as G
+
+rectangle "Reportes Gerenciales" {
+  usecase "Ver dashboard\nde Ventas" as UC1
+  usecase "Ver dashboard\nde Cobros" as UC2
+  usecase "Ver dashboard\nde Compras" as UC3
+  usecase "Ver dashboard\nde Inventario" as UC4
+  usecase "Generar informe\ngerencial" as UC5
+}
+
+G --> UC1
+G --> UC2
+G --> UC3
+G --> UC4
+G --> UC5
+
+note bottom of UC5
+  Un informe imprimible por área
+  (ventas, cobros, compras, inventario)
+  producido por FN_INFORME_*_HTML.
+end note
+
+@enduml

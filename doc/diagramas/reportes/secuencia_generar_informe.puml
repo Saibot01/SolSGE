@@ -1,0 +1,37 @@
+@startuml secuencia_generar_informe
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam sequenceMessageAlign center
+skinparam ParticipantFontSize 12
+skinparam sequence {
+  ArrowColor #34506B
+  LifeLineBorderColor #7A93AB
+  ParticipantBorderColor #2E5A88
+  ParticipantBackgroundColor #DCE9F5
+  ActorBorderColor #2E5A88
+  ActorBackgroundColor #DCE9F5
+}
+title Diagrama de Secuencia — Generar informe gerencial (SOLSGE)
+
+actor Gerente as G
+participant "Generador de Informe\n(P135/P137/P145/P143)" as PG <<página>>
+participant "FN_INFORME_*_HTML" as FN <<función>>
+participant "Vistas V_*" as V <<vista>>
+participant "Hechos +\nMETAS_*" as E <<entidad>>
+
+G -> PG : elige el área y los filtros (rango, sucursal, dimensión)
+activate PG
+PG -> FN : FN_INFORME_<área>_HTML(filtros)
+activate FN
+FN -> V : consulta las vistas agregadas
+activate V
+V -> E : lee hechos y metas del período
+V --> FN : datos agregados
+deactivate V
+FN --> PG : HTML del informe (barras CSS, @media print)
+deactivate FN
+PG --> G : muestra / imprime el informe
+deactivate PG
+@enduml

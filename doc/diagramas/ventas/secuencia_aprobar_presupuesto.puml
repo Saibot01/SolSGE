@@ -1,0 +1,68 @@
+@startuml secuencia_aprobar_presupuesto
+' ============================================================================
+' SolSGE - Diagrama de Secuencia - "Aprobar presupuesto"
+' Derivado del proceso real ProcesarCambioEstado de P118 + FN_PUEDE_TRANSICION_OV
+' + TRG_OV_LIBERA_RESERVA.
+' ============================================================================
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam sequenceMessageAlign center
+skinparam ParticipantFontSize 12
+skinparam sequence {
+  ArrowColor #34506B
+  LifeLineBorderColor #7A93AB
+  ParticipantBorderColor #2E5A88
+  ParticipantBackgroundColor #DCE9F5
+  ActorBorderColor #2E5A88
+  ActorBackgroundColor #DCE9F5
+}
+
+title Diagrama de Secuencia — Aprobar presupuesto (SOLSGE)
+
+actor "Supervisor /\nVendedor" as S
+participant "P117\nAprobación" as P117 <<página>>
+participant "P118\nDetalle Presupuesto" as P118 <<página>>
+participant "FN_PUEDE_\nTRANSICION_OV" as FN <<función>>
+participant "ORDENES_VENTA" as OV <<entidad>>
+participant "TRG_OV_LIBERA_RESERVA\n/ RESERVAS_PRODUCTO" as TR <<trigger>>
+
+S -> P117 : abre lista (PENDIENTE / APROBADO)
+activate P117
+S -> P117 : elige un presupuesto
+P117 -> P118 : abre modal de detalle
+deactivate P117
+activate P118
+P118 --> S : muestra cabecera, líneas y estado actual
+
+S -> P118 : presiona APROBAR (o ANULAR + motivo)
+P118 -> P118 : ProcesarCambioEstado\nv_target = APROBADO / ANULADO
+P118 -> OV : SELECT ESTADO ... FOR UPDATE (lock)
+P118 -> FN : FN_PUEDE_TRANSICION_OV(actual, destino)
+activate FN
+alt transición inválida
+  FN --> P118 : 'N'
+  P118 --> S : error "Transición inválida: actual → destino"
+else transición válida
+  FN --> P118 : 'S'
+end
+deactivate FN
+
+P118 -> OV : UPDATE ESTADO = destino\n+ auditoría (fecha/usuario; motivo si ANULADO)
+activate OV
+opt destino = ANULADO
+  OV -> TR : TRG_OV_LIBERA_RESERVA (AFTER UPDATE OF ESTADO)
+  activate TR
+  TR -> TR : UPDATE RESERVAS_PRODUCTO\nVIGENTE → ANULADA
+  deactivate TR
+end
+deactivate OV
+
+P118 -> P117 : cierra modal (y refresca la lista)
+deactivate P118
+activate P117
+P117 --> S : lista actualizada
+deactivate P117
+
+@enduml

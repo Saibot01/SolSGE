@@ -1,0 +1,54 @@
+@startuml casos_uso_compras
+' ============================================================================
+' SolSGE - Diagrama de Casos de Uso - Módulo Compras
+' Actores reales: Comprador crea/factura; Supervisor aprueba OC y OP;
+' Encargado de Depósito recepciona (conteo físico).
+' ============================================================================
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam packageStyle rectangle
+skinparam usecase {
+  BackgroundColor #DCE9F5
+  BorderColor #2E5A88
+  ArrowColor #34506B
+}
+skinparam actor {
+  BackgroundColor #DCE9F5
+  BorderColor #2E5A88
+}
+left to right direction
+
+title Diagrama de Casos de Uso — Módulo Compras (SOLSGE)
+
+actor Comprador as C
+actor Supervisor as S
+actor "Encargado\nde Depósito" as D
+
+rectangle "Compras" {
+  usecase "Crear orden de compra" as UC1
+  usecase "Aprobar / rechazar\norden de compra" as UC2
+  usecase "Recepcionar orden\nde compra" as UC3
+  usecase "Registrar factura\nde proveedor" as UC4
+  usecase "Generar orden de pago" as UC5
+  usecase "Confirmar / rechazar\norden de pago" as UC6
+  usecase "Registrar nota de\ncrédito de compra" as UC7
+}
+
+C --> UC1
+S --> UC2
+D --> UC3
+C --> UC4
+C --> UC5
+S --> UC6
+C --> UC7
+
+UC2 ..> UC1 : «sobre» la OC en Borrador
+UC3 ..> UC2 : la OC aprobada se recepciona
+UC4 ..> UC1 : referencia la OC
+UC5 ..> UC4 : paga la deuda (CxP)
+UC6 ..> UC5 : ejecuta el pago
+UC7 ..> UC4 : sobre la factura
+
+@enduml

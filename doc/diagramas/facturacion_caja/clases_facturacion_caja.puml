@@ -1,0 +1,205 @@
+@startuml clases_facturacion_caja
+' ============================================================================
+' SolSGE - Diagrama de Clases - Modulo Facturacion + Caja
+' Fuente de verdad: BD real (WKSP_WORKPLACE) - tablas, PK/FK reales.
+' Tema claro para impresion.
+' ============================================================================
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam classFontSize 12
+skinparam classAttributeFontSize 11
+skinparam DefaultFontName Segoe UI
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #2E5A88
+  HeaderBackgroundColor #DCE9F5
+  ArrowColor #34506B
+}
+hide circle
+hide methods
+
+title Diagrama de Clases — Módulo Facturación + Caja (SOLSGE)
+
+' ----------------------------------------------------------------------------
+' NUCLEO DE FACTURACION
+' ----------------------------------------------------------------------------
+class Comprobante <<COMPROBANTES>> {
+  +id_comprobante : Number «PK»
+  --
+  tipo_comprobante : Char(2)  'FA / NC'
+  nro_comprobante : Varchar2(20)
+  fecha : Date
+  forma_pago : Varchar2(20)  '21=contado / 1=crédito'
+  estado : Char(1)  'A / P / N'
+  total_moneda_local : Number(12,2)
+  total_iva : Number(12,2)
+  interes_financiacion : Number
+  fecha_hora_emision : Timestamp
+}
+
+class DetalleComprobante <<DETALLE_COMPROBANTE>> {
+  +id_detalle : Number «PK»
+  --
+  cantidad : Number
+  precio_unitario : Number(12,2)
+  total_linea : Number(12,2)
+  porcentaje_iva : Number(5,2)
+  monto_iva : Number(12,2)
+}
+
+class Talonario <<TALONARIOS>> {
+  +id_talonario : Number «PK»
+  --
+  tipo_comprobante : Varchar2(2)  'FA / NC / RC'
+  establecimiento : Varchar2(3)
+  punto_expedicion : Varchar2(3)
+  timbrado : Varchar2(20)
+  nro_actual : Number
+  nro_final : Number
+  fecha_inicio : Date
+  fecha_fin : Date
+  activo : Char(1)
+}
+
+' ----------------------------------------------------------------------------
+' CUENTAS POR COBRAR (venta a credito)
+' ----------------------------------------------------------------------------
+class CuentaCobrar <<CUENTAS_COBRAR>> {
+  +id_cxc : Number «PK»
+  --
+  total_a_pagar : Number(12,2)
+  saldo : Number(12,2)
+  fecha_registro : Date
+  estado : Varchar2(20)  'PENDIENTE / PAGADA'
+}
+
+class CuentaCobrarDet <<CUENTAS_COBRAR_DET>> {
+  +id_detalle : Number «PK»
+  --
+  nro_cuota : Number
+  fecha_vencimiento : Date
+  monto_cuota : Number(12,2)
+  estado : Varchar2(20)  'PENDIENTE / PAGADA / VENCIDA'
+}
+
+' ----------------------------------------------------------------------------
+' CAJA
+' ----------------------------------------------------------------------------
+class Caja <<CAJAS>> {
+  +id_caja : Number «PK»
+  --
+  estado : Char(1)  'A=abierta / C=cerrada'
+  fec_apertura : Timestamp
+  fec_cierre : Timestamp
+  usu_apertura : Varchar2
+  usu_cierre : Varchar2
+}
+
+class CajaMoneda <<CAJA_MONEDAS>> {
+  +id_caja : Number «PK,FK»
+  +moneda : Varchar2(10) «PK»
+  --
+  monto_apertura : Number(12,2)
+  monto_cierre : Number(12,2)
+  monto_declarado : Number
+  monto_diferencia : Number
+}
+
+class MovimientoCaja <<MOVIMIENTOS_CAJA>> {
+  +id_movimiento : Number «PK»
+  --
+  tipo : Varchar2(20)  'INGRESO_VENTA / COBRO_CXC / EGRESO'
+  fecha : Timestamp
+  total_moneda_local : Number(12,2)
+  moneda : Varchar2(10)
+  estado : Char(1)  'A / C (de la caja)'
+  usuario : Varchar2(60)
+  nro_recibo : Varchar2(20)
+  fecha_emision_recibo : Date
+}
+
+class DetalleMovimientoCaja <<DETALLE_MOVIMIENTO_CAJA>> {
+  +id_detalle : Number «PK»
+  --
+  monto_local : Number(12,2)
+  moneda : Varchar2(10)
+  nro_referencia : Varchar2(50)
+}
+
+' ----------------------------------------------------------------------------
+' CATALOGOS
+' ----------------------------------------------------------------------------
+class FormaPago <<FORMAS_PAGO>> {
+  +id_forma_pago : Number «PK»
+  descripcion : Varchar2(50)
+  requiere_referencia : Char(1)
+}
+
+class MetodoPago <<METODOS_PAGO>> {
+  +id_metodo_pago : Number «PK»
+  nombre : Varchar2(50)
+}
+
+class Moneda <<MONEDAS>> {
+  +codigo_moneda : Varchar2(10) «PK»
+  descripcion : Varchar2(50)
+  es_local : Char(1)
+}
+
+' ----------------------------------------------------------------------------
+' CLASES FRONTERA (otros modulos, referenciadas)
+' ----------------------------------------------------------------------------
+class OrdenVenta <<ORDENES_VENTA>> #EFEFEF {
+  +id_orden : Number «PK»
+  estado : 'APROBADO → FACTURADO'
+}
+class Cliente <<CLIENTES>> #EFEFEF {
+  +id_cliente : Number «PK»
+}
+class Producto <<PRODUCTOS>> #EFEFEF {
+  +id_producto : Number «PK»
+}
+class Oficina <<OFICINAS>> #EFEFEF {
+  +codigo_oficina : Number «PK»
+}
+class MovimientoStock <<MOVIMIENTOS_STOCK>> #EFEFEF {
+  +id_movimiento : Number «PK»
+  tipo_movimiento : 'SALIDA'
+}
+
+' ============================================================================
+' RELACIONES
+' ============================================================================
+' Composicion: el detalle no existe sin su cabecera
+Comprobante "1" *-- "1..*" DetalleComprobante : contiene
+CuentaCobrar "1" *-- "1..*" CuentaCobrarDet : cuotas
+Caja "1" *-- "1..*" CajaMoneda : saldos por moneda
+MovimientoCaja "1" *-- "1..*" DetalleMovimientoCaja : formas de pago
+
+' Agregacion: los movimientos pertenecen a la caja pero tienen vida propia
+Caja "1" o-- "0..*" MovimientoCaja : registra
+
+' Asociaciones tipadas (FK reales)
+Comprobante "0..*" --> "1" Talonario : numerado por
+Comprobante "0..*" --> "1" Cliente : facturado a
+Comprobante "0..1" --> "1" OrdenVenta : factura de\npresupuesto
+Comprobante "1" --> "0..1" CuentaCobrar : genera (crédito)
+CuentaCobrar "0..*" --> "1" Cliente : deuda de
+DetalleComprobante "0..*" --> "1" Producto : de
+
+MovimientoCaja "0..*" --> "0..1" Comprobante : ingreso de venta
+MovimientoCaja "0..*" --> "0..1" CuentaCobrarDet : cobro de cuota
+MovimientoCaja "0..*" --> "0..1" Talonario : recibo (RC)
+DetalleMovimientoCaja "0..*" --> "1" FormaPago : con
+DetalleMovimientoCaja "0..*" --> "0..1" MetodoPago : vía
+CajaMoneda "0..*" --> "1" Moneda : en
+
+Talonario "0..*" --> "1" Oficina : de
+Caja "0..*" --> "1" Oficina : de
+
+' Dependencia: facturar dispara la salida de stock (trigger)
+DetalleComprobante ..> MovimientoStock : «dispara»\nSALIDA de stock
+
+@enduml

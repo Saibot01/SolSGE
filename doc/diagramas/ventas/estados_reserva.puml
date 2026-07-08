@@ -1,0 +1,33 @@
+@startuml estados_reserva
+' ============================================================================
+' SolSGE - Diagrama de Estados - Reserva de Producto (RESERVAS_PRODUCTO.ESTADO)
+' Transiciones reales: TRG_GENERAR_RESERVA_ORDEN, TRG_OV_LIBERA_RESERVA.
+' ============================================================================
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam state {
+  BackgroundColor #DCE9F5
+  BorderColor #2E5A88
+  ArrowColor #34506B
+  FontSize 13
+}
+
+title Diagrama de Estados — Reserva de Producto (SOLSGE)
+
+[*] --> Vigente : alta de línea de presupuesto\n(TRG_GENERAR_RESERVA_ORDEN, si el presupuesto\nestá PENDIENTE o APROBADO)
+
+state "Vigente\n(VIGENTE)" as Vigente
+state "Anulada\n(ANULADA)" as Anulada
+
+Vigente --> Anulada : el presupuesto pasa a\nANULADO / VENCIDO / FACTURADO\n[TRG_OV_LIBERA_RESERVA]
+Anulada --> [*]
+
+note bottom of Vigente
+  Las reservas VIGENTE descuentan la
+  disponibilidad calculada por FN_HAY_STOCK
+  (sin tocar STOCK_PRODUCTO.CANTIDAD).
+end note
+
+@enduml

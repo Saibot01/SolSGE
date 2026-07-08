@@ -1,0 +1,42 @@
+@startuml secuencia_registrar_factura_prov
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam sequenceMessageAlign center
+skinparam ParticipantFontSize 12
+skinparam sequence {
+  ArrowColor #34506B
+  LifeLineBorderColor #7A93AB
+  ParticipantBorderColor #2E5A88
+  ParticipantBackgroundColor #DCE9F5
+  ActorBorderColor #2E5A88
+  ActorBackgroundColor #DCE9F5 }
+title Diagrama de Secuencia — Registrar factura de proveedor (SOLSGE)
+
+actor Comprador as C
+participant "P70\nFactura Proveedor" as PG <<página>>
+participant "COMPROBANTES_\nPROVEEDOR" as CP <<entidad>>
+participant "TRG_INS_\nCUENTAS_PAGAR" as TR <<trigger>>
+participant "CUENTAS_PAGAR" as CXP <<entidad>>
+participant "DETALLE_\nCOMPROBANTE_PROV" as DP <<entidad>>
+
+C -> PG : carga la factura del proveedor\n(condición: contado / crédito)
+activate PG
+PG -> CP : INSERT COMPROBANTES_PROVEEDOR\n(TIPO='FA', ESTADO='R')
+activate CP
+CP -> TR : TRG_INS_CUENTAS_PAGAR
+activate TR
+alt forma de pago = crédito
+  TR -> CXP : INSERT CUENTAS_PAGAR (PENDIENTE)\nvencimiento = emisión + PLAZO_PAGO_DIAS
+else contado
+  TR -> TR : no genera CxP
+end
+deactivate TR
+deactivate CP
+loop por cada línea
+  PG -> DP : INSERT DETALLE_COMPROBANTE_PROV
+end
+PG --> C : factura registrada (deuda generada si es crédito)
+deactivate PG
+@enduml

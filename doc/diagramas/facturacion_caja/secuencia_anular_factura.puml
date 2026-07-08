@@ -1,0 +1,61 @@
+@startuml secuencia_anular_factura
+' ============================================================================
+' SolSGE - Diagrama de Secuencia - "Anular factura" (F11, ventana SIFEN 48h)
+' Derivado de PRC_SOLICITAR_ANULACION + PRC_APROBAR_ANULACION reales.
+' ============================================================================
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam sequenceMessageAlign center
+skinparam ParticipantFontSize 12
+skinparam sequence {
+  ArrowColor #34506B
+  LifeLineBorderColor #7A93AB
+  ParticipantBorderColor #2E5A88
+  ParticipantBackgroundColor #DCE9F5
+  ActorBorderColor #2E5A88
+  ActorBackgroundColor #DCE9F5
+}
+
+title Diagrama de Secuencia — Anular factura (SOLSGE)
+
+actor Cajero as C
+actor Supervisor as S
+participant "Pantalla\nAnulación" as PG <<página>>
+participant "PRC_SOLICITAR_\nANULACION" as PS <<procedimiento>>
+participant "PRC_APROBAR_\nANULACION" as PA <<procedimiento>>
+participant "COMPROBANTES" as CMP <<entidad>>
+participant "MOVIMIENTOS_STOCK\n/ MOVIMIENTOS_CAJA" as REV <<entidad>>
+participant "CUENTAS_COBRAR" as CXC <<entidad>>
+
+== Solicitud (Cajero) ==
+C -> PG : solicita anular factura + motivo
+activate PG
+PG -> PS : PRC_SOLICITAR_ANULACION(id, motivo, usuario)
+activate PS
+PS -> CMP : SELECT ... FOR UPDATE
+PS -> PS : valida ESTADO='A', ventana SIFEN (48 h),\nmotivo ≥ 10 car., sin cuotas pagadas
+alt fuera de plazo o cuota pagada
+  PS --> PG : error (-20932/-20933/-20934)\n"corresponde emitir Nota de Crédito"
+else válido
+  PS -> CMP : UPDATE ESTADO='P' (pendiente anulación)\n+ motivo, usuario, fecha solicitud
+end
+deactivate PS
+PG --> C : solicitud registrada
+deactivate PG
+
+== Aprobación (Supervisor) ==
+S -> PG : aprueba la anulación
+activate PG
+PG -> PA : PRC_APROBAR_ANULACION(id, usuario)
+activate PA
+PA -> CMP : SELECT ... FOR UPDATE — valida ESTADO='P' y ventana
+PA -> REV : reversa stock (ENTRADA por línea)\ny caja (EGRESO si era contado)
+PA -> CXC : si era crédito → anula CxC y cuotas
+PA -> CMP : UPDATE ESTADO='N' (anulada) + usuario/fecha resolución
+deactivate PA
+PG --> S : factura anulada
+deactivate PG
+
+@enduml

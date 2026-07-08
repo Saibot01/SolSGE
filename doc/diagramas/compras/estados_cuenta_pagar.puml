@@ -1,0 +1,24 @@
+@startuml estados_cuenta_pagar
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam state {
+  BackgroundColor #DCE9F5
+  BorderColor #2E5A88
+  ArrowColor #34506B
+  FontSize 13 }
+title Diagrama de Estados — Cuenta por Pagar (SOLSGE)
+
+[*] --> Pendiente : registrar factura a crédito\n(TRG_INS_CUENTAS_PAGAR)
+state "Pendiente\n(PENDIENTE)" as P
+state "Parcial\n(PARCIAL)" as PA
+state "Pagada\n(PAGADA)" as PG
+
+P --> PA : confirmar orden de pago parcial\n(baja SALDO)
+P --> PG : confirmar orden de pago total
+PA --> PG : confirmar el resto
+P --> PG : nota de crédito total (SALDO=0)
+PA --> PG : nota de crédito que salda
+PG --> [*]
+@enduml

@@ -1,0 +1,100 @@
+@startuml clases_inventario
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam classFontSize 12
+skinparam classAttributeFontSize 11
+skinparam DefaultFontName Segoe UI
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #2E5A88
+  HeaderBackgroundColor #DCE9F5
+  ArrowColor #34506B
+}
+hide circle
+hide methods
+
+title Diagrama de Clases — Módulo Inventario (SOLSGE)
+
+class StockProducto <<STOCK_PRODUCTO>> {
+  +id_producto : Number «PK,FK»
+  +id_oficina : Number «PK,FK»
+  --
+  cantidad : Number  '(on-hand actual)'
+  stock_minimo : Number
+  stock_maximo : Number
+}
+
+class MovimientoStock <<MOVIMIENTOS_STOCK>> {
+  +id_movimiento : Number «PK»
+  --
+  tipo_movimiento : Varchar2  'ENTRADA / SALIDA'
+  cantidad : Number
+  fecha_movimiento : Date
+  referencia : Varchar2
+  usuario : Varchar2
+}
+
+class Producto <<PRODUCTOS>> {
+  +id_producto : Number «PK»
+  --
+  nombre : Varchar2
+  modelo : Varchar2
+  activo : Char
+}
+
+class Inventario <<INVENTARIO>> {
+  +id_inventario : Number «PK»
+  --
+  nro_documento : Varchar2
+  fecha_inventario : Date
+  estado : Varchar2  'BORRADOR→ENVIADO→APROBADO / RECHAZADO'
+}
+
+class InventarioDetalle <<INVENTARIO_DETALLE>> {
+  +id_inventario_detalle : Number «PK»
+  --
+  stock_sistema : Number
+  cantidad_fisica : Number
+  diferencia : Number
+}
+
+class Categoria <<CATEGORIAS>> #EFEFEF {
+  +id_categoria : Number «PK»
+  nombre : Varchar2
+}
+class Marca <<MARCAS>> #EFEFEF {
+  +id_marca : Number «PK»
+  nombre : Varchar2
+}
+class Oficina <<OFICINAS>> #EFEFEF {
+  +codigo_oficina : Number «PK»
+}
+
+' ============================================================================
+' RELACIONES
+' ============================================================================
+Producto "1" --> "0..*" StockProducto : existencias por oficina
+Producto "1" --> "0..*" MovimientoStock : historial de movimientos
+StockProducto "0..*" --> "1" Oficina : en
+MovimientoStock "0..*" --> "1" Oficina : en
+Producto "0..*" --> "1" Categoria : de
+Producto "0..*" --> "1" Marca : de
+
+Inventario "1" *-- "1..*" InventarioDetalle : conteo por producto
+InventarioDetalle "0..*" --> "1" Producto : de
+Inventario "0..*" --> "1" Oficina : de
+
+' Dependencia: cada movimiento actualiza el on-hand
+MovimientoStock ..> StockProducto : «actualiza»\n(TRG_ACTUALIZAR_STOCK_MOVIMIENTO)
+Inventario ..> MovimientoStock : «genera ajuste»\nal aprobar (INVENTARIO_PKG)
+
+note bottom of StockProducto
+  STOCK_PRODUCTO.CANTIDAD es el on-hand
+  autoritativo (snapshot). El kardex
+  (MOVIMIENTOS_STOCK) guarda el historial;
+  no reconcilia la carga inicial.
+end note
+
+@enduml

@@ -1,0 +1,32 @@
+@startuml estados_usuario
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam state {
+  BackgroundColor #DCE9F5
+  BorderColor #2E5A88
+  ArrowColor #34506B
+  FontSize 13
+}
+title Diagrama de Estados — Usuario (SOLSGE)
+
+[*] --> Activo : registrar usuario (ACTIVO='S')
+
+state "Activo\n(ACTIVO='S')" as Activo
+state "Bloqueado\n(intentos fallidos)" as Bloqueado
+state "Inactivo\n(ACTIVO='N')" as Inactivo
+
+Activo --> Bloqueado : supera el máximo de\nintentos fallidos de login
+Bloqueado --> Activo : el administrador reinicia\nintentos / resetea la contraseña
+Activo --> Inactivo : el administrador da de baja
+Inactivo --> Activo : el administrador reactiva
+Inactivo --> [*]
+
+note bottom of Bloqueado
+  Cada login fallido incrementa
+  INTENTOS_FALLIDOS; al llegar al tope
+  se bloquea el acceso.
+end note
+
+@enduml

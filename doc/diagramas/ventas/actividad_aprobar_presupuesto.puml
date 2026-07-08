@@ -1,0 +1,50 @@
+@startuml actividad_aprobar_presupuesto
+' ============================================================================
+' SolSGE - Diagrama de Actividades - "Aprobar presupuesto"
+' Flujo real de P117/P118 (ProcesarCambioEstado) + FN_PUEDE_TRANSICION_OV.
+' ============================================================================
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam ActivityFontSize 12
+skinparam activity {
+  BackgroundColor #DCE9F5
+  BorderColor #2E5A88
+  DiamondBackgroundColor #FBF3D0
+  DiamondBorderColor #B9A24B
+  ArrowColor #34506B
+}
+
+title Diagrama de Actividades — Aprobar presupuesto (SOLSGE)
+
+|Supervisor / Vendedor|
+start
+:Abrir lista de aprobación (P117);
+:Elegir un presupuesto → abrir detalle (P118);
+if (¿Aprobar o anular?) then (aprobar)
+  :Presionar APROBAR;
+else (anular)
+  :Ingresar motivo y presionar ANULAR;
+endif
+
+|Sistema|
+:Determinar estado destino\n(APROBADO / ANULADO);
+:Bloquear el presupuesto (SELECT FOR UPDATE);
+if (¿FN_PUEDE_TRANSICION_OV = 'S'?) then (no)
+  :Mostrar "Transición inválida";
+  stop
+else (sí)
+endif
+:Actualizar estado + auditoría\n(fecha/usuario; motivo si anula);
+if (¿destino = ANULADO?) then (sí)
+  :Anular reservas VIGENTE\n(TRG_OV_LIBERA_RESERVA);
+else (no)
+endif
+:Cerrar modal y refrescar la lista;
+
+|Supervisor / Vendedor|
+:Presupuesto procesado;
+stop
+
+@enduml

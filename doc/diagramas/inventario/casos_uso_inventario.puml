@@ -1,0 +1,54 @@
+@startuml casos_uso_inventario
+' ============================================================================
+' SolSGE - Diagrama de Casos de Uso - Módulo Inventario
+' Actores: Encargado de Depósito (existencias, conteo), Supervisor (aprueba
+' inventario), Gerente (dashboard / informe).
+' ============================================================================
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam packageStyle rectangle
+skinparam usecase {
+  BackgroundColor #DCE9F5
+  BorderColor #2E5A88
+  ArrowColor #34506B
+}
+skinparam actor {
+  BackgroundColor #DCE9F5
+  BorderColor #2E5A88
+}
+left to right direction
+
+title Diagrama de Casos de Uso — Módulo Inventario (SOLSGE)
+
+actor "Encargado\nde Depósito" as D
+actor Supervisor as S
+actor Gerente as G
+
+rectangle "Inventario" {
+  usecase "Consultar existencias" as UC1
+  usecase "Consultar historial\nde movimientos de stock" as UC2
+  usecase "Realizar inventario\nfísico (conteo)" as UC3
+  usecase "Aprobar inventario" as UC4
+  usecase "Ver dashboard\nde inventario" as UC5
+  usecase "Generar informe\nde inventario" as UC6
+}
+
+D --> UC1
+D --> UC2
+D --> UC3
+S --> UC4
+G --> UC1
+G --> UC5
+G --> UC6
+
+UC4 ..> UC3 : «sobre» el inventario enviado\n(genera ajustes de stock)
+
+note bottom of UC3
+  El conteo físico se compara con el stock del
+  sistema; al aprobarlo se generan movimientos
+  de AJUSTE que reconcilian las existencias.
+end note
+
+@enduml

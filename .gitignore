@@ -2,3 +2,5 @@
 .env
 *.env
 export-prev/festive-varahamihira-3893ce/
+doc/diagramas/_build/node_modules/
+~$*.docx

@@ -1,0 +1,42 @@
+@startuml actividad_autenticar
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam ActivityFontSize 12
+skinparam activity {
+  BackgroundColor #DCE9F5
+  BorderColor #2E5A88
+  DiamondBackgroundColor #FBF3D0
+  DiamondBorderColor #B9A24B
+  ArrowColor #34506B
+}
+title Diagrama de Actividades — Autenticarse (SOLSGE)
+
+|Usuario|
+start
+:Ingresar usuario y contraseña;
+|Sistema|
+:Buscar usuario por código;
+if (¿Usuario activo y no bloqueado?) then (no)
+  :Denegar acceso\n(inactivo / bloqueado);
+  stop
+else (sí)
+endif
+if (¿Contraseña válida (hash+salt)?) then (no)
+  :Incrementar intentos fallidos;
+  if (¿Supera el máximo?) then (sí)
+    :Bloquear usuario;
+  else (no)
+  endif
+  :Mostrar "credenciales incorrectas";
+  stop
+else (sí)
+endif
+:Reiniciar intentos fallidos;
+:Cargar roles y privilegios del usuario;
+|Usuario|
+:Acceso concedido;
+stop
+
+@enduml

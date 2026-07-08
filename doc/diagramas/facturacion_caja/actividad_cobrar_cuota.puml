@@ -1,0 +1,66 @@
+@startuml actividad_cobrar_cuota
+' ============================================================================
+' SolSGE - Diagrama de Actividades - "Cobrar cuota"
+' Flujo de control real: FN_COBRAR_CUOTA (db/F9_cobros.sql).
+' ============================================================================
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam ActivityFontSize 12
+skinparam activity {
+  BackgroundColor #DCE9F5
+  BorderColor #2E5A88
+  DiamondBackgroundColor #FBF3D0
+  DiamondBorderColor #B9A24B
+  ArrowColor #34506B
+}
+
+title Diagrama de Actividades — Cobrar cuota (SOLSGE)
+
+|Cajero|
+start
+:Seleccionar cuota PENDIENTE/VENCIDA;
+:Elegir forma y método de pago,\ningresar monto y confirmar;
+
+|Sistema|
+:Invocar FN_COBRAR_CUOTA;
+:Bloquear cuota (FOR UPDATE);
+
+if (¿Cuota cobrable\ny monto >= monto de cuota?) then (no)
+  :Abortar (-20911/-20912);
+  stop
+else (sí)
+endif
+
+:Bloquear cabecera de la CxC;
+
+if (¿Caja abierta?) then (no)
+  :Abortar (-20913/-20914);
+  stop
+else (sí)
+endif
+
+if (¿Talonario RC vigente\ny de la oficina de la caja?) then (no)
+  :Abortar (-20916/-20917);
+  stop
+else (sí)
+endif
+
+:Reservar N.º de recibo\n(FN_OBTENER_COMPROBANTE);
+:Registrar cobro en caja\n(MOVIMIENTOS_CAJA = COBRO_CXC) + detalle;
+:Marcar cuota = PAGADA;
+:Descontar SALDO de la CxC;
+
+if (¿SALDO = 0?) then (sí)
+  :Marcar CxC = PAGADA;
+else (no)
+endif
+
+:Generar documento KuDE Recibo (P119);
+
+|Cajero|
+:Imprimir recibo;
+stop
+
+@enduml

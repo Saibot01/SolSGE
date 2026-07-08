@@ -1,0 +1,35 @@
+@startuml estados_cuota
+' ============================================================================
+' SolSGE - Diagrama de Estados - Cuota (CUENTAS_COBRAR_DET.ESTADO)
+' Transiciones reales: FN_COBRAR_CUOTA, JOB_VENCER_CUOTAS, NC (F14).
+' ============================================================================
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam state {
+  BackgroundColor #DCE9F5
+  BorderColor #2E5A88
+  ArrowColor #34506B
+  FontSize 13
+}
+
+title Diagrama de Estados — Cuota de Cuenta por Cobrar (SOLSGE)
+
+[*] --> Pendiente : facturar a crédito\n(TRG_INS_CUENTAS_COBRAR genera las cuotas)
+
+state "Pendiente\n(ESTADO='PENDIENTE')" as Pendiente
+state "Vencida\n(ESTADO='VENCIDA')" as Vencida
+state "Pagada\n(ESTADO='PAGADA')" as Pagada
+state "Anulada\n(ESTADO='ANULADA')" as Anulada
+
+Pendiente --> Vencida : vencimiento\n[fecha_venc < hoy — JOB_VENCER_CUOTAS]
+Pendiente --> Pagada : cobrar cuota\n[FN_COBRAR_CUOTA]
+Vencida --> Pagada : cobrar cuota\n[FN_COBRAR_CUOTA]
+Pendiente --> Anulada : nota de crédito\n[PRC_APROBAR_NOTA_CREDITO]
+Vencida --> Anulada : nota de crédito\n[PRC_APROBAR_NOTA_CREDITO]
+
+Pagada --> [*]
+Anulada --> [*]
+
+@enduml

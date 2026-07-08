@@ -1,0 +1,44 @@
+@startuml secuencia_asignar_roles
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam sequenceMessageAlign center
+skinparam ParticipantFontSize 12
+skinparam sequence {
+  ArrowColor #34506B
+  LifeLineBorderColor #7A93AB
+  ParticipantBorderColor #2E5A88
+  ParticipantBackgroundColor #DCE9F5
+  ActorBorderColor #2E5A88
+  ActorBackgroundColor #DCE9F5
+}
+title Diagrama de Secuencia — Asignar roles a un usuario (SOLSGE)
+
+actor Administrador as A
+participant "Pantalla\nUsuarios" as PG <<página>>
+participant "EMPLEADOS" as E <<entidad>>
+participant "EMPLEADOS_ROLES" as ER <<entidad>>
+participant "ROLES" as R <<entidad>>
+
+A -> PG : selecciona un usuario
+activate PG
+PG -> E : carga los datos del usuario
+PG -> R : lista de roles disponibles
+PG --> A : muestra roles asignados y disponibles
+A -> PG : marca / desmarca roles y guarda
+loop por cada rol agregado
+  PG -> ER : INSERT EMPLEADOS_ROLES (fecha de asignación)
+end
+loop por cada rol quitado
+  PG -> ER : DELETE EMPLEADOS_ROLES
+end
+PG --> A : roles actualizados
+deactivate PG
+
+note right of ER
+  El acceso efectivo del usuario cambia de inmediato:
+  sus privilegios = unión de los de sus roles.
+end note
+
+@enduml

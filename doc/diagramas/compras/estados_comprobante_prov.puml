@@ -1,0 +1,31 @@
+@startuml estados_comprobante_prov
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam state {
+  BackgroundColor #DCE9F5
+  BorderColor #2E5A88
+  ArrowColor #34506B
+  FontSize 13 }
+title Diagrama de Estados — Comprobante de Proveedor (SOLSGE)
+
+[*] --> Registrada : registrar factura de proveedor\n(genera CxP si es a crédito — TRG_INS_CUENTAS_PAGAR)
+state "Registrada\n(R)" as R
+state "Recepción\nparcial (PR)" as PR
+state "Completada\n(C)" as C
+state "Anulada\n(A)" as A
+
+R --> PR : recepción parcial de los ítems
+R --> C : recepción completa
+PR --> C : se completa la recepción
+R --> A : anular
+PR --> A : anular
+C --> [*]
+A --> [*]
+
+note bottom of R
+  La deuda (CxP) nace al REGISTRAR la factura,
+  no espera la recepción.
+end note
+@enduml

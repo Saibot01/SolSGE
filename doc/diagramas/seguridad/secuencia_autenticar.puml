@@ -1,0 +1,46 @@
+@startuml secuencia_autenticar
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam sequenceMessageAlign center
+skinparam ParticipantFontSize 12
+skinparam sequence {
+  ArrowColor #34506B
+  LifeLineBorderColor #7A93AB
+  ParticipantBorderColor #2E5A88
+  ParticipantBackgroundColor #DCE9F5
+  ActorBorderColor #2E5A88
+  ActorBackgroundColor #DCE9F5
+}
+title Diagrama de Secuencia — Autenticarse (SOLSGE)
+
+actor Usuario as U
+participant "Pantalla\nLogin" as PG <<página>>
+participant "PKG_EMPLEADOS.\nverificar_credenciales" as FN <<función>>
+participant "EMPLEADOS" as E <<entidad>>
+
+U -> PG : ingresa usuario y contraseña
+activate PG
+PG -> FN : verificar_credenciales(usuario, contraseña)
+activate FN
+FN -> E : SELECT por CODIGO_USUARIO (hash + salt, ACTIVO)
+alt usuario inactivo o bloqueado
+  FN --> PG : acceso denegado
+  PG --> U : "usuario inactivo / bloqueado"
+else credenciales inválidas
+  FN -> E : INTENTOS_FALLIDOS = INTENTOS_FALLIDOS + 1
+  opt supera el máximo
+    FN -> E : bloquear usuario
+  end
+  FN --> PG : credenciales inválidas
+  PG --> U : "usuario o contraseña incorrectos"
+else credenciales válidas
+  FN -> E : reinicia INTENTOS_FALLIDOS
+  FN --> PG : autenticación OK (empleado + roles)
+  PG --> U : acceso concedido
+end
+deactivate FN
+deactivate PG
+
+@enduml

@@ -1,0 +1,72 @@
+@startuml clases_reportes
+' ============================================================================
+' SolSGE - Diagrama de Clases - Módulo Reportes Gerenciales
+' Modelo de la capa de reportes: dashboards y funciones de informe consumen
+' vistas que agregan los hechos transaccionales y los comparan con las metas.
+' ============================================================================
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam classFontSize 12
+skinparam classAttributeFontSize 11
+skinparam DefaultFontName Segoe UI
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #2E5A88
+  HeaderBackgroundColor #DCE9F5
+  ArrowColor #34506B
+}
+hide circle
+hide methods
+
+title Diagrama de Clases — Módulo Reportes Gerenciales (SOLSGE)
+
+class DashboardGerencial <<página>> {
+  'P133 Ventas · P136 Cobros'
+  'P144 Compras · P142 Inventario'
+  KPIs + gráficos JET
+}
+
+class InformeGerencial <<función>> {
+  'FN_INFORME_VENTAS/COBROS/'
+  'COMPRAS/INVENTARIO_HTML'
+  HTML imprimible por filtros
+}
+
+class VistaGerencial <<vista>> {
+  'V_VENTAS_* · V_COBROS_* /'
+  'V_CARTERA_CXC · V_CMP_* · V_INV_*'
+  agrega los hechos por dimensión
+}
+
+class MetaVenta <<METAS_VENTA>> {
+  +id_meta : Number «PK»
+  periodo : Date
+  monto_meta : Number
+}
+class MetaCobranza <<METAS_COBRANZA>> {
+  +id_meta : Number «PK»
+  periodo : Date
+  monto_meta : Number
+}
+
+' ---- hechos transaccionales (frontera) ----
+class Comprobante <<COMPROBANTES>> #EFEFEF { }
+class MovimientoCaja <<MOVIMIENTOS_CAJA>> #EFEFEF { }
+class ComprobanteProveedor <<COMPROBANTES_PROVEEDOR>> #EFEFEF { }
+class StockProducto <<STOCK_PRODUCTO>> #EFEFEF { }
+
+' ============================================================================
+' RELACIONES
+' ============================================================================
+DashboardGerencial ..> VistaGerencial : consume
+InformeGerencial ..> VistaGerencial : consume
+VistaGerencial ..> Comprobante : agrega (ventas)
+VistaGerencial ..> MovimientoCaja : agrega (cobros)
+VistaGerencial ..> ComprobanteProveedor : agrega (compras)
+VistaGerencial ..> StockProducto : agrega (inventario)
+VistaGerencial ..> MetaVenta : compara vs meta
+VistaGerencial ..> MetaCobranza : compara vs meta
+
+@enduml

@@ -1,0 +1,49 @@
+@startuml actividad_inventario
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam ActivityFontSize 12
+skinparam activity {
+  BackgroundColor #DCE9F5
+  BorderColor #2E5A88
+  DiamondBackgroundColor #FBF3D0
+  DiamondBorderColor #B9A24B
+  ArrowColor #34506B
+}
+title Diagrama de Actividades — Realizar y aprobar inventario físico (SOLSGE)
+
+|Encargado de Depósito|
+start
+:Crear el inventario de una oficina;
+:Contar físicamente y registrar la cantidad por producto;
+:El sistema calcula la diferencia (físico − sistema);
+:Enviar a aprobación;
+|Sistema|
+:Validar BORRADOR → marcar ENVIADO;
+
+|Supervisor|
+:Revisar el inventario y las diferencias;
+if (¿Aprobar?) then (no)
+  |Sistema|
+  :Marcar RECHAZADO;
+  stop
+else (sí)
+endif
+|Sistema|
+:Validar ENVIADO;
+repeat :Tomar una línea con diferencia ≠ 0;
+  if (¿Diferencia > 0?) then (sí)
+    :ENTRADA de ajuste (MOVIMIENTOS_STOCK);
+  else (no)
+    :SALIDA de ajuste (MOVIMIENTOS_STOCK);
+  endif
+  :Actualizar STOCK_PRODUCTO;
+repeat while (¿más diferencias?) is (sí)
+->no;
+:Marcar APROBADO;
+|Supervisor|
+:Existencias reconciliadas;
+stop
+
+@enduml

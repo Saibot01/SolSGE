@@ -1,0 +1,47 @@
+@startuml actividad_orden_pago
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam ActivityFontSize 12
+skinparam activity {
+  BackgroundColor #DCE9F5
+  BorderColor #2E5A88
+  DiamondBackgroundColor #FBF3D0
+  DiamondBorderColor #B9A24B
+  ArrowColor #34506B }
+title Diagrama de Actividades — Generar y confirmar orden de pago (SOLSGE)
+
+|Comprador|
+start
+:Seleccionar proveedor y sus CxP a pagar;
+:Indicar el monto a aplicar por CxP;
+:Generar orden de pago;
+|Sistema|
+:Registrar OP en BORRADOR (autoriza, NO baja saldo);
+|Supervisor|
+:Revisar la orden de pago;
+if (¿Confirmar o rechazar?) then (rechazar)
+  |Sistema|
+  :Anular la OP con motivo (no toca las CxP);
+  stop
+else (confirmar)
+  :Elegir el método de pago;
+endif
+|Sistema|
+:Bloquear la OP (FOR UPDATE);
+if (¿ESTADO = BORRADOR?) then (no)
+  :Error (-20937/…);
+  stop
+else (sí)
+endif
+repeat :Tomar una CxP aplicada;
+  :Bajar SALDO;
+  :Marcar PAGADA o PARCIAL;
+repeat while (¿más CxP?) is (sí)
+->no;
+:Marcar OP CONFIRMADA (fecha de pago, método);
+|Supervisor|
+:Pago confirmado;
+stop
+@enduml

@@ -1,0 +1,22 @@
+@startuml estados_orden_pago
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam DefaultFontName Segoe UI
+skinparam state {
+  BackgroundColor #DCE9F5
+  BorderColor #2E5A88
+  ArrowColor #34506B
+  FontSize 13 }
+title Diagrama de Estados — Orden de Pago (SOLSGE)
+
+[*] --> Borrador : generar orden de pago\n(PRC_GENERAR_ORDEN_PAGO — autoriza, NO baja saldo)
+state "Borrador\n(BORRADOR)" as B
+state "Confirmada\n(CONFIRMADA)" as C
+state "Anulada\n(ANULADA)" as A
+
+B --> C : confirmar\n[PRC_CONFIRMAR_ORDEN_PAGO — baja SALDO de las CxP]
+B --> A : anular (con motivo)\n[PRC_ANULAR_ORDEN_PAGO]
+C --> [*]
+A --> [*]
+@enduml
