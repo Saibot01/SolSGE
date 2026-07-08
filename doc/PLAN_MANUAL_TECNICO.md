@@ -49,6 +49,11 @@ vocabulario. **Reutiliza** los diagramas ya hechos (no los rehace).
 4. **Capturas: mínimas** — solo técnicas puntuales (App Builder, esquema de despliegue, config).
    El grueso de capturas de la app va en el Manual de Usuario.
 5. **Diagrama ER (NUEVO, pedido por el alumno):** incluir un **modelo entidad-relación** del esquema.
+6. **Carga inicial de datos (NUEVO):** documentar los **datos maestros/paramétricos obligatorios**
+   para dejar el sistema operativo (PARAMETROS, roles/privilegios, oficinas/cajas/talonarios,
+   catálogos), separados de los datos demo. Ver §8.x.
+7. **"Instalación" en la nube (aclaración):** el usuario final **no instala nada** (solo navegador +
+   URL). Lo que se documenta es el **despliegue/puesta en marcha del entorno** para el mantenedor. Ver §8.
 
 ---
 
@@ -109,11 +114,30 @@ vocabulario. **Reutiliza** los diagramas ya hechos (no los rehace).
 7. **Integración fiscal (SET / SIFEN)**
    - Talonarios timbrados: numeración establecimiento-punto-expedición, derivación desde `CAJA_CONF` (F10/F27).
    - KuDE (representación gráfica) y su **alcance real**: sin CDC/QR, "sin validez fiscal", no integrado a SIFEN.
-8. **Instalación y despliegue**
-   - Requisitos: ADB 23ai, APEX 24.2, wallet SSL (vence 2031-03-26), SQLcl.
-   - Importar la app (`apex-work/f100` + `install_page.sql`/`install_component.sql`; `set/end_environment`).
-   - Correr las migraciones `db/` en orden por SQLcl (idempotentes, con bloque de verificación).
-   - Configuración: `PARAMETROS` (empresa, `REVERSO_COBRO_ACTIVO`…), timezone/`FN_HOY`, conexión wallet.
+8. **Despliegue y puesta en marcha** *(NO es "instalación en el cliente")*
+   - **Aclaración clave (nube):** el **usuario final no instala nada** — accede por navegador con la
+     URL del sistema (APEX en Oracle Cloud). Esta sección es para el **desarrollador/mantenedor**:
+     describe cómo **reproducir/desplegar el entorno** desde cero (recuperación ante desastres,
+     migración a otra cuenta de Oracle Cloud, ambiente de evaluación), no cómo instalar en cada PC.
+   - Requisitos del entorno: ADB 23ai, APEX 24.2, wallet SSL (vence 2031-03-26), SQLcl.
+   - Desplegar la app APEX en el workspace (`apex-work/f100` + `install_page.sql`/`install_component.sql`;
+     `set/end_environment`). Crear el esquema y correr las migraciones `db/` en orden por SQLcl
+     (idempotentes, con bloque de verificación).
+   - **8.x Carga inicial de datos (bootstrap)** — sin esto el sistema no opera. Distinguir:
+     - **Datos maestros/paramétricos OBLIGATORIOS** (leídos de la BD real):
+       - `PARAMETROS`: **EMPRESA** (emisor del KuDE: `RAZON_SOCIAL`, `RUC`, `DIRECCION`, `CIUDAD`,
+         `TELEFONO`, `ACTIVIDAD_ECONOMICA`, `TIPO_CONTRIBUYENTE`) y **reglas de negocio**
+         (`HORAS_LIMITE_CANCELACION`=48, `DIAS_VIGENCIA_PRESUPUESTO`=15, `LIMITE_MONTO_OC_MENSUAL`,
+         `COSTO_VENTANA_DIAS`=90, `VALIDAR_STOCK_MAXIMO_EN_OC`, `REVERSO_COBRO_ACTIVO`=N).
+       - **Seguridad** (para poder entrar): `ROLES`, `PRIVILEGIOS`, `ROLES_PRIVILEGIOS` y al menos
+         un usuario administrador en `EMPLEADOS`.
+       - **Estructura fiscal:** `OFICINAS` (con establecimiento SET), `CAJA_CONF` (con punto de
+         expedición) y `TALONARIOS` timbrados — prerequisito para facturar.
+       - **Catálogos de referencia:** `MONEDAS`, `METODOS_PAGO`, `TIPO_IVA`, `MOTIVOS_NOTA_CREDITO`.
+     - **Datos demo/transaccionales (NO obligatorios):** productos demo, metas demo, seeds de
+       Ventas/Cobros/Inventario/Compras (`db/F18/F22/F23/F25_seed_*`) — solo para la defensa; se listan
+       aparte y se aclara que no son necesarios para operar.
+   - Configuración final: timezone/`FN_HOY` (BD en UTC), conexión wallet, `IMAGE_PREFIX`.
 9. **Mantenimiento y operación**
    - Versionado: dos árboles APEX (`apex-learn` read-only vs `apex-work` staging) y cuándo usar cada uno.
    - Gotchas documentados: BD en UTC, `MOVIMIENTOS_CAJA.MONEDA` texto vs `COMPROBANTES.MONEDA` código,
