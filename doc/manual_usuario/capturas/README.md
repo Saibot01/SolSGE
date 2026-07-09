@@ -86,5 +86,14 @@ El `build.js` referencia exactamente estos nombres. Entregalos y el documento lo
 | `08_op_documento_01.png` | Documento de la orden de pago. |
 | `08_nc_compra_01.png` | **Compras y Pagos → Nota de Credito Proveedor**: captura de la NC. |
 
+## Capturas que espera Inventario (capítulo 9)
+
+| Archivo | Pantalla / momento a capturar |
+|---|---|
+| `09_existencias_01.png` | **Productos e Inventario → Reporte Inventario → Existencias**. |
+| `09_movimientos_01.png` | **Productos e Inventario → Reporte Inventario → Movimiento de Stock**. |
+| `09_conteo_01.png` | **Proceso de Inventario / Conteo Físico**: conteo de productos. |
+| `09_revision_01.png` | **Productos e Inventario → Revisión**: aprobación del inventario. |
+
 > Si el nombre real de alguna pantalla o el orden de un paso no coincide con lo redactado, avisá:
 > ajustamos el texto contra la app en vivo (la app es la fuente de verdad, nunca inventamos pasos).

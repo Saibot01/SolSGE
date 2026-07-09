@@ -651,6 +651,83 @@ const tNCCompra = (() => {
 })();
 
 // ==========================================================================
+//  9. INVENTARIO
+// ==========================================================================
+const inventarioIntro = [
+  H1("9. Inventario"),
+  P("Este módulo permite consultar las existencias de productos y el historial de movimientos de stock, y realizar el inventario físico (conteo) con su posterior aprobación para ajustar el stock del sistema. La siguiente tabla indica qué tarea realiza cada rol."),
+  dataTable({
+    headers: ["Rol", "Tareas"],
+    widths: [26, 74],
+    rows: [
+      ["Encargado de Depósito", "Consultar existencias · Consultar el historial de movimientos · Realizar un inventario físico."],
+      ["Supervisor", "Aprobar un inventario físico."],
+    ],
+  }),
+  tablaCap("Roles y tareas del módulo Inventario."),
+];
+
+const tExistencias = (() => {
+  const s = stepList();
+  return [
+    H2("9.1. Consultar existencias"),
+    Field("Rol: ", "Encargado de Depósito."),
+    Field("Objetivo: ", "ver el stock disponible de los productos por oficina."),
+    H3("Pasos"),
+    s("En el menú, ingrese a **Productos e Inventario → Reporte Inventario → Existencias**."),
+    s("Si lo necesita, filtre por **Oficina** (u otros filtros disponibles)."),
+    s("Consulte la lista de productos con su **cantidad en existencia**."),
+    ...figura("09_existencias_01.png", 1.90, "Existencias: stock por producto."),
+  ];
+})();
+
+const tMovimientos = (() => {
+  const s = stepList();
+  return [
+    pageBreak(),
+    H2("9.2. Consultar el historial de movimientos de stock"),
+    Field("Rol: ", "Encargado de Depósito."),
+    Field("Objetivo: ", "revisar las entradas y salidas de stock de los productos."),
+    H3("Pasos"),
+    s("En el menú, ingrese a **Productos e Inventario → Reporte Inventario → Movimiento de Stock**."),
+    s("Consulte los movimientos con su **fecha**, **tipo** (entrada o salida) y **cantidad**. Puede filtrar por producto o período."),
+    ...figura("09_movimientos_01.png", 1.90, "Historial de movimientos de stock."),
+    nota("Los movimientos reflejan las **ventas** (salidas), las **recepciones** de compra (entradas), las **transferencias** entre depósitos y los **ajustes** de inventario."),
+  ];
+})();
+
+const tInventarioFisico = (() => {
+  const s = stepList();
+  return [
+    pageBreak(),
+    H2("9.3. Realizar un inventario físico"),
+    Field("Rol: ", "Encargado de Depósito."),
+    Field("Objetivo: ", "registrar el conteo real de los productos para compararlo con el stock del sistema."),
+    H3("Pasos"),
+    s("En el menú, ingrese a **Productos e Inventario → Proceso de Inventario** y **Cree** un nuevo proceso de inventario, indicando el alcance (por ejemplo, la oficina)."),
+    s("Ingrese a **Conteo Físico** y registre la **cantidad contada** de cada producto."),
+    s("Guarde el conteo. El sistema calcula la **diferencia** contra el stock registrado."),
+    ...figura("09_conteo_01.png", 1.90, "Conteo físico de productos."),
+    nota("El **ajuste** de stock se aplica recién cuando el inventario se **aprueba** (ver 9.4)."),
+  ];
+})();
+
+const tAprobarInventario = (() => {
+  const s = stepList();
+  return [
+    pageBreak(),
+    H2("9.4. Aprobar un inventario físico"),
+    Field("Rol: ", "Supervisor."),
+    Field("Objetivo: ", "revisar las diferencias del conteo y aprobar el ajuste de stock."),
+    H3("Pasos"),
+    s("En el menú, ingrese a **Productos e Inventario → Revisión**."),
+    s("Abra el inventario a revisar y compare las **cantidades contadas** con las del sistema."),
+    s("**Apruebe** el inventario. El sistema **ajusta el stock** para que coincida con lo contado."),
+    ...figura("09_revision_01.png", 1.90, "Revisión y aprobación del inventario físico."),
+  ];
+})();
+
+// ==========================================================================
 //  ENSAMBLADO
 // ==========================================================================
 if (require.main === module) buildDoc({
@@ -696,8 +773,14 @@ if (require.main === module) buildDoc({
       ...tGenerarOP,
       ...tConfirmarOP,
       ...tNCCompra,
+      pageBreak(),
+      ...inventarioIntro,
+      ...tExistencias,
+      ...tMovimientos,
+      ...tInventarioFisico,
+      ...tAprobarInventario,
     ]),
   ],
 });
 
-module.exports = { intro, acceso, roles, ventasIntro, factCajaIntro, cobranzasIntro, ncIntro, comprasIntro };
+module.exports = { intro, acceso, roles, ventasIntro, factCajaIntro, cobranzasIntro, ncIntro, comprasIntro, inventarioIntro };
