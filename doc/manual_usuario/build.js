@@ -728,6 +728,205 @@ const tAprobarInventario = (() => {
 })();
 
 // ==========================================================================
+//  10. DOCUMENTOS FISCALES
+// ==========================================================================
+const docsIntro = [
+  H1("10. Documentos fiscales"),
+  P("El sistema genera documentos impresos de los comprobantes (KuDE): factura, recibo y nota de crédito, entre otros. Son representaciones gráficas para el cliente y llevan la leyenda «sin validez fiscal», ya que no están integradas al sistema nacional de facturación electrónica. La emisión de comprobantes se controla mediante talonarios, que administra el Administrador. La siguiente tabla indica qué tarea realiza cada rol."),
+  dataTable({
+    headers: ["Rol", "Tareas"],
+    widths: [30, 70],
+    rows: [
+      ["Cajero / Supervisor", "Imprimir el documento (KuDE) de un comprobante."],
+      ["Administrador", "Gestionar los talonarios."],
+    ],
+  }),
+  tablaCap("Roles y tareas del módulo Documentos fiscales."),
+];
+
+const tImprimirKude = (() => {
+  const s = stepList();
+  return [
+    H2("10.1. Imprimir el documento de un comprobante"),
+    Field("Rol: ", "Cajero o Supervisor, según el comprobante."),
+    Field("Objetivo: ", "obtener el documento impreso (KuDE) de una factura, recibo o nota de crédito."),
+    H3("Pasos"),
+    s("Ubique el comprobante en su módulo: la **factura** al emitirla o desde la lista de comprobantes (ver 5.2); el **recibo** desde Cobranzas (ver 6.1 y 6.2); la **nota de crédito** desde Notas de Crédito (ver 7.3)."),
+    s("Abra el **documento** del comprobante. Se muestra en pantalla, listo para **imprimir** o **guardar** (por ejemplo, en PDF desde el navegador)."),
+    ...figura("10_kude_documento_01.png", 1.05, "Documento (KuDE) de un comprobante."),
+    nota("Los documentos llevan la leyenda **«sin validez fiscal»**: son una representación gráfica del comprobante para entregar al cliente."),
+  ];
+})();
+
+const tTalonarios = (() => {
+  const s = stepList();
+  return [
+    pageBreak(),
+    H2("10.2. Gestionar los talonarios"),
+    Field("Rol: ", "Administrador."),
+    Field("Objetivo: ", "administrar los talonarios que habilitan la numeración de los comprobantes."),
+    H3("Pasos"),
+    s("En el menú, ingrese a **Configuración → Talonarios**. Se muestra la lista de talonarios."),
+    s("Para crear o editar uno, indique el **tipo de comprobante** (factura, recibo o nota de crédito), el **timbrado** y su vigencia, la **caja** asociada y su **punto de expedición**."),
+    s("Guarde. El talonario queda disponible para emitir comprobantes de ese tipo."),
+    ...figura("10_talonarios_01.png", 1.60, "Gestión de talonarios."),
+    importante("Cada caja puede tener **un solo talonario activo** por tipo de comprobante. El punto de expedición se define en la configuración de la caja (ver 12.5)."),
+  ];
+})();
+
+// ==========================================================================
+//  11. REPORTES GERENCIALES
+// ==========================================================================
+const reportesIntro = [
+  H1("11. Reportes gerenciales"),
+  P("Los reportes gerenciales resumen la información de ventas, cobros, inventario y compras en tableros interactivos (dashboards) y en informes imprimibles, y permiten definir las metas por período. Estas herramientas están dirigidas al Gerente. La siguiente tabla indica qué tarea realiza cada rol."),
+  dataTable({
+    headers: ["Rol", "Tareas"],
+    widths: [26, 74],
+    rows: [
+      ["Gerente", "Consultar un dashboard gerencial · Generar un informe · Definir las metas."],
+    ],
+  }),
+  tablaCap("Roles y tareas del módulo Reportes gerenciales."),
+];
+
+const tDashboard = (() => {
+  const s = stepList();
+  return [
+    H2("11.1. Consultar un dashboard gerencial"),
+    Field("Rol: ", "Gerente."),
+    Field("Objetivo: ", "revisar los indicadores y gráficos de un módulo."),
+    H3("Pasos"),
+    s("En el menú, ingrese al tablero del módulo que desea consultar: **Ventas** (Dashboard interactivo de Ventas), **Cobros** (Dashboard de Cobros), **Inventario** (Dashboard de Inventario) o **Compras** (Dashboard de Compras)."),
+    s("Elija el **período** (por ejemplo, el mes) con el selector del tablero."),
+    s("Consulte los **indicadores** (KPIs) y los **gráficos** del módulo."),
+    ...figura("11_dashboard_01.png", 1.90, "Dashboard gerencial de un módulo."),
+  ];
+})();
+
+const tInforme = (() => {
+  const s = stepList();
+  return [
+    pageBreak(),
+    H2("11.2. Generar un informe"),
+    Field("Rol: ", "Gerente."),
+    Field("Objetivo: ", "obtener un informe imprimible filtrado por los criterios que necesite."),
+    H3("Pasos"),
+    s("Desde el **dashboard** del módulo, presione el botón para **generar el informe** (por ejemplo, «Generar Informe de Ventas»)."),
+    s("Elija los **filtros**: rango de fechas o período, sucursal y los demás criterios disponibles."),
+    s("Genere el informe. Se muestra en pantalla, listo para **imprimir** o **guardar**."),
+    ...figura("11_informe_01.png", 1.40, "Generador de informe gerencial."),
+  ];
+})();
+
+const tMetas = (() => {
+  const s = stepList();
+  return [
+    pageBreak(),
+    H2("11.3. Definir las metas"),
+    Field("Rol: ", "Gerente."),
+    Field("Objetivo: ", "cargar las metas de venta y de cobranza por período."),
+    H3("Pasos"),
+    s("En el menú, ingrese a **Ventas → Metas de Venta** o a **Metas de Cobranza**, según corresponda."),
+    s("Cree o edite una meta indicando el **período** (mes), la **sucursal** o el **vendedor/cobrador** y el **monto** de la meta."),
+    s("Guarde. La meta se compara con lo realizado en el dashboard del módulo."),
+    ...figura("11_metas_01.png", 1.60, "Definición de metas."),
+  ];
+})();
+
+// ==========================================================================
+//  12. ADMINISTRACIÓN
+// ==========================================================================
+const adminIntro = [
+  H1("12. Administración"),
+  P("Estas tareas son responsabilidad del Administrador: gestionar los usuarios (empleados) y sus roles, definir roles y privilegios, configurar los catálogos y parámetros del sistema, y configurar las cajas y oficinas. La siguiente tabla indica qué tarea realiza cada rol."),
+  dataTable({
+    headers: ["Rol", "Tareas"],
+    widths: [26, 74],
+    rows: [
+      ["Administrador", "Gestionar usuarios (empleados) · Restablecer la contraseña de un empleado · Gestionar roles y privilegios · Configurar catálogos y parámetros · Configurar cajas y oficinas."],
+    ],
+  }),
+  tablaCap("Roles y tareas del módulo Administración."),
+];
+
+const tUsuarios = (() => {
+  const s = stepList();
+  return [
+    H2("12.1. Gestionar usuarios (empleados)"),
+    Field("Rol: ", "Administrador."),
+    Field("Objetivo: ", "registrar o modificar los empleados que usan el sistema y asignarles su rol."),
+    H3("Pasos"),
+    s("En el menú, ingrese a **Personas → Empleados**. Se muestra la lista de empleados."),
+    s("Presione **Crear** para registrar un empleado nuevo, o abra uno existente para editarlo."),
+    s("Complete sus datos (nombre, documento, correo, usuario) y asigne el **rol** que le corresponde."),
+    s("Guarde. El empleado queda habilitado para ingresar al sistema con las opciones de su rol."),
+    ...figura("12_empleados_01.png", 1.60, "Alta y edición de un empleado."),
+  ];
+})();
+
+const tResetAdmin = (() => {
+  const s = stepList();
+  return [
+    pageBreak(),
+    H2("12.2. Restablecer la contraseña de un empleado"),
+    Field("Rol: ", "Administrador."),
+    Field("Objetivo: ", "generar un enlace para que un empleado defina una nueva contraseña y desbloquear su cuenta."),
+    H3("Pasos"),
+    s("En **Personas → Empleados**, abra el empleado en cuestión."),
+    s("Presione **Restablecer / Reenviar credenciales**. El sistema genera un **enlace** de restablecimiento, lo muestra en pantalla y **desbloquea** la cuenta."),
+    s("Entregue ese enlace al empleado. Al abrirlo, podrá definir su nueva contraseña (ver 2.2)."),
+    ...figura("12_reset_01.png", 1.60, "Restablecer las credenciales de un empleado."),
+    nota("El enlace también se envía por correo al empleado; entregarlo en pantalla es la vía directa para cuando el correo no llegue."),
+  ];
+})();
+
+const tRolesPriv = (() => {
+  const s = stepList();
+  return [
+    pageBreak(),
+    H2("12.3. Gestionar roles y privilegios"),
+    Field("Rol: ", "Administrador."),
+    Field("Objetivo: ", "definir los roles del sistema y los privilegios (accesos) que tiene cada uno."),
+    H3("Pasos"),
+    s("En el menú, ingrese a **Configuración → Roles** para ver o crear los roles."),
+    s("Ingrese a **Seguridad → Roles - Privilegios** para asignar a cada rol los **privilegios** que le corresponden."),
+    s("Guarde. Los cambios determinan qué opciones del menú y qué tareas puede realizar cada rol."),
+    ...figura("12_roles_01.png", 1.60, "Asignación de privilegios a los roles."),
+  ];
+})();
+
+const tCatalogos = (() => {
+  const s = stepList();
+  return [
+    pageBreak(),
+    H2("12.4. Configurar catálogos y parámetros"),
+    Field("Rol: ", "Administrador."),
+    Field("Objetivo: ", "mantener los catálogos base que utiliza el sistema."),
+    H3("Pasos"),
+    s("En el menú, ingrese a **Configuración** y elija el catálogo a mantener: **Monedas**, **Planes de Cuota**, **Formas de Pago**, **Métodos de Pago** o **Talonarios** (ver 10.2)."),
+    s("Cree o edite los registros según sea necesario y guarde."),
+    ...figura("12_config_01.png", 1.60, "Configuración de catálogos del sistema."),
+    nota("Estos catálogos son la base de la operación: por ejemplo, las **formas** y **métodos de pago** aparecen al facturar y cobrar, y los **planes de cuota**, al vender a crédito."),
+  ];
+})();
+
+const tCajasOficinas = (() => {
+  const s = stepList();
+  return [
+    pageBreak(),
+    H2("12.5. Configurar cajas y oficinas"),
+    Field("Rol: ", "Administrador."),
+    Field("Objetivo: ", "dar de alta y configurar las oficinas (sucursales) y sus cajas."),
+    H3("Pasos"),
+    s("Para las oficinas, ingrese a **Personas → Oficinas** y registre o edite cada sucursal."),
+    s("Para las cajas, ingrese a **Configuración de Cajas** y configure cada caja: la **oficina** a la que pertenece y su **punto de expedición**."),
+    s("Guarde. Las cajas quedan disponibles para que los cajeros las abran y operen (ver 5.1)."),
+    ...figura("12_cajas_01.png", 1.60, "Configuración de cajas y oficinas."),
+  ];
+})();
+
+// ==========================================================================
 //  ENSAMBLADO
 // ==========================================================================
 if (require.main === module) buildDoc({
@@ -779,8 +978,24 @@ if (require.main === module) buildDoc({
       ...tMovimientos,
       ...tInventarioFisico,
       ...tAprobarInventario,
+      pageBreak(),
+      ...docsIntro,
+      ...tImprimirKude,
+      ...tTalonarios,
+      pageBreak(),
+      ...reportesIntro,
+      ...tDashboard,
+      ...tInforme,
+      ...tMetas,
+      pageBreak(),
+      ...adminIntro,
+      ...tUsuarios,
+      ...tResetAdmin,
+      ...tRolesPriv,
+      ...tCatalogos,
+      ...tCajasOficinas,
     ]),
   ],
 });
 
-module.exports = { intro, acceso, roles, ventasIntro, factCajaIntro, cobranzasIntro, ncIntro, comprasIntro, inventarioIntro };
+module.exports = { intro, acceso, roles, ventasIntro, factCajaIntro, cobranzasIntro, ncIntro, comprasIntro, inventarioIntro, docsIntro, reportesIntro, adminIntro };

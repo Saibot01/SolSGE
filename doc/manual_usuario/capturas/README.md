@@ -95,5 +95,30 @@ El `build.js` referencia exactamente estos nombres. Entregalos y el documento lo
 | `09_conteo_01.png` | **Proceso de Inventario / Conteo Físico**: conteo de productos. |
 | `09_revision_01.png` | **Productos e Inventario → Revisión**: aprobación del inventario. |
 
+## Capturas que espera Documentos fiscales (capítulo 10)
+
+| Archivo | Pantalla / momento a capturar |
+|---|---|
+| `10_kude_documento_01.png` | Documento (KuDE) de un comprobante (factura, recibo o NC). |
+| `10_talonarios_01.png` | **Configuración → Talonarios**: alta/edición de talonario. |
+
+## Capturas que espera Reportes gerenciales (capítulo 11)
+
+| Archivo | Pantalla / momento a capturar |
+|---|---|
+| `11_dashboard_01.png` | Un dashboard gerencial (Ventas, Cobros, Inventario o Compras) con KPIs y gráficos. |
+| `11_informe_01.png` | Un generador de informe (con sus filtros). |
+| `11_metas_01.png` | ABM de metas (Metas de Venta o Metas de Cobranza). |
+
+## Capturas que espera Administración (capítulo 12)
+
+| Archivo | Pantalla / momento a capturar |
+|---|---|
+| `12_empleados_01.png` | **Personas → Empleados**: alta/edición de empleado con su rol. |
+| `12_reset_01.png` | Empleado abierto con el botón *Restablecer / Reenviar credenciales* y el enlace. |
+| `12_roles_01.png` | **Seguridad → Roles - Privilegios**: asignación de privilegios. |
+| `12_config_01.png` | **Configuración**: un catálogo (Monedas, Formas de Pago, Planes de Cuota, etc.). |
+| `12_cajas_01.png` | **Configuración de Cajas** (u **Oficinas**): configuración de una caja/sucursal. |
+
 > Si el nombre real de alguna pantalla o el orden de un paso no coincide con lo redactado, avisá:
 > ajustamos el texto contra la app en vivo (la app es la fuente de verdad, nunca inventamos pasos).
