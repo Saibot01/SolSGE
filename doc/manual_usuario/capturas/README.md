@@ -42,5 +42,16 @@ El `build.js` referencia exactamente estos nombres. Entregalos y el documento lo
 | `05_cierre_caja_01.png` | **Ventas → Caja → Cierre de Caja**: arqueo con el monto declarado. |
 | `05_cierre_caja_02.png` | Documento de arqueo generado. |
 
+## Capturas que espera Cobranzas (capítulo 6)
+
+| Archivo | Pantalla / momento a capturar |
+|---|---|
+| `06_cobros_lista_01.png` | **Cobranzas → Cobros**: lista de cuentas por cobrar. |
+| `06_cobros_cuotas_01.png` | Detalle de cuotas de una cuenta por cobrar (al abrir una cuenta). |
+| `06_cobros_pago_01.png` | Cobro de Cuotas: método de pago, monto recibido y vuelto. |
+| `06_cobros_recibo_01.png` | Documento del recibo de cobro generado. |
+| `06_recibos_reimpresion_01.png` | **Cobranzas → Recibos de Cobro**: lista para reimprimir. |
+| `06_cuenta_cliente_01.png` | Detalle de cuotas y saldo del cliente (misma vista que el detalle de cuotas). |
+
 > Si el nombre real de alguna pantalla o el orden de un paso no coincide con lo redactado, avisá:
 > ajustamos el texto contra la app en vivo (la app es la fuente de verdad, nunca inventamos pasos).

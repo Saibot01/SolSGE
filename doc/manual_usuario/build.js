@@ -316,6 +316,74 @@ const tCerrarCaja = (() => {
 })();
 
 // ==========================================================================
+//  6. COBRANZAS
+// ==========================================================================
+const cobranzasIntro = [
+  H1("6. Cobranzas"),
+  P("Este módulo permite registrar el cobro de las cuotas de las ventas a crédito y emitir el recibo correspondiente, reimprimir recibos ya emitidos y consultar las cuentas por cobrar de un cliente. La siguiente tabla indica qué tarea realiza cada rol."),
+  dataTable({
+    headers: ["Rol", "Tareas"],
+    widths: [26, 74],
+    rows: [
+      ["Cajero", "Cobrar una cuota y emitir el recibo · Reimprimir un recibo · Consultar las cuentas por cobrar de un cliente."],
+    ],
+  }),
+  caption("Tabla 3. Roles y tareas del módulo Cobranzas."),
+];
+
+const tCobrarCuota = (() => {
+  const s = stepList();
+  return [
+    H2("6.1. Cobrar una cuota y emitir el recibo"),
+    Field("Rol: ", "Cajero."),
+    Field("Objetivo: ", "registrar el pago de una cuota pendiente de una venta a crédito y emitir el recibo."),
+    importante("Para cobrar debe tener su **caja abierta** (ver 5.1) y un **talonario de recibo** vigente. El cobro corresponde a facturas emitidas **a crédito**."),
+    H3("Pasos"),
+    s("En el menú, ingrese a **Cobranzas → Cobros**. Se muestra la lista de cuentas por cobrar."),
+    s("Ubique la cuenta por cobrar del cliente y ábrala. Se muestra el **Detalle de Cuotas**."),
+    ...figura("06_cobros_lista_01.png", 1.90, "Cobros: lista de cuentas por cobrar."),
+    s("Seleccione la **cuota pendiente** que va a cobrar. Se abre el formulario de **Cobro de Cuotas**."),
+    ...figura("06_cobros_cuotas_01.png", 1.90, "Detalle de cuotas de la cuenta por cobrar."),
+    s("Elija el **Método de Pago** e ingrese el **Monto Pago Recibido** (el efectivo que entrega el cliente). El sistema calcula el **vuelto**. Si corresponde, indique el **nº de referencia**."),
+    s("Presione **Cobrar**. El sistema registra el cobro, marca la cuota **Pagada**, descuenta el saldo de la cuenta por cobrar y genera el **número de recibo**."),
+    ...figura("06_cobros_pago_01.png", 1.40, "Cobro de cuota: método de pago y monto recibido."),
+    s("Presione **Imprimir** para ver el **documento del recibo**, listo para imprimir o guardar."),
+    ...figura("06_cobros_recibo_01.png", 1.05, "Documento del recibo de cobro."),
+    nota("Si la cuota estaba **vencida**, igual puede cobrarse. Al cobrar la última cuota, la cuenta por cobrar queda **saldada** (Pagada)."),
+  ];
+})();
+
+const tReimprimirRecibo = (() => {
+  const s = stepList();
+  return [
+    pageBreak(),
+    H2("6.2. Reimprimir un recibo"),
+    Field("Rol: ", "Cajero."),
+    Field("Objetivo: ", "volver a imprimir un recibo de cobro ya emitido."),
+    H3("Pasos"),
+    s("En el menú, ingrese a **Cobranzas → Recibos de Cobro**. Se muestra la lista de recibos emitidos."),
+    s("Ubique el recibo y ábralo. Se muestra el **documento del recibo**, listo para reimprimir o guardar."),
+    ...figura("06_recibos_reimpresion_01.png", 1.90, "Recibos de Cobro: lista para reimprimir."),
+  ];
+})();
+
+const tConsultarCxC = (() => {
+  const s = stepList();
+  return [
+    pageBreak(),
+    H2("6.3. Consultar las cuentas por cobrar de un cliente"),
+    Field("Rol: ", "Cajero."),
+    Field("Objetivo: ", "revisar las cuotas y el saldo pendiente de un cliente."),
+    H3("Pasos"),
+    s("En el menú, ingrese a **Cobranzas → Cobros**."),
+    s("Ubique la cuenta por cobrar del cliente en la lista."),
+    s("Ábrala para ver el **Detalle de Cuotas**: número de cuota, vencimiento, monto, estado (pendiente, pagada o vencida) y el saldo pendiente."),
+    ...figura("06_cuenta_cliente_01.png", 1.90, "Detalle de cuotas y saldo del cliente."),
+    nota("Desde esta vista también puede iniciar el **cobro** de una cuota (ver 6.1)."),
+  ];
+})();
+
+// ==========================================================================
 //  ENSAMBLADO
 // ==========================================================================
 if (require.main === module) buildDoc({
@@ -323,7 +391,6 @@ if (require.main === module) buildDoc({
   sections: [
     portraitSection(makeCaratula({
       titulo: "MANUAL DE USUARIO",
-      subtitulo: "Piloto — Módulo Facturación y Caja",
     }), true),
 
     portraitSection([
@@ -338,8 +405,13 @@ if (require.main === module) buildDoc({
       ...tAnular,
       ...tEstadoCaja,
       ...tCerrarCaja,
+      pageBreak(),
+      ...cobranzasIntro,
+      ...tCobrarCuota,
+      ...tReimprimirRecibo,
+      ...tConsultarCxC,
     ]),
   ],
 });
 
-module.exports = { intro, acceso, roles, factCajaIntro };
+module.exports = { intro, acceso, roles, factCajaIntro, cobranzasIntro };
