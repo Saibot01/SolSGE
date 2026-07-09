@@ -1,0 +1,336 @@
+// ============================================================================
+// Manual de Usuario SolSGE — build del .docx (documento 3 de 4 del libro de tesis).
+// PILOTO: portada + Introducción + Acceso al sistema + Roles + módulo Facturación y Caja.
+// Reutiliza la infra aprobada del libro: ../diagramas/_build/docxlib.js
+//   (portada réplica cátedra, banner UNA-FP, A4, TNR12/1.5, imgFit).
+// Las capturas las provee el alumno en ./capturas/ (convención NN_modulo_tarea_SS.png).
+//   Mientras un PNG no exista, el documento muestra un recuadro [FIGURA] (placeholder);
+//   apenas aparece el archivo, al re-generar queda embebido. Ver ./capturas/README.md.
+// Ejecutar: node doc/manual_usuario/build.js
+//
+// OJO (aprendido en el piloto): docx debe requerirse EXACTAMENTE como lo hace docxlib
+//   (require.resolve con paths=_build → dist/index.cjs). Si se requiere el paquete por
+//   otra ruta, Node carga index.umd.cjs = OTRA instancia del módulo y el Packer descarta
+//   silenciosamente los Table/Paragraph "foráneos" (no renderizan). Ver la línea de `docx`.
+// ============================================================================
+const path = require("path");
+const fs = require("fs");
+const DBUILD = path.join(__dirname, "..", "diagramas", "_build");
+const lib = require(path.join(DBUILD, "docxlib.js"));
+const {
+  P, Field, H1, H2, H3, bullet, caption, pageBreak,
+  makeImg, makeCaratula, portraitSection, buildDoc, dataTable, parseRuns,
+} = lib;
+const { PORT_PX } = lib.SIZES;
+
+// misma instancia de docx que docxlib (ver nota de cabecera)
+const docx = require(require.resolve("docx", { paths: [DBUILD] }));
+const {
+  Table, TableRow, TableCell, WidthType, BorderStyle, ShadingType,
+  Paragraph, TextRun, AlignmentType,
+} = docx;
+
+const CAP_DIR = path.join(__dirname, "capturas");
+const { imgFit } = makeImg(CAP_DIR);
+const OUT = path.join(__dirname, "MUESTRA_Manual_Usuario.docx");
+
+// ---------- pasos numerados que REINICIAN por procedimiento ----------
+// docx continúa la numeración si todos los ítems comparten instancia. stepList() reserva
+// una instancia nueva por procedimiento → cada lista arranca en 1 aunque se intercalen figuras.
+let STEP_INST = 100;
+function stepList() {
+  STEP_INST += 1;
+  const inst = STEP_INST;
+  return (text) => new Paragraph({
+    numbering: { reference: "pasos", level: 0, instance: inst },
+    spacing: { after: 60, line: 360, lineRule: "auto" },
+    children: parseRuns(text),
+  });
+}
+
+// ---------- recuadro Nota / Importante ----------
+function callout(kind, text) {
+  const imp = kind === "Importante";
+  const fill = imp ? "FDECEA" : "E8F1FB";       // salmón claro / azul claro
+  const accent = imp ? "C0392B" : "2E6DA4";
+  const label = imp ? "Importante: " : "Nota: ";
+  const cell = new TableCell({
+    shading: { type: ShadingType.CLEAR, fill },
+    borders: {
+      top: { style: BorderStyle.SINGLE, size: 2, color: accent },
+      bottom: { style: BorderStyle.SINGLE, size: 2, color: accent },
+      right: { style: BorderStyle.SINGLE, size: 2, color: accent },
+      left: { style: BorderStyle.SINGLE, size: 24, color: accent },
+    },
+    margins: { top: 80, bottom: 80, left: 160, right: 160 },
+    children: [new Paragraph({
+      alignment: AlignmentType.JUSTIFIED, spacing: { after: 0, line: 300 },
+      children: [new TextRun({ text: label, bold: true, color: accent }), ...parseRuns(text)],
+    })],
+  });
+  return new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    rows: [new TableRow({ children: [cell] })],
+  });
+}
+const nota = (t) => callout("Nota", t);
+const importante = (t) => callout("Importante", t);
+
+// párrafo de cuerpo con **negrita** inline (P() de docxlib no parsea markdown)
+const Pb = (text, opts = {}) => new Paragraph({
+  spacing: { after: opts.after ?? 160, before: opts.before ?? 0, line: 360, lineRule: "auto" },
+  alignment: AlignmentType.JUSTIFIED,
+  children: parseRuns(text),
+});
+
+// ---------- slot de figura (imagen si existe; si no, recuadro placeholder) ----------
+let FIG = 0;
+function figura(file, ratio, desc) {
+  FIG += 1;
+  const cap = caption("Figura " + FIG + ". " + desc);
+  if (fs.existsSync(path.join(CAP_DIR, file))) return [imgFit(file, PORT_PX, ratio), cap];
+  const dash = (extra = {}) => ({ style: BorderStyle.DASHED, size: 6, color: "9AA5B1", ...extra });
+  const box = new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    rows: [new TableRow({ children: [new TableCell({
+      borders: { top: dash(), bottom: dash(), left: dash(), right: dash() },
+      shading: { type: ShadingType.CLEAR, fill: "F5F7FA" },
+      margins: { top: 300, bottom: 300, left: 160, right: 160 },
+      children: [
+        new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 40 },
+          children: [new TextRun({ text: "[ FIGURA PENDIENTE DE CAPTURA ]", bold: true, color: "6B7683", size: 22 })] }),
+        new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 0 },
+          children: [new TextRun({ text: file, italics: true, color: "9AA5B1", size: 20 })] }),
+      ],
+    })] })],
+  });
+  return [box, cap];
+}
+
+// ==========================================================================
+//  1. INTRODUCCIÓN
+// ==========================================================================
+const intro = (() => {
+  return [
+    H1("1. Introducción"),
+    P("Este Manual de Usuario explica cómo operar SolSGE — Sol, Sistema de Gestión Empresarial, la aplicación web de gestión de la empresa Sole Informática. Presenta las tareas del sistema paso a paso y con capturas de pantalla, de modo que cualquier usuario pueda realizarlas siguiendo la secuencia indicada."),
+    H2("1.1. A quién está dirigido"),
+    P("Está dirigido al usuario final que opera el sistema en su trabajo diario: vendedores, cajeros, supervisores, compradores, encargados de depósito, gerentes y administradores. No se requieren conocimientos técnicos: alcanza con saber usar un navegador de internet."),
+    H2("1.2. Cómo está organizado"),
+    P("El manual se organiza por módulo (Ventas, Facturación y Caja, Cobranzas, Compras, Inventario, etc.). Dentro de cada módulo, cada tarea se documenta con la misma estructura: el rol que la ejecuta, el objetivo de la tarea y los pasos numerados a seguir. Al comienzo de cada módulo, una tabla resume qué tareas puede realizar cada rol."),
+    H2("1.3. Convenciones"),
+    P("A lo largo del manual se usan dos tipos de recuadros para resaltar información:"),
+    nota("aporta una aclaración o un dato útil para realizar mejor la tarea."),
+    importante("señala una condición obligatoria o una advertencia que, de no respetarse, impide completar la tarea o produce un error."),
+    P("Las opciones del menú se indican con el símbolo «→». Por ejemplo, Ventas → Caja → Apertura de Caja significa: abrir el menú Ventas, luego el submenú Caja y finalmente la opción Apertura de Caja.", { before: 80 }),
+  ];
+})();
+
+// ==========================================================================
+//  2. ACCESO AL SISTEMA
+// ==========================================================================
+const acceso = (() => {
+  const s = stepList();
+  return [
+    H1("2. Acceso al sistema"),
+    P("SolSGE es una aplicación web: se usa desde el navegador de internet, sin instalar nada en la computadora."),
+    H2("2.1. Ingresar al sistema"),
+    s("Abra el navegador de internet (Google Chrome, Microsoft Edge o Firefox)."),
+    s("Ingrese la dirección (URL) del sistema provista por la empresa. Se abre la pantalla de inicio de sesión."),
+    s("Escriba su **usuario** y su **contraseña**."),
+    s("Presione **Iniciar sesión**. Si los datos son correctos, ingresa a la pantalla principal."),
+    ...figura("02_acceso_login_01.png", 1.30, "Pantalla de inicio de sesión."),
+    importante("Tras varios intentos fallidos de inicio de sesión, el sistema **bloquea** el usuario por seguridad. En ese caso, contacte al Administrador para restablecer el acceso."),
+    nota("Si olvidó su contraseña, utilice la opción de restablecimiento de contraseña o solicítelo al Administrador."),
+    H2("2.2. La pantalla principal"),
+    Pb("Al ingresar se muestra la pantalla principal. A la izquierda (o en la parte superior) está el **menú de navegación**, organizado por módulos; desde ahí se accede a todas las tareas. Cada usuario ve únicamente las opciones habilitadas para su rol."),
+    ...figura("02_acceso_menu_01.png", 1.55, "Pantalla principal con el menú de navegación."),
+    H2("2.3. Cerrar sesión"),
+    Pb("Para salir de forma segura, abra el menú de su usuario (arriba a la derecha) y elija **Cerrar sesión**. Es recomendable cerrar sesión siempre que deje la computadora desatendida."),
+  ];
+})();
+
+// ==========================================================================
+//  3. ROLES DEL SISTEMA
+// ==========================================================================
+const roles = [
+  H1("3. Roles del sistema"),
+  P("El sistema asigna a cada usuario uno o más roles. El rol determina qué tareas puede realizar y qué opciones del menú ve. La siguiente tabla resume, de forma general, las responsabilidades de cada rol."),
+  dataTable({
+    headers: ["Rol", "Qué puede hacer"],
+    widths: [26, 74],
+    rows: [
+      ["Vendedor", "Registra y gestiona presupuestos y pedidos de venta."],
+      ["Cajero", "Abre y cierra su caja, factura al contado y a crédito, cobra cuotas y solicita anulaciones de factura."],
+      ["Supervisor", "Aprueba o rechaza anulaciones de factura y notas de crédito."],
+      ["Comprador", "Gestiona órdenes de compra, recepción y facturas de proveedor, y órdenes de pago."],
+      ["Encargado de Depósito", "Registra movimientos de stock, transferencias y el inventario físico."],
+      ["Gerente", "Consulta los reportes y dashboards gerenciales y define las metas."],
+      ["Administrador", "Administra usuarios, roles y privilegios, parámetros del sistema, talonarios y configuración de cajas y oficinas."],
+    ],
+  }),
+  caption("Tabla 1. Roles del sistema y sus responsabilidades."),
+];
+
+// ==========================================================================
+//  5. FACTURACIÓN Y CAJA  (módulo piloto)
+// ==========================================================================
+const factCajaIntro = [
+  H1("5. Facturación y Caja"),
+  P("Este módulo reúne la operación diaria del cajero: la apertura de la caja al comenzar la jornada, la emisión de facturas (al contado y a crédito), la anulación de una factura, la consulta del estado de la caja y, al finalizar el día, su cierre y arqueo. La siguiente tabla indica qué tarea realiza cada rol."),
+  dataTable({
+    headers: ["Rol", "Tareas"],
+    widths: [26, 74],
+    rows: [
+      ["Cajero", "Abrir caja · Facturar al contado · Facturar a crédito · Solicitar anulación de factura · Consultar el estado de caja · Cerrar y arquear la caja."],
+      ["Supervisor", "Aprobar o rechazar la anulación de una factura."],
+    ],
+  }),
+  caption("Tabla 2. Roles y tareas del módulo Facturación y Caja."),
+];
+
+const tAbrirCaja = (() => {
+  const s = stepList();
+  return [
+    H2("5.1. Abrir la caja"),
+    Field("Rol: ", "Cajero."),
+    Field("Objetivo: ", "habilitar la caja al comenzar la jornada para poder facturar y cobrar."),
+    H3("Pasos"),
+    s("En el menú, ingrese a **Ventas → Caja → Apertura de Caja**."),
+    s("Verifique la oficina y seleccione la caja a abrir."),
+    s("Ingrese el **monto de apertura** (el efectivo con el que inicia la caja) por cada moneda."),
+    s("Presione **Guardar** (o **Abrir caja**). La caja queda **Abierta** y lista para operar."),
+    ...figura("05_caja_apertura_01.png", 1.30, "Apertura de caja: montos de apertura."),
+    importante("Cada empleado puede tener **una sola caja abierta** a la vez. Si intenta abrir otra mientras ya tiene una abierta, el sistema no lo permite: primero debe cerrar la caja anterior."),
+    nota("La facturación al contado y el cobro de cuotas requieren tener la caja abierta. Si no abrió su caja, esas tareas no estarán disponibles."),
+  ];
+})();
+
+const tFacturarContado = (() => {
+  const s = stepList();
+  return [
+    pageBreak(),
+    H2("5.2. Facturar al contado"),
+    Field("Rol: ", "Cajero."),
+    Field("Objetivo: ", "emitir una factura de contado a partir de un presupuesto aprobado y cobrar el importe en el momento."),
+    importante("Para facturar debe tener su **caja abierta** (ver 5.1). El presupuesto a facturar debe estar en estado **Aprobado**."),
+    H3("Pasos"),
+    s("En el menú, ingrese a **Ventas → Proceso Ventas**. Se muestra la lista de comprobantes."),
+    s("Presione **Crear** para iniciar una nueva factura."),
+    ...figura("05_facturacion_contado_01.png", 1.55, "Proceso Ventas: lista de comprobantes y botón Crear."),
+    s("Seleccione el **cliente** y el **presupuesto aprobado** a facturar. El sistema carga el detalle de productos y los totales."),
+    ...figura("05_facturacion_contado_02.png", 1.30, "Factura con el cliente y el detalle cargados."),
+    s("En **Forma de Pago** elija **Contado**."),
+    s("Ingrese el **Monto Ingresado** (el efectivo que entrega el cliente). El sistema calcula el **vuelto**."),
+    ...figura("05_facturacion_contado_03.png", 1.30, "Forma de pago Contado: monto y vuelto."),
+    s("Presione **Crear** para confirmar. El sistema emite la factura, descuenta el stock de los productos y registra el ingreso en su caja."),
+    s("El sistema muestra el **documento de la factura**, listo para imprimir o guardar."),
+    ...figura("05_facturacion_contado_04.png", 1.41, "Documento de la factura (KuDE)."),
+    nota("El presupuesto facturado pasa a estado **Facturado** y ya no puede volver a facturarse."),
+  ];
+})();
+
+const tFacturarCredito = (() => {
+  const s = stepList();
+  return [
+    pageBreak(),
+    H2("5.3. Facturar a crédito"),
+    Field("Rol: ", "Cajero."),
+    Field("Objetivo: ", "emitir una factura cuyo importe se cobrará en cuotas."),
+    P("El procedimiento es igual al de la facturación al contado (5.2), con la diferencia en la forma de pago."),
+    H3("Pasos"),
+    s("Realice los pasos 1 a 4 de **Facturar al contado**: entre a **Ventas → Proceso Ventas**, presione **Crear** y seleccione el cliente y el presupuesto aprobado."),
+    s("En **Forma de Pago** elija **Crédito**."),
+    s("Seleccione el **Plan de Cuotas** con el que se financiará la venta."),
+    ...figura("05_facturacion_credito_01.png", 1.30, "Forma de pago Crédito con plan de cuotas."),
+    s("Presione **Crear** para confirmar. El sistema emite la factura, descuenta el stock y genera la **cuenta por cobrar** con sus cuotas."),
+    nota("En la venta a crédito **no** se registra ingreso en la caja: el dinero se percibe luego, al cobrar cada cuota (ver el módulo Cobranzas). El total financiado puede incluir el **interés** correspondiente al plan de cuotas."),
+  ];
+})();
+
+const tAnular = (() => {
+  const s1 = stepList();
+  const s2 = stepList();
+  return [
+    pageBreak(),
+    H2("5.4. Anular una factura"),
+    Field("Roles: ", "Cajero (solicita), Supervisor (aprueba)."),
+    Field("Objetivo: ", "dejar sin efecto una factura emitida por error, dentro del plazo permitido."),
+    importante("Una factura solo puede anularse dentro de las **48 horas** de emitida y siempre que **no** tenga cuotas ya cobradas. Pasado ese plazo, corresponde emitir una **Nota de Crédito** (ver el capítulo correspondiente)."),
+    H3("Solicitar la anulación (Cajero)"),
+    s1("En el menú, ingrese a **Ventas → Anulaciones de Facturas**."),
+    s1("Ubique la factura a anular e inicie la solicitud."),
+    s1("Escriba el **motivo** de la anulación (al menos 10 caracteres) y confirme. La factura queda **Pendiente de anulación**."),
+    ...figura("05_anulacion_solicitud_01.png", 1.45, "Solicitud de anulación con el motivo."),
+    H3("Aprobar o rechazar (Supervisor)"),
+    s2("El Supervisor ingresa a **Ventas → Anulaciones de Facturas** y abre la solicitud pendiente."),
+    s2("Revisa el motivo y presiona **Aprobar** o **Rechazar**."),
+    s2("Al **aprobar**, el sistema reversa el stock y, según corresponda, el ingreso de caja (si fue contado) o la cuenta por cobrar (si fue crédito); la factura queda **Anulada**."),
+    ...figura("05_anulacion_aprobacion_01.png", 1.45, "Aprobación o rechazo de la anulación."),
+    nota("Si el Supervisor **rechaza** la solicitud, la factura vuelve a quedar activa y no se produce ningún reverso."),
+  ];
+})();
+
+const tEstadoCaja = (() => {
+  const s = stepList();
+  return [
+    pageBreak(),
+    H2("5.5. Consultar el estado de la caja"),
+    Field("Rol: ", "Cajero."),
+    Field("Objetivo: ", "revisar en cualquier momento el saldo de la caja y los movimientos registrados."),
+    H3("Pasos"),
+    s("En el menú, ingrese a **Ventas → Caja → Estado de Caja**."),
+    s("Seleccione su caja. El sistema muestra el **saldo esperado por moneda** y la lista de **movimientos** (ingresos, cobros y egresos)."),
+    s("Puede filtrar los movimientos por tipo para ubicarlos más rápido."),
+    ...figura("05_estado_caja_01.png", 1.55, "Estado de caja: saldo por moneda y movimientos."),
+    nota("Desde esta pantalla también puede iniciar el **cierre** de la caja (ver 5.6) y consultar el documento de arqueo de cierres anteriores."),
+  ];
+})();
+
+const tCerrarCaja = (() => {
+  const s = stepList();
+  return [
+    pageBreak(),
+    H2("5.6. Cerrar y arquear la caja"),
+    Field("Rol: ", "Cajero."),
+    Field("Objetivo: ", "cerrar la caja al final de la jornada comparando el saldo esperado con el efectivo contado."),
+    H3("Pasos"),
+    s("En el menú, ingrese a **Ventas → Caja → Cierre de Caja** (o presione **Cerrar** desde el Estado de Caja)."),
+    s("El sistema muestra el **saldo esperado** de la caja calculado a partir de los movimientos."),
+    s("Cuente el efectivo disponible e ingrese el **monto declarado** (lo que realmente hay en la caja)."),
+    s("Confirme el cierre. El sistema calcula la **diferencia** (declarado − esperado) y marca la caja como **Cerrada**."),
+    ...figura("05_cierre_caja_01.png", 1.30, "Cierre de caja: arqueo con el monto declarado."),
+    s("El sistema genera el **documento de arqueo**, listo para imprimir."),
+    ...figura("05_cierre_caja_02.png", 1.41, "Documento de arqueo de caja."),
+    importante("Verifique el monto declarado antes de confirmar: una vez cerrada, la caja no puede reabrirse. Una **diferencia** positiva indica sobrante y una negativa, faltante."),
+  ];
+})();
+
+// ==========================================================================
+//  ENSAMBLADO
+// ==========================================================================
+if (require.main === module) buildDoc({
+  outPath: OUT,
+  sections: [
+    portraitSection(makeCaratula({
+      titulo: "MANUAL DE USUARIO",
+      subtitulo: "Piloto — Módulo Facturación y Caja",
+    }), true),
+
+    portraitSection([
+      ...intro,
+      pageBreak(), ...acceso,
+      pageBreak(), ...roles,
+      pageBreak(),
+      ...factCajaIntro,
+      ...tAbrirCaja,
+      ...tFacturarContado,
+      ...tFacturarCredito,
+      ...tAnular,
+      ...tEstadoCaja,
+      ...tCerrarCaja,
+    ]),
+  ],
+});
+
+module.exports = { intro, acceso, roles, factCajaIntro };
