@@ -32,7 +32,8 @@ const {
 
 const CAP_DIR = path.join(__dirname, "capturas");
 const { imgFit } = makeImg(CAP_DIR);
-const OUT = path.join(__dirname, "MUESTRA_Manual_Usuario.docx");
+// MU_OUT permite generar a otra ruta para previsualizar sin pisar el .docx abierto en Word (EBUSY)
+const OUT = process.env.MU_OUT || path.join(__dirname, "MUESTRA_Manual_Usuario.docx");
 
 // ---------- pasos numerados que REINICIAN por procedimiento ----------
 // docx continúa la numeración si todos los ítems comparten instancia. stepList() reserva
@@ -131,6 +132,7 @@ const intro = (() => {
 // ==========================================================================
 const acceso = (() => {
   const s = stepList();
+  const r = stepList();
   return [
     H1("2. Acceso al sistema"),
     P("SolSGE es una aplicación web: se usa desde el navegador de internet, sin instalar nada en la computadora."),
@@ -140,12 +142,20 @@ const acceso = (() => {
     s("Escriba su **usuario** y su **contraseña**."),
     s("Presione **Iniciar sesión**. Si los datos son correctos, ingresa a la pantalla principal."),
     ...figura("02_acceso_login_01.png", 1.30, "Pantalla de inicio de sesión."),
-    importante("Tras varios intentos fallidos de inicio de sesión, el sistema **bloquea** el usuario por seguridad. En ese caso, contacte al Administrador para restablecer el acceso."),
-    nota("Si olvidó su contraseña, utilice la opción de restablecimiento de contraseña o solicítelo al Administrador."),
-    H2("2.2. La pantalla principal"),
+    importante("Tras varios intentos fallidos de inicio de sesión, el sistema **bloquea** el usuario por seguridad. Para volver a ingresar, restablezca su contraseña (ver 2.2): al definir la nueva clave la cuenta se desbloquea."),
+    H2("2.2. Recuperar el acceso (contraseña olvidada)"),
+    P("Si olvidó su contraseña o su cuenta quedó bloqueada, puede restablecerla usted mismo desde la pantalla de inicio de sesión."),
+    r("En la pantalla de inicio de sesión, escriba su **usuario**."),
+    r("Haga clic en el enlace **¿Olvidaste tu contraseña?**."),
+    r("El sistema envía un enlace de restablecimiento al **correo registrado** de su cuenta y muestra un mensaje de confirmación."),
+    r("Abra ese correo y haga clic en el **enlace**: se abre la pantalla para definir una nueva contraseña."),
+    r("Escriba y confirme su **nueva contraseña** y guárdela. Con esto la cuenta queda **desbloqueada** y ya puede iniciar sesión con la nueva clave."),
+    ...figura("02_acceso_reset_01.png", 1.30, "Pantalla de restablecimiento de contraseña."),
+    nota("Si no recibe el correo, revise la carpeta de correo no deseado. Como alternativa, el **Administrador** puede restablecer su contraseña desde el módulo de Empleados y entregarle el enlace directamente."),
+    H2("2.3. La pantalla principal"),
     Pb("Al ingresar se muestra la pantalla principal. A la izquierda (o en la parte superior) está el **menú de navegación**, organizado por módulos; desde ahí se accede a todas las tareas. Cada usuario ve únicamente las opciones habilitadas para su rol."),
     ...figura("02_acceso_menu_01.png", 1.55, "Pantalla principal con el menú de navegación."),
-    H2("2.3. Cerrar sesión"),
+    H2("2.4. Cerrar sesión"),
     Pb("Para salir de forma segura, abra el menú de su usuario (arriba a la derecha) y elija **Cerrar sesión**. Es recomendable cerrar sesión siempre que deje la computadora desatendida."),
   ];
 })();

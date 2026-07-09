@@ -28,7 +28,8 @@ El `build.js` referencia exactamente estos nombres. Entregalos y el documento lo
 
 | Archivo | Pantalla / momento a capturar |
 |---|---|
-| `02_acceso_login_01.png` | Pantalla de inicio de sesión (login). |
+| `02_acceso_login_01.png` | Pantalla de inicio de sesión (login), con el enlace *¿Olvidaste tu contraseña?*. |
+| `02_acceso_reset_01.png` | Pantalla de restablecimiento de contraseña (definir la nueva clave). |
 | `02_acceso_menu_01.png` | Pantalla principal con el menú de navegación desplegado. |
 | `05_caja_apertura_01.png` | **Ventas → Caja → Apertura de Caja**: formulario de apertura con montos. |
 | `05_facturacion_contado_01.png` | **Ventas → Proceso Ventas**: lista de comprobantes con el botón *Crear*. |
