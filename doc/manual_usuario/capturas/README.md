@@ -31,6 +31,16 @@ El `build.js` referencia exactamente estos nombres. Entregalos y el documento lo
 | `02_acceso_login_01.png` | Pantalla de inicio de sesión (login), con el enlace *¿Olvidaste tu contraseña?*. |
 | `02_acceso_reset_01.png` | Pantalla de restablecimiento de contraseña (definir la nueva clave). |
 | `02_acceso_menu_01.png` | Pantalla principal con el menú de navegación desplegado. |
+
+## Capturas que espera Ventas (capítulo 4)
+
+| Archivo | Pantalla / momento a capturar |
+|---|---|
+| `04_presupuesto_lista_01.png` | **Ventas → Presupuesto**: lista de presupuestos con sus estados. |
+| `04_presupuesto_alta_01.png` | Alta de presupuesto: cliente + grilla de productos/cantidad. |
+| `04_presupuesto_aprobar_01.png` | **Ventas → Aprobación de Presupuestos**: aprobar/anular. |
+| `04_presupuesto_documento_01.png` | Documento del presupuesto (impresión). |
+| `04_presupuesto_vencidos_01.png` | **Ventas → Reportes → Presupuestos Anulados y Vencidos**. |
 | `05_caja_apertura_01.png` | **Ventas → Caja → Apertura de Caja**: formulario de apertura con montos. |
 | `05_facturacion_contado_01.png` | **Ventas → Proceso Ventas**: lista de comprobantes con el botón *Crear*. |
 | `05_facturacion_contado_02.png` | Formulario de facturación: cliente/presupuesto y detalle cargados. |

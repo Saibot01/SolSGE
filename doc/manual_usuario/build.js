@@ -108,6 +108,10 @@ function figura(file, ratio, desc) {
   return [box, cap];
 }
 
+// ---------- leyendas de tabla autonumeradas (evita renumerar a mano al insertar módulos) ----------
+let TBL = 0;
+const tablaCap = (desc) => { TBL += 1; return caption("Tabla " + TBL + ". " + desc); };
+
 // ==========================================================================
 //  1. INTRODUCCIÓN
 // ==========================================================================
@@ -172,18 +176,86 @@ const roles = [
     rows: [
       ["Vendedor", "Registra y gestiona presupuestos y pedidos de venta."],
       ["Cajero", "Abre y cierra su caja, factura al contado y a crédito, cobra cuotas y solicita anulaciones de factura."],
-      ["Supervisor", "Aprueba o rechaza anulaciones de factura y notas de crédito."],
+      ["Supervisor", "Aprueba o anula presupuestos, y aprueba o rechaza anulaciones de factura y notas de crédito."],
       ["Comprador", "Gestiona órdenes de compra, recepción y facturas de proveedor, y órdenes de pago."],
       ["Encargado de Depósito", "Registra movimientos de stock, transferencias y el inventario físico."],
       ["Gerente", "Consulta los reportes y dashboards gerenciales y define las metas."],
       ["Administrador", "Administra usuarios, roles y privilegios, parámetros del sistema, talonarios y configuración de cajas y oficinas."],
     ],
   }),
-  caption("Tabla 1. Roles del sistema y sus responsabilidades."),
+  tablaCap("Roles del sistema y sus responsabilidades."),
 ];
 
 // ==========================================================================
-//  5. FACTURACIÓN Y CAJA  (módulo piloto)
+//  4. VENTAS
+// ==========================================================================
+const ventasIntro = [
+  H1("4. Ventas"),
+  P("En este módulo el Vendedor registra los presupuestos (pedidos de venta) con sus productos y cantidades. Una vez aprobado, el presupuesto puede facturarse (ver el capítulo 5). Los presupuestos tienen un período de validez: al vencer, dejan de estar disponibles para facturar. La siguiente tabla indica qué tarea realiza cada rol."),
+  dataTable({
+    headers: ["Rol", "Tareas"],
+    widths: [26, 74],
+    rows: [
+      ["Vendedor", "Crear un presupuesto · Consultar presupuestos y su vencimiento · Imprimir un presupuesto."],
+      ["Supervisor", "Aprobar o anular un presupuesto."],
+    ],
+  }),
+  tablaCap("Roles y tareas del módulo Ventas."),
+];
+
+const tCrearPresupuesto = (() => {
+  const s = stepList();
+  return [
+    H2("4.1. Crear un presupuesto"),
+    Field("Rol: ", "Vendedor."),
+    Field("Objetivo: ", "registrar un presupuesto (pedido de venta) con el cliente y los productos solicitados."),
+    H3("Pasos"),
+    s("En el menú, ingrese a **Ventas → Presupuesto**. Se muestra la lista de presupuestos."),
+    ...figura("04_presupuesto_lista_01.png", 1.90, "Ventas: lista de presupuestos."),
+    s("Presione **+ Presupuesto** para iniciar uno nuevo."),
+    s("Seleccione el **Cliente** (o presione **+ Cliente** para registrar uno nuevo)."),
+    s("Agregue los productos: elija el **Producto** y la **Cantidad**, y presione **Agregar**. Repita por cada producto. El sistema calcula el **total**."),
+    s("Presione **Crear** para guardar. El presupuesto queda en estado **Pendiente** de aprobación."),
+    ...figura("04_presupuesto_alta_01.png", 1.40, "Alta de presupuesto: cliente y productos."),
+    nota("Mientras está **Pendiente** el presupuesto puede editarse. Una vez **Aprobado**, se factura desde el módulo Facturación y Caja (ver 5.2)."),
+  ];
+})();
+
+const tAprobarPresupuesto = (() => {
+  const s = stepList();
+  return [
+    pageBreak(),
+    H2("4.2. Aprobar o anular un presupuesto"),
+    Field("Rol: ", "Supervisor."),
+    Field("Objetivo: ", "revisar un presupuesto pendiente y aprobarlo para que pueda facturarse, o anularlo."),
+    H3("Pasos"),
+    s("En el menú, ingrese a **Ventas → Aprobación de Presupuestos**. Se muestran los presupuestos pendientes."),
+    s("Abra el presupuesto a resolver. Se muestra su **estado actual** y el detalle."),
+    s("Presione **Aprobar** (queda disponible para facturar) o **Anular** (se descarta)."),
+    ...figura("04_presupuesto_aprobar_01.png", 1.40, "Aprobar o anular un presupuesto."),
+    importante("Solo los presupuestos en estado **Aprobado** pueden facturarse. Un presupuesto **Anulado** o **Vencido** ya no puede facturarse."),
+  ];
+})();
+
+const tConsultarPresupuesto = (() => {
+  const s = stepList();
+  return [
+    pageBreak(),
+    H2("4.3. Consultar presupuestos y su vencimiento"),
+    Field("Rol: ", "Vendedor."),
+    Field("Objetivo: ", "revisar el estado de los presupuestos, imprimirlos y ver los vencidos o anulados."),
+    H3("Pasos"),
+    s("En el menú, ingrese a **Ventas → Presupuesto**. La lista muestra cada presupuesto con su **estado** (pendiente, aprobado, facturado, anulado o vencido) y su fecha."),
+    s("Para imprimir un presupuesto, ábralo y use la opción de **documento** del presupuesto."),
+    ...figura("04_presupuesto_documento_01.png", 1.05, "Documento del presupuesto."),
+    s("Para ver los presupuestos **anulados o vencidos**, ingrese a **Ventas → Reportes → Presupuestos Anulados y Vencidos**."),
+    ...figura("04_presupuesto_vencidos_01.png", 1.90, "Presupuestos anulados y vencidos."),
+    nota("Un presupuesto **vence** al terminar su período de validez; a partir de ese momento deja de estar disponible para facturar."),
+  ];
+})();
+
+// ==========================================================================
+//  5. FACTURACIÓN Y CAJA
 // ==========================================================================
 const factCajaIntro = [
   H1("5. Facturación y Caja"),
@@ -196,7 +268,7 @@ const factCajaIntro = [
       ["Supervisor", "Aprobar o rechazar la anulación de una factura."],
     ],
   }),
-  caption("Tabla 2. Roles y tareas del módulo Facturación y Caja."),
+  tablaCap("Roles y tareas del módulo Facturación y Caja."),
 ];
 
 const tAbrirCaja = (() => {
@@ -328,7 +400,7 @@ const cobranzasIntro = [
       ["Cajero", "Cobrar una cuota y emitir el recibo · Reimprimir un recibo · Consultar las cuentas por cobrar de un cliente."],
     ],
   }),
-  caption("Tabla 3. Roles y tareas del módulo Cobranzas."),
+  tablaCap("Roles y tareas del módulo Cobranzas."),
 ];
 
 const tCobrarCuota = (() => {
@@ -396,7 +468,7 @@ const ncIntro = [
       ["Supervisor", "Solicitar una nota de crédito · Aprobar o rechazar una solicitud · Imprimir la nota de crédito."],
     ],
   }),
-  caption("Tabla 4. Roles y tareas del módulo Notas de Crédito."),
+  tablaCap("Roles y tareas del módulo Notas de Crédito."),
 ];
 
 const tSolicitarNC = (() => {
@@ -463,6 +535,11 @@ if (require.main === module) buildDoc({
       pageBreak(), ...acceso,
       pageBreak(), ...roles,
       pageBreak(),
+      ...ventasIntro,
+      ...tCrearPresupuesto,
+      ...tAprobarPresupuesto,
+      ...tConsultarPresupuesto,
+      pageBreak(),
       ...factCajaIntro,
       ...tAbrirCaja,
       ...tFacturarContado,
@@ -484,4 +561,4 @@ if (require.main === module) buildDoc({
   ],
 });
 
-module.exports = { intro, acceso, roles, factCajaIntro, cobranzasIntro, ncIntro };
+module.exports = { intro, acceso, roles, ventasIntro, factCajaIntro, cobranzasIntro, ncIntro };
