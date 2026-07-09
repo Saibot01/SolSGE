@@ -521,6 +521,136 @@ const tImprimirNC = (() => {
 })();
 
 // ==========================================================================
+//  8. COMPRAS
+// ==========================================================================
+const comprasIntro = [
+  H1("8. Compras"),
+  P("Este módulo cubre el ciclo de compras: emitir una orden de compra a un proveedor, aprobarla, recepcionar la mercadería, registrar la factura del proveedor y pagarla mediante una orden de pago. También permite registrar la nota de crédito que emite el proveedor. La siguiente tabla indica qué tarea realiza cada rol."),
+  dataTable({
+    headers: ["Rol", "Tareas"],
+    widths: [26, 74],
+    rows: [
+      ["Comprador", "Crear una orden de compra · Recepcionar una orden de compra · Registrar la factura del proveedor · Generar una orden de pago · Registrar una nota de crédito de proveedor."],
+      ["Supervisor", "Aprobar una orden de compra · Confirmar o anular una orden de pago."],
+    ],
+  }),
+  tablaCap("Roles y tareas del módulo Compras."),
+];
+
+const tCrearOC = (() => {
+  const s = stepList();
+  return [
+    H2("8.1. Crear una orden de compra"),
+    Field("Rol: ", "Comprador."),
+    Field("Objetivo: ", "emitir una orden de compra a un proveedor con los productos a comprar."),
+    H3("Pasos"),
+    s("En el menú, ingrese a **Compras y Pagos → Orden de Compra**."),
+    s("Seleccione el **Proveedor**."),
+    s("Agregue los productos: elija el **Producto** y la **Cantidad** (y el precio, si corresponde). Repita por cada producto."),
+    s("Presione **Crear**. La orden de compra queda registrada, **pendiente de aprobación**."),
+    ...figura("08_oc_alta_01.png", 1.40, "Alta de una orden de compra."),
+  ];
+})();
+
+const tAprobarOC = (() => {
+  const s = stepList();
+  return [
+    pageBreak(),
+    H2("8.2. Aprobar una orden de compra"),
+    Field("Rol: ", "Supervisor."),
+    Field("Objetivo: ", "revisar y aprobar una orden de compra para que pueda recepcionarse."),
+    H3("Pasos"),
+    s("En el menú, ingrese a **Compras y Pagos → Aprobación de Órdenes de Compra**."),
+    s("Abra la orden **pendiente** y revise el detalle."),
+    s("**Apruebe** la orden (o recházela). Aprobada, queda lista para la recepción."),
+    ...figura("08_oc_aprobar_01.png", 1.40, "Aprobación de una orden de compra."),
+    nota("Solo las órdenes de compra **aprobadas** pueden recepcionarse."),
+  ];
+})();
+
+const tRecepcionar = (() => {
+  const s = stepList();
+  return [
+    pageBreak(),
+    H2("8.3. Recepcionar una orden de compra"),
+    Field("Rol: ", "Comprador."),
+    Field("Objetivo: ", "registrar la entrada de la mercadería recibida contra una orden de compra."),
+    H3("Pasos"),
+    s("En el menú, ingrese a **Compras y Pagos → Recepción de Orden de Compra**."),
+    s("Seleccione la orden de compra a recepcionar."),
+    s("Indique las **cantidades recibidas** por producto y confirme. El sistema **ingresa el stock** de los productos recibidos."),
+    ...figura("08_oc_recepcion_01.png", 1.90, "Recepción de una orden de compra."),
+    nota("La recepción puede ser **parcial**: el stock se actualiza con lo efectivamente recibido."),
+  ];
+})();
+
+const tFacturaProv = (() => {
+  const s = stepList();
+  return [
+    pageBreak(),
+    H2("8.4. Registrar la factura del proveedor"),
+    Field("Rol: ", "Comprador."),
+    Field("Objetivo: ", "registrar la factura emitida por el proveedor por la compra."),
+    H3("Pasos"),
+    s("En el menú, ingrese a **Compras y Pagos → Proceso de Compras**. Se muestra la lista de comprobantes de compra."),
+    s("Presione **Crear** para registrar una nueva factura."),
+    s("Seleccione el **Proveedor** e ingrese los datos del comprobante: **Nro. Comprobante**, **Nro. de Timbrado** con sus fechas y la **Fecha de Emisión**."),
+    s("Indique la **Condición** (Contado o Crédito) y agregue los productos con su cantidad y precio."),
+    s("Presione **Crear**. La factura queda registrada."),
+    ...figura("08_factura_prov_01.png", 1.40, "Registro de la factura del proveedor."),
+    nota("Una factura a **crédito** genera la **cuenta por pagar** correspondiente, con vencimiento según el plazo de pago del proveedor."),
+  ];
+})();
+
+const tGenerarOP = (() => {
+  const s = stepList();
+  return [
+    pageBreak(),
+    H2("8.5. Generar una orden de pago"),
+    Field("Rol: ", "Comprador."),
+    Field("Objetivo: ", "preparar el pago de una o varias facturas pendientes de un proveedor."),
+    H3("Pasos"),
+    s("En el menú, ingrese a **Compras y Pagos → Deuda a Proveedores**. Se muestran las facturas pendientes de pago con su saldo y vencimiento."),
+    s("Seleccione las facturas a pagar e indique el importe."),
+    s("Presione **Generar Orden de Pago**. La orden se crea en estado **Borrador** (todavía no baja el saldo de la deuda)."),
+    ...figura("08_op_generar_01.png", 1.90, "Deuda a proveedores y generación de la orden de pago."),
+  ];
+})();
+
+const tConfirmarOP = (() => {
+  const s = stepList();
+  return [
+    pageBreak(),
+    H2("8.6. Confirmar o anular una orden de pago"),
+    Field("Rol: ", "Supervisor."),
+    Field("Objetivo: ", "ejecutar el pago de una orden de pago en borrador, o anularla."),
+    H3("Pasos"),
+    s("En el menú, ingrese a **Compras y Pagos → Órdenes de Pago**. Se muestra la lista de órdenes de pago."),
+    s("Abra la orden en **Borrador** y elija **Resolver**. Se muestra el detalle de los comprobantes aplicados."),
+    s("Para pagar, elija el **método de pago** y presione **Confirmar pago**: el sistema registra el pago y **baja el saldo** de la deuda. Para descartarla, presione **Anular** (indicando el motivo)."),
+    ...figura("08_op_resolver_01.png", 1.40, "Resolver la orden de pago: confirmar o anular."),
+    s("Puede imprimir el **documento de la orden de pago**."),
+    ...figura("08_op_documento_01.png", 1.05, "Documento de la orden de pago."),
+  ];
+})();
+
+const tNCCompra = (() => {
+  const s = stepList();
+  return [
+    pageBreak(),
+    H2("8.7. Registrar una nota de crédito de proveedor"),
+    Field("Rol: ", "Comprador."),
+    Field("Objetivo: ", "registrar una nota de crédito emitida por el proveedor sobre una factura de compra."),
+    H3("Pasos"),
+    s("En el menú, ingrese a **Compras y Pagos → Nota de Credito Proveedor**."),
+    s("Seleccione la **factura** de compra de origen y el **motivo** de la nota de crédito."),
+    s("Indique las líneas o cantidades a acreditar y registre. El sistema **baja la cuenta por pagar** y, si el motivo es una **devolución**, **descuenta el stock** correspondiente."),
+    ...figura("08_nc_compra_01.png", 1.40, "Registro de una nota de crédito de proveedor."),
+    nota("La nota de crédito la **emite el proveedor**; el sistema solo la **captura** (no genera un documento propio)."),
+  ];
+})();
+
+// ==========================================================================
 //  ENSAMBLADO
 // ==========================================================================
 if (require.main === module) buildDoc({
@@ -557,8 +687,17 @@ if (require.main === module) buildDoc({
       ...tSolicitarNC,
       ...tAprobarNC,
       ...tImprimirNC,
+      pageBreak(),
+      ...comprasIntro,
+      ...tCrearOC,
+      ...tAprobarOC,
+      ...tRecepcionar,
+      ...tFacturaProv,
+      ...tGenerarOP,
+      ...tConfirmarOP,
+      ...tNCCompra,
     ]),
   ],
 });
 
-module.exports = { intro, acceso, roles, ventasIntro, factCajaIntro, cobranzasIntro, ncIntro };
+module.exports = { intro, acceso, roles, ventasIntro, factCajaIntro, cobranzasIntro, ncIntro, comprasIntro };

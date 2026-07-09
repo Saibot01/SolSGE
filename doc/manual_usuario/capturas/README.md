@@ -73,5 +73,18 @@ El `build.js` referencia exactamente estos nombres. Entregalos y el documento lo
 | `07_nc_aprobar_01.png` | Aprobar/rechazar la nota de crédito con el desglose. |
 | `07_nc_documento_01.png` | Documento de la nota de crédito. |
 
+## Capturas que espera Compras (capítulo 8)
+
+| Archivo | Pantalla / momento a capturar |
+|---|---|
+| `08_oc_alta_01.png` | **Compras y Pagos → Orden de Compra**: alta con proveedor y productos. |
+| `08_oc_aprobar_01.png` | **Compras y Pagos → Aprobación de Órdenes de Compra**. |
+| `08_oc_recepcion_01.png` | **Compras y Pagos → Recepción de Orden de Compra**. |
+| `08_factura_prov_01.png` | **Compras y Pagos → Proceso de Compras**: registro de factura de proveedor (proveedor, timbrado, condición). |
+| `08_op_generar_01.png` | **Compras y Pagos → Deuda a Proveedores**: generar orden de pago. |
+| `08_op_resolver_01.png` | **Compras y Pagos → Órdenes de Pago → Resolver**: confirmar pago / anular. |
+| `08_op_documento_01.png` | Documento de la orden de pago. |
+| `08_nc_compra_01.png` | **Compras y Pagos → Nota de Credito Proveedor**: captura de la NC. |
+
 > Si el nombre real de alguna pantalla o el orden de un paso no coincide con lo redactado, avisá:
 > ajustamos el texto contra la app en vivo (la app es la fuente de verdad, nunca inventamos pasos).
