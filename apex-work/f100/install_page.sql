@@ -94,6 +94,8 @@ prompt --install_page
 @@application/pages/page_00016.sql
 @@application/pages/delete_00020.sql
 @@application/pages/page_00020.sql
+@@application/pages/delete_09999.sql
+@@application/pages/page_09999.sql
 @@application/pages/delete_00041.sql
 @@application/pages/page_00041.sql
 @@application/pages/delete_00043.sql

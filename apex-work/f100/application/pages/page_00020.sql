@@ -109,6 +109,19 @@ wwv_flow_imp_page.create_page_button(
 ,p_button_condition_type=>'ITEM_IS_NULL'
 ,p_database_action=>'INSERT'
 );
+wwv_flow_imp_page.create_page_button(
+ p_id=>wwv_flow_imp.id(23787990790550728)
+,p_button_sequence=>35
+,p_button_plug_id=>wwv_flow_imp.id(11511726818464568)
+,p_button_name=>'RESET_PWD'
+,p_button_action=>'DEFINED_BY_DA'
+,p_button_template_options=>'#DEFAULT#'
+,p_button_template_id=>4072362960822175091
+,p_button_image_alt=>unistr('Restablecer / Reenviar credenciales')
+,p_button_position=>'NEXT'
+,p_button_condition=>'P20_ID_EMPLEADO'
+,p_button_condition_type=>'ITEM_IS_NOT_NULL'
+);
 wwv_flow_imp_page.create_page_item(
  p_id=>wwv_flow_imp.id(11505424286464554)
 ,p_name=>'P20_ID_EMPLEADO'
@@ -309,13 +322,12 @@ wwv_flow_imp_page.create_page_item(
 ,p_item_sequence=>140
 ,p_item_plug_id=>wwv_flow_imp.id(11505182297464549)
 ,p_item_source_plug_id=>wwv_flow_imp.id(11505182297464549)
+,p_item_default=>'S'
 ,p_prompt=>'Activo'
 ,p_source=>'ACTIVO'
 ,p_source_type=>'REGION_SOURCE_COLUMN'
 ,p_display_as=>'NATIVE_SELECT_LIST'
 ,p_lov=>'STATIC:Activo;S,Inactivo;N'
-,p_lov_display_null=>'NO'
-,p_item_default=>'S'
 ,p_cHeight=>1
 ,p_field_template=>1609121967514267634
 ,p_item_template_options=>'#DEFAULT#'
@@ -323,6 +335,22 @@ wwv_flow_imp_page.create_page_item(
 ,p_lov_display_extra=>'YES'
 ,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
   'page_action_on_selection', 'NONE')).to_clob
+);
+wwv_flow_imp_page.create_page_item(
+ p_id=>wwv_flow_imp.id(23787990790550729)
+,p_name=>'P20_RESET_LINK'
+,p_item_sequence=>150
+,p_item_plug_id=>wwv_flow_imp.id(11505182297464549)
+,p_prompt=>unistr('Enlace de restablecimiento (c\00F3pialo y entr\00E9galo al empleado)')
+,p_display_as=>'NATIVE_DISPLAY_ONLY'
+,p_field_template=>1609121967514267634
+,p_item_template_options=>'#DEFAULT#'
+,p_is_persistent=>'N'
+,p_attributes=>wwv_flow_t_plugin_attributes(wwv_flow_t_varchar2(
+  'based_on', 'VALUE',
+  'format', 'PLAIN',
+  'send_on_page_submit', 'N',
+  'show_line_breaks', 'Y')).to_clob
 );
 wwv_flow_imp_page.create_page_da_event(
  p_id=>wwv_flow_imp.id(11512282509464568)
@@ -401,6 +429,38 @@ wwv_flow_imp_page.create_page_da_action(
 ,p_attribute_07=>'P20_ID_PERSONA'
 ,p_attribute_08=>'Y'
 ,p_attribute_09=>'N'
+,p_wait_for_result=>'Y'
+);
+wwv_flow_imp_page.create_page_da_event(
+ p_id=>wwv_flow_imp.id(23787990790550730)
+,p_name=>'RESET_PWD_CLICK'
+,p_event_sequence=>40
+,p_triggering_element_type=>'BUTTON'
+,p_triggering_button_id=>wwv_flow_imp.id(23787990790550728)
+,p_bind_type=>'bind'
+,p_execution_type=>'IMMEDIATE'
+,p_bind_event_type=>'click'
+);
+wwv_flow_imp_page.create_page_da_action(
+ p_id=>wwv_flow_imp.id(23787990790550731)
+,p_event_id=>wwv_flow_imp.id(23787990790550730)
+,p_event_result=>'TRUE'
+,p_action_sequence=>10
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_EXECUTE_PLSQL_CODE'
+,p_attribute_01=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'DECLARE',
+'  v_link VARCHAR2(2000);',
+'BEGIN',
+'  PKG_RESET_PWD.resetear_por_admin(',
+'    p_id_empleado => :P20_ID_EMPLEADO,',
+'    p_url_reset   => ''https://gd48788b1691042-orapdbtes.adb.sa-vinhedo-1.oraclecloudapps.com/ords/r/workplace/solsge/reset-password'',',
+'    p_link_out    => v_link);',
+'  :P20_RESET_LINK := v_link;',
+'END;'))
+,p_attribute_02=>'P20_ID_EMPLEADO'
+,p_attribute_03=>'P20_RESET_LINK'
+,p_attribute_05=>'PLSQL'
 ,p_wait_for_result=>'Y'
 );
 wwv_flow_imp_page.create_page_process(
