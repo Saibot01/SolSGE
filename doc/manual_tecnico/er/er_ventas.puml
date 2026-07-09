@@ -1,0 +1,82 @@
+@startuml er_ventas
+!theme plain
+skinparam dpi 150
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 4
+skinparam linetype ortho
+skinparam DefaultFontName Segoe UI
+skinparam entityFontSize 12
+skinparam entityAttributeFontSize 10
+skinparam entity {
+  BackgroundColor #FFFFFF
+  BorderColor #2E5A88
+  ArrowColor #34506B
+}
+skinparam entity {
+  BackgroundColor<<frontera>> #EFEFEF
+  BorderColor<<frontera>> #9AA5B1
+}
+hide circle
+title Modelo Entidad-Relacion — Modulo Ventas (Presupuestos y Pedidos) (SOLSGE)\nEsquema físico: PK (llave), FK (#), * = obligatorio
+
+' --- entidades del módulo ---
+entity "ORDENES_VENTA" as ORDENES_VENTA {
+  * ID_ORDEN : NUMBER <<PK>>
+  * ID_PERSONA : NUMBER <<FK-CLIENTES>>
+  FECHA_ORDEN : DATE
+  ESTADO : VARCHAR2(20)
+  TOTAL : NUMBER(12,2)
+  OBSERVACION : VARCHAR2(255)
+  ID_OFICINA : NUMBER <<FK-OFICINAS>>
+  FECHA_APROBACION : DATE
+  USUARIO_APROBACION : VARCHAR2(60)
+  FECHA_ANULACION : DATE
+  USUARIO_ANULACION : VARCHAR2(60)
+  MOTIVO_ANULACION : VARCHAR2(400)
+  FECHA_VENCIMIENTO : DATE
+  USUARIO_CREACION : VARCHAR2(60)
+}
+
+entity "DETALLE_ORDEN" as DETALLE_ORDEN {
+  * ID_DETALLE : NUMBER <<PK>>
+  * ID_ORDEN : NUMBER <<FK-ORDENES_VENTA>>
+  * ID_PRODUCTO : NUMBER <<FK-PRODUCTOS>>
+  * CANTIDAD : NUMBER
+  PRECIO_UNITARIO : NUMBER(12,2)
+  TOTAL : NUMBER(12,2)
+}
+
+entity "RESERVAS_PRODUCTO" as RESERVAS_PRODUCTO {
+  * ID_RESERVA : NUMBER <<PK>>
+  * ID_PRODUCTO : NUMBER <<FK-PRODUCTOS>>
+  * ID_OFICINA : NUMBER <<FK-OFICINAS>>
+  * CANTIDAD_RESERVADA : NUMBER
+  FECHA_RESERVA : DATE
+  ESTADO : VARCHAR2(20)
+  OBSERVACION : VARCHAR2(255)
+  ID_ORDEN_VENTA : NUMBER <<FK-ORDENES_VENTA>>
+}
+
+' --- entidades frontera ---
+entity "CLIENTES" as CLIENTES <<frontera>> {
+  * ID_PERSONA : NUMBER <<PK>>
+}
+
+entity "OFICINAS" as OFICINAS <<frontera>> {
+  * CODIGO_OFICINA : NUMBER <<PK>>
+}
+
+entity "PRODUCTOS" as PRODUCTOS <<frontera>> {
+  * ID_PRODUCTO : NUMBER <<PK>>
+}
+
+' --- relaciones (crow's-foot desde FK reales) ---
+CLIENTES ||--o{ ORDENES_VENTA
+OFICINAS ||--o{ ORDENES_VENTA
+PRODUCTOS ||--o{ DETALLE_ORDEN
+ORDENES_VENTA ||--o{ DETALLE_ORDEN
+OFICINAS ||--o{ RESERVAS_PRODUCTO
+ORDENES_VENTA ||--o{ RESERVAS_PRODUCTO
+PRODUCTOS ||--o{ RESERVAS_PRODUCTO
+@enduml

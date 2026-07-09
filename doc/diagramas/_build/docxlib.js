@@ -14,6 +14,7 @@ const path = require("path");
 const {
   Document, Packer, Paragraph, TextRun, ImageRun, AlignmentType,
   HeadingLevel, PageOrientation, PageNumber, Header, Footer, BorderStyle, LineRuleType,
+  Table, TableRow, TableCell, WidthType, ShadingType, VerticalAlign,
 } = require("docx");
 
 const FONT = "Times New Roman";
@@ -56,6 +57,43 @@ function parseRuns(text) {
 }
 
 const pageBreak = () => new Paragraph({ pageBreakBefore: true, children: [new TextRun("")] });
+
+// --- tablas (diccionario de datos, catálogos) ------------------------------
+// dataTable({ headers:[str], rows:[[str|{t,b}]], widths:[pct], fontSize })
+//   headers -> fila de cabecera (negrita, fondo azul cátedra)
+//   rows    -> cada celda es string o {t:texto, b:bool negrita, mono:bool}
+//   widths  -> porcentajes por columna (suman 100); default equiespaciado
+const TB = { style: BorderStyle.SINGLE, size: 2, color: "AAB4C0" };
+const cellBorders = { top: TB, bottom: TB, left: TB, right: TB };
+function tCell(content, { header = false, size = 18, align = AlignmentType.LEFT, width } = {}) {
+  const items = Array.isArray(content) ? content : [content];
+  const runs = items.map((it) => {
+    const o = typeof it === "string" ? { t: it } : it;
+    return new TextRun({ text: o.t, bold: header || o.b, size, font: o.mono ? "Consolas" : FONT });
+  });
+  return new TableCell({
+    borders: cellBorders,
+    verticalAlign: VerticalAlign.CENTER,
+    shading: header ? { type: ShadingType.CLEAR, fill: "DCE9F5" } : undefined,
+    margins: { top: 20, bottom: 20, left: 70, right: 70 },
+    ...(width ? { width: { size: width, type: WidthType.PERCENTAGE } } : {}),
+    children: [new Paragraph({ alignment: align, spacing: { after: 0, line: 240, lineRule: LineRuleType.AUTO }, children: runs })],
+  });
+}
+function dataTable({ headers, rows, widths, fontSize = 18 }) {
+  const w = widths || headers.map(() => Math.round(100 / headers.length));
+  const headRow = new TableRow({
+    tableHeader: true,
+    children: headers.map((h, i) => tCell(h, { header: true, size: fontSize, width: w[i], align: AlignmentType.CENTER })),
+  });
+  const bodyRows = rows.map((r) => new TableRow({
+    children: r.map((c, i) => tCell(c, { size: fontSize, width: w[i] })),
+  }));
+  return new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    rows: [headRow, ...bodyRows],
+  });
+}
 const caption = (text) => new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 200 }, children: [new TextRun({ text, italics: true, size: 20 })] });
 
 // --- imágenes (escaladas por ancho o por alto) -----------------------------
@@ -105,11 +143,11 @@ const SIZES = { PORT_PX: 560, ACT_H: 640, LAND_H_CLASS: 395, LAND_H_SEQ: 390 };
 const cBlank = (size = 36) => new Paragraph({ alignment: AlignmentType.CENTER, spacing: L15, children: [new TextRun({ text: "", size })] });
 const cLine = (text, opts = {}) => new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: opts.after ?? 0, ...L15 }, children: [new TextRun({ text, size: 36 })] });
 
-// makeCaratula({ subtitulo, sistema, sigla, organo, ciudad, fecha })
+// makeCaratula({ titulo, subtitulo, sistema, sigla, organo, ciudad, fecha })
 function makeCaratula(c) {
   return [
     cBlank(24), cBlank(24),
-    cLine("DISEÑO DE DIAGRAMAS", { after: 200 }),
+    cLine(c.titulo || "DISEÑO DE DIAGRAMAS", { after: 200 }),
     ...(c.subtitulo ? [cLine("(" + c.subtitulo + ")")] : []),
     cBlank(),
     cLine(c.sistema || "Sole – Sistema de Gestión Empresarial"),
@@ -171,6 +209,6 @@ function buildDoc({ outPath, sections }) {
 
 module.exports = {
   P, Field, H1, H2, H3, SubBold, bullet, num, caption, pageBreak, parseRuns,
-  makeImg, makeCaratula, portraitSection, landscapeSection, buildDoc,
+  makeImg, makeCaratula, portraitSection, landscapeSection, buildDoc, dataTable,
   bannerHeader, pageFooter, PORTRAIT, LAND, SIZES, AlignmentType, Paragraph, TextRun,
 };

@@ -1,0 +1,52 @@
+@startuml er_reportes
+!theme plain
+skinparam dpi 150
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 4
+skinparam linetype ortho
+skinparam DefaultFontName Segoe UI
+skinparam entityFontSize 12
+skinparam entityAttributeFontSize 10
+skinparam entity {
+  BackgroundColor #FFFFFF
+  BorderColor #2E5A88
+  ArrowColor #34506B
+}
+skinparam entity {
+  BackgroundColor<<frontera>> #EFEFEF
+  BorderColor<<frontera>> #9AA5B1
+}
+hide circle
+title Modelo Entidad-Relacion — Modulo Reportes Gerenciales (SOLSGE)\nEsquema físico: PK (llave), FK (#), * = obligatorio
+
+' --- entidades del módulo ---
+entity "METAS_VENTA" as METAS_VENTA {
+  * ID_META : NUMBER <<PK>>
+  ID_EMPLEADO : NUMBER <<FK-EMPLEADOS>>
+  ID_OFICINA : NUMBER <<FK-OFICINAS>>
+  * PERIODO : DATE
+  * MONTO_META : NUMBER
+}
+
+entity "METAS_COBRANZA" as METAS_COBRANZA {
+  * ID_META : NUMBER <<PK>>
+  * ID_OFICINA : NUMBER <<FK-OFICINAS>>
+  * PERIODO : DATE
+  * MONTO_META : NUMBER
+}
+
+' --- entidades frontera ---
+entity "EMPLEADOS" as EMPLEADOS <<frontera>> {
+  * ID_EMPLEADO : NUMBER(38) <<PK>>
+}
+
+entity "OFICINAS" as OFICINAS <<frontera>> {
+  * CODIGO_OFICINA : NUMBER <<PK>>
+}
+
+' --- relaciones (crow's-foot desde FK reales) ---
+EMPLEADOS ||--o{ METAS_VENTA
+OFICINAS ||--o{ METAS_VENTA
+OFICINAS ||--o{ METAS_COBRANZA
+@enduml

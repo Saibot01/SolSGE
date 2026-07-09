@@ -1,0 +1,99 @@
+@startuml er_catalogos
+!theme plain
+skinparam dpi 150
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 4
+skinparam linetype ortho
+skinparam DefaultFontName Segoe UI
+skinparam entityFontSize 12
+skinparam entityAttributeFontSize 10
+skinparam entity {
+  BackgroundColor #FFFFFF
+  BorderColor #2E5A88
+  ArrowColor #34506B
+}
+skinparam entity {
+  BackgroundColor<<frontera>> #EFEFEF
+  BorderColor<<frontera>> #9AA5B1
+}
+hide circle
+title Modelo Entidad-Relacion — Modulo Catálogos base y configuración (SOLSGE)\nEsquema físico: PK (llave), FK (#), * = obligatorio
+
+' --- entidades del módulo ---
+entity "OFICINAS" as OFICINAS {
+  * CODIGO_OFICINA : NUMBER <<PK>>
+  * DESCRIPCION : VARCHAR2(255)
+  CODIGO_DEPARTAMENTO : NUMBER <<FK-DEPARTAMENTOS>>
+  CODIGO_CIUDAD : NUMBER <<FK-CIUDADES>>
+  ESTABLECIMIENTO_SET : VARCHAR2(3)
+}
+
+entity "PARAMETROS" as PARAMETROS {
+  * ID_PARAMETRO : NUMBER <<PK>>
+  * TIPO_PARAMETRO : VARCHAR2(50)
+  * CLAVE : VARCHAR2(100)
+  VALOR_NUMERICO : NUMBER(12,2)
+  VALOR_TEXTO : VARCHAR2(500)
+  DESCRIPCION : VARCHAR2(500)
+  MES_APLICABLE : CHAR(2)
+  ANO_APLICABLE : CHAR(4)
+  * ACTIVO : CHAR(1)
+  * FECHA_CREACION : DATE
+  USUARIO_CREACION : VARCHAR2(100)
+  FECHA_MODIFICACION : DATE
+  USUARIO_MODIFICACION : VARCHAR2(100)
+}
+
+entity "APP_CONFIG" as APP_CONFIG {
+  * CLAVE : VARCHAR2(100) <<PK>>
+  VALOR : VARCHAR2(4000)
+  DESCRIPCION : VARCHAR2(500)
+}
+
+entity "TIPO_IVA" as TIPO_IVA {
+  * ID_TIPO_IVA : NUMBER <<PK>>
+  * DESCRIPCION : VARCHAR2(50)
+  * PORCENTAJE : NUMBER(5,2)
+  ACTIVO : CHAR(1)
+}
+
+entity "TIPOS_CAMBIO" as TIPOS_CAMBIO {
+  * ID_TC : NUMBER <<PK>>
+  * FECHA : DATE
+  * COD_MONEDA_BASE : VARCHAR2(10) <<FK-MONEDAS>>
+  * COD_MONEDA_COTIZADA : VARCHAR2(10) <<FK-MONEDAS>>
+  * FUENTE : VARCHAR2(30)
+  TIPO_COMPRA : NUMBER(18,6)
+  TIPO_VENTA : NUMBER(18,6)
+  REF_DIARIO : NUMBER(18,6)
+  FECHA_UPDATED : DATE
+}
+
+entity "PAISES" as PAISES {
+  * ID_PAIS : NUMBER <<PK>>
+  * DESCRIPCION : VARCHAR2(255)
+}
+
+entity "DEPARTAMENTOS" as DEPARTAMENTOS {
+  * CODIGO_DEPARTAMENTO : NUMBER <<PK>>
+  * DESCRIPCION : VARCHAR2(255)
+}
+
+entity "CIUDADES" as CIUDADES {
+  * CODIGO_CIUDAD : NUMBER <<PK>>
+  * DESCRIPCION : VARCHAR2(255)
+  CODIGO_DEPARTAMENTO : NUMBER <<FK-DEPARTAMENTOS>>
+}
+
+' --- entidades frontera ---
+entity "MONEDAS" as MONEDAS <<frontera>> {
+  * CODIGO_MONEDA : VARCHAR2(10) <<PK>>
+}
+
+' --- relaciones (crow's-foot desde FK reales) ---
+DEPARTAMENTOS ||--o{ OFICINAS
+CIUDADES ||--o{ OFICINAS
+MONEDAS ||--o{ TIPOS_CAMBIO
+DEPARTAMENTOS ||--o{ CIUDADES
+@enduml
