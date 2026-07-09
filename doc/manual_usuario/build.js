@@ -384,6 +384,71 @@ const tConsultarCxC = (() => {
 })();
 
 // ==========================================================================
+//  7. NOTAS DE CRÉDITO
+// ==========================================================================
+const ncIntro = [
+  H1("7. Notas de Crédito"),
+  P("Una nota de crédito permite revertir total o parcialmente una factura cuando ya pasó el plazo de anulación (48 horas). A diferencia de la anulación, la factura original permanece activa y la nota de crédito es un documento nuevo. Según el motivo, al aprobarse reingresa stock (devolución), afecta la caja (si la factura fue de contado) o ajusta la cuenta por cobrar (si fue a crédito). La siguiente tabla indica qué tarea realiza cada rol."),
+  dataTable({
+    headers: ["Rol", "Tareas"],
+    widths: [26, 74],
+    rows: [
+      ["Supervisor", "Solicitar una nota de crédito · Aprobar o rechazar una solicitud · Imprimir la nota de crédito."],
+    ],
+  }),
+  caption("Tabla 4. Roles y tareas del módulo Notas de Crédito."),
+];
+
+const tSolicitarNC = (() => {
+  const s = stepList();
+  return [
+    H2("7.1. Solicitar una nota de crédito"),
+    Field("Rol: ", "Supervisor."),
+    Field("Objetivo: ", "registrar una solicitud de nota de crédito sobre una factura, indicando el motivo y las líneas o importes a acreditar."),
+    H3("Pasos"),
+    s("En el menú, ingrese a **Ventas → Proceso Ventas** y ubique la **factura** sobre la que emitirá la nota de crédito."),
+    s("Elija la acción **Solicitar Nota de Crédito**. Se abre el formulario con los datos de la factura."),
+    ...figura("07_nc_solicitar_01.png", 1.90, "Solicitud de nota de crédito desde la factura."),
+    s("Seleccione el **Motivo** de la nota de crédito y el **Tipo** (total o parcial)."),
+    s("Para cada línea indique lo que se acredita: en una **devolución**, la **Cantidad** devuelta; en un **descuento** o **ajuste**, el **Precio Nuevo** (el sistema acredita la diferencia)."),
+    s("Si corresponde, escriba una **observación** y presione **Solicitar**. La solicitud queda **pendiente** de aprobación."),
+    ...figura("07_nc_solicitar_02.png", 1.40, "Formulario de solicitud: motivo y líneas a acreditar."),
+    importante("La nota de crédito **no anula** la factura: es un documento nuevo. Si la factura tiene menos de 48 horas y desea dejarla sin efecto, conviene **anularla** (ver 5.4) en lugar de emitir una nota de crédito."),
+  ];
+})();
+
+const tAprobarNC = (() => {
+  const s = stepList();
+  return [
+    pageBreak(),
+    H2("7.2. Aprobar o rechazar una nota de crédito"),
+    Field("Rol: ", "Supervisor."),
+    Field("Objetivo: ", "revisar una solicitud de nota de crédito y resolverla."),
+    H3("Pasos"),
+    s("En el menú, ingrese a **Ventas → Notas de Crédito**. Se muestra la lista de solicitudes y notas de crédito."),
+    ...figura("07_nc_lista_01.png", 1.90, "Notas de Crédito: lista de solicitudes."),
+    s("Abra la solicitud **pendiente**. Se muestra el desglose de lo que se acreditará."),
+    s("Presione **Aprobar** o **Rechazar**. Al **aprobar**, el sistema reserva el número de nota de crédito y aplica los efectos según el motivo: reingreso de **stock** (devolución), **egreso de caja** (si la factura fue de contado del día) o ajuste de la **cuenta por cobrar** (si fue a crédito)."),
+    ...figura("07_nc_aprobar_01.png", 1.40, "Aprobar o rechazar la nota de crédito, con el desglose."),
+    nota("Si **rechaza** la solicitud, no se produce ningún efecto y la factura queda igual."),
+  ];
+})();
+
+const tImprimirNC = (() => {
+  const s = stepList();
+  return [
+    pageBreak(),
+    H2("7.3. Imprimir la nota de crédito"),
+    Field("Rol: ", "Supervisor."),
+    Field("Objetivo: ", "obtener el documento de una nota de crédito aprobada."),
+    H3("Pasos"),
+    s("En **Ventas → Notas de Crédito**, ubique la nota de crédito **aprobada**."),
+    s("Ábrala para ver el **documento de la nota de crédito**, listo para imprimir o guardar."),
+    ...figura("07_nc_documento_01.png", 1.05, "Documento de la nota de crédito."),
+  ];
+})();
+
+// ==========================================================================
 //  ENSAMBLADO
 // ==========================================================================
 if (require.main === module) buildDoc({
@@ -410,8 +475,13 @@ if (require.main === module) buildDoc({
       ...tCobrarCuota,
       ...tReimprimirRecibo,
       ...tConsultarCxC,
+      pageBreak(),
+      ...ncIntro,
+      ...tSolicitarNC,
+      ...tAprobarNC,
+      ...tImprimirNC,
     ]),
   ],
 });
 
-module.exports = { intro, acceso, roles, factCajaIntro, cobranzasIntro };
+module.exports = { intro, acceso, roles, factCajaIntro, cobranzasIntro, ncIntro };

@@ -53,5 +53,15 @@ El `build.js` referencia exactamente estos nombres. Entregalos y el documento lo
 | `06_recibos_reimpresion_01.png` | **Cobranzas → Recibos de Cobro**: lista para reimprimir. |
 | `06_cuenta_cliente_01.png` | Detalle de cuotas y saldo del cliente (misma vista que el detalle de cuotas). |
 
+## Capturas que espera Notas de Crédito (capítulo 7)
+
+| Archivo | Pantalla / momento a capturar |
+|---|---|
+| `07_nc_solicitar_01.png` | **Ventas → Proceso Ventas**: acción *Solicitar Nota de Crédito* sobre una factura. |
+| `07_nc_solicitar_02.png` | Formulario de solicitud: motivo, tipo y grilla de líneas (Cantidad / Precio Nuevo). |
+| `07_nc_lista_01.png` | **Ventas → Notas de Crédito**: lista de solicitudes. |
+| `07_nc_aprobar_01.png` | Aprobar/rechazar la nota de crédito con el desglose. |
+| `07_nc_documento_01.png` | Documento de la nota de crédito. |
+
 > Si el nombre real de alguna pantalla o el orden de un paso no coincide con lo redactado, avisá:
 > ajustamos el texto contra la app en vivo (la app es la fuente de verdad, nunca inventamos pasos).
