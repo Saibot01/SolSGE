@@ -36,8 +36,7 @@ El `build.js` referencia exactamente estos nombres. Entregalos y el documento lo
 | `05_facturacion_contado_02.png` | Formulario de facturación: cliente/presupuesto y detalle cargados. |
 | `05_facturacion_contado_03.png` | Forma de pago **Contado**: monto ingresado y vuelto calculado. |
 | `05_facturacion_contado_04.png` | Documento de la factura (KuDE) generado. |
-| `05_facturacion_credito_01.png` | Forma de pago **Crédito** con el plan de cuotas seleccionado. |
-| `05_anulacion_solicitud_01.png` | **Ventas → Anulaciones de Facturas**: solicitud con motivo. |
+| `05_anulacion_solicitud_01.png` | **Ventas → Proceso Ventas**: solicitud de anulación con motivo. |
 | `05_anulacion_aprobacion_01.png` | Aprobación/rechazo de la anulación (vista del Supervisor). |
 | `05_estado_caja_01.png` | **Ventas → Caja → Estado de Caja**: saldos por moneda y movimientos. |
 | `05_cierre_caja_01.png` | **Ventas → Caja → Cierre de Caja**: arqueo con el monto declarado. |
